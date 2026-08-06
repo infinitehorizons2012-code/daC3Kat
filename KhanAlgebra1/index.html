@@ -3220,7 +3220,6 @@ function buildWeekTable() {
   
   // UPDATE "TUẦN NÀY" TAB
   // Find the first active week (where 'end' is not yet achieved or is the current week)
-  const curIdx = window.getCurrentWeekIndex();
   let activeWeek = weeklyData[curIdx]; // Always show the calendar current week on the dashboard
   let startVal = activeWeek.start !== null ? activeWeek.start : 0;
   let endVal = activeWeek.end !== null ? activeWeek.end : startVal;
