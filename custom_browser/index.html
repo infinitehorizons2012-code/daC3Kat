@@ -59,7 +59,12 @@
     <button id="btn-khan">Tính % Điểm Khan</button>
   </div>
   
-  <webview id="browser-view" src="https://www.khanacademy.org/" preload="scripts/khan_extractor.js"></webview>
+  <!-- Thêm thuộc tính useragent để giả làm Google Chrome chuẩn, tránh bị trang web chặn -->
+  <webview id="browser-view" 
+           src="https://www.khanacademy.org/" 
+           preload="scripts/khan_extractor.js"
+           useragent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36">
+  </webview>
 
   <script>
     const webview = document.getElementById('browser-view');
