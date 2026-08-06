@@ -768,12 +768,14 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
             <div class="timeline-title">📚 Hoàn thành Units 1–5 (HK1)</div>
             <div class="timeline-desc">Tiến độ thong thả (~1.5 tuần/Unit). Các Units đầu tương đối dễ — ưu tiên thi test sớm để dành thời gian cho các bài khó phía sau! Mỗi Unit xong → báo cô ngay!</div>
             <div class="timeline-projection" id="proj-u5"></div>
+            <div class="timeline-projection" id="proj-u5"></div>
             <span class="timeline-tag" id="tag-u5" style="background:rgba(124,92,252,.12);color:var(--accent)">📌 Mục tiêu</span>
           </div>
           <div class="timeline-item">
             <div class="timeline-date">Mục tiêu: 09/11/2026 · Thứ 2</div>
             <div class="timeline-title">📚 Hoàn thành Units 6–10 + Ôn thi HK1</div>
             <div class="timeline-desc">Hoàn thiện nốt nửa sau của HK1. Cố gắng dứt điểm đúng hạn để có thời gian ôn tập và thi Kiểm tra HK1.</div>
+            <div class="timeline-projection" id="proj-u10"></div>
             <div class="timeline-projection" id="proj-u10"></div>
             <span class="timeline-tag" id="tag-u10" style="background:rgba(124,92,252,.12);color:var(--accent)">📌 Mục tiêu</span>
           </div>
@@ -788,12 +790,14 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
             <div class="timeline-title">📚 Hoàn thành Units 11–12 (HK2)</div>
             <div class="timeline-desc">Pace chậm (~4 tuần/Unit) cho các phần khó. Exponents & Radicals, Exponential Growth — đây là nền tảng sống còn cho Quadratics.</div>
             <div class="timeline-projection" id="proj-u12"></div>
+            <div class="timeline-projection" id="proj-u12"></div>
             <span class="timeline-tag" id="tag-u12" style="background:rgba(86,207,178,.12);color:var(--accent2)">🎯 HK2</span>
           </div>
           <div class="timeline-item">
             <div class="timeline-date">Mục tiêu: 15/03/2027 · Thứ 2</div>
             <div class="timeline-title">📚 Hoàn thành Units 13–14 (HK2)</div>
             <div class="timeline-desc">Quadratics — phần khó nhất của Algebra 1! Cần ôn thật kỹ, làm bài tập đầy đủ, dành tối đa thời gian trước khi thi Unit Test.</div>
+            <div class="timeline-projection" id="proj-u14"></div>
             <div class="timeline-projection" id="proj-u14"></div>
             <span class="timeline-tag" id="tag-u14" style="background:rgba(86,207,178,.12);color:var(--accent2)">🎯 HK2</span>
           </div>
@@ -3273,7 +3277,125 @@ function getWeeklyData() {
   });
 }
 
+
+function updateTimelineProjections() {
+    // 1. Update Current Week Date & Tag
+    let weekDatesStr = window.weeklyData && window.weeklyData[curIdx] ? window.weeklyData[curIdx].date : "";
+    if(weekDatesStr) {
+        let endStr = weekDatesStr.split(" - ")[1] || weekDatesStr;
+        let elWeekDate = document.getElementById("tl-date-week");
+        if(elWeekDate) elWeekDate.innerText = endStr + " · Thứ 2";
+    }
+    
+    let tagWeek = document.getElementById("tag-week");
+    if(tagWeek) {
+        tagWeek.innerHTML = "⚡ Đang diễn ra";
+        tagWeek.style.background = "rgba(124,92,252,.12)";
+        tagWeek.style.color = "var(--accent)";
+    }
+
+    // 2. Calculate Pace
+    const START_DATE_STR = "2026-07-20";
+    let startDate = new Date(START_DATE_STR);
+    
+    let completedUnits = 0;
+    let latestCompleteDate = startDate;
+    
+    for(let i=1; i<=14; i++) {
+        let status = localStorage.getItem("khan_status_u" + i);
+        let progDate = localStorage.getItem("khan_prog_u" + i);
+        if (status === "dat" && progDate) {
+            completedUnits++;
+            let d = new Date(progDate);
+            if(d > latestCompleteDate) latestCompleteDate = d;
+        }
+    }
+    
+    let daysPassed = (latestCompleteDate - startDate) / (1000 * 3600 * 24);
+    if(daysPassed < 0) daysPassed = 0;
+    
+    let pace = (completedUnits > 0) ? (daysPassed / completedUnits) : 10.5; // default 1.5 weeks ~ 10.5 days
+
+    // Planned Dates
+    const plannedDates = {
+        5: new Date("2026-09-14"),
+        10: new Date("2026-11-09"),
+        12: new Date("2027-01-18"),
+        14: new Date("2027-03-15")
+    };
+    
+    // Update Tags & Projections
+    let unitsArr = [5, 10, 12, 14];
+    
+    unitsArr.forEach(u => {
+        let tagEl = document.getElementById("tag-u" + u);
+        let projEl = document.getElementById("proj-u" + u);
+        if(!projEl) return;
+        
+        let plannedDate = plannedDates[u];
+        
+        if (completedUnits >= u) {
+            // Already completed this milestone
+            if(tagEl) {
+                tagEl.innerHTML = "✅ Đã hoàn thành";
+                tagEl.style.background = "rgba(74,222,128,.12)";
+                tagEl.style.color = "var(--success)";
+            }
+            
+            // Find when exactly it was completed
+            let maxD = startDate;
+            for(let i=1; i<=u; i++) {
+                let pd = localStorage.getItem("khan_prog_u" + i);
+                if(pd) {
+                    let d = new Date(pd);
+                    if(d > maxD) maxD = d;
+                }
+            }
+            let diffDays = Math.round((maxD - plannedDate) / (1000*3600*24));
+            let dStr = maxD.toLocaleDateString("vi-VN");
+            
+            if (diffDays < 0) {
+                projEl.innerHTML = `<span class="proj-early">Thực tế: Xong ngày ${dStr} (Sớm ${Math.abs(diffDays)} ngày) 🎉</span>`;
+            } else if (diffDays > 0) {
+                projEl.innerHTML = `<span class="proj-late">Thực tế: Xong ngày ${dStr} (Trễ ${diffDays} ngày) ⚠️</span>`;
+            } else {
+                projEl.innerHTML = `<span class="proj-early">Thực tế: Xong ngày ${dStr} (Đúng chuẩn kế hoạch!) ✅</span>`;
+            }
+        } else {
+            // Not yet completed
+            // Check if currently working on it
+            let isWorkingOn = false;
+            if(u === 5 && completedUnits < 5) isWorkingOn = true;
+            else if(u === 10 && completedUnits >= 5 && completedUnits < 10) isWorkingOn = true;
+            else if(u === 12 && completedUnits >= 10 && completedUnits < 12) isWorkingOn = true;
+            else if(u === 14 && completedUnits >= 12 && completedUnits < 14) isWorkingOn = true;
+            
+            if(isWorkingOn && tagEl) {
+                tagEl.innerHTML = "🚀 Đang thực hiện";
+                tagEl.style.background = "rgba(124,92,252,.12)";
+                tagEl.style.color = "var(--accent)";
+            }
+            
+            // Calculate Projection
+            let projectedDays = pace * u;
+            let projectedDate = new Date(startDate.getTime() + projectedDays * 24 * 3600 * 1000);
+            let diffDays = Math.round((projectedDate - plannedDate) / (1000*3600*24));
+            let dStr = projectedDate.toLocaleDateString("vi-VN");
+            
+            if (diffDays < -3) {
+                projEl.innerHTML = `<span class="proj-early">Dự phóng: Xong ngày ${dStr} (Nhanh hơn KH ${Math.abs(diffDays)} ngày) 📈</span>`;
+            } else if (diffDays > 3) {
+                projEl.innerHTML = `<span class="proj-late">Dự phóng: Xong ngày ${dStr} (Chậm hơn KH ${diffDays} ngày) 📉</span>`;
+            } else {
+                projEl.innerHTML = `<span class="proj-neutral">Dự phóng: Xong ngày ${dStr} (Đúng tiến độ) ⚡</span>`;
+            }
+        }
+    });
+}
+
 function buildWeekTable() {
+    updateTimelineProjections();
+
   const tbody = document.getElementById('weekTableBody');
   tbody.innerHTML = '';
   let total = 0, bonus = 0, penalty = 0, safe = 0;
