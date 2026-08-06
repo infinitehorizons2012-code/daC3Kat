@@ -2935,6 +2935,18 @@ body {
         schedUpdateVisibility();
       };
 
+      window.schedCollapseUnitsOnLoad = function() {
+        document.querySelectorAll('tr[data-unit]').forEach(tr => {
+          const id = tr.getAttribute('data-unit');
+          if (tr.classList.contains('unit-cell') || tr.querySelector('.unit-cell')) tr.classList.add('unit-collapsed');
+        });
+        schedUpdateVisibility();
+      };
+
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => { window.schedCollapseUnitsOnLoad(); }, 100);
+      });
+
       window.schedToggleAll = function(type) {
         let allCollapsed = true;
         const selector = type === 'unit' ? 'tr[data-unit]' : 'tr[data-section]';
@@ -3765,6 +3777,7 @@ document.addEventListener('CloudDataReady', () => {
 
 </body>
 </html>
+
 
 
 
