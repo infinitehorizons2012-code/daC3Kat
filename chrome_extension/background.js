@@ -1,6 +1,5 @@
-// Cấu hình Supabase (Chờ cấp URL/Key thật)
-const SUPABASE_URL = "YOUR_SUPABASE_URL_HERE";
-const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY_HERE";
+// Đọc cấu hình bảo mật từ config.js cục bộ
+importScripts("config.js");
 
 // Tạo menu chuột phải khi bôi đen văn bản
 chrome.runtime.onInstalled.addListener(() => {
