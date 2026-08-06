@@ -421,6 +421,103 @@
         border-top: 1px solid rgba(255,255,255,0.05);
       }
 </style>
+
+<script>
+
+// --- CLOUDFLARE SYNC LOGIC ---
+const CLOUDFLARE_API_URL = "https://algebra1.infinite-horizons-2012.workers.dev";
+
+let cf_password = localStorage.getItem("cf_password") || "";
+let cloudflareSaveTimer = null;
+
+async function syncFromCloud() {
+    // Show overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'cloud-loading-overlay';
+    overlay.innerHTML = '<div style="color:white; font-size:24px; font-family:sans-serif; text-align:center; margin-top:20vh; line-height: 1.5;">Đang tải dữ liệu từ Cloudflare...<br><small>Xin vui lòng chờ</small></div>';
+    overlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:999999;';
+    document.body.appendChild(overlay);
+
+    try {
+        const res = await fetch(CLOUDFLARE_API_URL);
+        if (res.ok) {
+            const data = await res.json();
+            for(let key in data) {
+                if(key !== "cf_password") {
+                    Storage.prototype.setItem.call(localStorage, key, data[key]);
+                }
+            }
+        }
+    } catch(e) {
+        console.error("Cloudflare sync error:", e);
+    }
+    
+    document.body.removeChild(overlay);
+    
+    // Dispatch custom event to start the app
+    document.dispatchEvent(new Event('CloudDataReady'));
+}
+
+async function syncToCloud() {
+    if(!cf_password) {
+        cf_password = prompt("Dữ liệu đã thay đổi. Vui lòng nhập mật khẩu để lưu lên Cloudflare:");
+        if(!cf_password) {
+            alert("Đã hủy lưu dữ liệu. Các thay đổi chỉ được lưu tạm trên máy này.");
+            return;
+        }
+        Storage.prototype.setItem.call(localStorage, "cf_password", cf_password);
+    }
+    
+    // Collect all khan_ prefixed data
+    let dump = {};
+    for(let i=0; i<localStorage.length; i++) {
+        let key = localStorage.key(i);
+        if(key.startsWith('khan_')) {
+            dump[key] = localStorage.getItem(key);
+        }
+    }
+
+    try {
+        const res = await fetch(CLOUDFLARE_API_URL, {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + cf_password,
+                "Content-Type": "text/plain"
+            },
+            body: JSON.stringify(dump)
+        });
+        if(!res.ok) {
+            if(res.status === 401) {
+                alert("Sai mật khẩu Cloudflare! Không thể lưu dữ liệu.");
+                cf_password = "";
+                Storage.prototype.removeItem.call(localStorage, "cf_password");
+            } else {
+                console.error("Cloudflare save error:", res.statusText);
+            }
+        } else {
+            console.log("Đã lưu lên Cloudflare thành công!");
+        }
+    } catch(e) {
+        console.error("Cloudflare save error:", e);
+    }
+}
+
+// Intercept localStorage.setItem
+const originalSetItem = Storage.prototype.setItem;
+Storage.prototype.setItem = function(key, value) {
+    originalSetItem.call(this, key, value);
+    if(key.startsWith('khan_')) {
+        if(cloudflareSaveTimer) clearTimeout(cloudflareSaveTimer);
+        cloudflareSaveTimer = setTimeout(syncToCloud, 1500); // Debounce 1.5s
+    }
+};
+
+// Start sync immediately when DOM is actually ready
+document.addEventListener("DOMContentLoaded", syncFromCloud);
+// ------------------------------
+
+</script>
+
 </head>
 <body>
 
@@ -2582,7 +2679,7 @@
         menu.style.left = (r.left  + window.scrollX) + 'px';
       };
 
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('CloudDataReady', function() {
         document.querySelectorAll('#sched-menu .s-opt').forEach(opt => {
           opt.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -3334,7 +3431,7 @@ function createChildNoteHTML(title, content) {
 }
 
 // init when DOM ready
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('CloudDataReady', () => {
    setTimeout(initNotes, 500); // Wait for other scripts to render
 });
 </script>
