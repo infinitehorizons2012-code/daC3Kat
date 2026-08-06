@@ -1098,12 +1098,9 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
 
       /* Global status menu */
       #sched-menu {
-        position:absolute; background:#1e293b;
-        border:1px solid rgba(255,255,255,0.1);
-        border-radius:8px; padding:6px;
-        display:none; flex-direction:column; gap:4px;
-        z-index:9999; min-width:150px;
-        box-shadow:0 10px 25px -5px rgba(0,0,0,0.6);
+        position:fixed; top:50% !important; left:50% !important; transform:translate(-50%, -50%);
+        background:#1e293b; border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px;
+        display:none; flex-direction:column; gap:6px; z-index:9999; min-width:200px; box-shadow:0 10px 40px rgba(0,0,0,0.8);
       }
       #sched-menu.show { display:flex; }
       #sched-menu .s-opt {
@@ -1312,7 +1309,7 @@ body {
         <button class="btn-secondary" style="font-size: 0.85rem;" onclick="schedToggleAll('unit')">↕️ Thu nhỏ / Mở rộng tất cả Units</button>
         <button class="btn-secondary" style="font-size: 0.85rem;" onclick="schedToggleAll('section')">↕️ Thu nhỏ / Mở rộng tất cả Sections</button>
         <a href="https://www.khanacademy.org/math/algebra" target="_blank" class="btn-primary" style="font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; margin-left: auto;">
-          🔗 Mở Khan Academy
+          🔗 Link
         </a>
       </div>
       <div class="table-container">
@@ -3768,6 +3765,7 @@ document.addEventListener('CloudDataReady', () => {
 
 </body>
 </html>
+
 
 
 
