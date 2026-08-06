@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8" />
@@ -567,6 +567,25 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
 
 </script>
 
+
+<style>
+/* Khoanh d? 1: C? d?nh header b?ng 14 Units */
+#schedule-wrap { position: relative; }
+#schedule-wrap > div:first-child {
+  position: sticky; top: 0; z-index: 11;
+  background: #0f1123; padding: 10px 0 12px 0; margin-bottom: 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+#schedule-table thead th {
+  position: sticky; top: 48px; z-index: 10;
+  background: #1a1e36;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+/* Khoanh d? 2: Th�m tu? ch?n Thi th�m l?n n?a */
+#schedule-wrap .s-thilai { background: rgba(245,158,11,0.15); color: #fbbf24; border-color: rgba(245,158,11,0.3); }
+</style>
 </head>
 <body>
 
@@ -2753,7 +2772,7 @@ body {
       <div class="s-opt s-danghoc" data-val="danghoc"><span>🟡</span> Đang học</div>
       <div class="s-opt s-sansang" data-val="sansang"><span>🔵</span> Sẵn sàng thi</div>
       <div class="s-opt s-dat"     data-val="dat"    ><span>✅</span> Đã thi — Đạt</div>
-      <div class="s-opt s-chuadat" data-val="chuadat"><span>❌</span> Chưa đạt</div>
+      <div class="s-opt s-chuadat" data-val="chuadat"><span>❌</span> Chưa đạt</div>`n      <div class="s-opt s-thilai" data-val="thilai"><span>🔄</span> Thi thêm lần nữa</div>
     </div>
 
     <script>
@@ -2763,7 +2782,8 @@ body {
         danghoc: { html:'<span>🟡</span> Đang học',    cls:'s-danghoc' },
         sansang: { html:'<span>🔵</span> Sẵn sàng thi',cls:'s-sansang' },
         dat:     { html:'<span>✅</span> Đã thi — Đạt',cls:'s-dat'     },
-        chuadat: { html:'<span>❌</span> Chưa đạt',    cls:'s-chuadat' }
+        chuadat: { html:'<span>❌</span> Chưa đạt',    cls:'s-chuadat' },
+        thilai:  { html:'<span>🔄</span> Thi thêm lần nữa', cls:'s-thilai' }
       };
       let curUnit = null;
 
@@ -3745,3 +3765,5 @@ document.addEventListener('CloudDataReady', () => {
 
 </body>
 </html>
+
+
