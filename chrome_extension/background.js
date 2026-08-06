@@ -1,4 +1,6 @@
-// background.js - Service worker cho Chrome Extension
+// Cấu hình Supabase (Chờ cấp URL/Key thật)
+const SUPABASE_URL = "YOUR_SUPABASE_URL_HERE";
+const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY_HERE";
 
 // Tạo menu chuột phải khi bôi đen văn bản
 chrome.runtime.onInstalled.addListener(() => {
@@ -10,14 +12,41 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 // Xử lý sự kiện click vào menu chuột phải
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "saveNote") {
     const selectedText = info.selectionText;
     const pageUrl = tab.url;
     
-    console.log("Đã lưu ghi chú:", selectedText, "từ URL:", pageUrl);
+    console.log("Đang lưu ghi chú:", selectedText);
     
-    // (Tương lai) Gửi dữ liệu này lên Supabase API ở đây
-    // fetch('SUPABASE_URL/rest/v1/notes', { ... })
+    // Đẩy dữ liệu lên Supabase bằng REST API tiêu chuẩn
+    if (SUPABASE_URL !== "YOUR_SUPABASE_URL_HERE") {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/notes`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ 
+            content: selectedText, 
+            source_url: pageUrl,
+            created_at: new Date().toISOString()
+          })
+        });
+        
+        if (!response.ok) {
+          console.error("Lỗi khi đẩy lên Supabase:", response.statusText);
+        } else {
+          console.log("Đã đẩy ghi chú lên mây thành công!");
+        }
+      } catch (err) {
+        console.error("Lỗi kết nối Supabase:", err);
+      }
+    } else {
+      console.warn("Chưa cấu hình Supabase URL/Key. Ghi chú chỉ được in ra console.");
+    }
   }
 });
