@@ -459,6 +459,16 @@ body {
   z-index: 10;
 }
 
+
+.timeline-projection {
+  font-size: 13px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.proj-early { color: var(--success); }
+.proj-late { color: var(--danger); }
+.proj-neutral { color: var(--text-light); }
 </style>
 
 <script>
@@ -748,22 +758,24 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
             <span class="timeline-tag" style="background:rgba(74,222,128,.12);color:var(--success)">✅ Ngày bắt đầu</span>
           </div>
           <div class="timeline-item current">
-            <div class="timeline-date">27/07/2026 · Thứ 2</div>
+            <div class="timeline-date" id="tl-date-week">27/07/2026 · Thứ 2</div>
             <div class="timeline-title">⚡ Kiểm tra tiến độ Tuần Này</div>
             <div class="timeline-desc">Phải đạt ≥ 5% để an toàn. Đạt ≥ 10% sẽ được cộng +10% vào Unit Test!</div>
-            <span class="timeline-tag" style="background:rgba(247,201,72,.12);color:var(--accent3)">🔥 Đang đến</span>
+            <span class="timeline-tag" id="tag-week" style="background:rgba(247,201,72,.12);color:var(--accent3)">🔥 Đang đến</span>
           </div>
           <div class="timeline-item">
             <div class="timeline-date">Mục tiêu: 14/09/2026 · Thứ 2</div>
             <div class="timeline-title">📚 Hoàn thành Units 1–5 (HK1)</div>
             <div class="timeline-desc">Tiến độ thong thả (~1.5 tuần/Unit). Các Units đầu tương đối dễ — ưu tiên thi test sớm để dành thời gian cho các bài khó phía sau! Mỗi Unit xong → báo cô ngay!</div>
-            <span class="timeline-tag" style="background:rgba(124,92,252,.12);color:var(--accent)">📌 Mục tiêu</span>
+            <div class="timeline-projection" id="proj-u5"></div>
+            <span class="timeline-tag" id="tag-u5" style="background:rgba(124,92,252,.12);color:var(--accent)">📌 Mục tiêu</span>
           </div>
           <div class="timeline-item">
             <div class="timeline-date">Mục tiêu: 09/11/2026 · Thứ 2</div>
             <div class="timeline-title">📚 Hoàn thành Units 6–10 + Ôn thi HK1</div>
             <div class="timeline-desc">Hoàn thiện nốt nửa sau của HK1. Cố gắng dứt điểm đúng hạn để có thời gian ôn tập và thi Kiểm tra HK1.</div>
-            <span class="timeline-tag" style="background:rgba(124,92,252,.12);color:var(--accent)">📌 Mục tiêu</span>
+            <div class="timeline-projection" id="proj-u10"></div>
+            <span class="timeline-tag" id="tag-u10" style="background:rgba(124,92,252,.12);color:var(--accent)">📌 Mục tiêu</span>
           </div>
           <div class="timeline-item">
             <div class="timeline-date">20/11/2026 · Deadline chót</div>
@@ -775,13 +787,15 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
             <div class="timeline-date">Mục tiêu: 18/01/2027 · Thứ 2</div>
             <div class="timeline-title">📚 Hoàn thành Units 11–12 (HK2)</div>
             <div class="timeline-desc">Pace chậm (~4 tuần/Unit) cho các phần khó. Exponents & Radicals, Exponential Growth — đây là nền tảng sống còn cho Quadratics.</div>
-            <span class="timeline-tag" style="background:rgba(86,207,178,.12);color:var(--accent2)">🎯 HK2</span>
+            <div class="timeline-projection" id="proj-u12"></div>
+            <span class="timeline-tag" id="tag-u12" style="background:rgba(86,207,178,.12);color:var(--accent2)">🎯 HK2</span>
           </div>
           <div class="timeline-item">
             <div class="timeline-date">Mục tiêu: 15/03/2027 · Thứ 2</div>
             <div class="timeline-title">📚 Hoàn thành Units 13–14 (HK2)</div>
             <div class="timeline-desc">Quadratics — phần khó nhất của Algebra 1! Cần ôn thật kỹ, làm bài tập đầy đủ, dành tối đa thời gian trước khi thi Unit Test.</div>
-            <span class="timeline-tag" style="background:rgba(86,207,178,.12);color:var(--accent2)">🎯 HK2</span>
+            <div class="timeline-projection" id="proj-u14"></div>
+            <span class="timeline-tag" id="tag-u14" style="background:rgba(86,207,178,.12);color:var(--accent2)">🎯 HK2</span>
           </div>
           <div class="timeline-item">
             <div class="timeline-date">20/03/2027 · Deadline chót</div>
@@ -1258,6 +1272,16 @@ body {
   z-index: 10;
 }
 
+
+.timeline-projection {
+  font-size: 13px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.proj-early { color: var(--success); }
+.proj-late { color: var(--danger); }
+.proj-neutral { color: var(--text-light); }
 </style>
 
     <div id="schedule-wrap">
