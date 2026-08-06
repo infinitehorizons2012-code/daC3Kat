@@ -27,4 +27,42 @@ Thay vì tự viết lại một trình duyệt từ đầu (rất phức tạp 
 - **Browser Extension:** HTML, CSS, JavaScript (React.js) cho Chrome/Edge.
 - **Backend & Database:** Node.js (Express) và SQLite để lưu trữ và đồng bộ dữ liệu.
 
-Chúng ta sẽ tiến hành lên kế hoạch (Implementation Plan) để thiết kế cấu trúc dự án và triển khai.
+---
+
+## Kế hoạch Triển khai (Implementation Plan)
+
+Dự án DA C3 Kat nhằm mục đích cung cấp công cụ quản lý thời gian và máy tính cho con gái, hỗ trợ mục tiêu homeschool. Hệ thống sẽ ghi nhận lịch sử sử dụng các ứng dụng, đồng thời cung cấp một trình duyệt/extension đặc biệt giúp tự động thu thập báo cáo tiến độ học (ví dụ: Khan Academy) và hỗ trợ công cụ học tập như ghi chú, dịch thuật.
+
+### Cấu trúc hệ thống:
+1. **Activity Tracker (Python):** Chạy ngầm trên Windows để theo dõi thời gian và ứng dụng đang sử dụng.
+2. **Chrome/Edge Extension:** Một tiện ích cài vào trình duyệt web của bé để hỗ trợ tính % điểm Khan Academy, bôi đen ghi chú, và dịch thuật. (Lựa chọn làm Extension tốt hơn làm một trình duyệt nhúng từ đầu vì nhẹ, nhanh và bé vẫn được dùng môi trường web quen thuộc).
+3. **Backend & Dashboard (Node.js + React):** Nơi lưu trữ toàn bộ lịch sử (Tracker và Extension gửi dữ liệu về đây) và hiển thị báo cáo cho mẹ xem.
+
+### Các thay đổi và cấu trúc dự án (Proposed Changes)
+
+Chúng ta sẽ tạo các cấu trúc thư mục sau trong repo `daC3Kat`:
+
+#### 1. Thư mục `tracker` (Python Window/Activity Tracker)
+Phần mềm theo dõi thời lượng sử dụng máy tính.
+- `tracker/requirements.txt` (Khai báo thư viện psutil, pygetwindow, requests)
+- `tracker/main.py` (Chạy ngầm lấy active window mỗi vài giây)
+- `tracker/db.py` (Lưu data vào SQLite)
+
+#### 2. Thư mục `browser_extension` (Công cụ hỗ trợ học tập)
+Tiện ích mở rộng cài vào trình duyệt.
+- `browser_extension/manifest.json`
+- `browser_extension/background.js` (Xử lý các event và gửi data về server)
+- `browser_extension/content.js` (Đọc % Khan Academy, thêm nút dịch thuật/ghi chú khi bôi đen text)
+- `browser_extension/popup.html` (Giao diện khi bấm vào extension để xem điểm/ghi chú nhanh)
+
+#### 3. Thư mục `backend` (Server API & Dashboard)
+Nơi nhận dữ liệu và xuất báo cáo.
+- `backend/package.json`
+- `backend/server.js` (Express.js nhận API)
+- `backend/database.js`
+- `backend/public/index.html` (Trang Dashboard báo cáo đơn giản)
+
+### Các câu hỏi mở (Open Questions):
+1. **Giao diện báo cáo (Dashboard):** Mẹ Kat muốn xem báo cáo qua website trên máy của mẹ hay xem chung trên máy tính của bé? 
+2. **Lưu trữ dữ liệu:** Tạm thời dùng SQLite (lưu trên máy), mẹ có muốn sau này xem báo cáo online từ xa qua điện thoại không?
+3. **Quản lý trình duyệt:** Bạn đồng ý với giải pháp làm Extension, hay muốn làm một ứng dụng trình duyệt độc lập, khép kín?
