@@ -855,15 +855,15 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
   <div class="tab-panel" id="panel-week">
     <div class="section-heading">
       ⚡ Bảng điều khiển Tuần Này
-      <span class="badge">20 – 27/07/2026</span>
+      <span id="tw-date-badge" class="badge">20 – 27/07/2026</span>
     </div>
 
     <div class="target-card">
-      <h2>Kiểm tra Thứ 2, 27/07/2026</h2>
+      <h2 id="tw-date-heading">Deadline Thứ 2, 27/07/2026</h2>
       <p>Cô sẽ kiểm tra tiến độ vào ngày này</p>
       <div class="grid-3" style="gap:16px">
         <div class="stat-box purple" style="background:rgba(124,92,252,.12)">
-          <div class="stat-label">Hiện tại</div>
+          <div class="stat-label" id="tw-start-label">Ngày đầu tuần</div>
           <div class="stat-value purple" id="tw-current">0%</div>
           <div class="stat-sub">Khi bắt đầu tuần</div>
         </div>
@@ -3324,9 +3324,17 @@ function buildWeekTable() {
     let prevDate = curIdx > 0 ? weeklyData[curIdx-1].date.substring(0, 5) : '20/07';
     twDateBadge.textContent = prevDate + ' – ' + activeWeek.date;
   }
+  
   if (twDateHeading && activeWeek) {
-    twDateHeading.textContent = 'Kiểm tra Thứ 2, ' + activeWeek.date;
+    twDateHeading.textContent = 'Deadline Thứ 2, ' + activeWeek.date;
   }
+  
+  const twStartLabel = document.getElementById('tw-start-label');
+  if (twStartLabel && activeWeek) {
+    let prevDate = curIdx > 0 ? weeklyData[curIdx-1].date.substring(0, 5) : '20/07';
+    twStartLabel.textContent = 'Ngày đầu tuần (' + prevDate + ')';
+  }
+
 
   
   if (window.buildBlocks) {
