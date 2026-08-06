@@ -710,7 +710,7 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
           </div>
           <div class="timeline-item current">
             <div class="timeline-date">27/07/2026 · Thứ 2</div>
-            <div class="timeline-title">⚡ Kiểm tra tiến độ Tuần 1</div>
+            <div class="timeline-title">⚡ Kiểm tra tiến độ Tuần Này</div>
             <div class="timeline-desc">Phải đạt ≥ 5% để an toàn. Đạt ≥ 10% sẽ được cộng +10% vào Unit Test!</div>
             <span class="timeline-tag" style="background:rgba(247,201,72,.12);color:var(--accent3)">🔥 Đang đến</span>
           </div>
@@ -815,7 +815,7 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
   <!-- TAB 3 — TUẦN NÀY -->
   <div class="tab-panel" id="panel-week">
     <div class="section-heading">
-      ⚡ Bảng điều khiển Tuần 1
+      ⚡ Bảng điều khiển Tuần Này
       <span class="badge">20 – 27/07/2026</span>
     </div>
 
@@ -3139,6 +3139,20 @@ const unitNames = [
   'Quadratic functions & equations',
 ];
 
+
+window.getCurrentWeekIndex = function() {
+  const now = new Date();
+  // For testing purposes, we can hardcode 'now' if needed, but Date() uses system time.
+  for (let i = 0; i < weeks.length; i++) {
+    const parts = weeks[i].date.split('/');
+    if(parts.length === 3) {
+      const d = new Date(parts[2], parts[1] - 1, parts[0], 23, 59, 59);
+      if (now <= d) return i;
+    }
+  }
+  return weeks.length - 1;
+};
+
 function getWeeklyData() {
   const saved = localStorage.getItem('khan_weekly_data');
   const parsed = saved ? JSON.parse(saved) : {};
@@ -3156,6 +3170,11 @@ function buildWeekTable() {
   let total = 0, bonus = 0, penalty = 0, safe = 0;
   
   const weeklyData = getWeeklyData();
+  
+  
+  const curIdx = window.getCurrentWeekIndex();
+  const badgeEl = document.getElementById('top-week-badge');
+  if(badgeEl) badgeEl.innerText = 'Đang theo dõi - Tuần ' + (curIdx + 1);
   
   weeklyData.forEach((w, i) => {
     const inc = (w.start !== null && w.end !== null && w.start !== '' && w.end !== '') ? (parseFloat(w.end) - parseFloat(w.start)) : null;
@@ -3177,7 +3196,7 @@ function buildWeekTable() {
     const endStr = w.end !== null ? w.end : '';
     
     tr.innerHTML = `
-      <td class="mono fw-600">Tuần ${w.num}${i===0?' <span class="badge-pill warn" style="font-size:10px;padding:2px 7px">Hiện tại</span>':''}</td>
+      <td class="mono fw-600">Tuần ${w.num}${i===curIdx?' <span class="badge-pill warn" style="font-size:10px;padding:2px 7px">Hiện tại</span>':''}</td>
       <td class="mono">${w.date}</td>
       <td class="mono" id="w-start-cell-${w.num}">${startStr !== '' ? startStr + '%' : '<span class="text-muted">—</span>'}</td>
       <td class="mono" id="w-end-cell-${w.num}">${endStr !== '' ? endStr + '%' : '<span class="text-muted">—</span>'}</td>
@@ -3201,7 +3220,8 @@ function buildWeekTable() {
   
   // UPDATE "TUẦN NÀY" TAB
   // Find the first active week (where 'end' is not yet achieved or is the current week)
-  let activeWeek = weeklyData.find(w => w.end === null) || weeklyData[0];
+  const curIdx = window.getCurrentWeekIndex();
+  let activeWeek = weeklyData[curIdx]; // Always show the calendar current week on the dashboard
   let startVal = activeWeek.start !== null ? activeWeek.start : 0;
   let endVal = activeWeek.end !== null ? activeWeek.end : startVal;
   
