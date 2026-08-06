@@ -567,23 +567,6 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
 
 </script>
 
-
-<style>
-/* Khoanh d? 1: C? d?nh header b?ng 14 Units */
-#schedule-wrap { position: relative; }
-
-#schedule-table thead th {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: #1a1e36;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-}
-
-/* Khoanh d? 2: Th�m tu? ch?n Thi th�m l?n n?a */
-#schedule-wrap .s-thilai { background: rgba(245,158,11,0.15); color: #fbbf24; border-color: rgba(245,158,11,0.3); }
-</style>
 </head>
 <body>
 
@@ -771,7 +754,7 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
           <div class="timeline-item done">
             <div class="timeline-date">20/07/2026 · Thứ 2</div>
             <div class="timeline-title">🚀 Bắt đầu tự học chính thức</div>
-            <div class="timeline-desc">Bắt đầu từ 0%. Áp dụng hệ thống thưởng/phạt từ tuần này. Mỗi thứ 2 cô sẽ kiểm tra %.</div>
+            <div class="timeline-desc">Bắt đầu từ 0%. Áp dụng hệ thống thưởng/phạt từ tuần này. Mỗi thứ 2 cô sẽ kiểm tra % trên Khan Academy.</div>
             <span class="timeline-tag" style="background:rgba(74,222,128,.12);color:var(--success)">✅ Ngày bắt đầu</span>
           </div>
           <div class="timeline-item current">
@@ -1096,9 +1079,12 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
 
       /* Global status menu */
       #sched-menu {
-        position:fixed; top:50% !important; left:50% !important; transform:translate(-50%, -50%);
-        background:#1e293b; border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px;
-        display:none; flex-direction:column; gap:6px; z-index:9999; min-width:200px; box-shadow:0 10px 40px rgba(0,0,0,0.8);
+        position:absolute; background:#1e293b;
+        border:1px solid rgba(255,255,255,0.1);
+        border-radius:8px; padding:6px;
+        display:none; flex-direction:column; gap:4px;
+        z-index:9999; min-width:150px;
+        box-shadow:0 10px 25px -5px rgba(0,0,0,0.6);
       }
       #sched-menu.show { display:flex; }
       #sched-menu .s-opt {
@@ -1274,8 +1260,7 @@ body {
   overflow-y: auto;
   padding-bottom: 60px;
 }
-#panel-allweeks.active,
-#panel-units.active {
+#panel-allweeks.active {
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1304,15 +1289,11 @@ body {
 </style>
 
     <div id="schedule-wrap">
-      <div class="table-container" style="display: flex; flex-direction: column; height: 100%;">
-        <div id="unified-toolbar" style="padding: 10px 14px; background: #0f1123; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px; z-index: 11; position: sticky; top: 0;">
-          <button class="btn-secondary" style="font-size: 0.85rem;" onclick="schedToggleAll('unit')">↕️ Thu nhỏ / Mở rộng tất cả Units</button>
-          <button class="btn-secondary" style="font-size: 0.85rem;" onclick="schedToggleAll('section')">↕️ Thu nhỏ / Mở rộng tất cả Sections</button>
-          <a href="https://www.khanacademy.org/math/algebra" target="_blank" class="btn-primary" style="font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; margin-left: auto;">
-            🔗 Link
-          </a>
-        </div>
-        <div class="table-inner-scroll" style="flex: 1; overflow-y: auto;">
+      <div style="margin-bottom: 12px; display: flex; gap: 10px;">
+        <button class="btn-secondary" style="font-size: 0.85rem;" onclick="schedToggleAll('unit')">↕️ Thu nhỏ / Mở rộng tất cả Units</button>
+        <button class="btn-secondary" style="font-size: 0.85rem;" onclick="schedToggleAll('section')">↕️ Thu nhỏ / Mở rộng tất cả Sections</button>
+      </div>
+      <div class="table-container">
         <table id="schedule-table">
           <thead>
             <tr>
@@ -2772,7 +2753,7 @@ body {
       <div class="s-opt s-danghoc" data-val="danghoc"><span>🟡</span> Đang học</div>
       <div class="s-opt s-sansang" data-val="sansang"><span>🔵</span> Sẵn sàng thi</div>
       <div class="s-opt s-dat"     data-val="dat"    ><span>✅</span> Đã thi — Đạt</div>
-      <div class="s-opt s-chuadat" data-val="chuadat"><span>❌</span> Chưa đạt</div>`n      <div class="s-opt s-thilai" data-val="thilai"><span>🔄</span> Thi thêm lần nữa</div>
+      <div class="s-opt s-chuadat" data-val="chuadat"><span>❌</span> Chưa đạt</div>
     </div>
 
     <script>
@@ -2782,8 +2763,7 @@ body {
         danghoc: { html:'<span>🟡</span> Đang học',    cls:'s-danghoc' },
         sansang: { html:'<span>🔵</span> Sẵn sàng thi',cls:'s-sansang' },
         dat:     { html:'<span>✅</span> Đã thi — Đạt',cls:'s-dat'     },
-        chuadat: { html:'<span>❌</span> Chưa đạt',    cls:'s-chuadat' },
-        thilai:  { html:'<span>🔄</span> Thi thêm lần nữa', cls:'s-thilai' }
+        chuadat: { html:'<span>❌</span> Chưa đạt',    cls:'s-chuadat' }
       };
       let curUnit = null;
 
@@ -2934,18 +2914,6 @@ body {
         if (rows.length) rows[0].classList.toggle('section-collapsed');
         schedUpdateVisibility();
       };
-
-      window.schedCollapseUnitsOnLoad = function() {
-        document.querySelectorAll('tr[data-unit]').forEach(tr => {
-          const id = tr.getAttribute('data-unit');
-          if (tr.classList.contains('unit-cell') || tr.querySelector('.unit-cell')) tr.classList.add('unit-collapsed');
-        });
-        schedUpdateVisibility();
-      };
-
-      window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => { window.schedCollapseUnitsOnLoad(); }, 100);
-      });
 
       window.schedToggleAll = function(type) {
         let allCollapsed = true;
@@ -3312,8 +3280,7 @@ function getWeeklyData() {
 
 function updateTimelineProjections() {
     // 1. Update Current Week Date & Tag
-    const curIdx = window.getCurrentWeekIndex();
-    let weekDatesStr = typeof weeks !== 'undefined' && weeks[curIdx] ? weeks[curIdx].date : "";
+    let weekDatesStr = window.weeklyData && window.weeklyData[curIdx] ? window.weeklyData[curIdx].date : "";
     if(weekDatesStr) {
         let endStr = weekDatesStr.split(" - ")[1] || weekDatesStr;
         let elWeekDate = document.getElementById("tl-date-week");
@@ -3777,9 +3744,3 @@ document.addEventListener('CloudDataReady', () => {
 
 </body>
 </html>
-
-
-
-
-
-
