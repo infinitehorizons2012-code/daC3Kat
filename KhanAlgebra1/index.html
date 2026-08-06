@@ -531,7 +531,7 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
   </div>
   <div class="header-badge">
     <div class="dot"></div>
-    <span>Đang theo dõi · Tuần 1</span>
+    <span id="top-week-badge">Đang theo dõi · Tuần 1</span>
   </div>
 </header>
 
@@ -3174,7 +3174,7 @@ function buildWeekTable() {
   
   const curIdx = window.getCurrentWeekIndex();
   const badgeEl = document.getElementById('top-week-badge');
-  if(badgeEl) badgeEl.innerText = 'Đang theo dõi - Tuần ' + (curIdx + 1);
+  if(badgeEl) badgeEl.innerText = 'Đang theo dõi · Tuần ' + (curIdx + 1);
   
   weeklyData.forEach((w, i) => {
     const inc = (w.start !== null && w.end !== null && w.start !== '' && w.end !== '') ? (parseFloat(w.end) - parseFloat(w.start)) : null;
