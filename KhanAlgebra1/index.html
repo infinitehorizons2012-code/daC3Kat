@@ -565,7 +565,7 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
     <div class="logo-icon">📐</div>
     <div class="logo-text">
       <h1>Algebra 1 Tracker</h1>
-      <p>Khan Academy · Năm học 2026–2027</p>
+      <p>Năm học 2026–2027</p>
     </div>
   </div>
   <div class="header-badge">
@@ -607,7 +607,7 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
         <div class="rule-icon purple">📈</div>
         <div class="rule-body">
           <h3>Tự học hàng tuần (Kiểm tra mỗi Thứ 2)</h3>
-          <p>Mỗi tuần phải tự hoàn thành ít nhất <strong style="color:var(--accent)">5%</strong> tiến độ trên Khan Academy. Cô sẽ kiểm tra vào <strong>Thứ 2</strong> hàng tuần. Điểm thưởng/phạt được cộng/trừ vào các bài <strong>Unit Test</strong> tiếp theo.</p>
+          <p>Mỗi tuần phải tự hoàn thành ít nhất <strong style="color:var(--accent)">5%</strong> tiến độ. Cô sẽ kiểm tra vào <strong>Thứ 2</strong> hàng tuần. Điểm thưởng/phạt được cộng/trừ vào các bài <strong>Unit Test</strong> tiếp theo.</p>
         </div>
       </div>
 
@@ -860,7 +860,7 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
 
     <div class="target-card">
       <h2>Kiểm tra Thứ 2, 27/07/2026</h2>
-      <p>Cô sẽ kiểm tra tiến độ Khan Academy vào ngày này</p>
+      <p>Cô sẽ kiểm tra tiến độ vào ngày này</p>
       <div class="grid-3" style="gap:16px">
         <div class="stat-box purple" style="background:rgba(124,92,252,.12)">
           <div class="stat-label">Hiện tại</div>
@@ -3301,7 +3301,7 @@ function buildWeekTable() {
   document.getElementById('bonusWeeks').textContent = bonus + ' tuần';
   document.getElementById('penaltyWeeks').textContent = penalty + ' tuần';
   document.getElementById('safeWeeks').textContent = safe + ' tuần';
-  document.getElementById('retakes').textContent = '0 lần (−0%)';
+  
   
   // UPDATE "TUẦN NÀY" TAB
   // Find the first active week (where 'end' is not yet achieved or is the current week)
@@ -3315,7 +3315,19 @@ function buildWeekTable() {
   
   if (twCurr) twCurr.textContent = startVal + '%';
   if (twTarg) twTarg.textContent = (startVal + 5) + '%';
+  
   if (twBonu) twBonu.textContent = (startVal + 10) + '%';
+  
+  const twDateBadge = document.getElementById('tw-date-badge');
+  const twDateHeading = document.getElementById('tw-date-heading');
+  if (twDateBadge && activeWeek) {
+    let prevDate = curIdx > 0 ? weeklyData[curIdx-1].date.substring(0, 5) : '20/07';
+    twDateBadge.textContent = prevDate + ' – ' + activeWeek.date;
+  }
+  if (twDateHeading && activeWeek) {
+    twDateHeading.textContent = 'Kiểm tra Thứ 2, ' + activeWeek.date;
+  }
+
   
   if (window.buildBlocks) {
     window.buildBlocks(startVal, activeWeek.end);
