@@ -420,6 +420,45 @@
         padding: 16px; color: #cbd5e1; font-size: 0.9rem; line-height: 1.6;
         border-top: 1px solid rgba(255,255,255,0.05);
       }
+
+/* App Layout for Sticky Header */
+html, body {
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+.tab-panel {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 60px;
+}
+#panel-allweeks.active {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+#panel-allweeks > .table-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 60px;
+}
+.week-table th {
+  background: #212631 !important; /* solid color matching card bg to prevent text overlap */
+  z-index: 10;
+}
+
 </style>
 
 <script>
@@ -1180,6 +1219,45 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
         padding: 16px; color: #cbd5e1; font-size: 0.9rem; line-height: 1.6;
         border-top: 1px solid rgba(255,255,255,0.05);
       }
+
+/* App Layout for Sticky Header */
+html, body {
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+.tab-panel {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 60px;
+}
+#panel-allweeks.active {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+#panel-allweeks > .table-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 60px;
+}
+.week-table th {
+  background: #212631 !important; /* solid color matching card bg to prevent text overlap */
+  z-index: 10;
+}
+
 </style>
 
     <div id="schedule-wrap">
