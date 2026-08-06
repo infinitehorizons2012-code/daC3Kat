@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8" />
@@ -1003,7 +1003,7 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
   <div class="tab-panel" id="panel-units">
     <style>
       /* Schedule table overrides for embedded context */
-      #schedule-wrap { width:100%; }
+      #schedule-wrap { width: 100%; flex: 1; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 20px; }
       #schedule-wrap .table-container {
         background: rgba(30,41,59,0.7);
         backdrop-filter: blur(12px);
@@ -1274,8 +1274,7 @@ body {
   overflow-y: auto;
   padding-bottom: 60px;
 }
-#panel-allweeks.active,
-#panel-units.active {
+#panel-allweeks.active {
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -3777,6 +3776,7 @@ document.addEventListener('CloudDataReady', () => {
 
 </body>
 </html>
+
 
 
 
