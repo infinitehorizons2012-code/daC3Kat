@@ -796,22 +796,22 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
           <div class="card-title"><span>📊</span> Tổng quan lộ trình</div>
           <div class="gap-col">
             <div>
-              <div class="progress-label"><span>Tiến độ toàn chương trình</span><span class="mono">0%</span></div>
-              <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+              <div class="progress-label"><span>Tiến độ toàn chương trình</span><span class="mono" id="prog-total-txt">0%</span></div>
+              <div class="progress-track"><div class="progress-fill" id="prog-total-bar" style="width:0%"></div></div>
             </div>
             <div>
-              <div class="progress-label"><span>Thời gian đã dùng (HK1)</span><span class="mono">~0 / 4 tháng</span></div>
-              <div class="progress-track"><div class="progress-fill" style="width:2%;background:linear-gradient(90deg,var(--accent2),var(--accent3))"></div></div>
+              <div class="progress-label"><span>Thời gian đã dùng (HK1)</span><span class="mono" id="prog-hk1-txt">~0 / 4 tháng</span></div>
+              <div class="progress-track"><div class="progress-fill" id="prog-hk1-bar" style="width:2%;background:linear-gradient(90deg,var(--accent2),var(--accent3))"></div></div>
             </div>
             <div>
-              <div class="progress-label"><span>Thời gian đã dùng (HK2)</span><span class="mono">~0 / 4 tháng</span></div>
-              <div class="progress-track"><div class="progress-fill" style="width:0%;background:linear-gradient(90deg,var(--accent3),var(--danger))"></div></div>
+              <div class="progress-label"><span>Thời gian đã dùng (HK2)</span><span class="mono" id="prog-hk2-txt">~0 / 4 tháng</span></div>
+              <div class="progress-track"><div class="progress-fill" id="prog-hk2-bar" style="width:0%;background:linear-gradient(90deg,var(--accent3),var(--danger))"></div></div>
             </div>
           </div>
         </div>
         <div class="stat-box yellow">
           <div class="stat-label">⏰ Thời gian còn lại HK1</div>
-          <div class="stat-value yellow">~4 tháng</div>
+          <div class="stat-value yellow" id="stat-hk1-rem">~4 tháng</div>
           <div class="stat-sub">Deadline: 20/11/2026</div>
         </div>
         <div class="stat-box teal">
@@ -833,7 +833,7 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
 
         <div class="stat-box yellow">
           <div class="stat-label">⏰ Thời gian dự kiến HK2</div>
-          <div class="stat-value yellow">~4 tháng</div>
+          <div class="stat-value yellow" id="stat-hk1-rem">~4 tháng</div>
           <div class="stat-sub">Deadline: 20/03/2027</div>
         </div>
         <div class="stat-box teal">
@@ -3337,7 +3337,43 @@ function buildWeekTable() {
 
 
   
+  
+  // Update Overview bars
+  const progTotalTxt = document.getElementById('prog-total-txt');
+  const progTotalBar = document.getElementById('prog-total-bar');
+  const progHk1Txt = document.getElementById('prog-hk1-txt');
+  const progHk1Bar = document.getElementById('prog-hk1-bar');
+  const progHk2Txt = document.getElementById('prog-hk2-txt');
+  const progHk2Bar = document.getElementById('prog-hk2-bar');
+  const statHk1Rem = document.getElementById('stat-hk1-rem');
+  
+  if (progTotalTxt && progTotalBar) {
+    progTotalTxt.textContent = startVal + '%';
+    progTotalBar.style.width = startVal + '%';
+  }
+  
+  if (progHk1Txt && progHk1Bar && progHk2Txt && progHk2Bar && statHk1Rem) {
+    let hk1WeeksUsed = Math.min(curIdx, 18);
+    let hk1Pct = (hk1WeeksUsed / 18) * 100;
+    let hk1Months = Math.round((hk1WeeksUsed / 18) * 4 * 10) / 10;
+    
+    progHk1Txt.textContent = '~' + hk1Months + ' / 4 tháng';
+    progHk1Bar.style.width = hk1Pct + '%';
+    
+    let remHk1 = 4 - hk1Months;
+    if (remHk1 < 0) remHk1 = 0;
+    statHk1Rem.textContent = '~' + remHk1.toFixed(1) + ' tháng';
+    
+    let hk2WeeksUsed = Math.max(0, curIdx - 18);
+    let hk2Pct = (hk2WeeksUsed / 17) * 100;
+    let hk2Months = Math.round((hk2WeeksUsed / 17) * 4 * 10) / 10;
+    
+    progHk2Txt.textContent = '~' + hk2Months + ' / 4 tháng';
+    progHk2Bar.style.width = hk2Pct + '%';
+  }
+  
   if (window.buildBlocks) {
+
     window.buildBlocks(startVal, activeWeek.end);
   }
 }
