@@ -893,7 +893,7 @@ document.addEventListener("DOMContentLoaded", syncFromCloud);
         <div class="ledger-row"><span class="text-muted">Số tuần đạt ≥ 10%</span><span id="bonusWeeks" class="fw-600 text-success">0 tuần</span></div>
         <div class="ledger-row"><span class="text-muted">Số tuần thiếu &lt; 5%</span><span id="penaltyWeeks" class="fw-600 text-danger">0 tuần</span></div>
         <div class="ledger-row"><span class="text-muted">Số tuần an toàn (5–9%)</span><span id="safeWeeks" class="fw-600 text-muted">0 tuần</span></div>
-        <div class="ledger-row"><span class="text-muted">Lần thi lại Unit Test</span><span id="retakes" class="fw-600 text-warn">0 lần (−0%)</span></div>
+
       </div>
       <div>
         <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;font-weight:600">Hướng dẫn</div>
@@ -3046,6 +3046,13 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    
+    if (btn.dataset.tab === 'all-weeks') {
+      const curBadge = document.querySelector('#panel-all-weeks .badge-pill.warn');
+      if (curBadge) {
+        curBadge.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
   });
 });
 
