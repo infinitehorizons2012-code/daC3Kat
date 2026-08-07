@@ -579,6 +579,120 @@ const tabConfigs = {
             </div>
         `
     },
+    'scm': {
+        title: 'SCM',
+        desc: 'Supply Chain & AI',
+        icon: 'fa-truck-fast',
+        color: '#3b82f6',
+        defaultWorkCat: 'Vision',
+        defaultSysCat: 'N/A',
+        guide: `
+<div class="gtd-guide">
+    <h4><i class="fa-solid fa-truck-fast"></i> SCM: Supply Chain & AI</h4>
+    <div style="margin-bottom: 20px; padding: 15px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border-left: 4px solid #3b82f6; font-size: 0.95rem; line-height: 1.5;">
+        <p style="margin-bottom: 12px;">Sự kết hợp giữa <strong>Supply Chain (Chuỗi cung ứng)</strong> và <strong>Trí tuệ nhân tạo (AI)</strong> đang tạo ra bước ngoặt lớn, giúp chuyển đổi các chuỗi cung ứng truyền thống (vốn thụ động, xử lý dữ liệu chậm) thành chuỗi cung ứng thông minh (Smart Supply Chain) với khả năng tự động hóa, dự báo chính xác và ứng phó linh hoạt.</p>
+        <p>Dưới đây là các ứng dụng cốt lõi, lợi ích mang lại và thách thức khi triển khai AI trong chuỗi cung ứng:</p>
+    </div>
+
+    <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 15px;" open>
+        <summary style="font-weight: bold; cursor: pointer; color: #1d4ed8; font-size: 1.05rem;">
+            1. Các ứng dụng cốt lõi của AI trong Chuỗi cung ứng
+        </summary>
+        <div style="margin-top: 15px; font-size: 0.95rem; color: #334155;">
+            <p><strong>A. Dự báo nhu cầu (Demand Forecasting)</strong><br>
+            - <em>Cách AI hoạt động:</em> Thay vì chỉ dựa vào dữ liệu bán hàng quá khứ, các mô hình Học máy (Machine Learning) phân tích đồng thời dữ liệu lịch sử, xu hướng thị trường, thời tiết, biến động kinh tế, mạng xã hội và thậm chí cả sự kiện địa chính trị.<br>
+            - <em>Tác dụng:</em> Giảm tình trạng thiếu hàng (stockouts) hoặc tồn kho quá mức (overstocking), giúp doanh nghiệp tối ưu hóa lượng hàng tồn trữ.</p>
+            
+            <p><strong>B. Quản lý kho hàng & Tự động hóa (Warehouse Automation)</strong><br>
+            - <em>Robots & AMR (Autonomous Mobile Robots):</em> AI điều hướng robot tự hành trong kho để lấy hàng (picking), đóng gói và sắp xếp hàng hóa tối ưu.<br>
+            - <em>Kiểm kê tự động:</em> Sử dụng thị giác máy tính (Computer Vision) kết hợp với Drone để quét mã vạch và kiểm kê hàng tồn kho theo thời gian thực với độ chính xác tuyệt đối.</p>
+            
+            <p><strong>C. Tối ưu hóa vận tải & Logistics (Route & Network Optimization)</strong><br>
+            - <em>Định tuyến thông minh:</em> AI tính toán tuyến đường giao hàng tối ưu dựa trên tình trạng giao thông thời gian thực, thời tiết, tải trọng xe và hạn giao hàng.<br>
+            - <em>Logistics chặng cuối (Last-mile Delivery):</em> Phân bổ đơn hàng cho tài xế hoặc phương tiện giao hàng (drone, xe tự hành) để giảm thời gian và chi phí nhiên liệu.</p>
+            
+            <p><strong>D. Bảo trì dự đoán (Predictive Maintenance)</strong><br>
+            - <em>Giám sát thiết bị:</em> Cảm biến IoT gắn trên xe tải, máy móc nhà xưởng gửi dữ liệu về hệ thống AI để phát hiện các dấu hiệu hỏng hóc trước khi sự cố xảy ra.<br>
+            - <em>Tác dụng:</em> Giảm thời gian dừng hoạt động ngoài kế hoạch (downtime) và kéo dài tuổi thọ tài sản.</p>
+            
+            <p><strong>E. Quản lý rủi ro & Nhà cung cấp (Risk Management & Supplier Analytics)</strong><br>
+            - <em>Cảnh báo sớm:</em> AI quét tin tức toàn cầu, dữ liệu thời tiết và báo cáo tài chính để phát hiện sớm nguy cơ đứt gãy từ phía nhà cung cấp (thiên tai, đình công, phá sản).<br>
+            - <em>Đánh giá nhà cung cấp:</em> Tự động xếp hạng và chấm điểm hiệu suất của nhà cung cấp dựa trên tỷ lệ giao hàng đúng hạn, chất lượng sản phẩm và biến động giá.</p>
+            
+            <p><strong>F. AI Tạo sinh (Generative AI) trong Chuỗi cung ứng</strong><br>
+            - Tự động tạo và xử lý hóa đơn, chứng từ xuất nhập khẩu, hợp đồng.<br>
+            - Trợ lý ảo (Chatbot AI) hỗ trợ xử lý sự cố đơn hàng, giải đáp thắc mắc cho đối tác và khách hàng 24/7.</p>
+        </div>
+    </details>
+
+    <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 15px;">
+        <summary style="font-weight: bold; cursor: pointer; color: #1d4ed8; font-size: 1.05rem;">
+            2. Lợi ích chiến lược AI mang lại
+        </summary>
+        <div style="margin-top: 15px; font-size: 0.95rem; color: #334155;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 10px;">
+                <thead>
+                    <tr style="background: rgba(59, 130, 246, 0.1); color: #1e3a8a;">
+                        <th style="padding: 10px; border-bottom: 2px solid #93c5fd;">Tiêu chí</th>
+                        <th style="padding: 10px; border-bottom: 2px solid #93c5fd;">Chuỗi cung ứng Truyền thống</th>
+                        <th style="padding: 10px; border-bottom: 2px solid #93c5fd;">Chuỗi cung ứng kết hợp AI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #dbeafe;">
+                        <td style="padding: 10px;"><strong>Phản ứng với biến động</strong></td>
+                        <td style="padding: 10px;">Thụ động (xử lý khi sự cố đã xảy ra)</td>
+                        <td style="padding: 10px; font-weight: bold; color: #047857;">Chủ động (dự báo và phòng ngừa trước)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #dbeafe; background: rgba(243, 244, 246, 0.5);">
+                        <td style="padding: 10px;"><strong>Độ chính xác dự báo</strong></td>
+                        <td style="padding: 10px;">Dựa trên kinh nghiệm & dữ liệu cũ (60–70%)</td>
+                        <td style="padding: 10px; font-weight: bold; color: #047857;">Dựa trên dữ liệu đa chiều thời gian thực (>90%)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #dbeafe;">
+                        <td style="padding: 10px;"><strong>Chi phí vận hành</strong></td>
+                        <td style="padding: 10px;">Cao (chi phí tồn kho, lãng phí logistics)</td>
+                        <td style="padding: 10px; font-weight: bold; color: #047857;">Tối ưu (giảm 15–20% chi phí kho & vận chuyển)</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><strong>Thời gian giao hàng</strong></td>
+                        <td style="padding: 10px;">Chậm hơn, dễ trễ do nghẽn mạng lưới</td>
+                        <td style="padding: 10px; font-weight: bold; color: #047857;">Tối ưu hóa tuyến đường, giao hàng nhanh hơn</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </details>
+
+    <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 15px;">
+        <summary style="font-weight: bold; cursor: pointer; color: #1d4ed8; font-size: 1.05rem;">
+            3. Thách thức khi triển khai AI
+        </summary>
+        <div style="margin-top: 15px; font-size: 0.95rem; color: #334155;">
+            <ul style="padding-left: 20px;">
+                <li style="margin-bottom: 8px;"><strong>Chất lượng dữ liệu (Data Quality):</strong> AI cần lượng lớn dữ liệu chuẩn xác, sạch và đồng bộ. Nếu dữ liệu đầu vào bị phân mảnh hoặc sai lệch, dự đoán của AI sẽ không hiệu quả.</li>
+                <li style="margin-bottom: 8px;"><strong>Chi phí đầu tư ban đầu:</strong> Chi phí tích hợp hạ tầng công nghệ, hệ thống IoT và đào tạo nhân sự khá đắt đỏ.</li>
+                <li style="margin-bottom: 8px;"><strong>Thay đổi văn hóa doanh nghiệp:</strong> Nhân sự truyền thống có thể e ngại bị thay thế hoặc gặp khó khăn khi tiếp cận công nghệ mới.</li>
+                <li style="margin-bottom: 8px;"><strong>An ninh mạng & Bảo mật:</strong> Chuỗi cung ứng kết nối AI và Cloud dễ trở thành mục tiêu của các cuộc tấn công mạng nếu không có giải pháp bảo mật vững chắc.</li>
+            </ul>
+        </div>
+    </details>
+
+    <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 15px;">
+        <summary style="font-weight: bold; cursor: pointer; color: #1d4ed8; font-size: 1.05rem;">
+            4. Ví dụ thực tế từ các tập đoàn lớn
+        </summary>
+        <div style="margin-top: 15px; font-size: 0.95rem; color: #334155;">
+            <ul style="padding-left: 20px;">
+                <li style="margin-bottom: 8px;"><strong>Amazon:</strong> Sử dụng AI và hơn 750.000 robot để quản lý kho, cùng thuật toán dự báo nhu cầu để chuẩn bị hàng hóa tại kho gần khách hàng nhất trước cả khi họ bấm mua.</li>
+                <li style="margin-bottom: 8px;"><strong>Walmart:</strong> Dùng AI phân tích dữ liệu thời tiết và xu hướng khu vực để điều phối hàng hóa đến đúng cửa hàng trước khi các đợt bão hoặc nắng nóng diễn ra.</li>
+                <li style="margin-bottom: 8px;"><strong>DHL:</strong> Sử dụng thuật toán AI định tuyến giao hàng giúp tiết kiệm hàng triệu lít nhiên liệu mỗi năm.</li>
+            </ul>
+        </div>
+    </details>
+</div>
+        `
+    },
     'kat': {
         title: 'Kế hoạch của Kat',
         desc: 'Hồ sơ Ứng tuyển Đại học (College Admissions)',
@@ -906,7 +1020,7 @@ function updateHeader() {
     // Ẩn form nhập và danh sách công việc nếu là tab Tầm Nhìn hoặc tab Kat
     const quickAddForm = document.getElementById('quick-add-form');
     const masterList = document.getElementById('master-task-list');
-    if (currentActiveTab === 'vision' || currentActiveTab === 'kat' || currentActiveTab === 'dream' || currentActiveTab === 'prinberk' || currentActiveTab === 'portfolio') {
+    if (currentActiveTab === 'vision' || currentActiveTab === 'kat' || currentActiveTab === 'dream' || currentActiveTab === 'prinberk' || currentActiveTab === 'portfolio' || currentActiveTab === 'scm') {
         if (quickAddForm) quickAddForm.style.display = 'none';
         if (masterList) masterList.style.display = 'none';
     } else {
