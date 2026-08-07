@@ -447,6 +447,63 @@ const tabConfigs = {
                         </div>
                     </div>
                 </details>
+
+                <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 15px;">
+                    <summary style="font-weight: bold; cursor: pointer; color: #1d4ed8; font-size: 1.05rem;">
+                        <i class="fa-solid fa-laptop-code"></i> MÔ HÌNH 1: "Học Qua Làm" (Learn by Doing) Ngay Trong Cấp 3
+                    </summary>
+                    <div style="margin-top: 15px; font-size: 0.95rem;">
+                        <p style="margin-bottom: 8px;"><em>Đây là kịch bản phổ biến nhất đối với học sinh Unschooling/Homeschooling theo triết lý Blake Boles để làm bằng chứng cho Hồ sơ Đại học.</em></p>
+                        
+                        <p style="margin-bottom: 4px;"><strong><span style="color: #1d4ed8;">Bản chất:</span></strong> Dự án Dream Map (Viết sách, Xuất bản App, Tổ chức Sự kiện) áp dụng khung 5 Bước không phải để con bạn bỏ học đi làm full-time ngay, mà là để sản phẩm đó có giá trị thực (thị trường chấp nhận, có dòng tiền/người dùng thật).</p>
+                        
+                        <p style="margin-bottom: 4px;"><strong><span style="color: #1d4ed8;">Cách hiểu:</span></strong> Thay vì làm một dự án "giả lập" chỉ để làm đẹp hồ sơ, con áp dụng khung 5 bước: Học kỹ năng (B1) &rarr; Đóng gói sản phẩm (B2) &rarr; Tiếp cận Mentor (B3) &rarr; Ra mắt sản phẩm / Thương mại hóa nhỏ (B4).</p>
+                        
+                        <p style="margin-bottom: 10px;">Chính số tiền kiếm được ($) hoặc số lượng người dùng thực tế từ Bước 2/Bước 3/Bước 4 trở thành "bằng chứng thép" (Proof of Work) vô cùng ấn tượng trong Dự án Hồ sơ Đại học (College Portfolio).</p>
+                        
+                        <div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 10px; border-radius: 6px;">
+                            <strong>Tóm lại:</strong> Khung 5 Bước lúc này là "động cơ thực thi" để tạo ra Sản phẩm Dream Map chất lượng nhất gửi cho Trường Đại học.
+                        </div>
+                    </div>
+                </details>
+
+                <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #a7f3d0; border-radius: 8px; padding: 10px 15px;">
+                    <summary style="font-weight: bold; cursor: pointer; color: #047857; font-size: 1.05rem;">
+                        <i class="fa-solid fa-map-signs"></i> MÔ HÌNH 2: Chiến Lược "Gap Year / Parallel Track" (Thực Chiến Trước, Đại Học Sau)
+                    </summary>
+                    <div style="margin-top: 15px; font-size: 0.95rem;">
+                        <p style="margin-bottom: 8px;"><em>Kịch bản dành cho người muốn kiểm tra năng lực bản thân và chuẩn bị tài chính/kinh nghiệm trước khi vào Đại học.</em></p>
+                        
+                        <p style="margin-bottom: 4px;"><strong><span style="color: #047857;">Bản chất:</span></strong> Người học dành 1–2 năm chạy trọn vẹn khung 5 Bước Better Than College để tự chủ tài chính nhỏ, tích lũy vốn sống, xác định chính xác ngành mình yêu thích.</p>
+                        
+                        <p style="margin-bottom: 4px;"><strong><span style="color: #047857;">Cách hiểu:</span></strong> Sau khi hoàn thành Bước 4 (Có thu nhập tự chủ, hiểu rõ thị trường), họ nhận ra: "Đại học là nơi giúp mình nâng cấp tư duy nền tảng và mở rộng mạng lưới ở quy mô lớn hơn (Bản nâng cấp của Bước 5)".</p>
+                        
+                        <p style="margin-bottom: 10px;">Lúc này, họ quay lại dùng chính toàn bộ thành quả (Portfolio, Thu nhập, Trải nghiệm) của 5 bước đó để nộp xin Học bổng Đại học.</p>
+                        
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; padding: 10px; border-radius: 6px;">
+                            <strong>Tóm lại:</strong> Đi làm/thực chiến ngắn hạn &rarr; Hiểu rõ mình cần gì &rarr; Bước vào Đại học với tư thế của một người từng trải, hoàn toàn chủ động chứ không đi học vì phong trào.
+                        </div>
+                    </div>
+                </details>
+
+                <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #fed7aa; border-radius: 8px; padding: 10px 15px;">
+                    <summary style="font-weight: bold; cursor: pointer; color: #c2410c; font-size: 1.05rem;">
+                        <i class="fa-solid fa-hammer"></i> MÔ HÌNH 3: "DIY Degree" (Tự Tạo Bằng Đại Học Cho Ngành Mới / Học Sau Đại Học)
+                    </summary>
+                    <div style="margin-top: 15px; font-size: 0.95rem;">
+                        <p style="margin-bottom: 8px;"><em>Kịch bản dành cho người đã đi làm/đã có nền tảng, muốn chuyển ngành hoặc nâng tầm sự nghiệp.</em></p>
+                        
+                        <p style="margin-bottom: 4px;"><strong><span style="color: #c2410c;">Bản chất:</span></strong> Bạn dùng khung 5 Bước để tự đào tạo mình ở một ngành hoàn toàn mới (ví dụ: từ Kinh tế chuyển sang Khoa học Dữ liệu hoặc Thiết kế).</p>
+                        
+                        <p style="margin-bottom: 4px;"><strong><span style="color: #c2410c;">Cách hiểu (5 Bước Dream Map):</span></strong> Giúp bạn làm chủ kỹ năng ngành mới, tạo ra dòng tiền và sản phẩm thực tế mà không cần tốn 4 năm đi học lại đại học từ đầu.</p>
+                        
+                        <p style="margin-bottom: 10px;"><strong><span style="color: #c2410c;">Hồ sơ Đại học (Horizons 50k–10k ft):</span></strong> Nếu ngành mới yêu cầu bằng cấp chuyên sâu (như Thạc sĩ/Cao học), toàn bộ các Dự án Dream Map thực chiến kia trở thành Hồ sơ ứng tuyển (Portfolio) cực mạnh để xin học bổng Cao học (Master/PhD) hoặc các chứng chỉ quốc tế cao cấp.</p>
+                        
+                        <div style="background: rgba(249, 115, 22, 0.1); border-left: 4px solid #f97316; padding: 10px; border-radius: 6px;">
+                            <strong>Tóm lại:</strong> Dùng khung 5 bước như một công cụ xây dựng "Bằng cấp tự tạo" (DIY Degree) để đi tắt đón đầu trên con đường chuyển hướng sự nghiệp.
+                        </div>
+                    </div>
+                </details>
             </div>
         `
     },
