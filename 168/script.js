@@ -425,7 +425,11 @@ const tabConfigs = {
                         <i class="fa-solid fa-language"></i> Foreign Language: Chinese
                     </summary>
                     <div style="margin-top: 15px; font-size: 0.95rem; color: #334155;">
-                        <p>Nội dung đang được cập nhật...</p>
+                        <ul style="margin: 0; padding-left: 20px; list-style-type: square;">
+                            <li style="margin-bottom: 4px;">Pinyin</li>
+                            <li style="margin-bottom: 4px;">Chiết tự</li>
+                            <li style="margin-bottom: 0;">Polyglyph</li>
+                        </ul>
                     </div>
                 </details>
 
