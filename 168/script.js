@@ -362,6 +362,37 @@ const tabConfigs = {
             </div>
         `
     },
+    'kat2': {
+        title: 'Kế hoạch của Kat 2',
+        desc: 'Sự nghiệp tự do & Thương hiệu cá nhân',
+        icon: 'fa-rocket',
+        color: '#8b5cf6',
+        defaultWorkCat: 'Vision',
+        defaultSysCat: 'N/A',
+        guide: `
+            <div class="gtd-guide">
+                <h4><i class="fa-solid fa-rocket"></i> Kế hoạch của Kat 2:</h4>
+                <div style="margin-bottom: 20px; padding: 15px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 4px solid #8b5cf6; font-size: 0.95rem; line-height: 1.5;">
+                    <p style="margin-bottom: 8px;"><strong style="color: #5b21b6;">50,000 ft (Sứ mệnh):</strong> Sống tự chủ, làm chủ năng lực học tập suốt đời và tự tạo giá trị cho xã hội.</p>
+                    <p style="margin-bottom: 8px;"><strong style="color: #5b21b6;">40,000 ft (Tầm nhìn):</strong> Sở hữu sự nghiệp tự do, tự chủ tài chính không phụ thuộc bằng cấp trong 3–5 năm.</p>
+                    <p style="margin-bottom: 12px;"><strong style="color: #5b21b6;">30,000 ft (Mục tiêu):</strong> Đạt thu nhập $1,000/tháng từ công việc Freelance/Kinh doanh trong 12 tháng.</p>
+                    
+                    <div style="margin-bottom: 12px; font-style: italic; color: #4c1d95; padding: 10px; background: rgba(255,255,255,0.7); border-radius: 6px;">
+                        <strong style="color: #5b21b6;">20,000 ft (Lĩnh vực): Lĩnh vực Năng lực Thực chiến & Thương hiệu Cá nhân</strong>
+                    </div>
+                    
+                    <p style="margin-bottom: 8px;"><strong style="color: #5b21b6;">10,000 ft (Dự án):</strong></p>
+                    <ul style="margin-bottom: 12px; margin-left: 15px; list-style-type: none; padding-left: 0;">
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #8b5cf6; margin-right: 5px;"></i> <strong>Dự án Kỹ năng:</strong> Master kỹ năng Lập trình Web / Marketing trong 3 tháng.</li>
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #8b5cf6; margin-right: 5px;"></i> <strong>Dự án Portfolio:</strong> Xây dựng trang web cá nhân trưng bày 3 sản phẩm thực tế.</li>
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #8b5cf6; margin-right: 5px;"></i> <strong>Dự án Mạng lưới:</strong> Cold email & thực hiện 10 cuộc phỏng vấn với Mentor trong ngành.</li>
+                    </ul>
+
+                    <p style="margin-bottom: 4px;"><strong style="color: #5b21b6;">Runway (Hành động):</strong> Hoàn thành bài tập Code hôm nay / Soạn 1 email ngỏ lời kết nối với Mentor lúc 14:00.</p>
+                </div>
+            </div>
+        `
+    },
     'kat': {
         title: 'Kế hoạch của Kat',
         desc: 'Hồ sơ Ứng tuyển Đại học (College Admissions)',
@@ -673,7 +704,7 @@ function updateHeader() {
     // Ẩn form nhập và danh sách công việc nếu là tab Tầm Nhìn hoặc tab Kat
     const quickAddForm = document.getElementById('quick-add-form');
     const masterList = document.getElementById('master-task-list');
-    if (currentActiveTab === 'vision' || currentActiveTab === 'kat' || currentActiveTab === 'prinberk') {
+    if (currentActiveTab === 'vision' || currentActiveTab === 'kat' || currentActiveTab === 'kat2' || currentActiveTab === 'prinberk') {
         if (quickAddForm) quickAddForm.style.display = 'none';
         if (masterList) masterList.style.display = 'none';
     } else {
