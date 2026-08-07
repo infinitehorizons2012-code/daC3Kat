@@ -70,9 +70,15 @@
             
             <div id="tab-guide" class="tab-guide" style="display: none;"></div>
             
-            <form class="task-form" id="quick-add-form" onsubmit="handleQuickAdd(event)">
-                <input type="text" id="quick-add-input" placeholder="Nhập việc mới..." required>
-                <button type="submit"><i class="fa-solid fa-plus"></i> Thêm</button>
+            <form class="task-form" id="quick-add-form" onsubmit="handleQuickAdd(event)" style="display: flex;">
+                <select id="quick-add-strategy-type" style="display: none; padding: 12px 15px; border: 2px solid transparent; border-radius: 8px; background: white; font-size: 1rem; color: var(--text-color); outline: none; margin-right: 10px;">
+                    <option value="Project">Dự án (10k)</option>
+                    <option value="Goal">Mục tiêu (30k)</option>
+                    <option value="Vision">Tầm nhìn (40k)</option>
+                    <option value="Mission">Sứ mệnh (50k)</option>
+                </select>
+                <input type="text" id="quick-add-input" placeholder="Nhập việc mới..." required style="flex-grow: 1;">
+                <button type="submit" style="margin-left: 10px;"><i class="fa-solid fa-plus"></i> Thêm</button>
             </form>
 
             <div class="task-list" id="master-task-list">
@@ -143,16 +149,21 @@
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group half">
+                    <div class="form-group half" id="workcat-container">
                         <label>Bản chất công việc:</label>
                         <select id="modal-task-workcat" onchange="handleWorkCatChange()">
                             <option value="Defining Work">Defining Work</option>
                             <option value="Pre-defined Work">Pre-defined Work</option>
                             <option value="Unplanned Work">Unplanned Work</option>
-                            <option value="Project">Dự án</option>
-                            <option value="Goal">Mục tiêu</option>
-                            <option value="Vision">Tầm nhìn</option>
-                            <option value="Mission">Sứ mệnh</option>
+                        </select>
+                    </div>
+                    <div class="form-group half" id="strategy-type-container" style="display: none;">
+                        <label>Loại Chiến Lược:</label>
+                        <select id="modal-task-strategy-type" onchange="handleWorkCatChange()">
+                            <option value="Project">Dự án (10k)</option>
+                            <option value="Goal">Mục tiêu (30k)</option>
+                            <option value="Vision">Tầm nhìn (40k)</option>
+                            <option value="Mission">Sứ mệnh (50k)</option>
                         </select>
                     </div>
                     <div class="form-group half">
@@ -195,27 +206,27 @@
                 </div>
 
                 <div id="strategic-fields" style="display: none;">
-                    <div class="form-group">
+                    <div class="form-group" id="field-project">
                         <label>Thuộc Dự án (Project 10k ft):</label>
                         <select id="modal-task-project" class="full-width">
                             <option value="">-- Không có --</option>
                         </select>
                     </div>
                     <div class="form-row">
-                        <div class="form-group half">
+                        <div class="form-group half" id="field-goal">
                             <label>Mục tiêu (30k ft):</label>
                             <select id="modal-task-goal" class="full-width">
                                 <option value="">-- Không có --</option>
                             </select>
                         </div>
-                        <div class="form-group half">
+                        <div class="form-group half" id="field-vision">
                             <label>Tầm nhìn (40k ft):</label>
                             <select id="modal-task-vision" class="full-width">
                                 <option value="">-- Không có --</option>
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="field-mission">
                         <label>Sứ mệnh (50k ft):</label>
                         <select id="modal-task-mission" class="full-width">
                             <option value="">-- Không có --</option>

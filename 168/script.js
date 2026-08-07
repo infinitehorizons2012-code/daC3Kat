@@ -642,8 +642,13 @@ function updateHeader() {
         if (quickAddForm) quickAddForm.style.display = 'none';
         if (masterList) masterList.style.display = 'none';
     } else {
-        if (quickAddForm) quickAddForm.style.display = '';
+        if (quickAddForm) quickAddForm.style.display = 'flex';
         if (masterList) masterList.style.display = '';
+    }
+
+    const stratDropdown = document.getElementById('quick-add-strategy-type');
+    if (stratDropdown) {
+        stratDropdown.style.display = currentActiveTab === 'project' ? 'block' : 'none';
     }
 
     // Đổi placeholder input
@@ -742,15 +747,21 @@ function setSyncStatus(status) {
 // --- Quick Add Task ---
 window.handleQuickAdd = async function(event) {
     event.preventDefault();
-    const text = quickAddInput.value.trim();
+    const input = document.getElementById('quick-add-input');
+    const text = input.value.trim();
     if (!text) return;
 
     const conf = tabConfigs[currentActiveTab];
+    const strategyDropdown = document.getElementById('quick-add-strategy-type');
+    const workCat = (currentActiveTab === 'project' && strategyDropdown && strategyDropdown.style.display !== 'none') 
+        ? strategyDropdown.value 
+        : conf.defaultWorkCat;
+
     const newTask = {
-        id: Date.now().toString(),
+        id: 't-' + Date.now(),
         text: text,
         done: false,
-        workCategory: conf.defaultWorkCat,
+        workCategory: workCat,
         systemCategory: conf.defaultSysCat,
         context: "",
         time: "",
@@ -814,11 +825,6 @@ window.populateStrategicDropdowns = function() {
 };
 
 window.handleWorkCatChange = function() {
-    const workCat = document.getElementById('modal-task-workcat').value;
-    const groupSelect = document.getElementById('modal-task-group');
-    if (['Project', 'Goal', 'Vision', 'Mission'].includes(workCat)) {
-        groupSelect.value = 'Strategic';
-    }
     window.toggleGroupFields();
 };
 
@@ -830,12 +836,25 @@ window.openTaskModal = function(taskId) {
 
     document.getElementById('modal-task-id').value = task.id;
     document.getElementById('modal-task-name').value = task.text;
-    document.getElementById('modal-task-workcat').value = task.workCategory;
+    
+    const isStrategicItem = ['Project', 'Goal', 'Vision', 'Mission'].includes(task.workCategory);
+    
+    if (isStrategicItem) {
+        document.getElementById('workcat-container').style.display = 'none';
+        document.getElementById('strategy-type-container').style.display = 'block';
+        document.getElementById('modal-task-strategy-type').value = task.workCategory;
+        document.getElementById('modal-task-group').value = 'Strategic';
+    } else {
+        document.getElementById('workcat-container').style.display = 'block';
+        document.getElementById('strategy-type-container').style.display = 'none';
+        document.getElementById('modal-task-workcat').value = task.workCategory;
+        document.getElementById('modal-task-group').value = task.taskGroup || "Maintenance";
+    }
+
     document.getElementById('modal-task-syscat').value = task.systemCategory;
     document.getElementById('modal-task-context').value = task.context || "";
     document.getElementById('modal-task-time').value = task.time || "";
     document.getElementById('modal-task-energy').value = task.energy || "";
-    document.getElementById('modal-task-group').value = task.taskGroup || "Maintenance";
     document.getElementById('modal-task-area').value = task.area || "";
     document.getElementById('modal-task-project').value = task.projectRef || "";
     document.getElementById('modal-task-goal').value = task.goalRef || "";
@@ -847,8 +866,19 @@ window.openTaskModal = function(taskId) {
 };
 
 window.toggleGroupFields = function() {
-    const group = document.getElementById('modal-task-group').value;
-    document.getElementById('strategic-fields').style.display = group === 'Strategic' ? 'block' : 'none';
+    const groupSelect = document.getElementById('modal-task-group').value;
+    const isStrategicContainerVisible = document.getElementById('strategy-type-container').style.display === 'block';
+    
+    document.getElementById('strategic-fields').style.display = groupSelect === 'Strategic' ? 'block' : 'none';
+
+    if (groupSelect === 'Strategic') {
+        const type = isStrategicContainerVisible ? document.getElementById('modal-task-strategy-type').value : 'NormalAction';
+        
+        document.getElementById('field-project').style.display = type === 'NormalAction' ? 'block' : 'none';
+        document.getElementById('field-goal').style.display = (type === 'Project') ? 'block' : 'none';
+        document.getElementById('field-vision').style.display = (type === 'Project' || type === 'Goal') ? 'block' : 'none';
+        document.getElementById('field-mission').style.display = (type === 'Project' || type === 'Goal' || type === 'Vision') ? 'block' : 'none';
+    }
 };
 
 window.closeTaskModal = function() {
@@ -861,7 +891,12 @@ window.saveTaskDetails = async function() {
     if (!task) return;
 
     task.text = document.getElementById('modal-task-name').value;
-    task.workCategory = document.getElementById('modal-task-workcat').value;
+    
+    const isStrategicContainerVisible = document.getElementById('strategy-type-container').style.display === 'block';
+    task.workCategory = isStrategicContainerVisible 
+        ? document.getElementById('modal-task-strategy-type').value 
+        : document.getElementById('modal-task-workcat').value;
+
     task.systemCategory = document.getElementById('modal-task-syscat').value;
     task.context = document.getElementById('modal-task-context').value;
     task.time = document.getElementById('modal-task-time').value;
