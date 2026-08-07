@@ -350,8 +350,8 @@ const tabConfigs = {
         `
     },
     'prinberk': {
-        title: 'Kế hoạch của Prinberk',
-        desc: 'Không gian cá nhân hóa',
+        title: 'Dự án học thuật 1:',
+        desc: 'Prinberk Highschool',
         icon: 'fa-gem',
         color: '#14b8a6',
         defaultWorkCat: 'Vision',
