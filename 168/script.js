@@ -224,7 +224,7 @@ const tabConfigs = {
                     </div>
                 </details>
 
-                <div class="gtd-tip" style="margin-bottom: 15px;"><i class="fa-solid fa-lightbulb"></i> <strong>Tránh bẫy ôm đồm:</strong> Gom dự án theo nhóm (Tài chính, Sức khỏe, Gia đình, Sự nghiệp...) để cân bằng nguồn lực, tránh lệch vai.</div>
+                <div class="gtd-tip" style="margin-bottom: 15px;"><i class="fa-solid fa-lightbulb"></i> <strong>Tránh bẫy ôm đồm:</strong> Gom dự án theo Lĩnh vực trách nhiệm (Tài chính, Sức khỏe, Gia đình, Sự nghiệp...) để cân bằng nguồn lực, tránh lệch vai.</div>
 
                 <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; border-radius: 8px; padding: 15px; font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px;">
                     <h5 style="color: #d97706; margin-bottom: 10px;"><i class="fa-solid fa-arrows-rotate"></i> Tính linh hoạt (Adaptability):</h5>
