@@ -336,51 +336,49 @@ const tabConfigs = {
                         <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Dream Map (Sản phẩm):</strong> Viết sách / Xuất bản App / Tổ chức Sự kiện...</li>
                         <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Hồ sơ:</strong> Đóng gói Portfolio & viết bài luận cá nhân.</li>
                     </ul>
+                </div>
 
-                    <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #fbcfe8; border-radius: 8px; padding: 10px 15px;">
-                        <summary style="font-weight: bold; cursor: pointer; color: #be185d; font-size: 1.05rem;">
-                            <i class="fa-solid fa-book-open"></i> Phân tích: DỰ ÁN HỌC THUẬT (ACADEMIC PROJECT)
-                        </summary>
-                        <div style="margin-top: 15px; font-size: 0.95rem;">
-                            <p style="margin-bottom: 8px;"><strong>Bản chất:</strong> Đây là gói dự án đáp ứng tiêu chuẩn học thuật nền tảng và chuẩn hóa (Core Academic Standards & Standardized Testing).</p>
-                            
-                            <p style="margin-bottom: 4px; font-weight: bold; color: #9d174d;">Tại sao cần:</p>
-                            <p style="margin-bottom: 8px;">Hội đồng tuyển sinh đại học cần hai bằng chứng học thuật cốt lõi để bảo đảm "điều kiện cần":</p>
-                            <ul style="margin-bottom: 15px; margin-left: 15px; list-style-type: square; color: #475569;">
-                                <li style="margin-bottom: 4px;"><strong>Sức bền & Kiến thức phổ thông:</strong> Bằng tốt nghiệp THPT (High School Diploma) thông qua việc tích lũy đủ các tín chỉ (Credits) quy định.</li>
-                                <li style="margin-bottom: 4px;"><strong>Thước đo khách quan:</strong> Điểm số kỳ thi chuẩn hóa (SAT/ACT) để chứng minh tư duy Toán học, Đọc hiểu và Phân tích đạt mặt bằng chung toàn cầu, xóa bỏ mối lo ngại về chất lượng giảng dạy tự do tại nhà.</li>
-                            </ul>
-                            </ul>
-
-                        </div>
-                    </details>
-
-                    <div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 12px; border-radius: 6px; margin-top: 15px;">
-                        <p style="margin-bottom: 8px; font-weight: bold; color: #1d4ed8;"><i class="fa-solid fa-gears"></i> Cách vận hành trong hệ thống GTD (Tầng 10,000 ft):</p>
-                        <p style="margin-bottom: 12px; color: #475569;">Dự án Học thuật này bao gồm 2 Sub-Projects (Dự án thành phần) chạy song song:</p>
+                <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #fbcfe8; border-radius: 8px; padding: 10px 15px;">
+                    <summary style="font-weight: bold; cursor: pointer; color: #be185d; font-size: 1.05rem;">
+                        <i class="fa-solid fa-book-open"></i> Phân tích: DỰ ÁN HỌC THUẬT (ACADEMIC PROJECT)
+                    </summary>
+                    <div style="margin-top: 15px; font-size: 0.95rem;">
+                        <p style="margin-bottom: 8px;"><strong>Bản chất:</strong> Đây là gói dự án đáp ứng tiêu chuẩn học thuật nền tảng và chuẩn hóa (Core Academic Standards & Standardized Testing).</p>
                         
-                        <strong style="color: #1e40af;">1. Sub-Project A: Hoàn thành Chương trình High School (20 Credits)</strong>
-                        <ul style="margin-bottom: 12px; margin-top: 5px; margin-left: 15px; list-style-type: disc;">
-                            <li style="margin-bottom: 4px;"><strong>Kết quả mong muốn (Outcome):</strong> Hoàn thành toàn bộ các môn học yêu cầu, đạt đủ 20 High School Credits và nhận Bằng Tốt nghiệp THPT chính thức trước tháng [Tháng/Năm].</li>
-                            <li style="margin-bottom: 4px;"><strong>Hành động kế tiếp (Runway):</strong> 
-                                <ul style="margin-top: 4px; margin-bottom: 4px; list-style-type: circle; color: #475569;">
-                                    <li>Rà soát bảng theo dõi tiến độ môn học (Credit Audit) để xác định các môn còn thiếu.</li>
-                                    <li>Hoàn thành bài kiểm tra cuối chương môn Toán / Đọc 15 trang tài liệu Lịch sử chiều nay.</li>
-                                </ul>
-                            </li>
-                        </ul>
-
-                        <strong style="color: #1e40af;">2. Sub-Project B: Ôn luyện & Thi SAT trong 4 tháng</strong>
-                        <ul style="margin-bottom: 0; margin-top: 5px; margin-left: 15px; list-style-type: disc;">
-                            <li style="margin-bottom: 4px;"><strong>Kết quả mong muốn (Outcome):</strong> Đạt điểm SAT mục tiêu (ví dụ: 1450+) và nhận phiếu điểm chính thức từ College Board trước đợt nộp hồ sơ.</li>
-                            <li style="margin-bottom: 4px;"><strong>Hành động kế tiếp (Runway):</strong> 
-                                <ul style="margin-top: 4px; margin-bottom: 0; list-style-type: circle; color: #475569;">
-                                    <li>Làm 1 bài thi thử SAT Diagnostic Test trên Bluebook để xác định mức điểm đầu vào.</li>
-                                    <li>Mở Khan Academy và giải 20 câu Toán SAT thuộc phần Algebra lúc 15:00 hôm nay.</li>
-                                </ul>
-                            </li>
+                        <p style="margin-bottom: 4px; font-weight: bold; color: #9d174d;">Tại sao cần:</p>
+                        <p style="margin-bottom: 8px;">Hội đồng tuyển sinh đại học cần hai bằng chứng học thuật cốt lõi để bảo đảm "điều kiện cần":</p>
+                        <ul style="margin-bottom: 15px; margin-left: 15px; list-style-type: square; color: #475569;">
+                            <li style="margin-bottom: 4px;"><strong>Sức bền & Kiến thức phổ thông:</strong> Bằng tốt nghiệp THPT (High School Diploma) thông qua việc tích lũy đủ các tín chỉ (Credits) quy định.</li>
+                            <li style="margin-bottom: 4px;"><strong>Thước đo khách quan:</strong> Điểm số kỳ thi chuẩn hóa (SAT/ACT) để chứng minh tư duy Toán học, Đọc hiểu và Phân tích đạt mặt bằng chung toàn cầu, xóa bỏ mối lo ngại về chất lượng giảng dạy tự do tại nhà.</li>
                         </ul>
                     </div>
+                </details>
+
+                <div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 12px; border-radius: 6px; margin-top: 15px; font-size: 0.95rem;">
+                    <p style="margin-bottom: 8px; font-weight: bold; color: #1d4ed8;"><i class="fa-solid fa-gears"></i> Cách vận hành trong hệ thống GTD (Tầng 10,000 ft):</p>
+                    <p style="margin-bottom: 12px; color: #475569;">Dự án Học thuật này bao gồm 2 Sub-Projects (Dự án thành phần) chạy song song:</p>
+                    
+                    <strong style="color: #1e40af;">1. Sub-Project A: Hoàn thành Chương trình High School (20 Credits)</strong>
+                    <ul style="margin-bottom: 12px; margin-top: 5px; margin-left: 15px; list-style-type: disc;">
+                        <li style="margin-bottom: 4px;"><strong>Kết quả mong muốn (Outcome):</strong> Hoàn thành toàn bộ các môn học yêu cầu, đạt đủ 20 High School Credits và nhận Bằng Tốt nghiệp THPT chính thức trước tháng [Tháng/Năm].</li>
+                        <li style="margin-bottom: 4px;"><strong>Hành động kế tiếp (Runway):</strong> 
+                            <ul style="margin-top: 4px; margin-bottom: 4px; list-style-type: circle; color: #475569;">
+                                <li>Rà soát bảng theo dõi tiến độ môn học (Credit Audit) để xác định các môn còn thiếu.</li>
+                                <li>Hoàn thành bài kiểm tra cuối chương môn Toán / Đọc 15 trang tài liệu Lịch sử chiều nay.</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <strong style="color: #1e40af;">2. Sub-Project B: Ôn luyện & Thi SAT trong 4 tháng</strong>
+                    <ul style="margin-bottom: 0; margin-top: 5px; margin-left: 15px; list-style-type: disc;">
+                        <li style="margin-bottom: 4px;"><strong>Kết quả mong muốn (Outcome):</strong> Đạt điểm SAT mục tiêu (ví dụ: 1450+) và nhận phiếu điểm chính thức từ College Board trước đợt nộp hồ sơ.</li>
+                        <li style="margin-bottom: 4px;"><strong>Hành động kế tiếp (Runway):</strong> 
+                            <ul style="margin-top: 4px; margin-bottom: 0; list-style-type: circle; color: #475569;">
+                                <li>Làm 1 bài thi thử SAT Diagnostic Test trên Bluebook để xác định mức điểm đầu vào.</li>
+                                <li>Mở Khan Academy và giải 20 câu Toán SAT thuộc phần Algebra lúc 15:00 hôm nay.</li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
         `
