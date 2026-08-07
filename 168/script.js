@@ -690,6 +690,47 @@ const tabConfigs = {
             </ul>
         </div>
     </details>
+    <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 15px;" open>
+        <summary style="font-weight: bold; cursor: pointer; color: #1d4ed8; font-size: 1.05rem;">
+            5. Bức tranh tổng thể về năng lực
+        </summary>
+        <div style="margin-top: 15px; font-size: 0.95rem; color: #334155;">
+            <p><strong>Góc độ Kỹ thuật & Phần cứng (Automotive / Electronics / Industrial Maintenance):</strong><br>
+            Cho bạn hiểu biết thực tế về "thể xác" của chuỗi cung ứng: xe tải, xe nâng, băng tải, hệ thống điện kho bãi, cơ chế vận hành và bảo trì máy móc.</p>
+            
+            <p><strong>Góc độ Công nghệ & Phần mềm (Computer Science / Python / Data Science):</strong><br>
+            Cho bạn "bộ não" để điều khiển phần cứng: viết thuật toán, xử lý dữ liệu lớn, áp dụng AI để tối ưu lộ trình và dự báo bảo trì thiết bị.</p>
+            
+            <p><strong>Góc độ Kinh doanh & Quản lý (Intro to Business / Economics / Finance):</strong><br>
+            Cho bạn "tư duy hệ thống": hiểu tại sao doanh nghiệp cần tối ưu chi phí, cách tính toán lợi nhuận, dòng tiền và quản lý vận hành.</p>
+        </div>
+    </details>
+
+    <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 15px;" open>
+        <summary style="font-weight: bold; cursor: pointer; color: #1d4ed8; font-size: 1.05rem;">
+            6. Ví dụ về 2 cách phối hợp 3 Credits thực tế
+        </summary>
+        <div style="margin-top: 15px; font-size: 0.95rem; color: #334155;">
+            <strong style="color: #047857;">Cách 1: Nghiêng về "Kỹ thuật + Công nghệ" (Thực hành & Phần cứng)</strong>
+            <ul style="padding-left: 20px; margin-bottom: 12px;">
+                <li><strong>1.0 Credit:</strong> Automotive Technology (hoặc Basic Electronics) &rarr; Học sâu về cơ khí / điện tử.</li>
+                <li><strong>1.0 Credit:</strong> Python Programming (hoặc AP Computer Science) &rarr; Học lập trình và xử lý dữ liệu.</li>
+                <li><strong>1.0 Credit:</strong> Intro to Business (hoặc Economics) &rarr; Nắm tư duy vận hành doanh nghiệp.</li>
+            </ul>
+
+            <strong style="color: #047857;">Cách 2: Nghiêng về "Cơ điện tử & Tự động hóa kho bãi" (Mechatronics)</strong>
+            <ul style="padding-left: 20px; margin-bottom: 12px;">
+                <li><strong>1.0 Credit:</strong> Mechatronics / Robotics Technology &rarr; Kết hợp thẳng cả cơ khí, điện tử lẫn lập trình robot.</li>
+                <li><strong>1.0 Credit:</strong> Data Science / AP Statistics &rarr; Phân tích dữ liệu chuỗi cung ứng.</li>
+                <li><strong>1.0 Credit:</strong> Business Management / Financial Literacy &rarr; Quản lý tài chính & tối ưu chi phí vận hành.</li>
+            </ul>
+
+            <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; padding: 12px; border-radius: 6px; margin-top: 15px;">
+                <p style="margin-bottom: 8px; font-weight: bold; color: #047857;"><i class="fa-solid fa-star"></i> Lợi thế khi chọn theo cách này</p>
+                <p style="margin-bottom: 0;">Khi nộp đơn vào Đại học (hoặc viết bài luận xin học bổng), một hồ sơ kết hợp như vậy thể hiện bạn không chỉ là người "học lý thuyết trên giấy" hay chỉ biết "ngồi gõ code", mà là một học sinh có trải nghiệm thực tế với máy móc, hiểu bản chất phần cứng và biết dùng công nghệ/kinh doanh để giải quyết bài toán thực tế.</p>
+            </div>
+        </div>
+    </details>
 </div>
         `
     },
