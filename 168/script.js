@@ -348,6 +348,19 @@ const tabConfigs = {
             </div>
         `
     },
+    'prinberk': {
+        title: 'Kế hoạch của Prinberk',
+        desc: 'Không gian cá nhân hóa',
+        icon: 'fa-gem',
+        color: '#14b8a6',
+        defaultWorkCat: 'Vision',
+        defaultSysCat: 'N/A',
+        guide: `
+            <div class="gtd-guide">
+                <p>Nội dung tab Prinberk đang được xây dựng...</p>
+            </div>
+        `
+    },
     'kat': {
         title: 'Kế hoạch của Kat',
         desc: 'Hồ sơ Ứng tuyển Đại học (College Admissions)',
@@ -592,7 +605,7 @@ function updateHeader() {
     // Ẩn form nhập và danh sách công việc nếu là tab Tầm Nhìn hoặc tab Kat
     const quickAddForm = document.getElementById('quick-add-form');
     const masterList = document.getElementById('master-task-list');
-    if (currentActiveTab === 'vision' || currentActiveTab === 'kat') {
+    if (currentActiveTab === 'vision' || currentActiveTab === 'kat' || currentActiveTab === 'prinberk') {
         if (quickAddForm) quickAddForm.style.display = 'none';
         if (masterList) masterList.style.display = 'none';
     } else {
