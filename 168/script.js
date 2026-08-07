@@ -556,6 +556,40 @@ const tabConfigs = {
                         </div>
                     </div>
                 </details>
+
+                <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #f87171; border-radius: 8px; padding: 10px 15px;">
+                    <summary style="font-weight: bold; cursor: pointer; color: #b91c1c; font-size: 1.05rem;">
+                        <i class="fa-solid fa-star"></i> Phân tích: CÁC TIÊU CHÍ TUYỂN SINH CỐT LÕI
+                    </summary>
+                    <div style="margin-top: 15px; font-size: 0.95rem;">
+                        <div style="margin-bottom: 12px;">
+                            <strong style="color: #b91c1c;">Intellectual Vitality</strong> là tò mò trí tuệ tự thân (Self-directed Curiosity). Nhà tuyển sinh không chỉ tìm học sinh biết làm bài thi, mà tìm người thật sự yêu thích việc học. Đối với người tự học, điều này thể hiện qua việc bạn tự đọc những cuốn sách khó, tự đăng ký các khóa học online chuyên sâu, hoặc theo đuổi một chủ đề nghiên cứu đến cùng mà không ai bắt buộc.
+                            <br><em style="color: #475569;">Biểu hiện thực tế: Danh mục sách chuyên sâu đã đọc (Reading List), các chứng chỉ khóa học trực tuyến/tín chỉ cao đẳng (College Credits), bài nghiên cứu cá nhân.</em>
+                        </div>
+
+                        <div style="margin-bottom: 12px;">
+                            <strong style="color: #b91c1c;">Leadership & Initiative</strong> không nhất thiết phải là làm Lớp trưởng hay Chủ tịch câu lạc bộ trường lớp. Lãnh đạo chính là Sự chủ động (Initiative)—khả năng tự biến một ý tưởng trong đầu thành một dự án ngoài đời thực, tự kết nối mọi người và tự chịu trách nhiệm về kết quả.
+                            <br><em style="color: #475569;">Biểu hiện thực tế: Tự tổ chức một sự kiện cộng đồng, thành lập một nhóm học tập/sở thích, khởi xướng một chiến dịch xã hội, hoặc điều hành một mô hình kinh doanh nhỏ (Micro-business).</em>
+                        </div>
+
+                        <div style="margin-bottom: 12px;">
+                            <strong style="color: #b91c1c;">Logic & Quantitative Reasoning</strong> là khả năng suy luận logic, giải quyết bài toán phức tạp và tư duy dựa trên dữ liệu. Đây là kỹ năng cốt lõi giúp học sinh tự học xóa tan nghi ngờ của xã hội về việc "học ở nhà thì thiếu tư duy khoa học".
+                            <br><em style="color: #475569;">Biểu hiện thực tế: Kết quả phần thi Toán/Đọc hiểu phân tích trong kỳ thi SAT, khả năng lập trình phần mềm, làm nghiên cứu khoa học, hoặc quản lý tài chính/dữ liệu thực tế cho dự án cá nhân.</em>
+                        </div>
+
+                        <div style="margin-bottom: 12px;">
+                            <strong style="color: #b91c1c;">Academic Background / Foundation</strong> vững chắc, đạt tiêu chuẩn mặt bằng chung để không bị tụt hậu khi bước vào môi trường đại học. Đây chính là "điều kiện cần".
+                            <br><em style="color: #475569;">Biểu hiện thực tế: Việc hoàn thành chương trình Cấp 3 (tích lũy đủ High School Credits), điểm số các kỳ thi chuẩn hóa (SAT/ACT) và các điểm số môn học nền tảng (Toán, Khoa học, Ngữ văn).</em>
+                        </div>
+
+                        <div style="margin-bottom: 12px;">
+                            <strong style="color: #b91c1c;">Deadlines & Grade Performance</strong> là "bằng chứng thép" về sự trưởng thành, tính kỷ luật và tinh thần trách nhiệm.
+                            <br><em style="color: #475569;">Biểu hiện thực tế:<br>
+                            - <strong>Deadlines:</strong> Hoàn thành các môn học/tín chỉ đúng thời hạn cam kết; nộp các dự án, bài luận, hồ sơ đúng hạn chót mà không cần ai nhắc nhở.<br>
+                            - <strong>Grade Standards:</strong> Không chỉ "học cho biết", mà đạt điểm số cao (Điểm A/B ở các lớp Cao đẳng Cộng đồng, điểm SAT thuộc top %, GPA chuẩn mực). Điểm số chính là kết quả đo lường sự nghiêm túc đối với cam kết của bản thân.</em>
+                        </div>
+                    </div>
+                </details>
             </div>
         `
     },
