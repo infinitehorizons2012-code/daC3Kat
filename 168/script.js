@@ -214,7 +214,7 @@ const tabConfigs = {
                             <h5 style="color: #6366f1; margin-bottom: 5px;">MẪU 14: Chuẩn bị ứng tuyển Đại học (College Admissions Dream Map)</h5>
                             <ul>
                                 <li><strong>Hành động (Runway):</strong> Tải đề thi mẫu SAT/ACT về máy và làm bài thi thử phần Math trong 45 phút chiều nay.</li>
-                                <li><strong>Dự án (10k ft):</strong> Hoàn thành chứng chỉ SAT đạt 1400+ và đóng gói Hồ sơ năng lực tự học (Unschooling Portfolio / Narrative) trong 6 tháng.</li>
+                                <li><strong>Dự án (10k ft):</strong> Hoàn thành chứng chỉ SAT đạt 1400+ và đóng gói Hồ sơ năng lực tự học (Portfolio / Narrative) trong 6 tháng.</li>
                                 <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Học thuật & Phát triển tri thức, Quản lý hồ sơ cá nhân (Duy trì và theo dõi liên tục).</li>
                                 <li><strong>Mục tiêu (30k ft):</strong> Nộp đơn và nhận thư trúng tuyển (kèm học bổng) từ ít nhất 1 trường Đại học phù hợp trong 12–18 tháng.</li>
                                 <li><strong>Tầm nhìn (40k ft):</strong> Tự do trải nghiệm môi trường đại học với tinh thần chủ động, kết nối với mạng lưới học giả và chuyên gia trong 3–5 năm tới.</li>
@@ -472,7 +472,7 @@ const tabConfigs = {
                         <p style="margin-bottom: 8px;">Dù có điểm thi tốt, học xong tín chỉ và làm ra sản phẩm hay, nếu không biết gom lại và kể thành một câu chuyện cá nhân (Narrative) hấp dẫn thì hồ sơ vẫn mờ nhạt. Đây là dự án ở tầng 10,000 ft (Project) nhằm tập hợp toàn bộ thành tựu, sản phẩm và câu chuyện trưởng thành của con thành một bộ hồ sơ ứng tuyển hoàn chỉnh (Application Package) gửi đến các trường Đại học.</p>
                         <p style="margin-bottom: 8px;">Dự án này gồm 2 thành tố chính:</p>
                         
-                        <strong style="color: #b45309;">A. Unschooling Portfolio (Hồ sơ năng lực thực tế)</strong>
+                        <strong style="color: #b45309;">A. Portfolio (Hồ sơ năng lực thực tế)</strong>
                         <p style="margin-bottom: 4px; color: #475569;">Thay vì chỉ đưa ra một bảng điểm số khô khan, Portfolio là một tập tài liệu (dạng file PDF, trang web cá nhân, hoặc video) minh chứng cho những gì con đã thực sự làm và tạo ra:</p>
                         <ul style="margin-bottom: 12px; margin-left: 15px; list-style-type: square; color: #475569;">
                             <li style="margin-bottom: 4px;"><strong>Các sản phẩm từ Dream Map / Micro-Projects:</strong> Cuốn sách con đã viết, ứng dụng/game con đã code, kênh nghiên cứu, dự án cộng đồng con từng tổ chức, tranh ảnh/thiết kế con đã sáng tác...</li>
