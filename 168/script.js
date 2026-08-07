@@ -276,30 +276,15 @@ window.saveTaskDetails = async function() {
 };
 
 // --- Filters & Render ---
-window.clearFilters = function() {
-    document.getElementById('filter-context').value = "";
-    document.getElementById('filter-time').value = "";
-    document.getElementById('filter-energy').value = "";
-    window.renderTasks();
-};
-
 window.renderTasks = function() {
-    const filterContext = document.getElementById('filter-context').value;
-    const filterTime = document.getElementById('filter-time').value;
-    const filterEnergy = document.getElementById('filter-energy').value;
-
     const conf = tabConfigs[currentActiveTab];
     const expectedWorkCat = conf.defaultWorkCat;
 
-    // Lọc theo Tab (Nếu không phải tab Hành Động) và Filter Bar
+    // Lọc theo Tab (Nếu không phải tab Hành Động)
     let filteredTasks = state.tasks;
     if (currentActiveTab !== 'action') {
         filteredTasks = filteredTasks.filter(t => t.workCategory === expectedWorkCat);
     }
-
-    if (filterContext) filteredTasks = filteredTasks.filter(t => t.context === filterContext);
-    if (filterTime) filteredTasks = filteredTasks.filter(t => t.time === filterTime);
-    if (filterEnergy) filteredTasks = filteredTasks.filter(t => t.energy === filterEnergy);
 
     if (filteredTasks.length === 0) {
         masterListEl.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-style:italic; padding:20px 0;">Không có công việc nào khớp với điều kiện lọc!</p>';

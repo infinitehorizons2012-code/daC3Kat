@@ -55,33 +55,7 @@
             </button>
         </nav>
 
-        <!-- Smart Filter Bar -->
-        <div class="filter-bar" id="filter-bar">
-            <div class="filter-group">
-                <i class="fa-solid fa-filter"></i> Lọc Việc:
-            </div>
-            <select id="filter-context" onchange="renderTasks()">
-                <option value="">Tất cả Bối cảnh</option>
-                <option value="@Máy_tính">@Máy_tính</option>
-                <option value="@Điện_thoại">@Điện_thoại</option>
-                <option value="@Nhà">@Nhà</option>
-                <option value="@Văn_phòng">@Văn_phòng</option>
-                <option value="@Gặp_ai">@Gặp_ai</option>
-            </select>
-            <select id="filter-time" onchange="renderTasks()">
-                <option value="">Mọi Thời gian</option>
-                <option value="< 5 phút">&lt; 5 phút</option>
-                <option value="15 phút">15 phút</option>
-                <option value="30 phút">30 phút</option>
-                <option value="1 tiếng">1 tiếng</option>
-            </select>
-            <select id="filter-energy" onchange="renderTasks()">
-                <option value="">Mọi Năng lượng</option>
-                <option value="Năng lượng cao">Cao (Tập trung)</option>
-                <option value="Năng lượng thấp">Thấp (Việc vặt)</option>
-            </select>
-            <button class="btn-clear-filter" onclick="clearFilters()" title="Xóa Bộ Lọc"><i class="fa-solid fa-xmark"></i></button>
-        </div>
+
 
         <main class="content-area">
             
