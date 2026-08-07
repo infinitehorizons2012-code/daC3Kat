@@ -472,7 +472,7 @@ const tabConfigs = {
                     <div style="margin-top: 15px; font-size: 0.95rem;">
                         <p style="margin-bottom: 8px;"><em>Kịch bản dành cho người muốn kiểm tra năng lực bản thân và chuẩn bị tài chính/kinh nghiệm trước khi vào Đại học.</em></p>
                         
-                        <p style="margin-bottom: 4px;"><strong><span style="color: #047857;">Bản chất:</span></strong> Người học dành 1–2 năm chạy trọn vẹn khung 5 Bước Better Than College để tự chủ tài chính nhỏ, tích lũy vốn sống, xác định chính xác ngành mình yêu thích.</p>
+                        <p style="margin-bottom: 4px;"><strong><span style="color: #047857;">Bản chất:</span></strong> Người học dành 1–2 năm chạy trọn vẹn khung 5 Bước để tự chủ tài chính nhỏ, tích lũy vốn sống, xác định chính xác ngành mình yêu thích.</p>
                         
                         <p style="margin-bottom: 4px;"><strong><span style="color: #047857;">Cách hiểu:</span></strong> Sau khi hoàn thành Bước 4 (Có thu nhập tự chủ, hiểu rõ thị trường), họ nhận ra: "Đại học là nơi giúp mình nâng cấp tư duy nền tảng và mở rộng mạng lưới ở quy mô lớn hơn (Bản nâng cấp của Bước 5)".</p>
                         
