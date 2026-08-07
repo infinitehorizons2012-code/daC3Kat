@@ -171,6 +171,7 @@ window.handleQuickAdd = async function(event) {
         projectRef: "",
         goalRef: "",
         visionRef: "",
+        missionRef: "",
         createdAt: new Date().toISOString()
     };
 
@@ -219,6 +220,7 @@ window.openTaskModal = function(taskId) {
     document.getElementById('modal-task-project').value = task.projectRef || "";
     document.getElementById('modal-task-goal').value = task.goalRef || "";
     document.getElementById('modal-task-vision').value = task.visionRef || "";
+    document.getElementById('modal-task-mission').value = task.missionRef || "";
 
     window.toggleGroupFields();
     taskModal.classList.add('show');
@@ -249,11 +251,13 @@ window.saveTaskDetails = async function() {
     task.projectRef = document.getElementById('modal-task-project').value;
     task.goalRef = document.getElementById('modal-task-goal').value;
     task.visionRef = document.getElementById('modal-task-vision').value;
+    task.missionRef = document.getElementById('modal-task-mission').value;
 
     if (task.taskGroup === 'Maintenance') {
         task.projectRef = "";
         task.goalRef = "";
         task.visionRef = "";
+        task.missionRef = "";
     }
 
     // Logic GTD: Nếu thêm Context/Time mà đang ở Defining -> Tự động chuyển qua Pre-defined
@@ -319,6 +323,7 @@ window.renderTasks = function() {
                             <th>Dự Án</th>
                             <th>Mục Tiêu</th>
                             <th>Tầm Nhìn</th>
+                            <th>Sứ Mệnh</th>
                             <th>Thao Tác</th>
                         </tr>
                     </thead>
@@ -341,6 +346,7 @@ window.renderTasks = function() {
                                 <td>${escapeHTML(task.projectRef || '')}</td>
                                 <td>${escapeHTML(task.goalRef || '')}</td>
                                 <td>${escapeHTML(task.visionRef || '')}</td>
+                                <td>${escapeHTML(task.missionRef || '')}</td>
                                 <td class="actions-cell">
                                     <button class="btn-details" onclick="openTaskModal('${task.id}')" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
                                     <button class="delete-btn" onclick="deleteTask('${task.id}')" title="Xóa"><i class="fa-solid fa-trash-can"></i></button>
@@ -374,6 +380,7 @@ window.renderTasks = function() {
                     ${task.projectRef ? `<span class="tag tag-sys" style="background:#e0f2fe;color:#0369a1;"><i class="fa-solid fa-rocket"></i> Dự án: ${escapeHTML(task.projectRef)}</span>` : ''}
                     ${task.goalRef ? `<span class="tag tag-sys" style="background:#ffedd5;color:#c2410c;"><i class="fa-solid fa-bullseye"></i> MT: ${escapeHTML(task.goalRef)}</span>` : ''}
                     ${task.visionRef ? `<span class="tag tag-sys" style="background:#fef08a;color:#854d0e;"><i class="fa-solid fa-eye"></i> TN: ${escapeHTML(task.visionRef)}</span>` : ''}
+                    ${task.missionRef ? `<span class="tag tag-sys" style="background:#fee2e2;color:#b91c1c;"><i class="fa-solid fa-fire"></i> SM: ${escapeHTML(task.missionRef)}</span>` : ''}
                     ${task.context ? `<span class="tag tag-context">${escapeHTML(task.context)}</span>` : ''}
                     ${task.time ? `<span class="tag tag-time"><i class="fa-regular fa-clock"></i> ${escapeHTML(task.time)}</span>` : ''}
                     ${task.energy ? `<span class="tag tag-energy"><i class="fa-solid fa-bolt"></i> ${escapeHTML(task.energy)}</span>` : ''}
