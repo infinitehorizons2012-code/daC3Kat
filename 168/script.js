@@ -262,6 +262,26 @@ const tabConfigs = {
                         </ul>
                     </div>
                 </div>
+
+                <div style="background: rgba(139, 92, 246, 0.1); border-left: 4px solid #8b5cf6; border-radius: 8px; padding: 15px; font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px;">
+                    <h5 style="color: #6d28d9; margin-bottom: 10px;"><i class="fa-solid fa-gears"></i> Cơ chế vận hành toàn hệ thống GTD:</h5>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <strong style="color: #5b21b6;"><i class="fa-solid fa-compass" style="color: #8b5cf6;"></i> Tầm nhìn (Horizons of Focus):</strong>
+                        <p style="margin: 4px 0 0 20px;">Định hướng cấp cao (Mục tiêu 1-5 năm, Sứ mệnh). Nó chính là "la bàn" để bạn biết việc nào quan trọng, việc nào không.</p>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <strong style="color: #5b21b6;"><i class="fa-solid fa-filter" style="color: #8b5cf6;"></i> Defining Work (Quá trình Định nghĩa):</strong>
+                        <p style="margin: 4px 0 4px 20px;">Đây là bước bạn lấy thông tin thô (hoặc từ Tầm nhìn, hoặc từ In-basket) và chạy qua Làm rõ (Clarify) & Đánh giá (Review).</p>
+                        <p style="margin: 0 0 0 20px; font-style: italic; color: #4c1d95;">Bước <strong>Review</strong> chính là cầu nối quan trọng nhất: Từ tầm nhìn cao &rarr; biến thành các Dự án (Projects) &rarr; chốt ra Hành động tiếp theo (Next Actions).</p>
+                    </div>
+
+                    <div style="margin-bottom: 0;">
+                        <strong style="color: #5b21b6;"><i class="fa-solid fa-check-double" style="color: #8b5cf6;"></i> Defined Work (Công việc đã sẵn sàng):</strong>
+                        <p style="margin: 4px 0 0 20px;">Là sản phẩm đầu ra của quá trình Defining Work. Nhờ đã được định nghĩa rõ ràng ("Làm cái gì, ở đâu, mất bao lâu"), khi nhảy vào làm (Engage), não bạn không bị ma sát hay trì hoãn.</p>
+                    </div>
+                </div>
             </div>
         `
     },
