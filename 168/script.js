@@ -45,29 +45,84 @@ const tabConfigs = {
                     <p style="margin-bottom: 0;"><strong><i class="fa-solid fa-bridge"></i> Lĩnh vực trách nhiệm (20k ft) và Dự án (10k ft)</strong> đóng vai trò là cầu nối thực thi giúp biến Mục tiêu thành các Hành động thực tế hàng ngày (Runway). Lĩnh vực là nơi quản lý các vai trò cuộc sống, còn Dự án là các phương tiện có mốc hoàn thành giúp bạn thực thi trách nhiệm trong lĩnh vực đó và tiến tới mục tiêu.</p>
                 </div>
                 
-                <div style="margin-bottom: 15px;">
-                    <h5 style="color: var(--primary-color); margin-bottom: 5px;">Ví dụ 1: Mục tiêu Tài chính / Sự nghiệp</h5>
-                    <ul>
-                        <li><strong>Hành động (Runway):</strong> Đọc 20 trang sách kinh tế hôm nay.</li>
-                        <li><strong>Dự án (10k ft):</strong> Hoàn thành khóa học & đọc 5 cuốn sách đầu tư giá trị.</li>
-                        <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Tài chính cá nhân & Đầu tư (Duy trì cả đời). Tính dài hạn: Dự án ngắn hạn sẽ kết thúc, nhưng Lĩnh vực này liên tục sinh ra các dự án tiếp theo.</li>
-                        <li><strong>Mục tiêu (30k ft):</strong> Đạt tự chủ tài chính / quy mô danh mục $X đồng trong 2 năm tới.</li>
-                        <li><strong>Tầm nhìn (40k ft):</strong> Tự do thời gian, chủ động công việc và dành nhiều thời gian chất lượng cho gia đình sau 5 năm.</li>
-                        <li><strong>Sứ mệnh (50k ft):</strong> Sống tự lập, tự do tư duy và liên tục phát triển bản thân.</li>
-                    </ul>
-                </div>
+                <details style="margin-bottom: 15px; background: rgba(255,255,255,0.8); border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 15px;">
+                    <summary style="font-weight: bold; cursor: pointer; color: var(--secondary-color); font-size: 1.05rem;">
+                        <i class="fa-solid fa-list-ul"></i> Xem 6 Mẫu Dream Map (Bản đồ Ước mơ)
+                    </summary>
+                    <div style="margin-top: 20px;">
+                        <div style="margin-bottom: 15px;">
+                            <h5 style="color: var(--primary-color); margin-bottom: 5px;">MẪU 1: Tài chính / Sự nghiệp</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Đọc 20 trang sách kinh tế hôm nay.</li>
+                                <li><strong>Dự án (10k ft):</strong> Hoàn thành khóa học & đọc 5 cuốn sách đầu tư giá trị.</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Tài chính cá nhân & Đầu tư (Duy trì cả đời). Tính dài hạn: Dự án ngắn hạn sẽ kết thúc, nhưng Lĩnh vực này liên tục sinh ra các dự án tiếp theo.</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Đạt tự chủ tài chính / quy mô danh mục $X đồng trong 2 năm tới.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Tự do thời gian, chủ động công việc và dành nhiều thời gian chất lượng cho gia đình sau 5 năm.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Sống tự lập, tự do tư duy và liên tục phát triển bản thân.</li>
+                            </ul>
+                        </div>
 
-                <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
-                    <h5 style="color: var(--success-color); margin-bottom: 5px;">Ví dụ 2: Mục tiêu Sức khỏe</h5>
-                    <ul>
-                        <li><strong>Hành động (Runway):</strong> Xỏ giày ra đường chạy 3km ngay chiều nay.</li>
-                        <li><strong>Dự án (10k ft):</strong> Hoàn thành giáo án tập chạy 12 tuần.</li>
-                        <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Rèn luyện thể lực hàng tuần (Duy trì cả đời). Tính dài hạn: Dự án giáo án 12 tuần sẽ kết thúc, nhưng Lĩnh vực sức khỏe này sẽ liên tục sinh ra các dự án tập luyện tiếp theo.</li>
-                        <li><strong>Mục tiêu (30k ft):</strong> Hoàn thành cự ly chạy Half Marathon 21km trong năm nay.</li>
-                        <li><strong>Tầm nhìn (40k ft):</strong> Sở hữu cơ thể dẻo dai, tràn đầy năng lượng sau 3 năm để đồng hành cùng con cái khi trưởng thành.</li>
-                        <li><strong>Sứ mệnh (50k ft):</strong> Coi trọng và tôn vinh sức khỏe như nền tảng gốc rễ của mọi sự phát triển.</li>
-                    </ul>
-                </div>
+                        <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <h5 style="color: var(--success-color); margin-bottom: 5px;">MẪU 2: Sức khỏe</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Xỏ giày ra đường chạy 3km ngay chiều nay.</li>
+                                <li><strong>Dự án (10k ft):</strong> Hoàn thành giáo án tập chạy 12 tuần.</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Rèn luyện thể lực hàng tuần (Duy trì cả đời). Tính dài hạn: Dự án giáo án 12 tuần sẽ kết thúc, nhưng Lĩnh vực sức khỏe này sẽ liên tục sinh ra các dự án tập luyện tiếp theo.</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Hoàn thành cự ly chạy Half Marathon 21km trong năm nay.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Sở hữu cơ thể dẻo dai, tràn đầy năng lượng sau 3 năm để đồng hành cùng con cái khi trưởng thành.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Coi trọng và tôn vinh sức khỏe như nền tảng gốc rễ của mọi sự phát triển.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <h5 style="color: #8b5cf6; margin-bottom: 5px;">MẪU 3: Lập trình & Game (Creating an Indie Video Game)</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Tải phần mềm Godot Engine / Unity về máy tính và xem video hướng dẫn làm game 2D cơ bản (30 phút).</li>
+                                <li><strong>Dự án (10k ft):</strong> Lập trình và phát hành bản Demo game dạng Platformer dài 5 phút trên nền tảng itch.io.</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Phát triển kỹ năng phần mềm, Thiết kế trải nghiệm người dùng & Sáng tạo nội dung số (Duy trì và nâng cấp liên tục).</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Xây dựng một hồ sơ năng lực (Portfolio) gồm 3 dự án game hoàn chỉnh và đạt 1,000 lượt tải trong vòng 12–18 tháng.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Trở thành một Nhà phát triển Game độc lập (Indie Game Developer) có nguồn thu nhập tự do và có thể làm việc từ xa trong 3 năm tới.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Tự do sáng tạo, giải quyết vấn đề bằng tư duy logic và mang lại niềm vui cho cộng đồng thông qua công nghệ.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <h5 style="color: #ec4899; margin-bottom: 5px;">MẪU 4: Du lịch & Ngôn ngữ (Sống & Học tập tại Nước ngoài)</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Tải ứng dụng Duolingo, đặt lịch học 15 phút tiếng Tây Ban Nha mỗi ngày và gửi 1 email hỏi thông tin về chương trình tình nguyện viên tại Guatemala.</li>
+                                <li><strong>Dự án (10k ft):</strong> Hoàn thành hồ sơ đăng ký, tiết kiệm đủ $1,500 chi phí sinh hoạt và mua vé máy bay cho chuyến đi 3 tháng.</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Năng lực ngôn ngữ, Trải nghiệm sống & Kỹ năng sinh tồn tự lập (Duy trì cả đời).</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Đạt trình độ giao tiếp phản xạ tự nhiên (B2) và thực hiện thành công 1 chuyến đi trải nghiệm thực tế trong vòng 1 năm.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Trở thành một công dân toàn cầu, tự tin sống, làm việc và kết nối ở bất kỳ đâu trên thế giới trong 3–5 năm tới.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Mở rộng ranh giới trải nghiệm, tôn trọng sự đa dạng văn hóa và không ngừng dấn thân vào những vùng đất mới.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <h5 style="color: #f59e0b; margin-bottom: 5px;">MẪU 5: Xuất bản / Viết sách (Writing & Publishing a Book)</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Mở file tài liệu mới và viết 500 từ cho chương đầu tiên vào 6:00 sáng nay.</li>
+                                <li><strong>Dự án (10k ft):</strong> Hoàn thành bản thảo 30,000 từ và tìm kiếm 1 biên tập viên tự do để hiệu chỉnh trong 6 tháng.</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Rèn luyện tư duy viết lách, Truyền thông cá nhân & Quản lý tri thức (Chăm sóc liên tục).</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Xuất bản tự lực (Self-publish) 1 cuốn sách trên Amazon Kindle / Nền tảng phát hành nội dung và bán được 500 bản trong vòng 1–2 năm.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Định hình bản thân như một Tác giả / Chuyên gia truyền cảm hứng có tiếng nói uy tín trong cộng đồng tự học trong 3 năm.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Lan tỏa tri thức, đóng góp giá trị tinh thần cho người khác và sống một cuộc đời có chiều sâu tư duy.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <h5 style="color: #06b6d4; margin-bottom: 5px;">MẪU 6: Khởi nghiệp / Tổ chức Sự kiện (Community Event / Micro-Business)</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Gửi tin nhắn khảo sát nhu cầu cho 10 người bạn trong mạng lưới và đặt thuê địa điểm tổ chức buổi hội thảo (workshop) nhỏ vào cuối tuần.</li>
+                                <li><strong>Dự án (10k ft):</strong> Tổ chức thành công chuỗi 4 buổi Workshop hướng dẫn kỹ năng tự học với 50 người tham dự.</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Quản lý tài chính cá nhân, Kỹ năng tổ chức/lãnh đạo & Kết nối cộng đồng (Lĩnh vực sống dài hạn).</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Xây dựng một mô hình kinh doanh nhỏ/dự án xã hội tự duy trì được tài chính trong 12–24 tháng.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Làm chủ mô hình kinh doanh linh hoạt, tự chủ tài chính và tạo được việc làm hoặc giá trị cho cộng đồng xung quanh sau 3–5 năm.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Chủ động tạo ra cơ hội, sống tự lập về kinh tế và tạo dựng một cộng đồng gắn kết, tích cực.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </details>
 
                 <div class="gtd-tip"><i class="fa-solid fa-lightbulb"></i> <strong>Tránh bẫy ôm đồm:</strong> Gom dự án theo nhóm (Tài chính, Sức khỏe, Gia đình, Sự nghiệp...) để cân bằng nguồn lực, tránh lệch vai.</div>
             </div>
