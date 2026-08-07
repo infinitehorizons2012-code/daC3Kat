@@ -147,6 +147,17 @@ body {
 /* Footer */
 .app-footer { text-align: center; margin-top: 2rem; color: var(--text-muted); font-size: 0.9rem; padding-top: 1rem; border-top: 1px solid var(--glass-border); }
 
+/* Excel Table View */
+.table-responsive { width: 100%; overflow-x: auto; background: white; border-radius: 12px; padding: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.excel-table { width: 100%; border-collapse: collapse; min-width: 800px; font-size: 0.9rem; }
+.excel-table th, .excel-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+.excel-table th { background-color: #f8fafc; color: var(--text-color); font-weight: 700; white-space: nowrap; position: sticky; top: 0; z-index: 10; }
+.excel-table tbody tr:hover { background-color: #f1f5f9; }
+.excel-table td { vertical-align: middle; color: var(--text-color); }
+.excel-table .done td { opacity: 0.6; text-decoration: line-through; }
+.excel-table .checkbox-cell { width: 50px; text-align: center; }
+.excel-table .actions-cell { white-space: nowrap; }
+
 @media (max-width: 600px) {
     .app-container { padding: 1rem; }
     .form-row { flex-direction: column; }

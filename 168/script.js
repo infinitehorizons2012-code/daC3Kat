@@ -21,6 +21,7 @@ const headerDesc = document.getElementById('header-desc');
 
 // Cấu hình Tabs
 const tabConfigs = {
+    'action': { title: 'Hành Động', desc: 'Bảng tổng hợp toàn bộ dữ liệu (Giao diện Excel).', icon: 'fa-table-list', color: '#10b981', defaultWorkCat: 'Pre-defined Work', defaultSysCat: 'Next Actions' },
     'vision': { title: 'Tầm Nhìn', desc: 'Mục tiêu lớn và ước mơ của con.', icon: 'fa-eye', color: 'var(--secondary-color)', defaultWorkCat: 'Vision', defaultSysCat: 'N/A' },
     'project': { title: 'Dự Án', desc: 'Mục tiêu cần nhiều bước để hoàn thành.', icon: 'fa-layer-group', color: 'var(--primary-color)', defaultWorkCat: 'Project', defaultSysCat: 'N/A' },
     'unplanned': { title: 'Đột Xuất', desc: 'Những việc bất ngờ nhảy vào! Làm ngay.', icon: 'fa-bolt', color: 'var(--warning-color)', defaultWorkCat: 'Unplanned Work', defaultSysCat: 'Next Actions' },
@@ -260,8 +261,11 @@ window.renderTasks = function() {
     const conf = tabConfigs[currentActiveTab];
     const expectedWorkCat = conf.defaultWorkCat;
 
-    // Lọc theo Tab và Filter Bar
-    let filteredTasks = state.tasks.filter(t => t.workCategory === expectedWorkCat);
+    // Lọc theo Tab (Nếu không phải tab Hành Động) và Filter Bar
+    let filteredTasks = state.tasks;
+    if (currentActiveTab !== 'action') {
+        filteredTasks = filteredTasks.filter(t => t.workCategory === expectedWorkCat);
+    }
 
     if (filterContext) filteredTasks = filteredTasks.filter(t => t.context === filterContext);
     if (filterTime) filteredTasks = filteredTasks.filter(t => t.time === filterTime);
@@ -272,29 +276,75 @@ window.renderTasks = function() {
         return;
     }
 
-    masterListEl.innerHTML = filteredTasks.map(task => `
-        <div class="task-item ${task.done ? 'done' : ''}">
-            <div class="task-main">
-                <div class="task-info">
-                    <div class="checkbox" onclick="toggleTask('${task.id}')">
-                        <i class="fa-solid fa-check"></i>
+    if (currentActiveTab === 'action') {
+        // Render dạng bảng Excel
+        masterListEl.innerHTML = `
+            <div class="table-responsive">
+                <table class="excel-table">
+                    <thead>
+                        <tr>
+                            <th>Xong</th>
+                            <th>Tên Hành Động</th>
+                            <th>Phân Loại CV</th>
+                            <th>Hệ Thống</th>
+                            <th>Bối Cảnh</th>
+                            <th>Thời Gian</th>
+                            <th>Năng Lượng</th>
+                            <th>Dự Án</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredTasks.map(task => `
+                            <tr class="${task.done ? 'done' : ''}">
+                                <td class="checkbox-cell">
+                                    <div class="checkbox" style="margin:0 auto;" onclick="toggleTask('${task.id}')">
+                                        <i class="fa-solid fa-check"></i>
+                                    </div>
+                                </td>
+                                <td><strong>${escapeHTML(task.text)}</strong></td>
+                                <td>${escapeHTML(task.workCategory)}</td>
+                                <td>${escapeHTML(task.systemCategory)}</td>
+                                <td>${escapeHTML(task.context || '')}</td>
+                                <td>${escapeHTML(task.time || '')}</td>
+                                <td>${escapeHTML(task.energy || '')}</td>
+                                <td>${escapeHTML(task.projectRef || '')}</td>
+                                <td class="actions-cell">
+                                    <button class="btn-details" onclick="openTaskModal('${task.id}')" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
+                                    <button class="delete-btn" onclick="deleteTask('${task.id}')" title="Xóa"><i class="fa-solid fa-trash-can"></i></button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    } else {
+        // Render dạng Card chuẩn
+        masterListEl.innerHTML = filteredTasks.map(task => `
+            <div class="task-item ${task.done ? 'done' : ''}">
+                <div class="task-main">
+                    <div class="task-info">
+                        <div class="checkbox" onclick="toggleTask('${task.id}')">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <span class="task-text">${escapeHTML(task.text)}</span>
                     </div>
-                    <span class="task-text">${escapeHTML(task.text)}</span>
+                    <div class="task-actions">
+                        <button class="btn-details" onclick="openTaskModal('${task.id}')" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
+                        <button class="delete-btn" onclick="deleteTask('${task.id}')" title="Xóa"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
                 </div>
-                <div class="task-actions">
-                    <button class="btn-details" onclick="openTaskModal('${task.id}')" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
-                    <button class="delete-btn" onclick="deleteTask('${task.id}')" title="Xóa"><i class="fa-solid fa-trash-can"></i></button>
+                <div class="task-tags">
+                    ${task.systemCategory && task.systemCategory !== 'N/A' ? `<span class="tag tag-sys">${escapeHTML(task.systemCategory)}</span>` : ''}
+                    ${task.projectRef ? `<span class="tag tag-sys"><i class="fa-solid fa-layer-group"></i> ${escapeHTML(task.projectRef)}</span>` : ''}
+                    ${task.context ? `<span class="tag tag-context">${escapeHTML(task.context)}</span>` : ''}
+                    ${task.time ? `<span class="tag tag-time"><i class="fa-regular fa-clock"></i> ${escapeHTML(task.time)}</span>` : ''}
+                    ${task.energy ? `<span class="tag tag-energy"><i class="fa-solid fa-bolt"></i> ${escapeHTML(task.energy)}</span>` : ''}
                 </div>
             </div>
-            <div class="task-tags">
-                ${task.systemCategory && task.systemCategory !== 'N/A' ? `<span class="tag tag-sys">${escapeHTML(task.systemCategory)}</span>` : ''}
-                ${task.projectRef ? `<span class="tag tag-sys"><i class="fa-solid fa-layer-group"></i> ${escapeHTML(task.projectRef)}</span>` : ''}
-                ${task.context ? `<span class="tag tag-context">${escapeHTML(task.context)}</span>` : ''}
-                ${task.time ? `<span class="tag tag-time"><i class="fa-regular fa-clock"></i> ${escapeHTML(task.time)}</span>` : ''}
-                ${task.energy ? `<span class="tag tag-energy"><i class="fa-solid fa-bolt"></i> ${escapeHTML(task.energy)}</span>` : ''}
-            </div>
-        </div>
-    `).join('');
+        `).join('');
+    }
 };
 
 // --- Gamification ---
