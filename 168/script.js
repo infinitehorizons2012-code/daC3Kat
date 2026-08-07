@@ -6,6 +6,8 @@ const CLOUDFLARE_API_URL = ''; // e.g. "https://my-worker.my-account.workers.dev
 let state = {
     stars: 0,
     tasks: {
+        vision: [],
+        project: [],
         unplanned: [],
         predefined: [],
         defining: []
@@ -186,6 +188,8 @@ function showCelebration() {
 
 // --- Render UI ---
 function renderAllTasks() {
+    renderCategory('vision');
+    renderCategory('project');
     renderCategory('unplanned');
     renderCategory('predefined');
     renderCategory('defining');

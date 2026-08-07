@@ -36,7 +36,15 @@
         </header>
 
         <nav class="tabs">
-            <button class="tab-btn active" data-tab="unplanned">
+            <button class="tab-btn active" data-tab="vision">
+                <i class="fa-solid fa-eye"></i>
+                <span>Tầm Nhìn</span>
+            </button>
+            <button class="tab-btn" data-tab="project">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>Dự Án</span>
+            </button>
+            <button class="tab-btn" data-tab="unplanned">
                 <i class="fa-solid fa-bolt"></i>
                 <span>Việc Đột Xuất</span>
             </button>
@@ -46,14 +54,48 @@
             </button>
             <button class="tab-btn" data-tab="defining">
                 <i class="fa-solid fa-box-archive"></i>
-                <span>Định Hình Công Việc</span>
+                <span>Định Hình</span>
             </button>
         </nav>
 
         <main class="content-area">
+
+            <!-- Tab: Tầm Nhìn (Vision) -->
+            <section id="vision" class="tab-content active">
+                <div class="tab-header">
+                    <h2><i class="fa-solid fa-eye" style="color: var(--secondary-color)"></i> Tầm Nhìn (Vision)</h2>
+                    <p>Mục tiêu lớn và ước mơ của con. Những điều con hướng tới trong tương lai!</p>
+                </div>
+                
+                <form class="task-form" onsubmit="handleAddTask(event, 'vision')">
+                    <input type="text" placeholder="Nhập mục tiêu/tầm nhìn..." required>
+                    <button type="submit"><i class="fa-solid fa-plus"></i> Thêm</button>
+                </form>
+
+                <div class="task-list" id="vision-list">
+                    <!-- Tasks will be injected here -->
+                </div>
+            </section>
+
+            <!-- Tab: Dự Án (Project) -->
+            <section id="project" class="tab-content">
+                <div class="tab-header">
+                    <h2><i class="fa-solid fa-layer-group" style="color: var(--primary-color)"></i> Dự Án (Project)</h2>
+                    <p>Những mục tiêu cần nhiều bước để hoàn thành (như làm mô hình, thi học kỳ...).</p>
+                </div>
+                
+                <form class="task-form" onsubmit="handleAddTask(event, 'project')">
+                    <input type="text" placeholder="Nhập dự án mới..." required>
+                    <button type="submit"><i class="fa-solid fa-plus"></i> Thêm</button>
+                </form>
+
+                <div class="task-list" id="project-list">
+                    <!-- Tasks will be injected here -->
+                </div>
+            </section>
             
             <!-- Tab: Việc đột xuất (Unplanned Work) -->
-            <section id="unplanned" class="tab-content active">
+            <section id="unplanned" class="tab-content">
                 <div class="tab-header">
                     <h2><i class="fa-solid fa-bolt" style="color: var(--warning-color)"></i> Việc Đột Xuất (Unplanned Work)</h2>
                     <p>Những việc bất ngờ nhảy vào! Làm ngay, hoặc ghi lại để xử lý sau nhé.</p>
@@ -89,7 +131,7 @@
             <!-- Tab: Định hình công việc (Defining Work) -->
             <section id="defining" class="tab-content">
                 <div class="tab-header">
-                    <h2><i class="fa-solid fa-box-archive" style="color: var(--primary-color)"></i> Định Hình (Defining Work)</h2>
+                    <h2><i class="fa-solid fa-box-archive" style="color: #6366f1"></i> Định Hình (Defining Work)</h2>
                     <p>Dọn dẹp hòm thư, ghi chép lại các ý tưởng, sắp xếp đồ đạc và hệ thống của con.</p>
                 </div>
 
