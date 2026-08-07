@@ -47,7 +47,7 @@ const tabConfigs = {
                 
                 <details style="margin-bottom: 15px; background: rgba(255,255,255,0.8); border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 15px;">
                     <summary style="font-weight: bold; cursor: pointer; color: var(--secondary-color); font-size: 1.05rem;">
-                        <i class="fa-solid fa-list-ul"></i> Xem 9 Mẫu Dream Map (Bản đồ Ước mơ)
+                        <i class="fa-solid fa-list-ul"></i> Xem 14 Mẫu Dream Map (Bản đồ Ước mơ)
                     </summary>
                     <div style="margin-top: 20px;">
                         <div style="margin-bottom: 15px;">
@@ -155,6 +155,66 @@ const tabConfigs = {
                                 <li><strong>Mục tiêu (30k ft):</strong> Kết nối được với ít nhất 2 người cố vấn (Mentors) chính thức đồng hành cùng lộ trình phát triển trong 1 năm.</li>
                                 <li><strong>Tầm nhìn (40k ft):</strong> Đứng trong mạng lưới những người tiên phong, uy tín trong ngành và sẵn sàng quay lại làm cố vấn cho thế hệ tiếp theo sau 3–5 năm.</li>
                                 <li><strong>Sứ mệnh (50k ft):</strong> Khiêm tốn học hỏi từ người đi trước, xây dựng giá trị trên sự kết nối chân thành và chia sẻ tri thức.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <h5 style="color: #a855f7; margin-bottom: 5px;">MẪU 10: Vượt qua Nỗi sợ & Rào cản (Comfort Zone Expansion / Fear-Busting)</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Đăng ký tham gia một câu lạc bộ nói trước công chúng (như Toastmasters) hoặc thực hiện 1 cuộc gọi "Cold call" tới người lạ trong 15 phút.</li>
+                                <li><strong>Dự án (10k ft):</strong> Hoàn thành chuỗi 30 ngày liên tục thực hiện các thử thách bước ra khỏi vùng an toàn (Comfort Zone Challenges).</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Rèn luyện tâm lý vững vàng, Sức khỏe tinh thần & Sự tự tin cá nhân (Lĩnh vực chăm sóc cả đời).</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Xóa bỏ rào cản sợ xã hội/sợ thất bại và tự tin chủ động dẫn dắt các cuộc trò chuyện quan trọng trong 1–2 năm.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Trở thành một người bản lĩnh, kiên cường, sẵn sàng đối mặt với rủi ro và thích nghi với mọi biến động cuộc sống sau 3–5 năm.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Sống dũng cảm, làm chủ nỗi sợ và không để sự nghi ngờ bản thân giới hạn tiềm năng cuộc đời.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <h5 style="color: #10b981; margin-bottom: 5px;">MẪU 11: Chuyển giao Đam mê sang Tài chính (Monetizing a Passion)</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Chụp ảnh 3 sản phẩm thủ công/nghệ thuật đẹp nhất và đăng bán trên sàn thương mại điện tử (Etsy/Shopee) hoặc mạng xã hội.</li>
+                                <li><strong>Dự án (10k ft):</strong> Xây dựng cửa hàng trực tuyến, tối ưu hóa quy trình đóng gói/giao hàng và đạt 50 đơn hàng đầu tiên trong 3 tháng.</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Thương mại hóa sáng tạo, Quản lý tài chính kinh doanh & Chăm sóc khách hàng (Trách nhiệm duy trì).</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Tạo ra dòng tiền đều đặn từ đam mê, trang trải 50–100% chi phí sinh hoạt cá nhân trong 1–2 năm.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Sở hữu một thương hiệu/doanh nghiệp sáng tạo độc lập, tự chủ kinh tế và tạo ra sản phẩm được cộng đồng đón nhận trong 3–5 năm.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Tự do tài chính thông qua việc trao giá trị thực sự và sống trọn vẹn với niềm đam mê.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <h5 style="color: #f97316; margin-bottom: 5px;">MẪU 12: Thử nghiệm Nhanh / Thất bại Rẻ (Rapid Prototyping & Fail Cheap)</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Dành 2 tiếng tối nay làm một bản khảo sát ngắn (Google Forms) và gửi cho 20 người để kiểm tra mức độ quan tâm về một ý tưởng mới.</li>
+                                <li><strong>Dự án (10k ft):</strong> Chạy thử nghiệm mô hình thu nhỏ (Minimum Viable Product - MVP) trong vòng 2 tuần với chi phí dưới $50.</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Tư duy thử nghiệm, Quản lý rủi ro & Năng lực học tập thích ứng (Lĩnh vực sống dài hạn).</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Thử nghiệm và loại bỏ nhanh 5–10 ý tưởng không khả thi để tìm ra 1–2 hướng đi cốt lõi nhất trong 1 năm.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Làm chủ tư duy khởi nghiệp tinh gọn (Lean Mindset), nhạy bén với cơ hội và ra quyết định chính xác dựa trên dữ liệu thực tế sau 3 năm.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Không ngừng khám phá, coi thất bại là học hỏi và hành động linh hoạt dựa trên sự thật.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <h5 style="color: #14b8a6; margin-bottom: 5px;">MẪU 13: Tự do Tài chính & Đi làm sớm (Financial Independence & Gap Year)</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Cập nhật CV/Resume cá nhân và gửi đơn ứng tuyển vào 3 vị trí bán thời gian/thực tập tại địa phương.</li>
+                                <li><strong>Dự án (10k ft):</strong> Đi làm và tích lũy quỹ tài chính khẩn cấp / quỹ trải nghiệm $3,000 trong vòng 8 tháng.</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Quản lý tài chính cá nhân & Kỹ năng làm việc thực tế (Lĩnh vực sống cốt lõi).</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Tự chủ 100% chi phí sinh hoạt cá nhân và tự tài trợ cho 1 năm trải nghiệm (Gap Year) trong 1–2 năm tới.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Đạt trạng thái tự do tài chính ở mức cơ bản, không bị phụ thuộc vào chu cấp gia đình hay rào cản bằng cấp sau 3 năm.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Tự lập về kinh tế, tôn trọng giá trị của lao động và làm chủ hoàn toàn các lựa chọn cuộc đời.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <h5 style="color: #6366f1; margin-bottom: 5px;">MẪU 14: Chuẩn bị ứng tuyển Đại học (College Admissions Dream Map)</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Tải đề thi mẫu SAT/ACT về máy và làm bài thi thử phần Math trong 45 phút chiều nay.</li>
+                                <li><strong>Dự án (10k ft):</strong> Hoàn thành chứng chỉ SAT đạt 1400+ và đóng gói Hồ sơ năng lực tự học (Unschooling Portfolio / Narrative) trong 6 tháng.</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Học thuật & Phát triển tri thức, Quản lý hồ sơ cá nhân (Duy trì và theo dõi liên tục).</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Nộp đơn và nhận thư trúng tuyển (kèm học bổng) từ ít nhất 1 trường Đại học phù hợp trong 12–18 tháng.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Tự do trải nghiệm môi trường đại học với tinh thần chủ động, kết nối với mạng lưới học giả và chuyên gia trong 3–5 năm tới.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Theo đuổi tri thức đỉnh cao, giữ vững tư duy độc lập và dùng sự hiểu biết để phụng sự xã hội.</li>
                             </ul>
                         </div>
                     </div>
