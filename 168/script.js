@@ -254,6 +254,7 @@ const tabConfigs = {
 
                     <div style="margin-bottom: 15px;">
                         <strong style="color: #1d4ed8;"><i class="fa-solid fa-screwdriver-wrench"></i> Nhóm 2: Việc duy trì & bảo trì cuộc sống (Maintenance Actions)</strong>
+                        <p style="margin: 4px 0 4px 15px; color: #475569;"><em>Chuỗi: Hành động &rarr; Dự án &rarr; Lĩnh vực trách nhiệm &rarr; Mục tiêu</em></p>
                         <p style="margin: 4px 0 4px 15px;">Những việc này chỉ dừng lại ở tầng Runway (Hành động) hoặc tầng 20,000 ft (Lĩnh vực trách nhiệm) mà không nhất thiết phải có "Dự án" hay "Mục tiêu 3-5 năm".</p>
                         <p style="margin: 0 0 0 15px;">Ví dụ: Đi đóng tiền điện, thay dầu xe, cắt tóc, dọn nhà... Bạn làm vì đó là trách nhiệm duy trì cuộc sống (Area of Responsibility), không cần gán cho nó một "mục tiêu cao cả" để tránh làm phức tạp hóa hệ thống.</p>
                     </div>
