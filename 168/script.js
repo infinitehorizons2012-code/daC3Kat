@@ -358,7 +358,7 @@ const tabConfigs = {
                         </ul>
                         
                         <div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 12px; border-radius: 6px; margin-top: 5px;">
-                            <p style="margin-bottom: 8px; font-weight: bold; color: #1d4ed8;"><i class="fa-solid fa-gears"></i> Cách vận hành trong hệ thống GTD (Tầng 10,000 ft):</p>
+                            <p style="margin-bottom: 8px; font-weight: bold; color: #1d4ed8;"><i class="fa-solid fa-gears"></i> Cách vận hành (Tầng 10,000 ft):</p>
                             <p style="margin-bottom: 12px; color: #475569;">Dự án Học thuật này bao gồm 2 Sub-Projects (Dự án thành phần) chạy song song:</p>
                             
                             <strong style="color: #1e40af;">1. Sub-Project A: Hoàn thành Chương trình High School (20 Credits)</strong>
@@ -402,7 +402,7 @@ const tabConfigs = {
                         <p style="margin-bottom: 15px;">Khác với điểm thi trắc nghiệm SAT, việc học và lấy 2 môn tín chỉ Đại học/Cao đẳng (ví dụ: Vi mô Kinh tế, Lập trình Python cơ bản, Tâm lý học nhập môn qua các nền tảng trực tuyến như ASU Universal Learner, edX, Coursera hoặc Cao đẳng cộng đồng) cho thấy học sinh có khả năng tự đọc tài liệu chuyên ngành, làm bài luận dài và vượt qua các bài thi khắt khe của giảng viên đại học.</p>
                         
                         <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; padding: 12px; border-radius: 6px; margin-top: 5px;">
-                            <p style="margin-bottom: 8px; font-weight: bold; color: #047857;"><i class="fa-solid fa-gears"></i> Cách vận hành trong hệ thống GTD (Tầng 10,000 ft):</p>
+                            <p style="margin-bottom: 8px; font-weight: bold; color: #047857;"><i class="fa-solid fa-gears"></i> Cách vận hành (Tầng 10,000 ft):</p>
                             
                             <ul style="margin-bottom: 0; margin-top: 5px; margin-left: 15px; list-style-type: disc;">
                                 <li style="margin-bottom: 4px;"><strong>Kết quả mong muốn (Outcome):</strong> Hoàn thành 2 khóa học với điểm số A/B và có bảng điểm chính thức (Official Transcript).</li>
@@ -433,7 +433,7 @@ const tabConfigs = {
                         <p style="margin-bottom: 15px;">Hàng ngàn học sinh truyền thống đều có điểm SAT cao và bảng điểm đẹp, nhưng rất ít người sở hữu một sản phẩm thực tế do chính mình tạo ra từ đầu đến cuối. Một cuốn sách đã xuất bản, một ứng dụng di động đã có người dùng, hay một dự án/sự kiện cộng đồng đã quy tụ hàng trăm người chính là minh chứng sống động nhất cho tư duy chủ động, năng lực lãnh đạo và sự kiên trì.</p>
                         
                         <div style="background: rgba(139, 92, 246, 0.1); border-left: 4px solid #8b5cf6; padding: 12px; border-radius: 6px; margin-top: 5px;">
-                            <p style="margin-bottom: 8px; font-weight: bold; color: #6d28d9;"><i class="fa-solid fa-gears"></i> Cách vận hành trong hệ thống GTD (Tầng 10,000 ft):</p>
+                            <p style="margin-bottom: 8px; font-weight: bold; color: #6d28d9;"><i class="fa-solid fa-gears"></i> Cách vận hành (Tầng 10,000 ft):</p>
                             
                             <ul style="margin-bottom: 0; margin-top: 5px; margin-left: 15px; list-style-type: disc;">
                                 <li style="margin-bottom: 4px;"><strong>Kết quả mong muốn (Outcome):</strong> Xuất bản ứng dụng lên Apple App Store / Đưa sách lên Amazon Kindle / Tổ chức xong buổi Workshop.</li>
@@ -468,7 +468,7 @@ const tabConfigs = {
                         </ul>
                         
                         <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; padding: 12px; border-radius: 6px; margin-top: 5px;">
-                            <p style="margin-bottom: 8px; font-weight: bold; color: #b45309;"><i class="fa-solid fa-gears"></i> Cách vận hành trong hệ thống GTD (Tầng 10,000 ft):</p>
+                            <p style="margin-bottom: 8px; font-weight: bold; color: #b45309;"><i class="fa-solid fa-gears"></i> Cách vận hành (Tầng 10,000 ft):</p>
                             
                             <ul style="margin-bottom: 0; margin-top: 5px; margin-left: 15px; list-style-type: disc;">
                                 <li style="margin-bottom: 4px;"><strong>Kết quả mong muốn (Outcome):</strong> Nộp hoàn tất bộ hồ sơ ứng tuyển (Common App) lên hệ thống của các trường Đại học trước hạn chót.</li>
