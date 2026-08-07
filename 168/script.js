@@ -358,7 +358,58 @@ const tabConfigs = {
         defaultSysCat: 'N/A',
         guide: `
             <div class="gtd-guide">
-                <p>Nội dung tab Prinberk đang được xây dựng...</p>
+                <h4><i class="fa-solid fa-gem"></i> YÊU CẦU TỐT NGHIỆP THPT (Path 2)</h4>
+                
+                <div style="margin-bottom: 20px; padding: 15px; background: rgba(20, 184, 166, 0.1); border-radius: 8px; border-left: 4px solid #14b8a6; font-size: 0.95rem; line-height: 1.5;">
+                    <p style="margin-bottom: 12px; font-weight: bold; color: #0f766e;">To graduate Path 2, students must be full-time and complete 20 credits.</p>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.7); border: 1px solid #99f6e4; border-radius: 8px; overflow: hidden;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ccfbf1;">
+                                    <td style="padding: 10px 15px; color: #334155;">English</td>
+                                    <td style="padding: 10px 15px; font-weight: bold; color: #0f766e; text-align: right; width: 100px;">4 credits</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ccfbf1; background: rgba(240, 253, 250, 0.5);">
+                                    <td style="padding: 10px 15px; color: #334155;">Math (must include Algebra I)</td>
+                                    <td style="padding: 10px 15px; font-weight: bold; color: #0f766e; text-align: right;">3 credits</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ccfbf1;">
+                                    <td style="padding: 10px 15px; color: #334155;">Social Studies (must include World History, US History, and Economics)</td>
+                                    <td style="padding: 10px 15px; font-weight: bold; color: #0f766e; text-align: right;">3 credits</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ccfbf1; background: rgba(240, 253, 250, 0.5);">
+                                    <td style="padding: 10px 15px; color: #334155;">Science (must include a physical and biology science)</td>
+                                    <td style="padding: 10px 15px; font-weight: bold; color: #0f766e; text-align: right;">3 credits</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ccfbf1;">
+                                    <td style="padding: 10px 15px; color: #334155;">Foreign Language (2 years of the same language)</td>
+                                    <td style="padding: 10px 15px; font-weight: bold; color: #0f766e; text-align: right;">2 credits</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ccfbf1; background: rgba(240, 253, 250, 0.5);">
+                                    <td style="padding: 10px 15px; color: #334155;"><strong style="color: #b91c1c;">Visual/Performing Arts</strong> or third Foreign Language</td>
+                                    <td style="padding: 10px 15px; font-weight: bold; color: #0f766e; text-align: right;">1 credit</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ccfbf1;">
+                                    <td style="padding: 10px 15px; color: #334155;">Physical Education</td>
+                                    <td style="padding: 10px 15px; font-weight: bold; color: #0f766e; text-align: right;">0.5 credits</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ccfbf1; background: rgba(240, 253, 250, 0.5);">
+                                    <td style="padding: 10px 15px; color: #334155;"><strong style="color: #b91c1c;">Health</strong></td>
+                                    <td style="padding: 10px 15px; font-weight: bold; color: #0f766e; text-align: right;">0.5 credits</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ccfbf1;">
+                                    <td style="padding: 10px 15px; color: #334155;"><strong style="color: #b91c1c;">Electives</strong> or <strong style="color: #b91c1c;">Career & Technical Education</strong> Courses (may be additional cores)</td>
+                                    <td style="padding: 10px 15px; font-weight: bold; color: #0f766e; text-align: right;">3 credits</td>
+                                </tr>
+                                <tr style="background: rgba(254, 226, 226, 0.5);">
+                                    <td style="padding: 12px 15px; font-weight: bold; color: #991b1b; text-transform: uppercase;">TOTAL</td>
+                                    <td style="padding: 12px 15px; font-weight: bold; color: #b91c1c; text-align: right; font-size: 1.05rem;">20 credits</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         `
     },
