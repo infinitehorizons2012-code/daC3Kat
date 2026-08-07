@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siêu Nhân Thời Gian 168</title>
+    <!-- Google Fonts: Quicksand for a playful kid-friendly look -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <div class="app-container glass-panel">
+        
+        <header class="app-header">
+            <div class="logo">
+                <i class="fa-solid fa-rocket"></i>
+                <h1>Phi Đội 168</h1>
+            </div>
+            <div class="gamification">
+                <div class="stars-badge">
+                    <i class="fa-solid fa-star"></i>
+                    <span id="star-count">0</span>
+                </div>
+                <div class="sync-status" id="sync-status" title="Trạng thái đồng bộ">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+            </div>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="unplanned">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Việc Đột Xuất</span>
+            </button>
+            <button class="tab-btn" data-tab="predefined">
+                <i class="fa-solid fa-bullseye"></i>
+                <span>Việc Định Trước</span>
+            </button>
+            <button class="tab-btn" data-tab="defining">
+                <i class="fa-solid fa-box-archive"></i>
+                <span>Định Hình Công Việc</span>
+            </button>
+        </nav>
+
+        <main class="content-area">
+            
+            <!-- Tab: Việc đột xuất (Unplanned Work) -->
+            <section id="unplanned" class="tab-content active">
+                <div class="tab-header">
+                    <h2><i class="fa-solid fa-bolt" style="color: var(--warning-color)"></i> Việc Đột Xuất (Unplanned Work)</h2>
+                    <p>Những việc bất ngờ nhảy vào! Làm ngay, hoặc ghi lại để xử lý sau nhé.</p>
+                </div>
+                
+                <form class="task-form" onsubmit="handleAddTask(event, 'unplanned')">
+                    <input type="text" placeholder="Nhập việc đột xuất..." required>
+                    <button type="submit"><i class="fa-solid fa-plus"></i> Thêm</button>
+                </form>
+
+                <div class="task-list" id="unplanned-list">
+                    <!-- Tasks will be injected here -->
+                </div>
+            </section>
+
+            <!-- Tab: Việc định trước (Pre-defined Work) -->
+            <section id="predefined" class="tab-content">
+                <div class="tab-header">
+                    <h2><i class="fa-solid fa-bullseye" style="color: var(--success-color)"></i> Việc Định Trước (Pre-defined Work)</h2>
+                    <p>Đây là những việc con đã lên kế hoạch! Hoàn thành để nhận <i class="fa-solid fa-star"></i> nha.</p>
+                </div>
+
+                <form class="task-form" onsubmit="handleAddTask(event, 'predefined')">
+                    <input type="text" placeholder="Nhập việc đã lên kế hoạch..." required>
+                    <button type="submit"><i class="fa-solid fa-plus"></i> Thêm</button>
+                </form>
+
+                <div class="task-list" id="predefined-list">
+                    <!-- Tasks will be injected here -->
+                </div>
+            </section>
+
+            <!-- Tab: Định hình công việc (Defining Work) -->
+            <section id="defining" class="tab-content">
+                <div class="tab-header">
+                    <h2><i class="fa-solid fa-box-archive" style="color: var(--primary-color)"></i> Định Hình (Defining Work)</h2>
+                    <p>Dọn dẹp hòm thư, ghi chép lại các ý tưởng, sắp xếp đồ đạc và hệ thống của con.</p>
+                </div>
+
+                <form class="task-form" onsubmit="handleAddTask(event, 'defining')">
+                    <input type="text" placeholder="Nhập ý tưởng/việc cần tổ chức..." required>
+                    <button type="submit"><i class="fa-solid fa-plus"></i> Thêm</button>
+                </form>
+
+                <div class="task-list" id="defining-list">
+                    <!-- Tasks will be injected here -->
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="app-footer">
+            <p>Trạm điều khiển không gian 168 © 2026</p>
+        </footer>
+
+    </div>
+
+    <!-- Celebration Overlay -->
+    <div class="celebration-overlay" id="celebration">
+        <div class="star-pop">
+            <i class="fa-solid fa-star"></i>
+            <h3>Tuyệt Vời!</h3>
+            <p>Con nhận được 1 sao vàng!</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
