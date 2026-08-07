@@ -845,11 +845,17 @@ window.openTaskModal = function(taskId) {
         document.getElementById('strategy-type-container').style.display = 'block';
         document.getElementById('modal-task-strategy-type').value = task.workCategory;
         document.getElementById('modal-task-group').value = 'Strategic';
+        if (document.getElementById('action-details-row')) document.getElementById('action-details-row').style.display = 'none';
+        if (document.getElementById('syscat-container')) document.getElementById('syscat-container').style.display = 'none';
+        if (document.getElementById('group-container')) document.getElementById('group-container').style.display = 'none';
     } else {
         document.getElementById('workcat-container').style.display = 'block';
         document.getElementById('strategy-type-container').style.display = 'none';
         document.getElementById('modal-task-workcat').value = task.workCategory;
         document.getElementById('modal-task-group').value = task.taskGroup || "Maintenance";
+        if (document.getElementById('action-details-row')) document.getElementById('action-details-row').style.display = 'flex';
+        if (document.getElementById('syscat-container')) document.getElementById('syscat-container').style.display = 'block';
+        if (document.getElementById('group-container')) document.getElementById('group-container').style.display = 'block';
     }
 
     document.getElementById('modal-task-syscat').value = task.systemCategory;
@@ -1017,16 +1023,21 @@ window.renderTasks = function() {
                     </div>
                 </div>
                 <div class="task-tags">
-                    ${task.taskGroup ? `<span class="tag tag-sys" style="background:#dcfce3;color:#166534;"><i class="fa-solid fa-layer-group"></i> ${escapeHTML(task.taskGroup)}</span>` : ''}
+                    ${['Project', 'Goal', 'Vision', 'Mission'].includes(task.workCategory) ? `
+                        ${task.workCategory === 'Project' ? `<span class="tag tag-sys" style="background:#e0f2fe;color:#0369a1;"><i class="fa-solid fa-rocket"></i> Dự án</span>` : ''}
+                        ${task.workCategory === 'Goal' ? `<span class="tag tag-sys" style="background:#ffedd5;color:#c2410c;"><i class="fa-solid fa-bullseye"></i> Mục tiêu</span>` : ''}
+                        ${task.workCategory === 'Vision' ? `<span class="tag tag-sys" style="background:#fef08a;color:#854d0e;"><i class="fa-solid fa-eye"></i> Tầm nhìn</span>` : ''}
+                        ${task.workCategory === 'Mission' ? `<span class="tag tag-sys" style="background:#fee2e2;color:#b91c1c;"><i class="fa-solid fa-fire"></i> Sứ mệnh</span>` : ''}
+                    ` : (task.taskGroup ? `<span class="tag tag-sys" style="background:#dcfce3;color:#166534;"><i class="fa-solid fa-layer-group"></i> ${escapeHTML(task.taskGroup)}</span>` : '')}
                     ${task.area ? `<span class="tag tag-sys" style="background:#f3e8ff;color:#6b21a8;">${escapeHTML(task.area)}</span>` : ''}
-                    ${task.systemCategory && task.systemCategory !== 'N/A' ? `<span class="tag tag-sys">${escapeHTML(task.systemCategory)}</span>` : ''}
+                    ${task.systemCategory && task.systemCategory !== 'N/A' && !['Project', 'Goal', 'Vision', 'Mission'].includes(task.workCategory) ? `<span class="tag tag-sys">${escapeHTML(task.systemCategory)}</span>` : ''}
                     ${task.projectRef ? `<span class="tag tag-sys" style="background:#e0f2fe;color:#0369a1;"><i class="fa-solid fa-rocket"></i> Dự án: ${escapeHTML(task.projectRef)}</span>` : ''}
                     ${task.goalRef ? `<span class="tag tag-sys" style="background:#ffedd5;color:#c2410c;"><i class="fa-solid fa-bullseye"></i> MT: ${escapeHTML(task.goalRef)}</span>` : ''}
                     ${task.visionRef ? `<span class="tag tag-sys" style="background:#fef08a;color:#854d0e;"><i class="fa-solid fa-eye"></i> TN: ${escapeHTML(task.visionRef)}</span>` : ''}
                     ${task.missionRef ? `<span class="tag tag-sys" style="background:#fee2e2;color:#b91c1c;"><i class="fa-solid fa-fire"></i> SM: ${escapeHTML(task.missionRef)}</span>` : ''}
-                    ${task.context ? `<span class="tag tag-context">${escapeHTML(task.context)}</span>` : ''}
-                    ${task.time ? `<span class="tag tag-time"><i class="fa-regular fa-clock"></i> ${escapeHTML(task.time)}</span>` : ''}
-                    ${task.energy ? `<span class="tag tag-energy"><i class="fa-solid fa-bolt"></i> ${escapeHTML(task.energy)}</span>` : ''}
+                    ${task.context && !['Project', 'Goal', 'Vision', 'Mission'].includes(task.workCategory) ? `<span class="tag tag-context">${escapeHTML(task.context)}</span>` : ''}
+                    ${task.time && !['Project', 'Goal', 'Vision', 'Mission'].includes(task.workCategory) ? `<span class="tag tag-time"><i class="fa-regular fa-clock"></i> ${escapeHTML(task.time)}</span>` : ''}
+                    ${task.energy && !['Project', 'Goal', 'Vision', 'Mission'].includes(task.workCategory) ? `<span class="tag tag-energy"><i class="fa-solid fa-bolt"></i> ${escapeHTML(task.energy)}</span>` : ''}
                 </div>
             </div>
         `).join('');

@@ -116,7 +116,7 @@
                     <input type="text" id="modal-task-name" class="full-width">
                 </div>
 
-                <div class="form-row">
+                <div class="form-row" id="action-details-row">
                     <div class="form-group third">
                         <label>Bối cảnh (Context):</label>
                         <select id="modal-task-context">
@@ -166,7 +166,7 @@
                             <option value="Mission">Sứ mệnh (50k)</option>
                         </select>
                     </div>
-                    <div class="form-group half">
+                    <div class="form-group half" id="syscat-container">
                         <label>Hệ thống lưu giữ:</label>
                         <select id="modal-task-syscat">
                             <option value="Inbox (Stuff)">Inbox (Stuff)</option>
@@ -180,7 +180,7 @@
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group half">
+                    <div class="form-group half" id="group-container">
                         <label>Nhóm (Group):</label>
                         <select id="modal-task-group" onchange="toggleGroupFields()">
                             <option value="Maintenance">Maintenance (Bảo trì)</option>
