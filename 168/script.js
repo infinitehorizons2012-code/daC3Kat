@@ -302,11 +302,11 @@ window.renderTasks = function() {
                             <th>Tên Hành Động</th>
                             <th>Nhóm</th>
                             <th>Lĩnh Vực</th>
-                            <th>Phân Loại CV</th>
-                            <th>Hệ Thống</th>
                             <th>Bối Cảnh</th>
                             <th>Thời Gian</th>
                             <th>Năng Lượng</th>
+                            <th>Phân Loại CV</th>
+                            <th>Hệ Thống</th>
                             <th>Dự Án</th>
                             <th>Mục Tiêu</th>
                             <th>Tầm Nhìn</th>
@@ -325,11 +325,11 @@ window.renderTasks = function() {
                                 <td><strong>${escapeHTML(task.text)}</strong></td>
                                 <td>${escapeHTML(task.taskGroup || 'Maintenance')}</td>
                                 <td>${escapeHTML(task.area || '')}</td>
-                                <td>${escapeHTML(task.workCategory)}</td>
-                                <td>${escapeHTML(task.systemCategory)}</td>
                                 <td>${escapeHTML(task.context || '')}</td>
                                 <td>${escapeHTML(task.time || '')}</td>
                                 <td>${escapeHTML(task.energy || '')}</td>
+                                <td>${escapeHTML(task.workCategory)}</td>
+                                <td>${escapeHTML(task.systemCategory)}</td>
                                 <td>${escapeHTML(task.projectRef || '')}</td>
                                 <td>${escapeHTML(task.goalRef || '')}</td>
                                 <td>${escapeHTML(task.visionRef || '')}</td>
