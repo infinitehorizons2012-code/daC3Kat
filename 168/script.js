@@ -282,6 +282,26 @@ const tabConfigs = {
                         <p style="margin: 4px 0 0 20px;">Là sản phẩm đầu ra của quá trình Defining Work. Nhờ đã được định nghĩa rõ ràng ("Làm cái gì, ở đâu, mất bao lâu"), khi nhảy vào làm (Engage), não bạn không bị ma sát hay trì hoãn.</p>
                     </div>
                 </div>
+
+                <div style="background: rgba(244, 63, 94, 0.1); border-left: 4px solid #f43f5e; border-radius: 8px; padding: 15px; font-size: 0.95rem; line-height: 1.5;">
+                    <h5 style="color: #e11d48; margin-bottom: 10px;"><i class="fa-solid fa-bolt"></i> Nguyên tắc xử lý Việc Đột xuất (Unplanned Work):</h5>
+                    <p style="margin-bottom: 12px;">Việc đột xuất sẽ xuất hiện liên tục và nguyên tắc xử lý như sau:</p>
+                    
+                    <div style="margin-bottom: 12px; background: rgba(255,255,255,0.7); padding: 10px 15px; border-radius: 6px;">
+                        <strong style="color: #be123c;"><i class="fa-regular fa-clock"></i> Quy tắc "Bộ lọc 2 phút nhanh" tại chỗ:</strong>
+                        <p style="margin: 4px 0 4px 0;">Khi một việc đột xuất đến (email khẩn, sếp gọi, sự cố phát sinh):</p>
+                        <ul style="margin-bottom: 0; padding-left: 20px; list-style-type: disc;">
+                            <li style="margin-bottom: 4px;"><strong>Nếu mất &lt; 2 phút:</strong> Làm luôn ngay tại chỗ rồi quay lại việc đang làm.</li>
+                            <li><strong>Nếu mất &gt; 2 phút:</strong> Bạn phải tạm dừng lại 3 giây để thực hiện <strong>ĐÁNH GIÁ ĐỐI GIAO THOA (Trade-off Decision)</strong> dựa trên 4 bộ lọc hành động (Bối cảnh, Thời gian, Năng lượng, Độ ưu tiên).</li>
+                        </ul>
+                    </div>
+
+                    <p style="margin-bottom: 8px; font-weight: bold; color: #9f1239;">Câu hỏi quyết định: "Liệu làm việc đột xuất này NGAY BÂY GIỜ có mang lại giá trị cao hơn tất cả những việc đã lên kế hoạch trong danh sách Defined Work của mình hay không?"</p>
+                    <ul style="margin-bottom: 0; padding-left: 20px; list-style-type: square;">
+                        <li style="margin-bottom: 4px;"><strong style="color: #16a34a;">Nếu CÓ:</strong> Chấp nhận gạt danh sách Defined Work sang một bên &rarr; Thực hiện việc đột xuất.</li>
+                        <li><strong style="color: #dc2626;">Nếu KHÔNG:</strong> Tiếp tục làm việc đã định trước (Defined Work) <strong>VÀ</strong> Quăng ngay việc đột xuất đó vào In-basket (Định Hình / Thu thập) để nó đi đúng chu trình Defining Work.</li>
+                    </ul>
+                </div>
             </div>
         `
     },
