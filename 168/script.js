@@ -453,8 +453,6 @@ const tabConfigs = {
                         <i class="fa-solid fa-laptop-code"></i> MÔ HÌNH 1: "Học Qua Làm" (Learn by Doing) Ngay Trong Cấp 3
                     </summary>
                     <div style="margin-top: 15px; font-size: 0.95rem;">
-                        <p style="margin-bottom: 8px;"><em>Đây là kịch bản phổ biến nhất đối với học sinh Unschooling/Homeschooling theo triết lý Blake Boles để làm bằng chứng cho Hồ sơ Đại học.</em></p>
-                        
                         <p style="margin-bottom: 4px;"><strong><span style="color: #1d4ed8;">Bản chất:</span></strong> Dự án Dream Map (Viết sách, Xuất bản App, Tổ chức Sự kiện) áp dụng khung 5 Bước không phải để con bạn bỏ học đi làm full-time ngay, mà là để sản phẩm đó có giá trị thực (thị trường chấp nhận, có dòng tiền/người dùng thật).</p>
                         
                         <p style="margin-bottom: 4px;"><strong><span style="color: #1d4ed8;">Cách hiểu:</span></strong> Thay vì làm một dự án "giả lập" chỉ để làm đẹp hồ sơ, con áp dụng khung 5 bước: Học kỹ năng (B1) &rarr; Đóng gói sản phẩm (B2) &rarr; Tiếp cận Mentor (B3) &rarr; Ra mắt sản phẩm / Thương mại hóa nhỏ (B4).</p>
