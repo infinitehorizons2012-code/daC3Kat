@@ -106,24 +106,26 @@
 
                 <div class="form-row">
                     <div class="form-group half">
-                        <label>Bản chất công việc:</label>
-                        <select id="modal-task-workcat">
-                            <option value="Defining Work">Defining Work</option>
-                            <option value="Pre-defined Work">Pre-defined Work</option>
-                            <option value="Unplanned Work">Unplanned Work</option>
-                            <option value="Project">Dự án</option>
-                            <option value="Vision">Tầm nhìn</option>
+                        <label>Nhóm (Group):</label>
+                        <select id="modal-task-group" onchange="toggleGroupFields()">
+                            <option value="Maintenance">Maintenance (Bảo trì)</option>
+                            <option value="Strategic">Strategic (Chiến lược)</option>
                         </select>
                     </div>
                     <div class="form-group half">
-                        <label>Hệ thống lưu giữ:</label>
-                        <select id="modal-task-syscat">
-                            <option value="Inbox (Stuff)">Inbox (Stuff)</option>
-                            <option value="Next Actions">Next Actions (Làm ngay)</option>
-                            <option value="Calendar">Calendar (Có lịch)</option>
-                            <option value="Waiting For">Waiting For (Đợi người khác)</option>
-                            <option value="Someday-Maybe">Someday-Maybe (Có lúc nào đó)</option>
-                            <option value="N/A">Không có</option>
+                        <label>Lĩnh vực (Area - 20k ft):</label>
+                        <select id="modal-task-area">
+                            <option value="">-- Chọn lĩnh vực --</option>
+                            <option value="Sinh mệnh">Sinh mệnh</option>
+                            <option value="Sức khỏe">Sức khỏe cá nhân</option>
+                            <option value="Gia đình">Gia đình</option>
+                            <option value="Nhà cửa">Nhà cửa & Đời sống (Manual)</option>
+                            <option value="Mối quan hệ">Mối quan hệ</option>
+                            <option value="Sự nghiệp">Sự nghiệp</option>
+                            <option value="Học tập">Phát triển cá nhân (Liberal)</option>
+                            <option value="Tài chính">Tài chính</option>
+                            <option value="Giải trí">Sở thích & Giải trí (Fine Art)</option>
+                            <option value="Khác">Khác</option>
                         </select>
                     </div>
                 </div>
@@ -162,26 +164,24 @@
 
                 <div class="form-row">
                     <div class="form-group half">
-                        <label>Nhóm (Group):</label>
-                        <select id="modal-task-group" onchange="toggleGroupFields()">
-                            <option value="Maintenance">Maintenance (Bảo trì)</option>
-                            <option value="Strategic">Strategic (Chiến lược)</option>
+                        <label>Bản chất công việc:</label>
+                        <select id="modal-task-workcat">
+                            <option value="Defining Work">Defining Work</option>
+                            <option value="Pre-defined Work">Pre-defined Work</option>
+                            <option value="Unplanned Work">Unplanned Work</option>
+                            <option value="Project">Dự án</option>
+                            <option value="Vision">Tầm nhìn</option>
                         </select>
                     </div>
                     <div class="form-group half">
-                        <label>Lĩnh vực (Area - 20k ft):</label>
-                        <select id="modal-task-area">
-                            <option value="">-- Chọn lĩnh vực --</option>
-                            <option value="Sinh mệnh">Sinh mệnh</option>
-                            <option value="Sức khỏe">Sức khỏe cá nhân</option>
-                            <option value="Gia đình">Gia đình</option>
-                            <option value="Nhà cửa">Nhà cửa & Đời sống (Manual)</option>
-                            <option value="Mối quan hệ">Mối quan hệ</option>
-                            <option value="Sự nghiệp">Sự nghiệp</option>
-                            <option value="Học tập">Phát triển cá nhân (Liberal)</option>
-                            <option value="Tài chính">Tài chính</option>
-                            <option value="Giải trí">Sở thích & Giải trí (Fine Art)</option>
-                            <option value="Khác">Khác</option>
+                        <label>Hệ thống lưu giữ:</label>
+                        <select id="modal-task-syscat">
+                            <option value="Inbox (Stuff)">Inbox (Stuff)</option>
+                            <option value="Next Actions">Next Actions (Làm ngay)</option>
+                            <option value="Calendar">Calendar (Có lịch)</option>
+                            <option value="Waiting For">Waiting For (Đợi người khác)</option>
+                            <option value="Someday-Maybe">Someday-Maybe (Có lúc nào đó)</option>
+                            <option value="N/A">Không có</option>
                         </select>
                     </div>
                 </div>
