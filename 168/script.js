@@ -580,15 +580,15 @@ const tabConfigs = {
         `
     },
     'scm': {
-        title: 'SCM',
-        desc: 'Supply Chain & AI',
+        title: 'SCM & AI:',
+        desc: 'DA Dream Map & DA Tín chỉ',
         icon: 'fa-truck-fast',
         color: '#3b82f6',
         defaultWorkCat: 'Vision',
         defaultSysCat: 'N/A',
         guide: `
 <div class="gtd-guide">
-    <h4><i class="fa-solid fa-truck-fast"></i> SCM: Supply Chain & AI</h4>
+                <h4><i class="fa-solid fa-truck-fast"></i> SCM & AI: DA Dream Map & DA Tín chỉ</h4>
     <div style="margin-bottom: 20px; padding: 15px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border-left: 4px solid #3b82f6; font-size: 0.95rem; line-height: 1.5;">
         <p style="margin-bottom: 12px;">Sự kết hợp giữa <strong>Supply Chain (Chuỗi cung ứng)</strong> và <strong>Trí tuệ nhân tạo (AI)</strong> đang tạo ra bước ngoặt lớn, giúp chuyển đổi các chuỗi cung ứng truyền thống (vốn thụ động, xử lý dữ liệu chậm) thành chuỗi cung ứng thông minh (Smart Supply Chain) với khả năng tự động hóa, dự báo chính xác và ứng phó linh hoạt.</p>
         <p>Dưới đây là các ứng dụng cốt lõi, lợi ích mang lại và thách thức khi triển khai AI trong chuỗi cung ứng:</p>
