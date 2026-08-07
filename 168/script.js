@@ -248,7 +248,7 @@ const tabConfigs = {
                     
                     <div style="margin-bottom: 12px;">
                         <strong style="color: #1d4ed8;"><i class="fa-solid fa-arrow-trend-up"></i> Nhóm 1: Việc hướng đến sự phát triển (Strategic Actions)</strong>
-                        <p style="margin: 4px 0 4px 15px; color: #475569;"><em>Chuỗi: Hành động &rarr; Dự án &rarr; Mục tiêu &rarr; Tầm nhìn &rarr; Sứ mệnh.</em></p>
+                        <p style="margin: 4px 0 4px 15px; color: #475569;"><em>Chuỗi: Hành động &rarr; Dự án &rarr; Lĩnh vực trách nhiệm &rarr; Mục tiêu &rarr; Tầm nhìn &rarr; Sứ mệnh.</em></p>
                         <p style="margin: 0 0 0 15px;">Ví dụ: Đọc 20 trang sách kinh tế &rarr; Hoàn thành khóa học đầu tư &rarr; Tự chủ tài chính 2 năm tới &rarr; Tự do thời gian &rarr; Tự lập và liên tục phát triển.</p>
                     </div>
 
