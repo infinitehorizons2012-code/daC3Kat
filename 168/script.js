@@ -47,7 +47,7 @@ const tabConfigs = {
                 
                 <details style="margin-bottom: 15px; background: rgba(255,255,255,0.8); border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 15px;">
                     <summary style="font-weight: bold; cursor: pointer; color: var(--secondary-color); font-size: 1.05rem;">
-                        <i class="fa-solid fa-list-ul"></i> Xem 6 Mẫu Dream Map (Bản đồ Ước mơ)
+                        <i class="fa-solid fa-list-ul"></i> Xem 9 Mẫu Dream Map (Bản đồ Ước mơ)
                     </summary>
                     <div style="margin-top: 20px;">
                         <div style="margin-bottom: 15px;">
@@ -119,6 +119,42 @@ const tabConfigs = {
                                 <li><strong>Mục tiêu (30k ft):</strong> Xây dựng một mô hình kinh doanh nhỏ/dự án xã hội tự duy trì được tài chính trong 12–24 tháng.</li>
                                 <li><strong>Tầm nhìn (40k ft):</strong> Làm chủ mô hình kinh doanh linh hoạt, tự chủ tài chính và tạo được việc làm hoặc giá trị cho cộng đồng xung quanh sau 3–5 năm.</li>
                                 <li><strong>Sứ mệnh (50k ft):</strong> Chủ động tạo ra cơ hội, sống tự lập về kinh tế và tạo dựng một cộng đồng gắn kết, tích cực.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <h5 style="color: #4ade80; margin-bottom: 5px;">MẪU 7: Dự án Xã hội & Cộng đồng (Social Impact & Advocacy)</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Gửi 1 email cho tổ chức phi chính phủ (NGO) địa phương để xin lịch hẹn phỏng vấn về vấn đề rác thải nhựa vào sáng mai.</li>
+                                <li><strong>Dự án (10k ft):</strong> Thiết kế và thực hiện chiến dịch truyền thông nhận thức rác thải nhựa tại địa phương, thu hút 200 người tham gia trong 3 tháng.</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Trách nhiệm xã hội, Kỹ năng lãnh đạo cộng đồng & Truyền thông vận động (Lĩnh vực duy trì lâu dài).</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Thành lập một nhóm/tổ chức tình nguyện trẻ tự vận hành và gây quỹ thành công $2,000 trong 12–18 tháng.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Trở thành một nhà hoạt động xã hội/nhà lãnh đạo trẻ có ảnh hưởng thực chất, kết nối các nguồn lực để tạo thay đổi bền vững trong 3–5 năm.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Phụng sự cộng đồng, bảo vệ môi trường sống và để lại những giá trị tích cực cho thế hệ sau.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <h5 style="color: #60a5fa; margin-bottom: 5px;">MẪU 8: Đa đam mê / Sự nghiệp Portfolio (Hybrid & Portfolio Career)</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Tạo một trang web cá nhân đơn giản (Notion/WordPress) và đăng lên 3 sản phẩm mẫu (1 bài viết, 1 bộ ảnh, 1 thiết kế) chiều nay.</li>
+                                <li><strong>Dự án (10k ft):</strong> Hoàn thành bộ hồ sơ năng lực đa dạng (Portfolio) và nhận 3 hợp đồng tự do (Freelance) đầu tiên ở cả 3 lĩnh vực trong 4 tháng.</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Quản lý năng lực đa chiều, Thương hiệu cá nhân & Tự do tài chính (Chăm sóc cả đời).</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Xây dựng mô hình thu nhập hỗn hợp (Portfolio Career) mang lại nguồn tài chính ổn định từ nhiều dịch vụ khác nhau trong 1–2 năm.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Làm chủ một sự nghiệp linh hoạt, không bị bó buộc vào một danh xưng công việc cố định, tự do điều phối thời gian cho các đam mê khác nhau sau 3–5 năm.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Sống đa dạng, khai phá tối đa tiềm năng bản thân và không giới hạn khả năng sáng tạo.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <h5 style="color: #f43f5e; margin-bottom: 5px;">MẪU 9: Xây dựng Mạng lưới Cố vấn (Mentorship & Network Building)</h5>
+                            <ul>
+                                <li><strong>Hành động (Runway):</strong> Soạn và gửi 1 thư điện tử (Cold Email) ngỏ lời xin 15 phút trò chuyện ngắn với 1 chuyên gia trong ngành.</li>
+                                <li><strong>Dự án (10k ft):</strong> Thực hiện chuỗi 10 cuộc phỏng vấn hướng nghiệp (Informational Interviews) với các chuyên gia và tổng hợp thành bộ tài liệu học tập trong 2 tháng.</li>
+                                <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Xây dựng mối quan hệ chất lượng & Phát triển tư duy chuyên môn (Lĩnh vực sống dài hạn).</li>
+                                <li><strong>Mục tiêu (30k ft):</strong> Kết nối được với ít nhất 2 người cố vấn (Mentors) chính thức đồng hành cùng lộ trình phát triển trong 1 năm.</li>
+                                <li><strong>Tầm nhìn (40k ft):</strong> Đứng trong mạng lưới những người tiên phong, uy tín trong ngành và sẵn sàng quay lại làm cố vấn cho thế hệ tiếp theo sau 3–5 năm.</li>
+                                <li><strong>Sứ mệnh (50k ft):</strong> Khiêm tốn học hỏi từ người đi trước, xây dựng giá trị trên sự kết nối chân thành và chia sẻ tri thức.</li>
                             </ul>
                         </div>
                     </div>
