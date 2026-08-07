@@ -469,10 +469,22 @@ const tabConfigs = {
                         </div>
                         
                         <p style="margin-bottom: 4px; font-weight: bold; color: #92400e;">Tại sao cần:</p>
-                        <p style="margin-bottom: 8px;">Dù có điểm thi tốt, học xong tín chỉ và làm ra sản phẩm hay, nếu không biết gom lại và kể thành một câu chuyện cá nhân (Narrative) hấp dẫn thì hồ sơ vẫn mờ nhạt. Dự án này bao gồm:</p>
+                        <p style="margin-bottom: 8px;">Dù có điểm thi tốt, học xong tín chỉ và làm ra sản phẩm hay, nếu không biết gom lại và kể thành một câu chuyện cá nhân (Narrative) hấp dẫn thì hồ sơ vẫn mờ nhạt. Đây là dự án ở tầng 10,000 ft (Project) nhằm tập hợp toàn bộ thành tựu, sản phẩm và câu chuyện trưởng thành của con thành một bộ hồ sơ ứng tuyển hoàn chỉnh (Application Package) gửi đến các trường Đại học.</p>
+                        <p style="margin-bottom: 8px;">Dự án này gồm 2 thành tố chính:</p>
+                        
+                        <strong style="color: #b45309;">A. Unschooling Portfolio (Hồ sơ năng lực thực tế)</strong>
+                        <p style="margin-bottom: 4px; color: #475569;">Thay vì chỉ đưa ra một bảng điểm số khô khan, Portfolio là một tập tài liệu (dạng file PDF, trang web cá nhân, hoặc video) minh chứng cho những gì con đã thực sự làm và tạo ra:</p>
+                        <ul style="margin-bottom: 12px; margin-left: 15px; list-style-type: square; color: #475569;">
+                            <li style="margin-bottom: 4px;"><strong>Các sản phẩm từ Dream Map / Micro-Projects:</strong> Cuốn sách con đã viết, ứng dụng/game con đã code, kênh nghiên cứu, dự án cộng đồng con từng tổ chức, tranh ảnh/thiết kế con đã sáng tác...</li>
+                            <li style="margin-bottom: 4px;"><strong>Danh mục tự học (Reading/Course List):</strong> Danh sách các cuốn sách chuyên sâu con đã đọc, các khóa học online (Coursera, edX...) con đã hoàn thành.</li>
+                            <li style="margin-bottom: 4px;"><strong>Minh chứng hoạt động:</strong> Hình ảnh, đường link sản phẩm, giấy chứng nhận, thư nhận xét từ người cố vấn (Mentors).</li>
+                        </ul>
+
+                        <strong style="color: #b45309;">B. Personal Essay / Statement (Bài luận cá nhân)</strong>
+                        <p style="margin-bottom: 4px; color: #475569;">Đây là bài viết (thường từ 500–650 từ) để con cất lên tiếng nói và góc nhìn của riêng mình:</p>
                         <ul style="margin-bottom: 15px; margin-left: 15px; list-style-type: square; color: #475569;">
-                            <li style="margin-bottom: 4px;"><strong>Portfolio:</strong> Tập hợp đường link, hình ảnh, bài báo, nhận xét từ người cố vấn (Mentors), danh mục sách đã đọc thành một file PDF hoặc trang web cá nhân đẹp mắt.</li>
-                            <li style="margin-bottom: 4px;"><strong>Bài luận cá nhân (Personal Statement):</strong> Bài viết 650 từ trả lời câu hỏi: "Con đường tự học đã hình thành nên con người và thế giới quan của bạn như thế nào?"</li>
+                            <li style="margin-bottom: 4px;"><strong>Nội dung:</strong> Con kể lại hành trình tự học của mình—tại sao con chọn con đường này, con đã gặp khó khăn gì khi thực hiện các dự án trong Dream Map, con đã vượt qua ra sao và điều đó định hình nên con người con như thế nào.</li>
+                            <li style="margin-bottom: 4px;"><strong>Vai trò:</strong> Bài luận giúp hội đồng tuyển sinh thấy được tính cách, sự trưởng thành, tư duy độc lập và niềm đam mê học tập của con—những điều mà điểm số hay tín chỉ không thể hiện hết được.</li>
                         </ul>
                         
                         <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; padding: 12px; border-radius: 6px; margin-top: 5px;">
