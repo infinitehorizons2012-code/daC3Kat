@@ -268,7 +268,7 @@ const tabConfigs = {
                 </div>
 
                 <div style="background: rgba(139, 92, 246, 0.1); border-left: 4px solid #8b5cf6; border-radius: 8px; padding: 15px; font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px;">
-                    <h5 style="color: #6d28d9; margin-bottom: 10px;"><i class="fa-solid fa-gears"></i> Cơ chế vận hành toàn hệ thống GTD:</h5>
+                    <h5 style="color: #6d28d9; margin-bottom: 10px;"><i class="fa-solid fa-gears"></i> Cơ chế vận hành toàn hệ thống:</h5>
                     
                     <div style="margin-bottom: 12px;">
                         <strong style="color: #5b21b6;"><i class="fa-solid fa-compass" style="color: #8b5cf6;"></i> Tầm nhìn (Horizons of Focus):</strong>
