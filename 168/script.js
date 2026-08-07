@@ -198,9 +198,11 @@ window.toggleTask = async function(taskId) {
 };
 
 window.deleteTask = async function(taskId) {
-    state.tasks = state.tasks.filter(t => t.id !== taskId);
-    window.renderTasks();
-    await saveData();
+    if (confirm("Bạn có chắc chắn muốn xóa công việc này không?")) {
+        state.tasks = state.tasks.filter(t => t.id !== taskId);
+        window.renderTasks();
+        await saveData();
+    }
 };
 
 // --- Modal Chỉnh sửa chi tiết ---
