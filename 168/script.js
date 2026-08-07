@@ -337,12 +337,7 @@ const tabConfigs = {
                         <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Hồ sơ:</strong> Đóng gói Unschooling Portfolio & viết bài luận cá nhân.</li>
                     </ul>
 
-                    <p style="margin-bottom: 8px;"><strong style="color: #be185d;">Hành động (Runway):</strong></p>
-                    <ul style="margin-bottom: 0; margin-left: 15px; list-style-type: none; padding-left: 0;">
-                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-play" style="color: #ec4899; margin-right: 5px;"></i> Giải 1 đề SAT Math chiều nay.</li>
-                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-play" style="color: #ec4899; margin-right: 5px;"></i> Gửi email cho Mentor xin thư giới thiệu.</li>
-                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-play" style="color: #ec4899; margin-right: 5px;"></i> Viết 300 từ cho bài luận cá nhân (Personal Statement).</li>
-                    </ul>
+
                 </div>
             </div>
         `
