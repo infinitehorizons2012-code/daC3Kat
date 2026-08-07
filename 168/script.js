@@ -374,7 +374,7 @@ const tabConfigs = {
                 <h4><i class="fa-solid fa-rocket"></i> Kế hoạch của Kat 2:</h4>
                 <div style="margin-bottom: 20px; padding: 15px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 4px solid #8b5cf6; font-size: 0.95rem; line-height: 1.5;">
                     <p style="margin-bottom: 8px;"><strong style="color: #5b21b6;">50,000 ft (Sứ mệnh):</strong> Sống tự chủ, làm chủ năng lực học tập suốt đời và tự tạo giá trị cho xã hội.</p>
-                    <p style="margin-bottom: 8px;"><strong style="color: #5b21b6;">40,000 ft (Tầm nhìn):</strong> Sở hữu sự nghiệp tự do, tự chủ tài chính không phụ thuộc bằng cấp trong 3–5 năm.</p>
+                    <p style="margin-bottom: 8px;"><strong style="color: #5b21b6;">40,000 ft (Tầm nhìn):</strong> Sở hữu sự nghiệp tự do, tự chủ tài chính trong 3–5 năm.</p>
                     <p style="margin-bottom: 12px;"><strong style="color: #5b21b6;">30,000 ft (Mục tiêu):</strong> Đạt thu nhập $1,000/tháng từ công việc Freelance/Kinh doanh trong 12 tháng.</p>
                     
                     <div style="margin-bottom: 12px; font-style: italic; color: #4c1d95; padding: 10px; background: rgba(255,255,255,0.7); border-radius: 6px;">
