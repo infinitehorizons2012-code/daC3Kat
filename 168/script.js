@@ -169,6 +169,8 @@ window.handleQuickAdd = async function(event) {
         taskGroup: "Maintenance",
         area: "",
         projectRef: "",
+        goalRef: "",
+        visionRef: "",
         createdAt: new Date().toISOString()
     };
 
@@ -215,6 +217,8 @@ window.openTaskModal = function(taskId) {
     document.getElementById('modal-task-group').value = task.taskGroup || "Maintenance";
     document.getElementById('modal-task-area').value = task.area || "";
     document.getElementById('modal-task-project').value = task.projectRef || "";
+    document.getElementById('modal-task-goal').value = task.goalRef || "";
+    document.getElementById('modal-task-vision').value = task.visionRef || "";
 
     window.toggleGroupFields();
     taskModal.classList.add('show');
@@ -222,7 +226,7 @@ window.openTaskModal = function(taskId) {
 
 window.toggleGroupFields = function() {
     const group = document.getElementById('modal-task-group').value;
-    document.getElementById('project-group-field').style.display = group === 'Strategic' ? 'block' : 'none';
+    document.getElementById('strategic-fields').style.display = group === 'Strategic' ? 'block' : 'none';
 };
 
 window.closeTaskModal = function() {
@@ -243,9 +247,13 @@ window.saveTaskDetails = async function() {
     task.taskGroup = document.getElementById('modal-task-group').value;
     task.area = document.getElementById('modal-task-area').value;
     task.projectRef = document.getElementById('modal-task-project').value;
+    task.goalRef = document.getElementById('modal-task-goal').value;
+    task.visionRef = document.getElementById('modal-task-vision').value;
 
     if (task.taskGroup === 'Maintenance') {
         task.projectRef = "";
+        task.goalRef = "";
+        task.visionRef = "";
     }
 
     // Logic GTD: Nếu thêm Context/Time mà đang ở Defining -> Tự động chuyển qua Pre-defined
@@ -309,6 +317,8 @@ window.renderTasks = function() {
                             <th>Thời Gian</th>
                             <th>Năng Lượng</th>
                             <th>Dự Án</th>
+                            <th>Mục Tiêu</th>
+                            <th>Tầm Nhìn</th>
                             <th>Thao Tác</th>
                         </tr>
                     </thead>
@@ -329,6 +339,8 @@ window.renderTasks = function() {
                                 <td>${escapeHTML(task.time || '')}</td>
                                 <td>${escapeHTML(task.energy || '')}</td>
                                 <td>${escapeHTML(task.projectRef || '')}</td>
+                                <td>${escapeHTML(task.goalRef || '')}</td>
+                                <td>${escapeHTML(task.visionRef || '')}</td>
                                 <td class="actions-cell">
                                     <button class="btn-details" onclick="openTaskModal('${task.id}')" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
                                     <button class="delete-btn" onclick="deleteTask('${task.id}')" title="Xóa"><i class="fa-solid fa-trash-can"></i></button>
@@ -359,7 +371,9 @@ window.renderTasks = function() {
                     ${task.taskGroup ? `<span class="tag tag-sys" style="background:#dcfce3;color:#166534;"><i class="fa-solid fa-layer-group"></i> ${escapeHTML(task.taskGroup)}</span>` : ''}
                     ${task.area ? `<span class="tag tag-sys" style="background:#f3e8ff;color:#6b21a8;">${escapeHTML(task.area)}</span>` : ''}
                     ${task.systemCategory && task.systemCategory !== 'N/A' ? `<span class="tag tag-sys">${escapeHTML(task.systemCategory)}</span>` : ''}
-                    ${task.projectRef ? `<span class="tag tag-sys"><i class="fa-solid fa-rocket"></i> ${escapeHTML(task.projectRef)}</span>` : ''}
+                    ${task.projectRef ? `<span class="tag tag-sys" style="background:#e0f2fe;color:#0369a1;"><i class="fa-solid fa-rocket"></i> Dự án: ${escapeHTML(task.projectRef)}</span>` : ''}
+                    ${task.goalRef ? `<span class="tag tag-sys" style="background:#ffedd5;color:#c2410c;"><i class="fa-solid fa-bullseye"></i> MT: ${escapeHTML(task.goalRef)}</span>` : ''}
+                    ${task.visionRef ? `<span class="tag tag-sys" style="background:#fef08a;color:#854d0e;"><i class="fa-solid fa-eye"></i> TN: ${escapeHTML(task.visionRef)}</span>` : ''}
                     ${task.context ? `<span class="tag tag-context">${escapeHTML(task.context)}</span>` : ''}
                     ${task.time ? `<span class="tag tag-time"><i class="fa-regular fa-clock"></i> ${escapeHTML(task.time)}</span>` : ''}
                     ${task.energy ? `<span class="tag tag-energy"><i class="fa-solid fa-bolt"></i> ${escapeHTML(task.energy)}</span>` : ''}
