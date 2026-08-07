@@ -422,7 +422,7 @@ const tabConfigs = {
                         <i class="fa-solid fa-lightbulb"></i> Phân tích: DỰ ÁN DREAM MAP / SẢN PHẨM (PRODUCT PROJECT)
                     </summary>
                     <div style="margin-top: 15px; font-size: 0.95rem;">
-                        <p style="margin-bottom: 8px;"><strong>Bản chất:</strong> Đây là dự án tạo nên "sự độc đáo và nét riêng" (Uniqueness / Standout Factor) từ triết lý của Blake Boles.</p>
+                        <p style="margin-bottom: 8px;"><strong>Bản chất:</strong> Đây là dự án tạo nên "sự độc đáo và nét riêng" (Uniqueness / Standout Factor).</p>
                         
                         <div style="margin-bottom: 15px; padding: 10px; background: rgba(139, 92, 246, 0.05); border-radius: 6px; border: 1px solid #ddd6fe;">
                             <p style="margin-bottom: 4px;"><strong><i class="fa-solid fa-crosshairs" style="color: #6d28d9; width: 20px;"></i> Vai trò:</strong> Điểm nét riêng biệt</p>
