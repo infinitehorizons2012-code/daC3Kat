@@ -32,15 +32,32 @@ const tabConfigs = {
         guide: `
             <div class="gtd-guide">
                 <h4><i class="fa-solid fa-map"></i> Bản đồ độ cao GTD (Ghi chú mẫu):</h4>
-                <ul>
-                    <li><strong>Hành động (Runway):</strong> Đọc 20 trang sách kinh tế hôm nay.</li>
-                    <li><strong>Dự án (10k ft):</strong> Hoàn thành khóa học & đọc 5 cuốn sách đầu tư giá trị.</li>
-                    <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Tài chính cá nhân & Đầu tư (Duy trì cả đời). Tính dài hạn: Dự án ngắn hạn sẽ kết thúc, nhưng Lĩnh vực này liên tục sinh ra các dự án tiếp theo.</li>
-                    <li><strong>Mục tiêu (30k ft):</strong> Đạt tự chủ tài chính / quy mô danh mục $X đồng trong 2 năm tới.</li>
-                    <li><strong>Tầm nhìn (40k ft):</strong> Tự do thời gian, chủ động công việc và dành nhiều thời gian chất lượng cho gia đình sau 5 năm.</li>
-                    <li><strong>Sứ mệnh (50k ft):</strong> Sống tự lập, tự do tư duy và liên tục phát triển bản thân.</li>
-                </ul>
-                <div class="gtd-tip"><i class="fa-solid fa-lightbulb"></i> <strong>Tránh bẫy ôm đồm:</strong> Gom dự án theo nhóm (Tài chính, Sức khỏe, Gia đình...) để cân bằng nguồn lực, tránh lệch vai.</div>
+                
+                <div style="margin-bottom: 15px;">
+                    <h5 style="color: var(--primary-color); margin-bottom: 5px;">Ví dụ 1: Mục tiêu Tài chính / Sự nghiệp</h5>
+                    <ul>
+                        <li><strong>Hành động (Runway):</strong> Đọc 20 trang sách kinh tế hôm nay.</li>
+                        <li><strong>Dự án (10k ft):</strong> Hoàn thành khóa học & đọc 5 cuốn sách đầu tư giá trị.</li>
+                        <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Tài chính cá nhân & Đầu tư (Duy trì cả đời). Tính dài hạn: Dự án ngắn hạn sẽ kết thúc, nhưng Lĩnh vực này liên tục sinh ra các dự án tiếp theo.</li>
+                        <li><strong>Mục tiêu (30k ft):</strong> Đạt tự chủ tài chính / quy mô danh mục $X đồng trong 2 năm tới.</li>
+                        <li><strong>Tầm nhìn (40k ft):</strong> Tự do thời gian, chủ động công việc và dành nhiều thời gian chất lượng cho gia đình sau 5 năm.</li>
+                        <li><strong>Sứ mệnh (50k ft):</strong> Sống tự lập, tự do tư duy và liên tục phát triển bản thân.</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                    <h5 style="color: var(--success-color); margin-bottom: 5px;">Ví dụ 2: Mục tiêu Sức khỏe</h5>
+                    <ul>
+                        <li><strong>Hành động (Runway):</strong> Xỏ giày ra đường chạy 3km ngay chiều nay.</li>
+                        <li><strong>Dự án (10k ft):</strong> Hoàn thành giáo án tập chạy 12 tuần.</li>
+                        <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Rèn luyện thể lực hàng tuần (Duy trì cả đời). Tính dài hạn: Dự án giáo án 12 tuần sẽ kết thúc, nhưng Lĩnh vực sức khỏe này sẽ liên tục sinh ra các dự án tập luyện tiếp theo.</li>
+                        <li><strong>Mục tiêu (30k ft):</strong> Hoàn thành cự ly chạy Half Marathon 21km trong năm nay.</li>
+                        <li><strong>Tầm nhìn (40k ft):</strong> Sở hữu cơ thể dẻo dai, tràn đầy năng lượng sau 3 năm để đồng hành cùng con cái khi trưởng thành.</li>
+                        <li><strong>Sứ mệnh (50k ft):</strong> Coi trọng và tôn vinh sức khỏe như nền tảng gốc rễ của mọi sự phát triển.</li>
+                    </ul>
+                </div>
+
+                <div class="gtd-tip"><i class="fa-solid fa-lightbulb"></i> <strong>Tránh bẫy ôm đồm:</strong> Gom dự án theo nhóm (Tài chính, Sức khỏe, Gia đình, Sự nghiệp...) để cân bằng nguồn lực, tránh lệch vai.</div>
             </div>
         `
     },
