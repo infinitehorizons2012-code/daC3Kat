@@ -22,7 +22,28 @@ const headerDesc = document.getElementById('header-desc');
 // Cấu hình Tabs
 const tabConfigs = {
     'action': { title: 'Hành Động', desc: 'Bảng tổng hợp toàn bộ dữ liệu (Giao diện Excel).', icon: 'fa-table-list', color: '#10b981', defaultWorkCat: 'Pre-defined Work', defaultSysCat: 'Next Actions' },
-    'vision': { title: 'Tầm Nhìn', desc: 'Mục tiêu lớn và ước mơ của con.', icon: 'fa-eye', color: 'var(--secondary-color)', defaultWorkCat: 'Vision', defaultSysCat: 'N/A' },
+    'vision': { 
+        title: 'Tầm Nhìn', 
+        desc: 'Mục tiêu lớn và ước mơ của con.', 
+        icon: 'fa-eye', 
+        color: 'var(--secondary-color)', 
+        defaultWorkCat: 'Vision', 
+        defaultSysCat: 'N/A',
+        guide: `
+            <div class="gtd-guide">
+                <h4><i class="fa-solid fa-map"></i> Bản đồ độ cao GTD (Ghi chú mẫu):</h4>
+                <ul>
+                    <li><strong>Hành động (Runway):</strong> Đọc 20 trang sách kinh tế hôm nay.</li>
+                    <li><strong>Dự án (10k ft):</strong> Hoàn thành khóa học & đọc 5 cuốn sách đầu tư giá trị.</li>
+                    <li><strong>Lĩnh vực trách nhiệm (20k ft):</strong> Tài chính cá nhân & Đầu tư (Duy trì cả đời). Tính dài hạn: Dự án ngắn hạn sẽ kết thúc, nhưng Lĩnh vực này liên tục sinh ra các dự án tiếp theo.</li>
+                    <li><strong>Mục tiêu (30k ft):</strong> Đạt tự chủ tài chính / quy mô danh mục $X đồng trong 2 năm tới.</li>
+                    <li><strong>Tầm nhìn (40k ft):</strong> Tự do thời gian, chủ động công việc và dành nhiều thời gian chất lượng cho gia đình sau 5 năm.</li>
+                    <li><strong>Sứ mệnh (50k ft):</strong> Sống tự lập, tự do tư duy và liên tục phát triển bản thân.</li>
+                </ul>
+                <div class="gtd-tip"><i class="fa-solid fa-lightbulb"></i> <strong>Tránh bẫy ôm đồm:</strong> Gom dự án theo nhóm (Tài chính, Sức khỏe, Gia đình...) để cân bằng nguồn lực, tránh lệch vai.</div>
+            </div>
+        `
+    },
     'project': { title: 'Dự Án', desc: 'Mục tiêu cần nhiều bước để hoàn thành.', icon: 'fa-layer-group', color: 'var(--primary-color)', defaultWorkCat: 'Project', defaultSysCat: 'N/A' },
     'unplanned': { title: 'Đột Xuất', desc: 'Những việc bất ngờ nhảy vào! Làm ngay.', icon: 'fa-bolt', color: 'var(--warning-color)', defaultWorkCat: 'Unplanned Work', defaultSysCat: 'Next Actions' },
     'predefined': { title: 'Định Trước', desc: 'Những việc đã lên kế hoạch!', icon: 'fa-bullseye', color: 'var(--success-color)', defaultWorkCat: 'Pre-defined Work', defaultSysCat: 'Next Actions' },
@@ -57,6 +78,16 @@ function updateHeader() {
     headerTitle.innerHTML = `<i class="fa-solid ${conf.icon}" style="color: ${conf.color}"></i> ${conf.title}`;
     headerDesc.textContent = conf.desc;
     
+    const guideEl = document.getElementById('tab-guide');
+    if (guideEl) {
+        if (conf.guide) {
+            guideEl.innerHTML = conf.guide;
+            guideEl.style.display = 'block';
+        } else {
+            guideEl.style.display = 'none';
+        }
+    }
+
     // Đổi placeholder input
     quickAddInput.placeholder = `Nhập ${conf.title.toLowerCase()} mới...`;
 }
