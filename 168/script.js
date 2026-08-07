@@ -380,6 +380,32 @@ const tabConfigs = {
                         </div>
                     </div>
                 </details>
+
+                <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #a7f3d0; border-radius: 8px; padding: 10px 15px;">
+                    <summary style="font-weight: bold; cursor: pointer; color: #047857; font-size: 1.05rem;">
+                        <i class="fa-solid fa-graduation-cap"></i> Phân tích: DỰ ÁN TÍN CHỈ (CREDIT PROJECT)
+                    </summary>
+                    <div style="margin-top: 15px; font-size: 0.95rem;">
+                        <p style="margin-bottom: 8px;"><strong>Bản chất:</strong> Đây là dự án chứng minh khả năng học tập ở cấp độ đại học thực sự (Academic Rigor).</p>
+                        
+                        <p style="margin-bottom: 4px; font-weight: bold; color: #065f46;">Tại sao cần:</p>
+                        <p style="margin-bottom: 15px;">Khác với điểm thi trắc nghiệm SAT, việc học và lấy 2 môn tín chỉ Đại học/Cao đẳng (ví dụ: Vi mô Kinh tế, Lập trình Python cơ bản, Tâm lý học nhập môn qua các nền tảng trực tuyến như ASU Universal Learner, edX, Coursera hoặc Cao đẳng cộng đồng) cho thấy học sinh có khả năng tự đọc tài liệu chuyên ngành, làm bài luận dài và vượt qua các bài thi khắt khe của giảng viên đại học.</p>
+                        
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; padding: 12px; border-radius: 6px; margin-top: 5px;">
+                            <p style="margin-bottom: 8px; font-weight: bold; color: #047857;"><i class="fa-solid fa-gears"></i> Cách vận hành trong hệ thống GTD (Tầng 10,000 ft):</p>
+                            
+                            <ul style="margin-bottom: 0; margin-top: 5px; margin-left: 15px; list-style-type: disc;">
+                                <li style="margin-bottom: 4px;"><strong>Kết quả mong muốn (Outcome):</strong> Hoàn thành 2 khóa học với điểm số A/B và có bảng điểm chính thức (Official Transcript).</li>
+                                <li style="margin-bottom: 4px;"><strong>Hành động kế tiếp (Runway):</strong> 
+                                    <ul style="margin-top: 4px; margin-bottom: 0; list-style-type: circle; color: #475569;">
+                                        <li>Đăng ký tài khoản trên hệ thống trường ASU.</li>
+                                        <li>Đọc chương 1 giáo trình Kinh tế học tối nay.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </details>
             </div>
         `
     },
