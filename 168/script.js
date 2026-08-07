@@ -1091,30 +1091,6 @@ const tabConfigs = {
         defaultWorkCat: 'Project',
         defaultSysCat: 'N/A',
         guide: `
-            <div class="gtd-guide" style="margin-bottom: 20px;">
-                <h5 style="color: var(--primary-color); margin-bottom: 15px;"><i class="fa-solid fa-sitemap"></i> Cây Liên Kết Chiến Lược</h5>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <div style="background: rgba(225, 29, 72, 0.1); padding: 10px 15px; border-left: 4px solid #e11d48; border-radius: 4px;">
-                        <strong style="color: #e11d48;"><i class="fa-solid fa-fire"></i> Sứ mệnh (50,000 ft)</strong> - Mục đích tối thượng
-                    </div>
-                    <div style="margin-left: 20px; border-left: 2px solid #cbd5e1; padding-left: 20px;">
-                        <div style="background: rgba(217, 119, 6, 0.1); padding: 10px 15px; border-left: 4px solid #d97706; border-radius: 4px; margin-bottom: 8px;">
-                            <strong style="color: #d97706;"><i class="fa-solid fa-eye"></i> Tầm nhìn (40,000 ft)</strong> - Bức tranh tương lai 3-5 năm
-                        </div>
-                        <div style="margin-left: 20px; border-left: 2px solid #cbd5e1; padding-left: 20px;">
-                            <div style="background: rgba(5, 150, 105, 0.1); padding: 10px 15px; border-left: 4px solid #059669; border-radius: 4px; margin-bottom: 8px;">
-                                <strong style="color: #059669;"><i class="fa-solid fa-bullseye"></i> Mục tiêu (30,000 ft)</strong> - Đích đến 1-2 năm
-                            </div>
-                            <div style="margin-left: 20px; border-left: 2px dashed #cbd5e1; padding-left: 20px;">
-                                <div style="background: rgba(37, 99, 235, 0.1); padding: 10px 15px; border-left: 4px solid #2563eb; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                                    <strong style="color: #2563eb;"><i class="fa-solid fa-layer-group"></i> Dự án (10,000 ft)</strong> - Kết quả cần nhiều bước (dưới 1 năm)
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <p style="margin-top: 15px; font-size: 0.9rem; color: #475569; font-style: italic;">* Mọi dự án bạn tạo ra ở đây nên phục vụ cho một Mục tiêu, Tầm nhìn hoặc Sứ mệnh cụ thể để đảm bảo đi đúng hướng chiến lược.</p>
-            </div>
         `
     },
     'unplanned': { title: 'Đột Xuất', desc: 'Những việc bất ngờ nhảy vào! Làm ngay.', icon: 'fa-bolt', color: 'var(--warning-color)', defaultWorkCat: 'Unplanned Work', defaultSysCat: 'Next Actions' },
