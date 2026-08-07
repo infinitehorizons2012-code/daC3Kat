@@ -33,6 +33,18 @@ const tabConfigs = {
             <div class="gtd-guide">
                 <h4><i class="fa-solid fa-map"></i> Bản đồ độ cao GTD (Ghi chú mẫu):</h4>
                 
+                <div style="margin-bottom: 20px; padding: 15px; background: rgba(22, 163, 74, 0.1); border-radius: 8px; border-left: 4px solid #16a34a; font-size: 0.95rem; line-height: 1.5;">
+                    <p style="margin-bottom: 8px;"><strong>Sứ mệnh (50k ft):</strong> Là lý do bạn có mặt trên đời, là nền tảng đạo đức và các nguyên tắc sống không thay đổi theo thời gian.</p>
+                    <p style="margin-bottom: 8px;"><strong>Tầm nhìn (40k ft):</strong> Là đích dài hạn, là bức tranh tổng thể, là kết quả cụ thể mà Sứ mệnh muốn hướng tới trong một khoảng thời gian nhất định (thường là 3–5 năm). Nó phác họa con người bạn muốn trở thành hoặc vị thế bạn muốn đạt được.</p>
+                    <p style="margin-bottom: 12px;"><strong>Mục tiêu (30k ft):</strong> Là các mốc ngắn hạn, là kết quả cụ thể, có thể đo lường được (số liệu, thời hạn) cần hoàn thành trong 1–2 năm để hiện thực hóa Tầm nhìn.</p>
+                    
+                    <div style="margin-bottom: 12px; font-style: italic; color: #15803d; padding: 10px; background: rgba(255,255,255,0.7); border-radius: 6px;">
+                        <i class="fa-solid fa-arrow-right"></i> <strong>Sứ mệnh</strong> là con đường bạn đi, <strong>Tầm nhìn</strong> là ngọn núi bạn muốn chinh phục trên con đường đó, còn <strong>Mục tiêu</strong> là các trạm dừng chân bạn phải cán mốc để lên tới đỉnh núi.
+                    </div>
+                    
+                    <p style="margin-bottom: 0;"><strong><i class="fa-solid fa-bridge"></i> Lĩnh vực trách nhiệm (20k ft) và Dự án (10k ft)</strong> đóng vai trò là cầu nối thực thi giúp biến Mục tiêu thành các Hành động thực tế hàng ngày (Runway). Lĩnh vực là nơi quản lý các vai trò cuộc sống, còn Dự án là các phương tiện có mốc hoàn thành giúp bạn thực thi trách nhiệm trong lĩnh vực đó và tiến tới mục tiêu.</p>
+                </div>
+                
                 <div style="margin-bottom: 15px;">
                     <h5 style="color: var(--primary-color); margin-bottom: 5px;">Ví dụ 1: Mục tiêu Tài chính / Sự nghiệp</h5>
                     <ul>
