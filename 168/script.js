@@ -795,9 +795,38 @@ window.deleteTask = async function(taskId) {
 };
 
 // --- Modal Chỉnh sửa chi tiết ---
+window.populateStrategicDropdowns = function() {
+    const projectSelect = document.getElementById('modal-task-project');
+    const goalSelect = document.getElementById('modal-task-goal');
+    const visionSelect = document.getElementById('modal-task-vision');
+    const missionSelect = document.getElementById('modal-task-mission');
+    
+    const genOptions = (category) => {
+        const tasks = state.tasks.filter(t => t.workCategory === category);
+        return '<option value="">-- Không có --</option>' + 
+               tasks.map(t => `<option value="${escapeHTML(t.text)}">${escapeHTML(t.text)}</option>`).join('');
+    };
+
+    if (projectSelect) projectSelect.innerHTML = genOptions('Project');
+    if (goalSelect) goalSelect.innerHTML = genOptions('Goal');
+    if (visionSelect) visionSelect.innerHTML = genOptions('Vision');
+    if (missionSelect) missionSelect.innerHTML = genOptions('Mission');
+};
+
+window.handleWorkCatChange = function() {
+    const workCat = document.getElementById('modal-task-workcat').value;
+    const groupSelect = document.getElementById('modal-task-group');
+    if (['Project', 'Goal', 'Vision', 'Mission'].includes(workCat)) {
+        groupSelect.value = 'Strategic';
+    }
+    window.toggleGroupFields();
+};
+
 window.openTaskModal = function(taskId) {
     const task = state.tasks.find(t => t.id === taskId);
     if (!task) return;
+
+    window.populateStrategicDropdowns();
 
     document.getElementById('modal-task-id').value = task.id;
     document.getElementById('modal-task-name').value = task.text;
@@ -871,7 +900,9 @@ window.renderTasks = function() {
 
     // Lọc theo Tab (Nếu không phải tab Hành Động)
     let filteredTasks = state.tasks;
-    if (currentActiveTab !== 'action') {
+    if (currentActiveTab === 'project') {
+        filteredTasks = filteredTasks.filter(t => ['Project', 'Goal', 'Vision', 'Mission'].includes(t.workCategory));
+    } else if (currentActiveTab !== 'action') {
         filteredTasks = filteredTasks.filter(t => t.workCategory === expectedWorkCat);
     }
 

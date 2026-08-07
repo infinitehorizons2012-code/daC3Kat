@@ -145,12 +145,14 @@
                 <div class="form-row">
                     <div class="form-group half">
                         <label>Bản chất công việc:</label>
-                        <select id="modal-task-workcat">
+                        <select id="modal-task-workcat" onchange="handleWorkCatChange()">
                             <option value="Defining Work">Defining Work</option>
                             <option value="Pre-defined Work">Pre-defined Work</option>
                             <option value="Unplanned Work">Unplanned Work</option>
                             <option value="Project">Dự án</option>
+                            <option value="Goal">Mục tiêu</option>
                             <option value="Vision">Tầm nhìn</option>
+                            <option value="Mission">Sứ mệnh</option>
                         </select>
                     </div>
                     <div class="form-group half">
@@ -195,21 +197,29 @@
                 <div id="strategic-fields" style="display: none;">
                     <div class="form-group">
                         <label>Thuộc Dự án (Project 10k ft):</label>
-                        <input type="text" id="modal-task-project" class="full-width" placeholder="Tên dự án...">
+                        <select id="modal-task-project" class="full-width">
+                            <option value="">-- Không có --</option>
+                        </select>
                     </div>
                     <div class="form-row">
                         <div class="form-group half">
                             <label>Mục tiêu (30k ft):</label>
-                            <input type="text" id="modal-task-goal" class="full-width" placeholder="Mục tiêu 1-2 năm...">
+                            <select id="modal-task-goal" class="full-width">
+                                <option value="">-- Không có --</option>
+                            </select>
                         </div>
                         <div class="form-group half">
                             <label>Tầm nhìn (40k ft):</label>
-                            <input type="text" id="modal-task-vision" class="full-width" placeholder="Tầm nhìn dài hạn (3-5 năm)...">
+                            <select id="modal-task-vision" class="full-width">
+                                <option value="">-- Không có --</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Sứ mệnh (50k ft):</label>
-                        <input type="text" id="modal-task-mission" class="full-width" placeholder="Sứ mệnh/Mục đích cốt lõi...">
+                        <select id="modal-task-mission" class="full-width">
+                            <option value="">-- Không có --</option>
+                        </select>
                     </div>
                 </div>
 
