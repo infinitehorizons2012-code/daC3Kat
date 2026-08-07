@@ -432,6 +432,36 @@ const tabConfigs = {
                         </div>
                     </div>
                 </details>
+
+                <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #fde68a; border-radius: 8px; padding: 10px 15px;">
+                    <summary style="font-weight: bold; cursor: pointer; color: #b45309; font-size: 1.05rem;">
+                        <i class="fa-solid fa-folder-open"></i> Phân tích: DỰ ÁN HỒ SƠ (APPLICATION PACKAGE PROJECT)
+                    </summary>
+                    <div style="margin-top: 15px; font-size: 0.95rem;">
+                        <p style="margin-bottom: 8px;"><strong>Bản chất:</strong> Đây là dự án "đóng gói và truyền thông" (Packaging & Storytelling) toàn bộ thành quả.</p>
+                        
+                        <p style="margin-bottom: 4px; font-weight: bold; color: #92400e;">Tại sao cần:</p>
+                        <p style="margin-bottom: 8px;">Dù có điểm thi tốt, học xong tín chỉ và làm ra sản phẩm hay, nếu không biết gom lại và kể thành một câu chuyện cá nhân (Narrative) hấp dẫn thì hồ sơ vẫn mờ nhạt. Dự án này bao gồm:</p>
+                        <ul style="margin-bottom: 15px; margin-left: 15px; list-style-type: square; color: #475569;">
+                            <li style="margin-bottom: 4px;"><strong>Unschooling Portfolio:</strong> Tập hợp đường link, hình ảnh, bài báo, nhận xét từ người cố vấn (Mentors), danh mục sách đã đọc thành một file PDF hoặc trang web cá nhân đẹp mắt.</li>
+                            <li style="margin-bottom: 4px;"><strong>Bài luận cá nhân (Personal Statement):</strong> Bài viết 650 từ trả lời câu hỏi: "Con đường tự học đã hình thành nên con người và thế giới quan của bạn như thế nào?"</li>
+                        </ul>
+                        
+                        <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; padding: 12px; border-radius: 6px; margin-top: 5px;">
+                            <p style="margin-bottom: 8px; font-weight: bold; color: #b45309;"><i class="fa-solid fa-gears"></i> Cách vận hành trong hệ thống GTD (Tầng 10,000 ft):</p>
+                            
+                            <ul style="margin-bottom: 0; margin-top: 5px; margin-left: 15px; list-style-type: disc;">
+                                <li style="margin-bottom: 4px;"><strong>Kết quả mong muốn (Outcome):</strong> Nộp hoàn tất bộ hồ sơ ứng tuyển (Common App) lên hệ thống của các trường Đại học trước hạn chót.</li>
+                                <li style="margin-bottom: 4px;"><strong>Hành động kế tiếp (Runway):</strong> 
+                                    <ul style="margin-top: 4px; margin-bottom: 0; list-style-type: circle; color: #475569;">
+                                        <li>Lập file Google Drive gom tất cả hình ảnh/chứng nhận dự án.</li>
+                                        <li>Viết 200 từ nháp đầu tiên cho bài luận cá nhân.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </details>
             </div>
         `
     },
