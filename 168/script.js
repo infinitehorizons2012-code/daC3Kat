@@ -345,7 +345,7 @@ const tabConfigs = {
                             <p style="margin-bottom: 8px;"><strong>Bản chất:</strong> Đây là gói dự án đáp ứng tiêu chuẩn học thuật nền tảng và chuẩn hóa (Core Academic Standards & Standardized Testing).</p>
                             
                             <p style="margin-bottom: 4px; font-weight: bold; color: #9d174d;">Tại sao cần:</p>
-                            <p style="margin-bottom: 8px;">Với học sinh tự học (unschooling/homeschooling), hội đồng tuyển sinh đại học cần hai bằng chứng học thuật cốt lõi để bảo đảm "điều kiện cần":</p>
+                            <p style="margin-bottom: 8px;">Hội đồng tuyển sinh đại học cần hai bằng chứng học thuật cốt lõi để bảo đảm "điều kiện cần":</p>
                             <ul style="margin-bottom: 15px; margin-left: 15px; list-style-type: square; color: #475569;">
                                 <li style="margin-bottom: 4px;"><strong>Sức bền & Kiến thức phổ thông:</strong> Bằng tốt nghiệp THPT (High School Diploma) thông qua việc tích lũy đủ các tín chỉ (Credits) quy định.</li>
                                 <li style="margin-bottom: 4px;"><strong>Thước đo khách quan:</strong> Điểm số kỳ thi chuẩn hóa (SAT/ACT) để chứng minh tư duy Toán học, Đọc hiểu và Phân tích đạt mặt bằng chung toàn cầu, xóa bỏ mối lo ngại về chất lượng giảng dạy tự do tại nhà.</li>
