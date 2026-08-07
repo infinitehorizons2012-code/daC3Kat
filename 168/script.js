@@ -731,6 +731,104 @@ const tabConfigs = {
             </div>
         </div>
     </details>
+    <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 15px;" open>
+        <summary style="font-weight: bold; cursor: pointer; color: #1d4ed8; font-size: 1.05rem;">
+            7. Kết nối thành một Bức tranh Thực thi Thống nhất
+        </summary>
+        <div style="margin-top: 15px; font-size: 0.95rem; color: #334155;">
+            <p><strong>1. Sự kết nối giữa Bộ môn học (3 Credits) và Dream Map</strong><br>
+            Nếu chỉ học 3 môn học này riêng rẽ, chúng vẫn chỉ là các tín chỉ nằm trên bảng điểm. Nhưng khi đặt vào Dream Map, 3 môn học này chuyển hóa thành 3 công cụ cốt lõi để tạo ra một <strong>Sản phẩm thực tế (Product / Project)</strong>:</p>
+            <ul style="padding-left: 20px; margin-bottom: 12px;">
+                <li><strong>Kỹ thuật & Phần cứng (Automotive/Mechatronics):</strong> Cung cấp chất liệu / môi trường thực tế (Hardware/Physical Layer).</li>
+                <li><strong>Công nghệ & Phần mềm (Python/Data Science):</strong> Cung cấp trí tuệ / giải pháp tự động hóa (Software/Brain Layer).</li>
+                <li><strong>Kinh doanh & Quản lý (Business/Economics):</strong> Cung cấp bài toán kinh tế / giá trị thực tiễn (Business Case/Impact Layer).</li>
+            </ul>
+            
+            <div style="background: rgba(243, 244, 246, 0.8); padding: 10px; border-radius: 6px; border-left: 3px solid #64748b; margin-bottom: 15px;">
+                <p style="margin-bottom: 4px; font-weight: bold;">Ví dụ về một Dự án Dream Map sinh ra từ sự kết hợp này:</p>
+                <p style="margin-bottom: 4px;"><strong>Dự án Dream Map:</strong> Xây dựng hệ thống tự động cảnh báo bảo trì & tối ưu lộ trình cho một đội xe tải / thiết bị kho bãi nhỏ tại địa phương.</p>
+                <p style="margin-bottom: 0;"><strong>Việc con làm:</strong> Dùng kiến thức Kỹ thuật để hiểu cơ chế hỏng hóc cơ khí &rarr; Dùng Python viết thuật toán dự báo dựa trên dữ liệu cảm biến &rarr; Dùng tư duy Business để tính toán xem hệ thống này giúp doanh nghiệp tiết kiệm bao nhiêu % chi phí vận hành.</p>
+            </div>
+
+            <p><strong>2. Chiếu sang Mô hình 1: "Học Qua Làm" (Learn by Doing)</strong><br>
+            Mô hình 1 nhấn mạnh: Con học kiến thức không phải để đi thi lấy điểm rồi để đó, mà học đến đâu dùng để giải quyết bài toán thực tế ngay đến đó (tạo ra Proof of Work). Khi áp dụng Mô hình 1 vào bộ môn học trên, tiến trình phát triển của con sẽ đi theo đúng <strong>Khung 5 Bước</strong> của Blake Boles:</p>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+                <tbody>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 8px; font-weight: bold; width: 140px;">Bước 1 (Practical Skills):</td>
+                        <td style="padding: 8px;">Học 3 Credits (Mechatronics + Python + Business) để có kỹ năng nền.</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 8px; font-weight: bold;">Bước 2 (Portfolio):</td>
+                        <td style="padding: 8px;">Chế tạo mô hình/ứng dụng thực tế & thử nghiệm trực tiếp trên máy móc thật.</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 8px; font-weight: bold;">Bước 3 (Network):</td>
+                        <td style="padding: 8px;">Đem giải pháp đến gõ cửa các xưởng bảo trì/kho bãi địa phương, xin ý kiến Mentor.</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 8px; font-weight: bold;">Bước 4 (Launch / $):</td>
+                        <td style="padding: 8px;">Áp dụng thử nghiệm cho 1 đơn vị thực tế, chứng minh giúp họ tiết kiệm chi phí ($).</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; font-weight: bold;">Bước 5 (Mastery):</td>
+                        <td style="padding: 8px;">Đóng gói toàn bộ quá trình thành <strong>Portfolio & Bài luận ứng tuyển Đại học</strong>.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>3. Sức mạnh vượt trội khi nộp Hồ sơ Đại học (The Standout Factor)</strong><br>
+            Hội đồng tuyển sinh Đại học (đặc biệt là các trường hàng đầu khối STEM / Logistics / Business) cực kỳ ấn tượng với những hồ sơ này vì:</p>
+            <ul style="padding-left: 20px; margin-bottom: 15px;">
+                <li style="margin-bottom: 6px;"><strong>Xóa bỏ hình mẫu "Học sinh học vẹt" (No Paper Student):</strong>
+                    <ul style="padding-left: 20px; margin-top: 4px;">
+                        <li><em>Học sinh truyền thống:</em> Chỉ có điểm A môn Toán, Lý, Kinh tế trên giấy.</li>
+                        <li><em>Con của bạn:</em> Có điểm A tín chỉ + Có một Portfolio thực tế chứng minh đã vận dụng cả 3 môn đó để giải quyết một bài toán ngoài đời thực.</li>
+                    </ul>
+                </li>
+                <li style="margin-bottom: 6px;"><strong>Thể hiện Tư duy Tích hợp Chuyên ngành (Interdisciplinary Thinking):</strong> Con không bị đóng khung là "chỉ biết viết code" hay "chỉ biết sửa máy", mà là người có tư duy hệ thống: biết kết nối Phần cứng + Phần mềm + Bài toán Tài chính.</li>
+                <li><strong>Chất liệu làm nên Bài luận cá nhân (Personal Statement) đỉnh cao:</strong> Bài luận của con sẽ không còn là những triết lý chung chung, mà là câu chuyện thực chiến: <em>"Tôi đã đối mặt với bài toán hỏng hóc thiết bị ra sao, tôi đã dùng Python giải quyết nó thế nào, và tôi nhận ra giá trị kinh tế mà công nghệ mang lại cho doanh nghiệp truyền thống như thế nào."</em></li>
+            </ul>
+
+            <div style="background: rgba(236, 72, 153, 0.05); border: 1px solid #fbcfe8; border-radius: 8px; padding: 15px;">
+                <p style="margin-bottom: 10px; font-weight: bold; color: #be185d; text-align: center;"><i class="fa-solid fa-layer-group"></i> Bảng Cấu Trúc Quản Lý Trên GTD (10,000 ft - 50,000 ft)</p>
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #fbcfe8;">
+                            <td style="padding: 8px; font-weight: bold; color: #9d174d; width: 140px;">50,000 ft (Sứ mệnh)</td>
+                            <td style="padding: 8px;">Trở thành nhà giải quyết bài toán thực tế bằng công nghệ và tư duy hệ thống.</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #fbcfe8;">
+                            <td style="padding: 8px; font-weight: bold; color: #9d174d;">40,000 ft (Tầm nhìn)</td>
+                            <td style="padding: 8px;">Trở thành ứng viên xuất sắc nhận học bổng Đại học ngành STEM/Supply Chain/Automation.</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #fbcfe8;">
+                            <td style="padding: 8px; font-weight: bold; color: #9d174d;">30,000 ft (Mục tiêu)</td>
+                            <td style="padding: 8px;">Hoàn thành 3 Credits tích hợp & Xây dựng 1 Dự án Tự động hóa Kho bãi có ứng dụng thực tế.</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #fbcfe8;">
+                            <td style="padding: 8px; font-weight: bold; color: #9d174d;">20,000 ft (Lĩnh vực)</td>
+                            <td style="padding: 8px; font-weight: bold;">Năng lực Kỹ thuật Tích hợp & Hồ sơ Đại học</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #fbcfe8;">
+                            <td style="padding: 8px; font-weight: bold; color: #9d174d;">10,000 ft (Dự án)</td>
+                            <td style="padding: 8px;">
+                                • <strong>Dự án Tín chỉ:</strong> Hoàn thành 3 môn Mechatronics, Python, Intro to Business.<br>
+                                • <strong>Dự án Dream Map:</strong> Chế tạo & triển khai Hệ thống Giám sát Thiết bị Kho bãi.<br>
+                                • <strong>Dự án Hồ sơ:</strong> Đóng gói Unschooling Portfolio & Viết Bài luận về quá trình làm dự án.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold; color: #9d174d;">Runway (Hành động)</td>
+                            <td style="padding: 8px;">Đọc chương 1 giáo trình Mechatronics / Viết 50 dòng code Python mô phỏng dữ liệu hôm nay.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <p style="margin-top: 15px; padding: 10px; background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; border-radius: 4px; font-weight: bold; color: #1e40af;">Tóm lại: Cách phối hợp 3 Credits này chính là nguyên liệu hoàn hảo cho Mô hình 1. Nó giúp con bạn biến việc học các môn lý thuyết thành một Dự án Dream Map thực chiến, từ đó đóng gói ra một Portfolio ứng tuyển Đại học độc nhất vô nhị!</p>
+        </div>
+    </details>
 </div>
         `
     },
