@@ -331,10 +331,10 @@ const tabConfigs = {
                     
                     <p style="margin-bottom: 8px;"><strong style="color: #be185d;">Dự án (10k ft):</strong></p>
                     <ul style="margin-bottom: 12px; margin-left: 15px; list-style-type: none; padding-left: 0;">
-                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Học thuật:</strong> Ôn luyện và thi SAT trong 4 tháng.</li>
-                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Tín chỉ:</strong> Đăng ký & hoàn thành 2 môn Online College Credits.</li>
-                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Dream Map (Sản phẩm):</strong> Viết sách / Xuất bản App / Tổ chức Sự kiện.</li>
-                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Hồ sơ:</strong> Đóng gói Unschooling Portfolio & viết bài luận cá nhân.</li>
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Học thuật:</strong> Highschool, SAT</li>
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Tín chỉ:</strong> 2 môn Online College Credits.</li>
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Dream Map (Sản phẩm):</strong> Viết sách / Xuất bản App / Tổ chức Sự kiện...</li>
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Hồ sơ:</strong> Đóng gói Portfolio & viết bài luận cá nhân.</li>
                     </ul>
 
                     <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #fbcfe8; border-radius: 8px; padding: 10px 15px;">
