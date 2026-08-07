@@ -172,3 +172,11 @@ body {
     .filter-bar { flex-direction: column; align-items: stretch; }
     .filter-group { justify-content: center; margin-bottom: 5px; }
 }
+
+/* Nested Hierarchy */
+.task-node { display: flex; flex-direction: column; width: 100%; }
+.task-children { margin-left: 28px; border-left: 2px dashed #cbd5e1; padding-left: 12px; display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.task-children.hidden { display: none; }
+.task-expand-btn { background: none; border: none; font-size: 1rem; color: var(--text-muted); cursor: pointer; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; padding: 0; margin-right: 4px; }
+.task-expand-btn:hover { color: var(--primary-color); }
+.task-info-wrapper { display: flex; align-items: center; flex: 1; }

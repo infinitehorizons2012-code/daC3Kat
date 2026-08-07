@@ -1436,6 +1436,122 @@ window.saveTaskDetails = async function() {
 };
 
 // --- Filters & Render ---
+
+window.collapsedTasks = new Set();
+window.toggleTaskExpand = function(taskId) {
+    if (window.collapsedTasks.has(taskId)) {
+        window.collapsedTasks.delete(taskId);
+    } else {
+        window.collapsedTasks.add(taskId);
+    }
+    window.renderTasks();
+};
+
+function buildTaskTree(filteredTasks) {
+    const taskMap = new Map();
+    const roots = [];
+
+    // Initialize map
+    filteredTasks.forEach(task => {
+        taskMap.set(task.text, { ...task, children: [] });
+    });
+
+    // Build tree
+    filteredTasks.forEach(task => {
+        const node = taskMap.get(task.text);
+        
+        let parentNode = null;
+        if (task.projectRef && taskMap.has(task.projectRef)) {
+            parentNode = taskMap.get(task.projectRef);
+        } else if (task.goalRef && taskMap.has(task.goalRef)) {
+            parentNode = taskMap.get(task.goalRef);
+        } else if (task.visionRef && taskMap.has(task.visionRef)) {
+            parentNode = taskMap.get(task.visionRef);
+        } else if (task.missionRef && taskMap.has(task.missionRef)) {
+            parentNode = taskMap.get(task.missionRef);
+        }
+
+        if (parentNode && parentNode.text !== task.text) { // prevent self-reference
+            parentNode.children.push(node);
+        } else {
+            roots.push(node);
+        }
+    });
+
+    return roots;
+}
+
+function renderTaskNode(node) {
+    const hasChildren = node.children && node.children.length > 0;
+    // Default expanded
+    const isExpanded = !window.collapsedTasks.has(node.id); 
+    
+    let tagsHTML = '';
+    if (['Project', 'Goal', 'Vision', 'Mission'].includes(node.workCategory)) {
+        tagsHTML += node.workCategory === 'Project' ? `<span class="tag tag-sys" style="background:#e0f2fe;color:#0369a1;"><i class="fa-solid fa-rocket"></i> Dự án</span>` : '';
+        tagsHTML += node.workCategory === 'Goal' ? `<span class="tag tag-sys" style="background:#ffedd5;color:#c2410c;"><i class="fa-solid fa-bullseye"></i> Mục tiêu</span>` : '';
+        tagsHTML += node.workCategory === 'Vision' ? `<span class="tag tag-sys" style="background:#fef08a;color:#854d0e;"><i class="fa-solid fa-eye"></i> Tầm nhìn</span>` : '';
+        tagsHTML += node.workCategory === 'Mission' ? `<span class="tag tag-sys" style="background:#fee2e2;color:#b91c1c;"><i class="fa-solid fa-fire"></i> Sứ mệnh</span>` : '';
+    } else if (node.taskGroup) {
+        tagsHTML += `<span class="tag tag-sys" style="background:#dcfce3;color:#166534;"><i class="fa-solid fa-layer-group"></i> ${escapeHTML(node.taskGroup)}</span>`;
+    }
+    
+    if (node.area) tagsHTML += `<span class="tag tag-sys" style="background:#f3e8ff;color:#6b21a8;">${escapeHTML(node.area)}</span>`;
+    if (node.systemCategory && node.systemCategory !== 'N/A' && !['Project', 'Goal', 'Vision', 'Mission'].includes(node.workCategory)) {
+        tagsHTML += `<span class="tag tag-sys">${escapeHTML(node.systemCategory)}</span>`;
+    }
+    
+    if (node.projectRef) tagsHTML += `<span class="tag tag-sys" style="background:#e0f2fe;color:#0369a1;"><i class="fa-solid fa-rocket"></i> DA: ${escapeHTML(node.projectRef)}</span>`;
+    if (node.goalRef) tagsHTML += `<span class="tag tag-sys" style="background:#ffedd5;color:#c2410c;"><i class="fa-solid fa-bullseye"></i> MT: ${escapeHTML(node.goalRef)}</span>`;
+    if (node.visionRef) tagsHTML += `<span class="tag tag-sys" style="background:#fef08a;color:#854d0e;"><i class="fa-solid fa-eye"></i> TN: ${escapeHTML(node.visionRef)}</span>`;
+    if (node.missionRef) tagsHTML += `<span class="tag tag-sys" style="background:#fee2e2;color:#b91c1c;"><i class="fa-solid fa-fire"></i> SM: ${escapeHTML(node.missionRef)}</span>`;
+    
+    if (node.context && !['Project', 'Goal', 'Vision', 'Mission'].includes(node.workCategory)) {
+        tagsHTML += `<span class="tag tag-context">${escapeHTML(node.context)}</span>`;
+    }
+    if (node.time && !['Project', 'Goal', 'Vision', 'Mission'].includes(node.workCategory)) {
+        tagsHTML += `<span class="tag tag-time"><i class="fa-regular fa-clock"></i> ${escapeHTML(node.time)}</span>`;
+    }
+    if (node.energy && !['Project', 'Goal', 'Vision', 'Mission'].includes(node.workCategory)) {
+        tagsHTML += `<span class="tag tag-energy"><i class="fa-solid fa-bolt"></i> ${escapeHTML(node.energy)}</span>`;
+    }
+    
+    let html = `
+    <div class="task-node">
+        <div class="task-item ${node.done ? 'done' : ''}">
+            <div class="task-main">
+                <div class="task-info-wrapper">
+                    ${hasChildren ? `
+                        <button class="task-expand-btn" onclick="toggleTaskExpand('${node.id}')" title="Thu/Phóng">
+                            <i class="fa-solid ${isExpanded ? 'fa-chevron-down' : 'fa-chevron-right'}"></i>
+                        </button>
+                    ` : '<div style="width: 24px; margin-right: 8px;"></div>'}
+                    <div class="task-info">
+                        <div class="checkbox" onclick="toggleTask('${node.id}')">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <span class="task-text">${escapeHTML(node.text)}</span>
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn-details" onclick="openTaskModal('${node.id}')" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
+                    <button class="delete-btn" onclick="deleteTask('${node.id}')" title="Xóa"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+            </div>
+            <div class="task-tags" style="${hasChildren ? 'margin-left: 32px;' : 'margin-left: 32px;'}">
+                ${tagsHTML}
+            </div>
+        </div>
+        ${hasChildren ? `
+            <div class="task-children ${isExpanded ? '' : 'hidden'}">
+                ${node.children.map(child => renderTaskNode(child)).join('')}
+            </div>
+        ` : ''}
+    </div>
+    `;
+    return html;
+}
+
 window.renderTasks = function() {
     const conf = tabConfigs[currentActiveTab];
     const expectedWorkCat = conf.defaultWorkCat;
