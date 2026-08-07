@@ -1453,25 +1453,25 @@ function buildTaskTree(filteredTasks) {
 
     // Initialize map
     filteredTasks.forEach(task => {
-        taskMap.set(task.text, { ...task, children: [] });
+        taskMap.set(task.text.trim(), { ...task, children: [] });
     });
 
     // Build tree
     filteredTasks.forEach(task => {
-        const node = taskMap.get(task.text);
+        const node = taskMap.get(task.text.trim());
         
         let parentNode = null;
-        if (task.projectRef && taskMap.has(task.projectRef)) {
-            parentNode = taskMap.get(task.projectRef);
-        } else if (task.goalRef && taskMap.has(task.goalRef)) {
-            parentNode = taskMap.get(task.goalRef);
-        } else if (task.visionRef && taskMap.has(task.visionRef)) {
-            parentNode = taskMap.get(task.visionRef);
-        } else if (task.missionRef && taskMap.has(task.missionRef)) {
-            parentNode = taskMap.get(task.missionRef);
+        if (task.projectRef && taskMap.has(task.projectRef.trim())) {
+            parentNode = taskMap.get(task.projectRef.trim());
+        } else if (task.goalRef && taskMap.has(task.goalRef.trim())) {
+            parentNode = taskMap.get(task.goalRef.trim());
+        } else if (task.visionRef && taskMap.has(task.visionRef.trim())) {
+            parentNode = taskMap.get(task.visionRef.trim());
+        } else if (task.missionRef && taskMap.has(task.missionRef.trim())) {
+            parentNode = taskMap.get(task.missionRef.trim());
         }
 
-        if (parentNode && parentNode.text !== task.text) { // prevent self-reference
+        if (parentNode && parentNode.text.trim() !== task.text.trim()) { // prevent self-reference
             parentNode.children.push(node);
         } else {
             roots.push(node);
