@@ -220,7 +220,23 @@ const tabConfigs = {
                     </div>
                 </details>
 
-                <div class="gtd-tip"><i class="fa-solid fa-lightbulb"></i> <strong>Tránh bẫy ôm đồm:</strong> Gom dự án theo nhóm (Tài chính, Sức khỏe, Gia đình, Sự nghiệp...) để cân bằng nguồn lực, tránh lệch vai.</div>
+                <div class="gtd-tip" style="margin-bottom: 15px;"><i class="fa-solid fa-lightbulb"></i> <strong>Tránh bẫy ôm đồm:</strong> Gom dự án theo nhóm (Tài chính, Sức khỏe, Gia đình, Sự nghiệp...) để cân bằng nguồn lực, tránh lệch vai.</div>
+
+                <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; border-radius: 8px; padding: 15px; font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px;">
+                    <h5 style="color: #d97706; margin-bottom: 10px;"><i class="fa-solid fa-arrows-rotate"></i> Tính linh hoạt (Adaptability):</h5>
+                    <p style="margin-bottom: 8px;">Giấc mơ hay Tầm nhìn có thể thay đổi. Khi thử làm một Dự án mà bạn nhận ra mình không thích, bạn hoàn toàn có thể gạch bỏ nó, điều chỉnh Dream Map và cập nhật lại hệ thống mà không thấy dằn vặt.</p>
+                    <p style="margin-bottom: 8px; font-weight: bold; color: #b45309;"><i class="fa-solid fa-arrow-right"></i> Không phải mọi tầm nhìn hay mục tiêu mới nảy ra đều phải đưa vào thực thi ngay lập tức. Để tránh "vỡ trận" do đổi hướng quá nhanh:</p>
+                    <ul style="margin-bottom: 15px; margin-left: 20px; list-style-type: disc;">
+                        <li style="margin-bottom: 4px;"><strong>Tận dụng danh sách Someday/Maybe (Định Hình):</strong> Khi có ý tưởng mới nhưng chưa phải lúc làm, hãy đưa nó vào danh sách này.</li>
+                        <li><strong>Kích hoạt đúng thời điểm:</strong> Trong các buổi Đánh giá định kỳ, bạn mới mở danh sách này ra để biến nó thành Mục tiêu / Dự án chính thức.</li>
+                    </ul>
+                    <p style="margin-bottom: 8px; font-weight: bold; color: #b45309;"><i class="fa-solid fa-arrow-right"></i> Nhịp điệu rà soát (Review Cadence): Tầm nhìn không thay đổi theo từng ngày, mà được điều chỉnh theo các nhịp khác nhau:</p>
+                    <ul style="margin-bottom: 0; margin-left: 20px; list-style-type: disc;">
+                        <li style="margin-bottom: 4px;"><strong>Weekly Review (Hàng tuần - Tầng Runway & 10,000 ft):</strong> Rà soát Hành động và Dự án. Hoàn thành hoặc gạch bỏ dự án không còn phù hợp.</li>
+                        <li style="margin-bottom: 4px;"><strong>Monthly/Quarterly Review (Hàng tháng/Quý - Tầng 20,000 & 30,000 ft):</strong> Kiểm tra Lĩnh vực & Mục tiêu 1-2 năm. Đạt được thì lên kế hoạch ăn mừng, không còn phù hợp thì điều chỉnh hoặc loại bỏ.</li>
+                        <li><strong>Annual Review (Hàng năm - Tầng 40,000 & 50,000 ft):</strong> Đánh giá Tầm nhìn 3–5 năm và Sứ mệnh/Nguyên tắc sống. Nhìn lại bản thân để xem các giá trị cốt lõi có chuyển biến hay mở rộng sang hướng mới không.</li>
+                    </ul>
+                </div>
             </div>
         `
     },
