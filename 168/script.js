@@ -406,6 +406,32 @@ const tabConfigs = {
                         </div>
                     </div>
                 </details>
+
+                <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #ddd6fe; border-radius: 8px; padding: 10px 15px;">
+                    <summary style="font-weight: bold; cursor: pointer; color: #6d28d9; font-size: 1.05rem;">
+                        <i class="fa-solid fa-lightbulb"></i> Phân tích: DỰ ÁN DREAM MAP / SẢN PHẨM (PRODUCT PROJECT)
+                    </summary>
+                    <div style="margin-top: 15px; font-size: 0.95rem;">
+                        <p style="margin-bottom: 8px;"><strong>Bản chất:</strong> Đây là dự án tạo nên "sự độc đáo và nét riêng" (Uniqueness / Standout Factor) từ triết lý của Blake Boles.</p>
+                        
+                        <p style="margin-bottom: 4px; font-weight: bold; color: #5b21b6;">Tại sao cần:</p>
+                        <p style="margin-bottom: 15px;">Hàng ngàn học sinh truyền thống đều có điểm SAT cao và bảng điểm đẹp, nhưng rất ít người sở hữu một sản phẩm thực tế do chính mình tạo ra từ đầu đến cuối. Một cuốn sách đã xuất bản, một ứng dụng di động đã có người dùng, hay một dự án/sự kiện cộng đồng đã quy tụ hàng trăm người chính là minh chứng sống động nhất cho tư duy chủ động, năng lực lãnh đạo và sự kiên trì.</p>
+                        
+                        <div style="background: rgba(139, 92, 246, 0.1); border-left: 4px solid #8b5cf6; padding: 12px; border-radius: 6px; margin-top: 5px;">
+                            <p style="margin-bottom: 8px; font-weight: bold; color: #6d28d9;"><i class="fa-solid fa-gears"></i> Cách vận hành trong hệ thống GTD (Tầng 10,000 ft):</p>
+                            
+                            <ul style="margin-bottom: 0; margin-top: 5px; margin-left: 15px; list-style-type: disc;">
+                                <li style="margin-bottom: 4px;"><strong>Kết quả mong muốn (Outcome):</strong> Xuất bản ứng dụng lên Apple App Store / Đưa sách lên Amazon Kindle / Tổ chức xong buổi Workshop.</li>
+                                <li style="margin-bottom: 4px;"><strong>Hành động kế tiếp (Runway):</strong> 
+                                    <ul style="margin-top: 4px; margin-bottom: 0; list-style-type: circle; color: #475569;">
+                                        <li>Viết 300 từ dàn ý cho chương 1.</li>
+                                        <li>Thiết kế giao diện (wireframe) cho màn hình chính của ứng dụng.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </details>
             </div>
         `
     },
