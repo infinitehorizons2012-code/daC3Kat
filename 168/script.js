@@ -815,7 +815,7 @@ const tabConfigs = {
                             <td style="padding: 8px;">
                                 • <strong>Dự án Tín chỉ:</strong> Hoàn thành 3 môn Mechatronics, Python, Intro to Business.<br>
                                 • <strong>Dự án Dream Map:</strong> Chế tạo & triển khai Hệ thống Giám sát Thiết bị Kho bãi.<br>
-                                • <strong>Dự án Hồ sơ:</strong> Đóng gói Unschooling Portfolio & Viết Bài luận về quá trình làm dự án.
+                                • <strong>Dự án Hồ sơ:</strong> Đóng gói Portfolio & Viết Bài luận về quá trình làm dự án.
                             </td>
                         </tr>
                         <tr>
