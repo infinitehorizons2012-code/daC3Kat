@@ -33,6 +33,10 @@ const tabConfigs = {
             <div class="gtd-guide">
                 <h4><i class="fa-solid fa-map"></i> Ghi chú:</h4>
                 
+                <div style="margin-bottom: 15px; padding: 12px 15px; background: rgba(234, 179, 8, 0.1); border-radius: 8px; border-left: 4px solid #eab308; font-size: 0.95rem; line-height: 1.5;">
+                    <strong style="color: #a16207;"><i class="fa-solid fa-star"></i> NGUYÊN TẮC CỐT LÕI (START WITH WHY):</strong> Trả lời câu hỏi <em>"Tại sao mình lại làm việc này?"</em> mang lại ý nghĩa, động lực và sự tập trung, giúp bạn loại bỏ những việc vô bổ không đóng góp cho bức tranh lớn.
+                </div>
+
                 <div style="margin-bottom: 20px; padding: 15px; background: rgba(22, 163, 74, 0.1); border-radius: 8px; border-left: 4px solid #16a34a; font-size: 0.95rem; line-height: 1.5;">
                     <p style="margin-bottom: 8px;"><strong>Sứ mệnh (50k ft):</strong> Là lý do bạn có mặt trên đời, là nền tảng đạo đức và các nguyên tắc sống không thay đổi theo thời gian.</p>
                     <p style="margin-bottom: 8px;"><strong>Tầm nhìn (40k ft):</strong> Là đích dài hạn, là bức tranh tổng thể, là kết quả cụ thể mà Sứ mệnh muốn hướng tới trong một khoảng thời gian nhất định (thường là 3–5 năm). Nó phác họa con người bạn muốn trở thành hoặc vị thế bạn muốn đạt được.</p>
