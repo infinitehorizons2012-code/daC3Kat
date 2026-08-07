@@ -389,6 +389,64 @@ const tabConfigs = {
                     </ul>
 
                 </div>
+
+                <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #c4b5fd; border-radius: 8px; padding: 10px 15px;">
+                    <summary style="font-weight: bold; cursor: pointer; color: #5b21b6; font-size: 1.05rem;">
+                        <i class="fa-solid fa-route"></i> Phân tích: LỘ TRÌNH PHÁT TRIỂN SỰ NGHIỆP TỰ DO (5 BƯỚC)
+                    </summary>
+                    <div style="margin-top: 15px; font-size: 0.95rem;">
+                        <p style="margin-bottom: 12px; font-style: italic; color: #475569;">Con đường phát triển sự nghiệp theo đúng trật tự tâm lý và lộ trình gia tăng giá trị thực tế trên thị trường, giải quyết triệt để 5 câu hỏi lớn nhất:</p>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <strong style="color: #6d28d9; font-size: 1.02rem;">Bước 1: Tích lũy Kỹ năng Thực chiến (Gain Practical Skills)</strong>
+                            <p style="margin-bottom: 4px; margin-top: 4px;"><strong>Câu hỏi giải quyết:</strong> <em>"Mình sẽ bán giá trị gì cho thị trường?"</em></p>
+                            <p style="margin-bottom: 4px;"><strong>Tại sao nằm ở Bước 1:</strong> Bạn không thể làm dự án, xây Portfolio hay tạo ra bất kỳ dòng tiền nào nếu chưa sở hữu một kỹ năng cốt lõi (Core Competency) mà thị trường sẵn sàng trả phí (Lập trình, Thiết kế, Copywriting, Digital Marketing...).</p>
+                            <p style="margin-bottom: 0;"><strong>Trạng thái tài chính:</strong> Đầu tư ban đầu (0 thu nhập). Đây là giai đoạn tập trung 100% nguồn lực để tự học, học qua làm (learn by doing) và làm chủ công cụ.</p>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <strong style="color: #6d28d9; font-size: 1.02rem;">Bước 2: Xây dựng Portfolio Sản phẩm (Build a Portfolio)</strong>
+                            <p style="margin-bottom: 4px; margin-top: 4px;"><strong>Câu hỏi giải quyết:</strong> <em>"Làm sao để thị trường tin mình làm được mà không cần Bằng đại học?"</em></p>
+                            <p style="margin-bottom: 4px;"><strong>Tại sao nằm ở Bước 2:</strong> Kiến thức ở Bước 1 phải được chuyển hóa thành sản phẩm thực tế (App đã vận hành, bài viết đã xuất bản, thiết kế đã ứng dụng) để làm "bằng chứng thép" thay thế tấm bằng cử nhân.</p>
+                            <p style="margin-bottom: 4px;"><strong>Trạng thái tài chính:</strong> Khởi tạo dòng tiền thử nghiệm (Tiền lẻ / Dòng tiền nhỏ).</p>
+                            <p style="margin-bottom: 4px;">Thay vì chỉ làm sản phẩm giả định, bạn có thể nhận các hợp đồng Freelance quy mô nhỏ, làm dự án giá rẻ hoặc nhận hoa hồng từ sản phẩm đầu tay.</p>
+                            <p style="margin-bottom: 0;"><strong>Mục tiêu chính:</strong> Chưa phải là giàu có, mà là dùng đồng tiền thực tế từ khách hàng để xác thực (validate) giá trị của Portfolio.</p>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <strong style="color: #6d28d9; font-size: 1.02rem;">Bước 3: Xây dựng Mạng lưới Cố vấn & Đồng hành (Build a Network)</strong>
+                            <p style="margin-bottom: 4px; margin-top: 4px;"><strong>Câu hỏi giải quyết:</strong> <em>"Ai sẽ là người mở cánh cửa cơ hội và đưa mình đến với những thương vụ lớn hơn?"</em></p>
+                            <p style="margin-bottom: 4px;"><strong>Tại sao nằm ở Bước 3:</strong> Khi đã có kỹ năng (Bước 1) và sản phẩm chứng minh (Bước 2), bạn tiếp cận các chuyên gia, Mentor và đối tác (Cold Email, tham gia cộng đồng) với tư thế của một người trao giá trị, không phải người đi xin xỏ.</p>
+                            <p style="margin-bottom: 4px;"><strong>Trạng thái tài chính:</strong> Gia tăng cơ hội thu nhập phụ (Micro-revenues & Referrals).</p>
+                            <p style="margin-bottom: 0;">Nhờ mạng lưới kết nối, bạn bắt đầu nhận được các lời giới thiệu dự án (Referrals), công việc bán thời gian (Part-time), hoặc các hợp đồng cộng tác có trả phí từ chính Mentor/đồng nghiệp trong ngành.</p>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <strong style="color: #6d28d9; font-size: 1.02rem;">Bước 4: Bước ra Thị trường / Tự Thúc đẩy (Launch Yourself)</strong>
+                            <p style="margin-bottom: 4px; margin-top: 4px;"><strong>Câu hỏi giải quyết:</strong> <em>"Làm sao để biến kỹ năng, sản phẩm và mạng lưới thành Thu nhập chính thức & Sự nghiệp bền vững?"</em></p>
+                            <p style="margin-bottom: 4px;"><strong>Tại sao nằm ở Bước 4:</strong> Đây là thời điểm "thu hoạch" quy mô lớn. Khi đã hội đủ 3 nền tảng trên, bạn chủ động tự đề xuất vị trí làm việc chính thức với doanh nghiệp, chào gói dịch vụ Freelance cao cấp, hoặc thương mại hóa mô hình kinh doanh nhỏ (Micro-business).</p>
+                            <p style="margin-bottom: 0;"><strong>Trạng thái tài chính:</strong> Bứt phá dòng tiền chính (Tự chủ tài chính / Thu nhập chính thức). Bạn chính thức bước vào thị trường với tư thế một chuyên gia tự chủ, đạt mốc thu nhập mục tiêu (ví dụ: $1,000–$3,000+/tháng) mà không bị giới hạn bởi bằng cấp.</p>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <strong style="color: #6d28d9; font-size: 1.02rem;">Bước 5: Rèn luyện Bản lĩnh & Tư duy Tự chủ (Personal Mastery)</strong>
+                            <p style="margin-bottom: 4px; margin-top: 4px;"><strong>Câu hỏi giải quyết:</strong> <em>"Làm sao để giữ vững phong độ, tăng giá trị bản thân và không bị bỏ lại phía sau?"</em></p>
+                            <p style="margin-bottom: 4px;"><strong>Tại sao nằm ở bước cuối (Môi trường bao phủ):</strong> Khi đã có thu nhập tốt, thách thức lớn nhất là duy trì kỷ luật, quản lý rủi ro tài chính và liên tục nâng cấp bản thân. Bước này đóng vai trò như một hệ điều hành, giúp bạn tái đầu tư vào Bước 1 (kỹ năng mới) để nâng mức giá của bản thân lên cao hơn.</p>
+                            <p style="margin-bottom: 0;"><strong>Trạng thái tài chính:</strong> Tăng trưởng & Tối ưu hóa tài chính dài hạn. Nâng cao đơn giá theo giờ (Hourly rate), đàm phán mức lương/hợp đồng cao hơn và xây dựng tài sản tích lũy bền vững.</p>
+                        </div>
+
+                        <div style="margin-top: 20px; padding: 15px; background: rgba(124, 58, 237, 0.05); border: 1px solid #c4b5fd; border-radius: 8px;">
+                            <strong style="color: #5b21b6; display: block; margin-bottom: 10px;"><i class="fa-solid fa-chart-line"></i> SƠ ĐỒ CHUYỂN DỊCH TÀI CHÍNH QUA 5 BƯỚC:</strong>
+                            <ul style="list-style-type: none; padding-left: 0; margin-bottom: 0;">
+                                <li style="margin-bottom: 6px;"><strong>Bước 1: Skill</strong> <span style="color: #64748b;">&rarr; Đầu tư thời gian/trí tuệ ($0)</span></li>
+                                <li style="margin-bottom: 6px;"><strong>Bước 2: Portfolio</strong> <span style="color: #64748b;">&rarr; Tạo dòng tiền thử nghiệm / Hợp đồng nhỏ ($)</span></li>
+                                <li style="margin-bottom: 6px;"><strong>Bước 3: Network</strong> <span style="color: #64748b;">&rarr; Mở rộng cơ hội giới thiệu / Dự án cộng tác ($$)</span></li>
+                                <li style="margin-bottom: 6px;"><strong>Bước 4: Launch</strong> <span style="color: #64748b;">&rarr; Bứt phá dòng tiền chính / Thu nhập tự chủ ($$$$)</span></li>
+                                <li style="margin-bottom: 0;"><strong>Bước 5: Mastery</strong> <span style="color: #64748b;">&rarr; Tối ưu đơn giá &amp; Tăng trưởng tài chính dài hạn ($$$$$)</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </details>
             </div>
         `
     },
