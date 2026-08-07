@@ -430,7 +430,15 @@ const tabConfigs = {
                         </div>
                         
                         <p style="margin-bottom: 4px; font-weight: bold; color: #5b21b6;">Tại sao cần:</p>
-                        <p style="margin-bottom: 15px;">Hàng ngàn học sinh truyền thống đều có điểm SAT cao và bảng điểm đẹp, nhưng rất ít người sở hữu một sản phẩm thực tế do chính mình tạo ra từ đầu đến cuối. Một cuốn sách đã xuất bản, một ứng dụng di động đã có người dùng, hay một dự án/sự kiện cộng đồng đã quy tụ hàng trăm người chính là minh chứng sống động nhất cho tư duy chủ động, năng lực lãnh đạo và sự kiên trì.</p>
+                        <p style="margin-bottom: 8px;">Hàng ngàn học sinh truyền thống đều có điểm SAT cao và bảng điểm đẹp, nhưng rất ít người sở hữu một sản phẩm thực tế do chính mình tạo ra từ đầu đến cuối. Một cuốn sách đã xuất bản, một ứng dụng di động đã có người dùng, hay một dự án/sự kiện cộng đồng đã quy tụ hàng trăm người chính là minh chứng sống động nhất cho tư duy chủ động, năng lực lãnh đạo và sự kiên trì.</p>
+                        <p style="margin-bottom: 8px;">Đó là hồ sơ thể hiện cách một ứng viên tư duy khi đối mặt với một bài toán thực tế. Nhà tuyển dụng (hay Hội đồng tuyển sinh) không chỉ nhìn vào kết quả cuối cùng. Họ quan tâm đến toàn bộ quá trình:</p>
+                        <ul style="margin-bottom: 8px; margin-left: 15px; list-style-type: square; color: #475569;">
+                            <li style="margin-bottom: 4px;">Bạn tiếp cận vấn đề như thế nào?</li>
+                            <li style="margin-bottom: 4px;">Bạn lựa chọn phương pháp ra sao?</li>
+                            <li style="margin-bottom: 4px;">Bạn đánh đổi giữa độ chính xác và khả năng triển khai thế nào?</li>
+                            <li style="margin-bottom: 4px;">Bạn giải thích kết quả cho người không có nền tảng kỹ thuật bằng cách nào?</li>
+                        </ul>
+                        <p style="margin-bottom: 15px;">Những yếu tố này gần như không thể hiện qua bảng điểm, nhưng lại thể hiện rất rõ thông qua các dự án cá nhân.</p>
                         
                         <div style="background: rgba(139, 92, 246, 0.1); border-left: 4px solid #8b5cf6; padding: 12px; border-radius: 6px; margin-top: 5px;">
                             <p style="margin-bottom: 8px; font-weight: bold; color: #6d28d9;"><i class="fa-solid fa-gears"></i> Cách vận hành (Tầng 10,000 ft):</p>
