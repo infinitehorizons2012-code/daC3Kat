@@ -309,6 +309,44 @@ const tabConfigs = {
             </div>
         `
     },
+    'kat': {
+        title: 'Kế hoạch của Kat',
+        desc: 'Hồ sơ Ứng tuyển Đại học (College Admissions)',
+        icon: 'fa-graduation-cap',
+        color: '#ec4899',
+        defaultWorkCat: 'Vision',
+        defaultSysCat: 'N/A',
+        guide: `
+            <div class="gtd-guide">
+                <h4><i class="fa-solid fa-graduation-cap"></i> Kế hoạch của Kat:</h4>
+                <div style="margin-bottom: 20px; padding: 15px; background: rgba(236, 72, 153, 0.1); border-radius: 8px; border-left: 4px solid #ec4899; font-size: 0.95rem; line-height: 1.5;">
+                    <p style="margin-bottom: 8px;"><strong style="color: #be185d;">Sứ mệnh (50k ft):</strong> Theo đuổi tri thức tự do, tự chủ con đường học tập và tạo giá trị.</p>
+                    <p style="margin-bottom: 8px;"><strong style="color: #be185d;">Tầm nhìn (40k ft):</strong> Nhận thư nhập học & học bổng từ trường Đại học mơ ước sau 3 năm.</p>
+                    <p style="margin-bottom: 12px;"><strong style="color: #be185d;">Mục tiêu (30k ft):</strong> Đạt SAT 1450+, có 12 tín chỉ Cao đẳng và hoàn thành 3 dự án độc đáo.</p>
+                    
+                    <div style="margin-bottom: 12px; font-style: italic; color: #831843; padding: 10px; background: rgba(255,255,255,0.7); border-radius: 6px;">
+                        <strong style="color: #9d174d;">Lĩnh vực (20k ft): Chuẩn bị Hồ sơ Đại học (College Admissions Portfolio)</strong><br>
+                        <span style="font-size: 0.9em;">(Lĩnh vực gom các dự án phục vụ 4 trụ cột ứng tuyển)</span>
+                    </div>
+                    
+                    <p style="margin-bottom: 8px;"><strong style="color: #be185d;">Dự án (10k ft):</strong></p>
+                    <ul style="margin-bottom: 12px; margin-left: 15px; list-style-type: none; padding-left: 0;">
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Học thuật:</strong> Ôn luyện và thi SAT trong 4 tháng.</li>
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Tín chỉ:</strong> Đăng ký & hoàn thành 2 môn Online College Credits.</li>
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Dream Map (Sản phẩm):</strong> Viết sách / Xuất bản App / Tổ chức Sự kiện.</li>
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #ec4899; margin-right: 5px;"></i> <strong>Dự án Hồ sơ:</strong> Đóng gói Unschooling Portfolio & viết bài luận cá nhân.</li>
+                    </ul>
+
+                    <p style="margin-bottom: 8px;"><strong style="color: #be185d;">Hành động (Runway):</strong></p>
+                    <ul style="margin-bottom: 0; margin-left: 15px; list-style-type: none; padding-left: 0;">
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-play" style="color: #ec4899; margin-right: 5px;"></i> Giải 1 đề SAT Math chiều nay.</li>
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-play" style="color: #ec4899; margin-right: 5px;"></i> Gửi email cho Mentor xin thư giới thiệu.</li>
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-play" style="color: #ec4899; margin-right: 5px;"></i> Viết 300 từ cho bài luận cá nhân (Personal Statement).</li>
+                    </ul>
+                </div>
+            </div>
+        `
+    },
     'project': { title: 'Dự Án', desc: 'Mục tiêu cần nhiều bước để hoàn thành.', icon: 'fa-layer-group', color: 'var(--primary-color)', defaultWorkCat: 'Project', defaultSysCat: 'N/A' },
     'unplanned': { title: 'Đột Xuất', desc: 'Những việc bất ngờ nhảy vào! Làm ngay.', icon: 'fa-bolt', color: 'var(--warning-color)', defaultWorkCat: 'Unplanned Work', defaultSysCat: 'Next Actions' },
     'predefined': { title: 'Định Trước', desc: 'Những việc đã lên kế hoạch!', icon: 'fa-bullseye', color: 'var(--success-color)', defaultWorkCat: 'Pre-defined Work', defaultSysCat: 'Next Actions' },
@@ -353,10 +391,10 @@ function updateHeader() {
         }
     }
 
-    // Ẩn form nhập và danh sách công việc nếu là tab Tầm Nhìn
+    // Ẩn form nhập và danh sách công việc nếu là tab Tầm Nhìn hoặc tab Kat
     const quickAddForm = document.getElementById('quick-add-form');
     const masterList = document.getElementById('master-task-list');
-    if (currentActiveTab === 'vision') {
+    if (currentActiveTab === 'vision' || currentActiveTab === 'kat') {
         if (quickAddForm) quickAddForm.style.display = 'none';
         if (masterList) masterList.style.display = 'none';
     } else {
