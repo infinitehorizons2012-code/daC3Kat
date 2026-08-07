@@ -353,6 +353,17 @@ function updateHeader() {
         }
     }
 
+    // Ẩn form nhập và danh sách công việc nếu là tab Tầm Nhìn
+    const quickAddForm = document.getElementById('quick-add-form');
+    const masterList = document.getElementById('master-task-list');
+    if (currentActiveTab === 'vision') {
+        if (quickAddForm) quickAddForm.style.display = 'none';
+        if (masterList) masterList.style.display = 'none';
+    } else {
+        if (quickAddForm) quickAddForm.style.display = '';
+        if (masterList) masterList.style.display = '';
+    }
+
     // Đổi placeholder input
     quickAddInput.placeholder = `Nhập ${conf.title.toLowerCase()} mới...`;
 }
