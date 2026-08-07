@@ -166,6 +166,8 @@ window.handleQuickAdd = async function(event) {
         context: "",
         time: "",
         energy: "",
+        taskGroup: "Maintenance",
+        area: "",
         projectRef: "",
         createdAt: new Date().toISOString()
     };
@@ -210,9 +212,17 @@ window.openTaskModal = function(taskId) {
     document.getElementById('modal-task-context').value = task.context || "";
     document.getElementById('modal-task-time').value = task.time || "";
     document.getElementById('modal-task-energy').value = task.energy || "";
+    document.getElementById('modal-task-group').value = task.taskGroup || "Maintenance";
+    document.getElementById('modal-task-area').value = task.area || "";
     document.getElementById('modal-task-project').value = task.projectRef || "";
 
+    window.toggleGroupFields();
     taskModal.classList.add('show');
+};
+
+window.toggleGroupFields = function() {
+    const group = document.getElementById('modal-task-group').value;
+    document.getElementById('project-group-field').style.display = group === 'Strategic' ? 'block' : 'none';
 };
 
 window.closeTaskModal = function() {
@@ -230,7 +240,13 @@ window.saveTaskDetails = async function() {
     task.context = document.getElementById('modal-task-context').value;
     task.time = document.getElementById('modal-task-time').value;
     task.energy = document.getElementById('modal-task-energy').value;
+    task.taskGroup = document.getElementById('modal-task-group').value;
+    task.area = document.getElementById('modal-task-area').value;
     task.projectRef = document.getElementById('modal-task-project').value;
+
+    if (task.taskGroup === 'Maintenance') {
+        task.projectRef = "";
+    }
 
     // Logic GTD: Nếu thêm Context/Time mà đang ở Defining -> Tự động chuyển qua Pre-defined
     if (task.workCategory === 'Defining Work' && (task.context || task.time)) {
@@ -285,6 +301,8 @@ window.renderTasks = function() {
                         <tr>
                             <th>Xong</th>
                             <th>Tên Hành Động</th>
+                            <th>Nhóm</th>
+                            <th>Lĩnh Vực</th>
                             <th>Phân Loại CV</th>
                             <th>Hệ Thống</th>
                             <th>Bối Cảnh</th>
@@ -303,6 +321,8 @@ window.renderTasks = function() {
                                     </div>
                                 </td>
                                 <td><strong>${escapeHTML(task.text)}</strong></td>
+                                <td>${escapeHTML(task.taskGroup || 'Maintenance')}</td>
+                                <td>${escapeHTML(task.area || '')}</td>
                                 <td>${escapeHTML(task.workCategory)}</td>
                                 <td>${escapeHTML(task.systemCategory)}</td>
                                 <td>${escapeHTML(task.context || '')}</td>
@@ -336,8 +356,10 @@ window.renderTasks = function() {
                     </div>
                 </div>
                 <div class="task-tags">
+                    ${task.taskGroup ? `<span class="tag tag-sys" style="background:#dcfce3;color:#166534;"><i class="fa-solid fa-layer-group"></i> ${escapeHTML(task.taskGroup)}</span>` : ''}
+                    ${task.area ? `<span class="tag tag-sys" style="background:#f3e8ff;color:#6b21a8;">${escapeHTML(task.area)}</span>` : ''}
                     ${task.systemCategory && task.systemCategory !== 'N/A' ? `<span class="tag tag-sys">${escapeHTML(task.systemCategory)}</span>` : ''}
-                    ${task.projectRef ? `<span class="tag tag-sys"><i class="fa-solid fa-layer-group"></i> ${escapeHTML(task.projectRef)}</span>` : ''}
+                    ${task.projectRef ? `<span class="tag tag-sys"><i class="fa-solid fa-rocket"></i> ${escapeHTML(task.projectRef)}</span>` : ''}
                     ${task.context ? `<span class="tag tag-context">${escapeHTML(task.context)}</span>` : ''}
                     ${task.time ? `<span class="tag tag-time"><i class="fa-regular fa-clock"></i> ${escapeHTML(task.time)}</span>` : ''}
                     ${task.energy ? `<span class="tag tag-energy"><i class="fa-solid fa-bolt"></i> ${escapeHTML(task.energy)}</span>` : ''}
