@@ -1074,7 +1074,11 @@ const tabConfigs = {
             <div class="gtd-guide">
                 <h4><i class="fa-solid fa-briefcase"></i> Dự án học thuật 3: Portfolio</h4>
                 <div style="margin-bottom: 20px; padding: 15px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border-left: 4px solid #f59e0b; font-size: 0.95rem; line-height: 1.5;">
-                    <p>Nội dung đang được cập nhật...</p>
+                    <ul style="margin: 0; padding-left: 20px; list-style-type: square; color: #334155;">
+                        <li style="margin-bottom: 8px;">Lập file Google Drive gom tất cả hình ảnh/chứng nhận dự án.</li>
+                        <li style="margin-bottom: 8px;">Viết 200 từ nháp đầu tiên cho bài luận cá nhân.</li>
+                        <li style="margin-bottom: 0;">Xin Thư giới thiệu của người cố vấn.</li>
+                    </ul>
                 </div>
             </div>
         `
