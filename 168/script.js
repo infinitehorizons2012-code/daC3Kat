@@ -463,7 +463,7 @@ const tabConfigs = {
                         <p style="margin-bottom: 4px; font-weight: bold; color: #92400e;">Tại sao cần:</p>
                         <p style="margin-bottom: 8px;">Dù có điểm thi tốt, học xong tín chỉ và làm ra sản phẩm hay, nếu không biết gom lại và kể thành một câu chuyện cá nhân (Narrative) hấp dẫn thì hồ sơ vẫn mờ nhạt. Dự án này bao gồm:</p>
                         <ul style="margin-bottom: 15px; margin-left: 15px; list-style-type: square; color: #475569;">
-                            <li style="margin-bottom: 4px;"><strong>Unschooling Portfolio:</strong> Tập hợp đường link, hình ảnh, bài báo, nhận xét từ người cố vấn (Mentors), danh mục sách đã đọc thành một file PDF hoặc trang web cá nhân đẹp mắt.</li>
+                            <li style="margin-bottom: 4px;"><strong>Portfolio:</strong> Tập hợp đường link, hình ảnh, bài báo, nhận xét từ người cố vấn (Mentors), danh mục sách đã đọc thành một file PDF hoặc trang web cá nhân đẹp mắt.</li>
                             <li style="margin-bottom: 4px;"><strong>Bài luận cá nhân (Personal Statement):</strong> Bài viết 650 từ trả lời câu hỏi: "Con đường tự học đã hình thành nên con người và thế giới quan của bạn như thế nào?"</li>
                         </ul>
                         
