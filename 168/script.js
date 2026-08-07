@@ -791,7 +791,7 @@ const tabConfigs = {
             </ul>
 
             <div style="background: rgba(236, 72, 153, 0.05); border: 1px solid #fbcfe8; border-radius: 8px; padding: 15px;">
-                <p style="margin-bottom: 10px; font-weight: bold; color: #be185d; text-align: center;"><i class="fa-solid fa-layer-group"></i> Bảng Cấu Trúc Quản Lý Trên GTD (10,000 ft - 50,000 ft)</p>
+                <p style="margin-bottom: 10px; font-weight: bold; color: #be185d; text-align: center;"><i class="fa-solid fa-layer-group"></i> Bảng Cấu Trúc Quản Lý (10,000 ft - 50,000 ft)</p>
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
                     <tbody>
                         <tr style="border-bottom: 1px solid #fbcfe8;">
