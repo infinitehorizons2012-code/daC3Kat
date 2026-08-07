@@ -388,7 +388,6 @@ const tabConfigs = {
                         <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #8b5cf6; margin-right: 5px;"></i> <strong>Dự án Mạng lưới:</strong> Cold email & thực hiện 10 cuộc phỏng vấn với Mentor trong ngành.</li>
                     </ul>
 
-                    <p style="margin-bottom: 4px;"><strong style="color: #5b21b6;">Runway (Hành động):</strong> Hoàn thành bài tập Code hôm nay / Soạn 1 email ngỏ lời kết nối với Mentor lúc 14:00.</p>
                 </div>
             </div>
         `
