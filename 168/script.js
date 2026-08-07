@@ -476,6 +476,7 @@ const tabConfigs = {
                                     <ul style="margin-top: 4px; margin-bottom: 0; list-style-type: circle; color: #475569;">
                                         <li>Lập file Google Drive gom tất cả hình ảnh/chứng nhận dự án.</li>
                                         <li>Viết 200 từ nháp đầu tiên cho bài luận cá nhân.</li>
+                                        <li>Xin Thư giới thiệu của người cố vấn.</li>
                                     </ul>
                                 </li>
                             </ul>
