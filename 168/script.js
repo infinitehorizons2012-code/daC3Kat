@@ -306,6 +306,45 @@ const tabConfigs = {
                         <li><strong style="color: #dc2626;">Nếu KHÔNG:</strong> Tiếp tục làm việc đã định trước (Defined Work) <strong>VÀ</strong> Quăng ngay việc đột xuất đó vào In-basket (Định Hình / Thu thập) để nó đi đúng chu trình Defining Work.</li>
                     </ul>
                 </div>
+
+                <div style="background: rgba(139, 92, 246, 0.05); border: 1px solid #ddd6fe; border-radius: 8px; padding: 15px; margin-top: 20px;">
+                    <h5 style="color: #6d28d9; margin-bottom: 10px; text-transform: uppercase; border-bottom: 2px solid #ddd6fe; padding-bottom: 5px;"><i class="fa-solid fa-bullseye"></i> QUẢN LÝ MỤC TIÊU (30,000 FT) KHI THIẾU DỰ ÁN DẪN ĐƯỜNG</h5>
+                    <p style="margin-bottom: 12px; font-size: 0.95rem;">Khi một Mục tiêu 1–2 năm (30k ft) không liên kết với bất kỳ Dự án (10k ft) nào đang kích hoạt, nó đang rơi vào trạng thái "mồ côi" thực thi. Một Mục tiêu ở tình trạng này thường thuộc về 1 trong 3 trường hợp sau:</p>
+                    
+                    <strong style="color: #5b21b6;">Trường hợp 1: Mục tiêu đang ở giai đoạn "Ấp ủ" (Someday / Maybe)</strong>
+                    <ul style="margin-bottom: 12px; margin-top: 5px; margin-left: 15px; list-style-type: square; font-size: 0.95rem; color: #475569;">
+                        <li style="margin-bottom: 4px;"><strong>Bản chất:</strong> Đây là mục tiêu chính đáng trong khung thời gian 1–2 năm, nhưng chưa phải là ưu tiên vận hành trong quý hoặc tháng này.</li>
+                        <li style="margin-bottom: 4px;"><strong>Ví dụ:</strong> Mục tiêu "Thi lấy bằng lái xe ô tô trong năm nay", nhưng Quý 1 bạn dành 100% nguồn lực cho "Mục tiêu SAT 1450+". Bạn chủ động lưu giữ mục tiêu này ở danh sách 30,000 ft mà chưa cần đẻ ra Dự án ở tầng 10,000 ft.</li>
+                        <li><strong>Trạng thái hệ thống:</strong> Hợp lệ (Pended / On Hold).</li>
+                    </ul>
+
+                    <strong style="color: #5b21b6;">Trường hợp 2: Mục tiêu bị ngưng trệ do thiếu đóng gói (Unactionable Goal)</strong>
+                    <ul style="margin-bottom: 12px; margin-top: 5px; margin-left: 15px; list-style-type: square; font-size: 0.95rem; color: #475569;">
+                        <li style="margin-bottom: 4px;"><strong>Bản chất:</strong> Bạn mong muốn đạt được mục tiêu ngay thời điểm hiện tại, nhưng hệ thống quản lý mới chỉ dừng lại ở tên gọi mong muốn chứ chưa chuyển hóa thành các gói công việc đóng gói cụ thể.</li>
+                        <li style="margin-bottom: 4px;"><strong>Hậu quả:</strong> Mục tiêu bị treo vô thời hạn vì não bộ gặp rào cản nhận thức, không biết bước đi cụ thể tiếp theo là gì.</li>
+                        <li style="margin-bottom: 4px;"><strong>Giải pháp:</strong> Đặt câu hỏi định hướng: <em>"Để tiến gần 1 bước tới Mục tiêu này ngay lúc này, kết quả cụ thể (Project) cần đóng gói và hoàn thành trong 1–3 tháng tới là gì?"</em></li>
+                        <li><strong>Trạng thái hệ thống:</strong> Cần xử lý ngay (Action Required).</li>
+                    </ul>
+
+                    <strong style="color: #5b21b6;">Trường hợp 3: Mục tiêu đã lỗi thời hoặc không còn phù hợp (Obsolete Goal)</strong>
+                    <ul style="margin-bottom: 15px; margin-top: 5px; margin-left: 15px; list-style-type: square; font-size: 0.95rem; color: #475569;">
+                        <li style="margin-bottom: 4px;"><strong>Bản chất:</strong> Mục tiêu từng được thiết lập trong quá khứ nhưng hoàn cảnh, nguồn lực hoặc định hướng cá nhân đã thay đổi khiến nó không còn giá trị thực tế.</li>
+                        <li style="margin-bottom: 4px;"><strong>Hậu quả:</strong> Gây nhiễu tâm trí và làm phân tán sự tập trung khi thực hiện đánh giá định kỳ.</li>
+                        <li style="margin-bottom: 4px;"><strong>Giải pháp:</strong> Chủ động dọn dẹp và gạch bỏ (Archive / Delete) khỏi hệ thống.</li>
+                        <li><strong>Trạng thái hệ thống:</strong> Loại bỏ (Archived).</li>
+                    </ul>
+
+                    <h6 style="color: #6d28d9; margin-top: 15px; margin-bottom: 10px; text-transform: uppercase;"><i class="fa-solid fa-calendar-check"></i> QUY TRÌNH KIỂM TRA ĐỊNH KỲ (WEEKLY REVIEW)</h6>
+                    <p style="margin-bottom: 10px; font-size: 0.95rem;">Trong buổi Rà soát Tuần (Weekly Review), lọc danh sách dữ liệu tại tầng 30,000 ft (Mục tiêu) và đối chiếu với tầng 10,000 ft (Dự án). Khi phát hiện Mục tiêu chưa có Dự án:</p>
+                    
+                    <div style="background: white; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; font-size: 0.95rem; margin-bottom: 10px;">
+                        <ul style="margin-bottom: 0; padding-left: 20px; list-style-type: circle;">
+                            <li style="margin-bottom: 8px;"><strong>Lựa chọn 1 - Chưa làm ngay (Chưa kích hoạt):</strong> Gán nhãn Someday/Maybe &rarr; Giữ ở tầng 30k ft, không tạo dự án rác.</li>
+                            <li style="margin-bottom: 8px;"><strong>Lựa chọn 2 - Muốn làm ngay (Triển khai ngay):</strong> Tạo tối thiểu <strong>1 Dự án (10k ft)</strong> tương ứng &rarr; Tạo <strong>1 Hành động tiếp theo (Runway)</strong> để đưa vào Lịch/Danh sách việc cần làm.</li>
+                            <li><strong>Lựa chọn 3 - Không làm nữa (Chuyển hướng):</strong> Lưu trữ / Xóa bỏ (Archive / Delete) khỏi danh sách &rarr; Giải phóng dung lượng hệ thống và tâm trí.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         `
     },
