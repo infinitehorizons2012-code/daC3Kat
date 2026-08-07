@@ -345,6 +345,11 @@ const tabConfigs = {
                     <div style="margin-top: 15px; font-size: 0.95rem;">
                         <p style="margin-bottom: 8px;"><strong>Bản chất:</strong> Đây là gói dự án đáp ứng tiêu chuẩn học thuật nền tảng và chuẩn hóa (Core Academic Standards & Standardized Testing).</p>
                         
+                        <div style="margin-bottom: 15px; padding: 10px; background: rgba(59, 130, 246, 0.05); border-radius: 6px; border: 1px solid #bfdbfe;">
+                            <p style="margin-bottom: 4px;"><strong><i class="fa-solid fa-crosshairs" style="color: #1d4ed8; width: 20px;"></i> Vai trò:</strong> Tiêu chuẩn nền tảng</p>
+                            <p style="margin-bottom: 0;"><strong><i class="fa-solid fa-comment-dots" style="color: #1d4ed8; width: 20px;"></i> Thông điệp:</strong> <em>"Học sinh này có đủ tư duy cơ bản không?"</em> &rarr; <strong>Có.</strong></p>
+                        </div>
+                        
                         <p style="margin-bottom: 4px; font-weight: bold; color: #1e40af;">Tại sao cần:</p>
                         <p style="margin-bottom: 8px;">Hội đồng tuyển sinh đại học cần hai bằng chứng học thuật cốt lõi để bảo đảm "điều kiện cần":</p>
                         <ul style="margin-bottom: 15px; margin-left: 15px; list-style-type: square; color: #475569;">
@@ -388,6 +393,11 @@ const tabConfigs = {
                     <div style="margin-top: 15px; font-size: 0.95rem;">
                         <p style="margin-bottom: 8px;"><strong>Bản chất:</strong> Đây là dự án chứng minh khả năng học tập ở cấp độ đại học thực sự (Academic Rigor).</p>
                         
+                        <div style="margin-bottom: 15px; padding: 10px; background: rgba(16, 185, 129, 0.05); border-radius: 6px; border: 1px solid #a7f3d0;">
+                            <p style="margin-bottom: 4px;"><strong><i class="fa-solid fa-crosshairs" style="color: #047857; width: 20px;"></i> Vai trò:</strong> Sức bền học thuật</p>
+                            <p style="margin-bottom: 0;"><strong><i class="fa-solid fa-comment-dots" style="color: #047857; width: 20px;"></i> Thông điệp:</strong> <em>"Học sinh này có chịu được áp lực đại học không?"</em> &rarr; <strong>Có.</strong></p>
+                        </div>
+                        
                         <p style="margin-bottom: 4px; font-weight: bold; color: #065f46;">Tại sao cần:</p>
                         <p style="margin-bottom: 15px;">Khác với điểm thi trắc nghiệm SAT, việc học và lấy 2 môn tín chỉ Đại học/Cao đẳng (ví dụ: Vi mô Kinh tế, Lập trình Python cơ bản, Tâm lý học nhập môn qua các nền tảng trực tuyến như ASU Universal Learner, edX, Coursera hoặc Cao đẳng cộng đồng) cho thấy học sinh có khả năng tự đọc tài liệu chuyên ngành, làm bài luận dài và vượt qua các bài thi khắt khe của giảng viên đại học.</p>
                         
@@ -414,6 +424,11 @@ const tabConfigs = {
                     <div style="margin-top: 15px; font-size: 0.95rem;">
                         <p style="margin-bottom: 8px;"><strong>Bản chất:</strong> Đây là dự án tạo nên "sự độc đáo và nét riêng" (Uniqueness / Standout Factor) từ triết lý của Blake Boles.</p>
                         
+                        <div style="margin-bottom: 15px; padding: 10px; background: rgba(139, 92, 246, 0.05); border-radius: 6px; border: 1px solid #ddd6fe;">
+                            <p style="margin-bottom: 4px;"><strong><i class="fa-solid fa-crosshairs" style="color: #6d28d9; width: 20px;"></i> Vai trò:</strong> Điểm nét riêng biệt</p>
+                            <p style="margin-bottom: 0;"><strong><i class="fa-solid fa-comment-dots" style="color: #6d28d9; width: 20px;"></i> Thông điệp:</strong> <em>"Học sinh này có gì đặc biệt so với những người khác?"</em> &rarr; <strong>Rất độc đáo.</strong></p>
+                        </div>
+                        
                         <p style="margin-bottom: 4px; font-weight: bold; color: #5b21b6;">Tại sao cần:</p>
                         <p style="margin-bottom: 15px;">Hàng ngàn học sinh truyền thống đều có điểm SAT cao và bảng điểm đẹp, nhưng rất ít người sở hữu một sản phẩm thực tế do chính mình tạo ra từ đầu đến cuối. Một cuốn sách đã xuất bản, một ứng dụng di động đã có người dùng, hay một dự án/sự kiện cộng đồng đã quy tụ hàng trăm người chính là minh chứng sống động nhất cho tư duy chủ động, năng lực lãnh đạo và sự kiên trì.</p>
                         
@@ -439,6 +454,11 @@ const tabConfigs = {
                     </summary>
                     <div style="margin-top: 15px; font-size: 0.95rem;">
                         <p style="margin-bottom: 8px;"><strong>Bản chất:</strong> Đây là dự án "đóng gói và truyền thông" (Packaging & Storytelling) toàn bộ thành quả.</p>
+                        
+                        <div style="margin-bottom: 15px; padding: 10px; background: rgba(245, 158, 11, 0.05); border-radius: 6px; border: 1px solid #fde68a;">
+                            <p style="margin-bottom: 4px;"><strong><i class="fa-solid fa-crosshairs" style="color: #b45309; width: 20px;"></i> Vai trò:</strong> Câu chuyện thương hiệu</p>
+                            <p style="margin-bottom: 0;"><strong><i class="fa-solid fa-comment-dots" style="color: #b45309; width: 20px;"></i> Thông điệp:</strong> <em>"Học sinh này là ai và tại sao chúng tôi nên chọn?"</em> &rarr; <strong>Rõ ràng, truyền cảm hứng.</strong></p>
+                        </div>
                         
                         <p style="margin-bottom: 4px; font-weight: bold; color: #92400e;">Tại sao cần:</p>
                         <p style="margin-bottom: 8px;">Dù có điểm thi tốt, học xong tín chỉ và làm ra sản phẩm hay, nếu không biết gom lại và kể thành một câu chuyện cá nhân (Narrative) hấp dẫn thì hồ sơ vẫn mờ nhạt. Dự án này bao gồm:</p>
