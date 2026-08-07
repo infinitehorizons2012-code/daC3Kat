@@ -806,6 +806,22 @@ const tabConfigs = {
             </div>
         `
     },
+    'portfolio': {
+        title: 'Dự án học thuật 3:',
+        desc: 'Portfolio',
+        icon: 'fa-briefcase',
+        color: '#f59e0b',
+        defaultWorkCat: 'Vision',
+        defaultSysCat: 'N/A',
+        guide: `
+            <div class="gtd-guide">
+                <h4><i class="fa-solid fa-briefcase"></i> Dự án học thuật 3: Portfolio</h4>
+                <div style="margin-bottom: 20px; padding: 15px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border-left: 4px solid #f59e0b; font-size: 0.95rem; line-height: 1.5;">
+                    <p>Nội dung đang được cập nhật...</p>
+                </div>
+            </div>
+        `
+    },
     'project': {
         title: 'Dự Án',
         desc: 'Mục tiêu cần nhiều bước để hoàn thành.',
@@ -886,7 +902,7 @@ function updateHeader() {
     // Ẩn form nhập và danh sách công việc nếu là tab Tầm Nhìn hoặc tab Kat
     const quickAddForm = document.getElementById('quick-add-form');
     const masterList = document.getElementById('master-task-list');
-    if (currentActiveTab === 'vision' || currentActiveTab === 'kat' || currentActiveTab === 'dream' || currentActiveTab === 'prinberk') {
+    if (currentActiveTab === 'vision' || currentActiveTab === 'kat' || currentActiveTab === 'dream' || currentActiveTab === 'prinberk' || currentActiveTab === 'portfolio') {
         if (quickAddForm) quickAddForm.style.display = 'none';
         if (masterList) masterList.style.display = 'none';
     } else {
