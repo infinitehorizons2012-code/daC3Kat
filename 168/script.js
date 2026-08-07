@@ -438,14 +438,14 @@ const tabConfigs = {
     },
     'dream': {
         title: 'Dự án học thuật 2:',
-        desc: 'Dream',
+        desc: 'DA Dream Map',
         icon: 'fa-rocket',
         color: '#8b5cf6',
         defaultWorkCat: 'Vision',
         defaultSysCat: 'N/A',
         guide: `
             <div class="gtd-guide">
-                <h4><i class="fa-solid fa-rocket"></i> Dự án học thuật 2: Dream</h4>
+                <h4><i class="fa-solid fa-rocket"></i> Dự án học thuật 2: DA Dream Map</h4>
                 <div style="margin-bottom: 20px; padding: 15px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 4px solid #8b5cf6; font-size: 0.95rem; line-height: 1.5;">
                     <p style="margin-bottom: 8px;"><strong style="color: #5b21b6;">50,000 ft (Sứ mệnh):</strong> Sống tự chủ, làm chủ năng lực học tập suốt đời và tự tạo giá trị cho xã hội.</p>
                     <p style="margin-bottom: 8px;"><strong style="color: #5b21b6;">40,000 ft (Tầm nhìn):</strong> Sở hữu sự nghiệp tự do, tự chủ tài chính trong 3–5 năm.</p>
