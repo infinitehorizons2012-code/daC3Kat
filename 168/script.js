@@ -237,6 +237,31 @@ const tabConfigs = {
                         <li><strong>Annual Review (Hàng năm - Tầng 40,000 & 50,000 ft):</strong> Đánh giá Tầm nhìn 3–5 năm và Sứ mệnh/Nguyên tắc sống. Nhìn lại bản thân để xem các giá trị cốt lõi có chuyển biến hay mở rộng sang hướng mới không.</li>
                     </ul>
                 </div>
+
+                <div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; border-radius: 8px; padding: 15px; font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px;">
+                    <h5 style="color: #2563eb; margin-bottom: 10px;"><i class="fa-solid fa-layer-group"></i> Phân loại Hành động thực tế:</h5>
+                    <p style="margin-bottom: 12px;">Trong cuộc sống hàng ngày, không phải 100% mọi việc hôm nay đều phải nối lên tận Sứ mệnh. Cần phân chia hành động thành 2 nhóm:</p>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <strong style="color: #1d4ed8;"><i class="fa-solid fa-arrow-trend-up"></i> Nhóm 1: Việc hướng đến sự phát triển (Strategic Actions)</strong>
+                        <p style="margin: 4px 0 4px 15px; color: #475569;"><em>Chuỗi: Hành động &rarr; Dự án &rarr; Mục tiêu &rarr; Tầm nhìn &rarr; Sứ mệnh.</em></p>
+                        <p style="margin: 0 0 0 15px;">Ví dụ: Đọc 20 trang sách kinh tế &rarr; Hoàn thành khóa học đầu tư &rarr; Tự chủ tài chính 2 năm tới &rarr; Tự do thời gian &rarr; Tự lập và liên tục phát triển.</p>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: #1d4ed8;"><i class="fa-solid fa-screwdriver-wrench"></i> Nhóm 2: Việc duy trì & bảo trì cuộc sống (Maintenance Actions)</strong>
+                        <p style="margin: 4px 0 4px 15px;">Những việc này chỉ dừng lại ở tầng Runway (Hành động) hoặc tầng 20,000 ft (Lĩnh vực trách nhiệm) mà không nhất thiết phải có "Dự án" hay "Mục tiêu 3-5 năm".</p>
+                        <p style="margin: 0 0 0 15px;">Ví dụ: Đi đóng tiền điện, thay dầu xe, cắt tóc, dọn nhà... Bạn làm vì đó là trách nhiệm duy trì cuộc sống (Area of Responsibility), không cần gán cho nó một "mục tiêu cao cả" để tránh làm phức tạp hóa hệ thống.</p>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.7); padding: 10px 15px; border-radius: 6px; border-left: 3px solid #60a5fa;">
+                        <h6 style="color: #1e40af; font-weight: bold; margin-bottom: 5px;">TÓM LẠI:</h6>
+                        <ul style="margin-bottom: 0; padding-left: 20px; list-style-type: square;">
+                            <li style="margin-bottom: 4px;"><strong>Nghĩa chuẩn:</strong> Mọi việc quan trọng bạn làm hôm nay nên có "gốc rễ" cắm sâu vào Mục tiêu, Tầm nhìn và Sứ mệnh.</li>
+                            <li><strong>Tâm thế vận hành:</strong> Dùng Tầm nhìn & Sứ mệnh để biết việc gì nên làm, và dùng Lịch & Danh sách việc để biết hôm nay làm gì cụ thể.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         `
     },
