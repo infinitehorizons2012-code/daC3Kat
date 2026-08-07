@@ -31,7 +31,7 @@ const tabConfigs = {
         defaultSysCat: 'N/A',
         guide: `
             <div class="gtd-guide">
-                <h4><i class="fa-solid fa-map"></i> Bản đồ độ cao GTD (Ghi chú mẫu):</h4>
+                <h4><i class="fa-solid fa-map"></i> Ghi chú:</h4>
                 
                 <div style="margin-bottom: 20px; padding: 15px; background: rgba(22, 163, 74, 0.1); border-radius: 8px; border-left: 4px solid #16a34a; font-size: 0.95rem; line-height: 1.5;">
                     <p style="margin-bottom: 8px;"><strong>Sứ mệnh (50k ft):</strong> Là lý do bạn có mặt trên đời, là nền tảng đạo đức và các nguyên tắc sống không thay đổi theo thời gian.</p>
