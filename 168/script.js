@@ -1248,15 +1248,17 @@ function updateHeader() {
     quickAddInput.placeholder = `Nhập ${conf.title.toLowerCase()} mới...`;
 }
 
-function getApiKey() {
-    let key = localStorage.getItem('app_api_key');
-    if (!key) {
-        key = prompt("Vui lòng nhập mật khẩu API để kết nối Database (Chỉ nhập 1 lần):");
-        if (key) {
-            localStorage.setItem('app_api_key', key);
-        }
+window.promptForApiKey = function() {
+    let key = prompt("Vui lòng nhập mật khẩu API để khởi động kết nối Database:");
+    if (key) {
+        localStorage.setItem('app_api_key', key);
+        alert("Đã lưu mật khẩu! Hệ thống sẽ tải lại dữ liệu từ Cloudflare.");
+        loadData();
     }
-    return key || '';
+}
+
+function getApiKey() {
+    return localStorage.getItem('app_api_key') || '';
 }
 
 // --- Dữ liệu (Cloudflare + LocalStorage Fallback) ---
@@ -1285,9 +1287,9 @@ async function loadData() {
         }
     }
 
-    if (CLOUDFLARE_API_URL) {
+    const apiKey = getApiKey();
+    if (CLOUDFLARE_API_URL && apiKey) {
         setSyncStatus('syncing');
-        const apiKey = getApiKey();
         try {
             const response = await fetch(`${CLOUDFLARE_API_URL}/data`, {
                 headers: { 'x-api-key': apiKey }
@@ -1321,9 +1323,9 @@ async function loadData() {
 
 async function saveData() {
     saveToLocal();
-    if (CLOUDFLARE_API_URL) {
+    const apiKey = getApiKey();
+    if (CLOUDFLARE_API_URL && apiKey) {
         setSyncStatus('syncing');
-        const apiKey = getApiKey();
         try {
             const response = await fetch(`${CLOUDFLARE_API_URL}/data`, {
                 method: 'POST',
