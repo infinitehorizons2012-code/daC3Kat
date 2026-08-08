@@ -1252,8 +1252,14 @@ window.promptForApiKey = function() {
     let key = prompt("Vui lòng nhập mật khẩu API để khởi động kết nối Database:");
     if (key) {
         localStorage.setItem('app_api_key', key);
-        alert("Đã lưu mật khẩu! Hệ thống sẽ tải lại dữ liệu từ Cloudflare.");
-        loadData();
+        
+        if (state && state.tasks && state.tasks.length > 0) {
+            alert("Đã lưu mật khẩu! Dữ liệu cũ trong máy của bạn đang được đẩy lên Cloudflare...");
+            saveData();
+        } else {
+            alert("Đã lưu mật khẩu! Hệ thống sẽ tải dữ liệu từ Cloudflare.");
+            loadData();
+        }
     }
 }
 
@@ -1360,6 +1366,7 @@ function saveToLocal() {
 }
 
 function setSyncStatus(status) {
+    syncStatusEl.style.display = 'flex';
     syncStatusEl.className = 'sync-status ' + status;
     if (status === 'synced') {
         syncStatusEl.innerHTML = '<i class="fa-solid fa-cloud-check"></i>';
