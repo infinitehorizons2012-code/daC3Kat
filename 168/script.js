@@ -905,6 +905,22 @@ const tabConfigs = {
 </div>
         `
     },
+    'homeconomie': {
+        title: 'Homeconomie',
+        desc: 'DA Homeconomie',
+        icon: 'fa-house-chimney',
+        color: '#f59e0b',
+        defaultWorkCat: 'Vision',
+        defaultSysCat: 'N/A',
+        guide: `
+            <div class="gtd-guide">
+                <h4><i class="fa-solid fa-house-chimney"></i> Homeconomie</h4>
+                <div style="margin-bottom: 20px; padding: 15px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border-left: 4px solid #f59e0b; font-size: 0.95rem; line-height: 1.5;">
+                    <p>Nội dung đang cập nhật...</p>
+                </div>
+            </div>
+        `
+    },
     'kat': {
         title: 'Kế hoạch của Kat',
         desc: 'Hồ sơ Ứng tuyển Đại học (College Admissions)',
@@ -1213,7 +1229,7 @@ function updateHeader() {
     const quickAddForm = document.getElementById('quick-add-form');
     const masterList = document.getElementById('master-task-list');
     const listControls = document.getElementById('list-controls');
-    if (currentActiveTab === 'vision' || currentActiveTab === 'kat' || currentActiveTab === 'dream' || currentActiveTab === 'prinberk' || currentActiveTab === 'portfolio' || currentActiveTab === 'scm') {
+    if (currentActiveTab === 'vision' || currentActiveTab === 'kat' || currentActiveTab === 'dream' || currentActiveTab === 'prinberk' || currentActiveTab === 'portfolio' || currentActiveTab === 'scm' || currentActiveTab === 'homeconomie') {
         if (quickAddForm) quickAddForm.style.display = 'none';
         if (masterList) masterList.style.display = 'none';
         if (listControls) listControls.style.display = 'none';
