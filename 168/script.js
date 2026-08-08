@@ -1466,6 +1466,72 @@ window.toggleArchiveTask = async function() {
     }
 };
 
+
+window.findSiblingsInTree = function(tree, taskId) {
+    for (let i = 0; i < tree.length; i++) {
+        if (tree[i].id === taskId) {
+            return { siblings: tree, index: i };
+        }
+        if (tree[i].children && tree[i].children.length > 0) {
+            const res = window.findSiblingsInTree(tree[i].children, taskId);
+            if (res) return res;
+        }
+    }
+    return null;
+};
+
+window.swapTasksInState = async function(taskId1, taskId2) {
+    const idx1 = state.tasks.findIndex(t => t.id === taskId1);
+    const idx2 = state.tasks.findIndex(t => t.id === taskId2);
+    if (idx1 !== -1 && idx2 !== -1) {
+        const temp = state.tasks[idx1];
+        state.tasks[idx1] = state.tasks[idx2];
+        state.tasks[idx2] = temp;
+        window.renderTasks();
+        await saveData();
+    }
+};
+
+window.moveTaskUp = function(taskId) {
+    let currentFiltered = state.tasks;
+    if (currentActiveTab === 'project') {
+        currentFiltered = currentFiltered.filter(t => ['Project', 'Goal', 'Vision', 'Mission'].includes(t.workCategory));
+    } else if (currentActiveTab !== 'action') {
+        const conf = tabConfigs[currentActiveTab];
+        currentFiltered = currentFiltered.filter(t => t.workCategory === conf.defaultWorkCat);
+    }
+    if (!window.showArchived) {
+        currentFiltered = currentFiltered.filter(t => !t.archived);
+    }
+
+    const tree = buildTaskTree(currentFiltered);
+    const info = window.findSiblingsInTree(tree, taskId);
+    if (info && info.index > 0) {
+        const siblingId = info.siblings[info.index - 1].id;
+        window.swapTasksInState(taskId, siblingId);
+    }
+};
+
+window.moveTaskDown = function(taskId) {
+    let currentFiltered = state.tasks;
+    if (currentActiveTab === 'project') {
+        currentFiltered = currentFiltered.filter(t => ['Project', 'Goal', 'Vision', 'Mission'].includes(t.workCategory));
+    } else if (currentActiveTab !== 'action') {
+        const conf = tabConfigs[currentActiveTab];
+        currentFiltered = currentFiltered.filter(t => t.workCategory === conf.defaultWorkCat);
+    }
+    if (!window.showArchived) {
+        currentFiltered = currentFiltered.filter(t => !t.archived);
+    }
+
+    const tree = buildTaskTree(currentFiltered);
+    const info = window.findSiblingsInTree(tree, taskId);
+    if (info && info.index < info.siblings.length - 1) {
+        const siblingId = info.siblings[info.index + 1].id;
+        window.swapTasksInState(taskId, siblingId);
+    }
+};
+
 window.collapsedTasks = new Set();
 window.toggleTaskExpand = function(taskId) {
     if (window.collapsedTasks.has(taskId)) {
@@ -1565,7 +1631,9 @@ function renderTaskNode(node) {
                         <span class="task-text">${escapeHTML(node.text)}</span>
                     </div>
                 </div>
-                <div class="task-actions">
+                <div class="task-actions" style="display: flex; gap: 4px; align-items: center;">
+                    <button class="btn-move" onclick="moveTaskUp('${node.id}')" title="Lên"><i class="fa-solid fa-arrow-up"></i></button>
+                    <button class="btn-move" onclick="moveTaskDown('${node.id}')" title="Xuống"><i class="fa-solid fa-arrow-down"></i></button>
                     <button class="btn-details" onclick="openTaskModal('${node.id}')" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
                     <button class="delete-btn" onclick="deleteTask('${node.id}')" title="Xóa"><i class="fa-solid fa-trash-can"></i></button>
                 </div>
