@@ -1368,15 +1368,20 @@ function saveToLocal() {
 function setSyncStatus(status) {
     syncStatusEl.style.display = 'flex';
     syncStatusEl.className = 'sync-status ' + status;
+    const appTitle = document.getElementById('app-title');
+    
     if (status === 'synced') {
         syncStatusEl.innerHTML = '<i class="fa-solid fa-cloud-check"></i>';
         syncStatusEl.title = 'Đã đồng bộ';
+        if (appTitle) appTitle.classList.add('db-connected');
     } else if (status === 'syncing') {
         syncStatusEl.innerHTML = '<i class="fa-solid fa-rotate"></i>';
         syncStatusEl.title = 'Đang đồng bộ...';
+        if (appTitle) appTitle.classList.remove('db-connected');
     } else {
         syncStatusEl.innerHTML = '<i class="fa-solid fa-cloud-xmark"></i>';
         syncStatusEl.title = 'Lỗi đồng bộ';
+        if (appTitle) appTitle.classList.remove('db-connected');
     }
 }
 
