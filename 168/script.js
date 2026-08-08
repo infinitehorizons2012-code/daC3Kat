@@ -439,6 +439,18 @@ const tabConfigs = {
                     </div>
                 </details>
 
+                <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #99f6e4; border-radius: 8px; padding: 10px 15px;">
+                    <summary style="font-weight: bold; cursor: pointer; color: #0f766e; font-size: 1.05rem;">
+                        <i class="fa-solid fa-running"></i> Physical Education (0.5)
+                    </summary>
+                    <div style="margin-top: 15px; font-size: 0.95rem; color: #334155;">
+                        <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                            <li>Karate</li>
+                            <li>Bơi</li>
+                        </ul>
+                    </div>
+                </details>
+
             </div>
         `
     },
