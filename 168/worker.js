@@ -14,8 +14,11 @@
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
 };
+
+// Đặt mật khẩu truy cập API tại đây (Bạn có thể tự đổi thành mật khẩu khác)
+const API_PASSWORD = "kat-super-secret-168";
 
 export default {
   async fetch(request, env) {
@@ -28,10 +31,19 @@ export default {
 
     // API Route: /data
     if (url.pathname === '/data') {
+      
+      // KIỂM TRA MẬT KHẨU BẢO MẬT
+      const providedKey = request.headers.get('x-api-key');
+      if (providedKey !== API_PASSWORD) {
+          return new Response(JSON.stringify({ error: "Unauthorized: Sai mật khẩu API!" }), { 
+              status: 401, 
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          });
+      }
+
       if (request.method === 'GET') {
         try {
-          // Lấy data từ KV Namespace (nếu bạn đã cài đặt biến môi trường APP_DATA)
-          // Nếu chưa cài KV, fallback trả về data rỗng (hoặc báo lỗi).
+          // Lấy data từ KV Namespace
           if (!env.APP_DATA) {
             return new Response(JSON.stringify({ error: "Chưa cấu hình KV APP_DATA" }), { 
                 status: 500, 

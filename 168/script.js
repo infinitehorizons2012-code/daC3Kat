@@ -1248,6 +1248,17 @@ function updateHeader() {
     quickAddInput.placeholder = `Nhập ${conf.title.toLowerCase()} mới...`;
 }
 
+function getApiKey() {
+    let key = localStorage.getItem('app_api_key');
+    if (!key) {
+        key = prompt("Vui lòng nhập mật khẩu API để kết nối Database (Chỉ nhập 1 lần):");
+        if (key) {
+            localStorage.setItem('app_api_key', key);
+        }
+    }
+    return key || '';
+}
+
 // --- Dữ liệu (Cloudflare + LocalStorage Fallback) ---
 async function loadData() {
     const localData = localStorage.getItem('timeManagementStatePro');
@@ -1276,8 +1287,19 @@ async function loadData() {
 
     if (CLOUDFLARE_API_URL) {
         setSyncStatus('syncing');
+        const apiKey = getApiKey();
         try {
-            const response = await fetch(`${CLOUDFLARE_API_URL}/data`);
+            const response = await fetch(`${CLOUDFLARE_API_URL}/data`, {
+                headers: { 'x-api-key': apiKey }
+            });
+            
+            if (response.status === 401) {
+                alert("Sai mật khẩu API! Vui lòng tải lại trang và nhập lại.");
+                localStorage.removeItem('app_api_key');
+                setSyncStatus('error');
+                return;
+            }
+            
             if (response.ok) {
                 const cloudData = await response.json();
                 if (cloudData && Array.isArray(cloudData.tasks)) {
@@ -1301,12 +1323,24 @@ async function saveData() {
     saveToLocal();
     if (CLOUDFLARE_API_URL) {
         setSyncStatus('syncing');
+        const apiKey = getApiKey();
         try {
             const response = await fetch(`${CLOUDFLARE_API_URL}/data`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-api-key': apiKey
+                },
                 body: JSON.stringify(state)
             });
+            
+            if (response.status === 401) {
+                alert("Sai mật khẩu API khi lưu dữ liệu! Vui lòng tải lại trang.");
+                localStorage.removeItem('app_api_key');
+                setSyncStatus('error');
+                return;
+            }
+            
             if (response.ok) {
                 setSyncStatus('synced');
             } else {
