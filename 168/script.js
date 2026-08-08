@@ -1,4 +1,4 @@
-﻿// Cloudflare Worker API URL (User needs to replace this with their actual deployed worker URL)
+// Cloudflare Worker API URL (User needs to replace this with their actual deployed worker URL)
 const CLOUDFLARE_API_URL = 'https://time-app-api.infinite-horizons-2012.workers.dev'; 
 
 // Khởi tạo state (Kiến trúc Master Task List)
@@ -987,7 +987,7 @@ const tabConfigs = {
                             <ul style="margin-top: 5px; margin-left: 15px; margin-bottom: 0;">
                                 <li style="margin-bottom: 4px;"><strong>Dự án Học thuật Core:</strong> Hoàn thành 20 High School Credits + Ôn thi SAT đạt mục tiêu 1500+.</li>
                                 <li style="margin-bottom: 4px;"><strong>Dự án Tín chỉ Chuyên sâu:</strong> Hoàn thành 3 môn Tích hợp (Mechatronics + Python / Data Science + Intro to Business).</li>
-                                <li style="margin-bottom: 4px;"><strong>Dự án Dream Map (Sản phẩm Thực chiến):</strong> Triển khai Hệ thống Giám sát & Tự động hóa Thiết bị Kho bãi (Áp dụng khung 5 bước Better Than College).</li>
+                                <li style="margin-bottom: 4px;"><strong>Dự án Dream Map (Sản phẩm Thực chiến):</strong> Triển khai Hệ thống Giám sát & Tự động hóa Thiết bị Kho bãi.</li>
                                 <li><strong>Dự án Hồ sơ & Bài luận:</strong> Đóng gói Portfolio & Viết Bài luận cá nhân về Tâm thế Nhà nghiên cứu liên môn: Kiến tạo thay vì thụ động tiếp thu.</li>
                             </ul>
                         </div>
