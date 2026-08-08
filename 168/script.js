@@ -950,6 +950,59 @@ const tabConfigs = {
                     </ul>
                 </div>
 
+                <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #fbcfe8; border-radius: 8px; padding: 10px 15px;" open>
+                    <summary style="font-weight: bold; cursor: pointer; color: #be185d; font-size: 1.05rem;">
+                        <i class="fa-solid fa-layer-group"></i> Phân tích chi tiết: HỆ SINH THÁI 6 CẤP ĐỘ
+                    </summary>
+                    <div style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+                        
+                        <div style="margin-bottom: 15px;">
+                            <strong style="color: #9d174d; font-size: 1.05em;">50,000 ft — SỨ MỆNH & TUYÊN NGÔN DANH TÍNH (MISSION & IDENTITY)</strong><br>
+                            <i style="color: #be185d;">Tư duy Cổ điển (Logos - Ethos/Egos - Pathos) × Công nghệ AI Thế kỷ 21</i><br>
+                            <p style="margin-top: 5px; margin-bottom: 8px;">Phá vỡ giới hạn độ tuổi, dấn thân tìm bản chất gốc rễ của tri thức để tháo dỡ, tái tạo và kiến tạo giá trị mới cho xã hội.</p>
+                            <ul style="margin-left: 15px; margin-bottom: 0;">
+                                <li style="margin-bottom: 4px;"><strong>LOGOS (Trí - Quy luật & Logic cốt lõi):</strong> Đi tìm Chân lý (Truth) và Nguyên lý thứ nhất (First Principles) của vũ trụ; mang trong mình tư duy của một nhà nghiên cứu liên môn, thấu hiểu trọn vẹn từ bản chất phần cứng, cấu trúc dữ liệu, thuật toán AI đến tư duy hệ thống kinh tế với bộ não suy luận mạch lạc, không đứt gãy.</li>
+                                <li style="margin-bottom: 4px;"><strong>ETHOS / EGOS (Đức & Đảm - Bản lĩnh & Kỷ luật tự chủ):</strong> Khẳng định danh tính của một Nhà nghiên cứu tự do (Self-directed Scholar); giữ vững sự uy tín thông qua sản phẩm thật (Portfolio), kỷ luật tự giác, tuân thủ cam kết/deadlines và chuẩn mực chất lượng.</li>
+                                <li><strong>PATHOS (Tâm - Rung cảm Trí tuệ & Thấu cảm):</strong> Nuôi dưỡng tình yêu tri thức từ sự kinh ngạc chân thành (Wonder & Awe) trước vẻ đẹp tự nhiên; dùng sự thấu cảm bài toán thực tế của cộng đồng làm động lực kiến tạo, truyền tải đam mê tự thân vào câu chuyện cá nhân.</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <strong style="color: #9d174d; font-size: 1.05em;">40,000 ft — TẦM NHÌN DÀI HẠN (VISION 3–5 NĂM)</strong>
+                            <p style="margin-top: 5px; margin-bottom: 0;">Bước chân vào các Viện Công nghệ / Đại học tinh hoa (như MIT, Caltech hay các trường hàng đầu khu vực Massachusetts) như một hệ quả tất yếu của một bộ não nghiên cứu liên môn. Bước vào đại học là để kiến tạo cái mới, phát triển tiếp các công trình thực chiến, chứ không phải để ngồi nghe lại lý thuyết bề mặt.</p>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <strong style="color: #9d174d; font-size: 1.05em;">30,000 ft — MỤC TIÊU CHIẾN LƯỢC (GOALS 1–2 NĂM)</strong>
+                            <p style="margin-top: 5px; margin-bottom: 0;">Xây dựng bộ năng lực liên môn tích hợp (Kỹ thuật + Phần mềm + Kinh tế) và hoàn thành tối thiểu 1 Dự án Tự động hóa có ứng dụng thực tế & thương mại hóa/tạo tác động xã hội ở độ tuổi 12–15.</p>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <strong style="color: #9d174d; font-size: 1.05em;">20,000 ft — LĨNH VỰC TRÁCH NHIỆM (AREAS OF FOCUS)</strong>
+                            <p style="margin-top: 5px; margin-bottom: 0;">Năng lực Nghiên cứu Tích hợp & Hồ sơ Đại học Tinh hoa (Quản lý & nuôi dưỡng các trụ cột: Học thuật chuẩn hóa, Kỹ năng thực chiến, Portfolio sản phẩm và Mạng lưới chuyên môn).</p>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <strong style="color: #9d174d; font-size: 1.05em;">10,000 ft — DANH SÁCH DỰ ÁN (ACTIVE PROJECTS)</strong>
+                            <ul style="margin-top: 5px; margin-left: 15px; margin-bottom: 0;">
+                                <li style="margin-bottom: 4px;"><strong>Dự án Học thuật Core:</strong> Hoàn thành 20 High School Credits + Ôn thi SAT đạt mục tiêu 1500+.</li>
+                                <li style="margin-bottom: 4px;"><strong>Dự án Tín chỉ Chuyên sâu:</strong> Hoàn thành 3 môn Tích hợp (Mechatronics + Python / Data Science + Intro to Business).</li>
+                                <li style="margin-bottom: 4px;"><strong>Dự án Dream Map (Sản phẩm Thực chiến):</strong> Triển khai Hệ thống Giám sát & Tự động hóa Thiết bị Kho bãi (Áp dụng khung 5 bước Better Than College).</li>
+                                <li><strong>Dự án Hồ sơ & Bài luận:</strong> Đóng gói Unschooling Portfolio & Viết Bài luận cá nhân về Tâm thế Nhà nghiên cứu liên môn: Kiến tạo thay vì thụ động tiếp thu.</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <strong style="color: #9d174d; font-size: 1.05em;">GROUND / RUNWAY — HÀNH ĐỘNG KẾ TIẾP (NEXT ACTIONS)</strong>
+                            <ul style="margin-top: 5px; margin-left: 15px; margin-bottom: 0;">
+                                <li style="margin-bottom: 4px;"><strong>Kỹ thuật (Logos):</strong> Đọc Chương 1 giáo trình Mechatronics & tóm tắt 3 nguyên lý vận hành phần cứng chiều nay.</li>
+                                <li style="margin-bottom: 4px;"><strong>Lập trình (Logos):</strong> Mở IDE và viết 30 dòng code Python mô phỏng thuật toán xử lý dữ liệu cảm biến lúc 15:00.</li>
+                                <li><strong>Kỷ luật (Ethos):</strong> Cập nhật tiến độ bài tập SAT trên Khan Academy đúng khung giờ đã cam kết.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </details>
+
                 <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 15px;">
                     <summary style="font-weight: bold; cursor: pointer; color: #1d4ed8; font-size: 1.05rem;">
                         <i class="fa-solid fa-book-open"></i> Phân tích: DỰ ÁN HỌC THUẬT (ACADEMIC PROJECT)
