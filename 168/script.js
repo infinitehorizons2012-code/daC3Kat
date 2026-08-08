@@ -1455,8 +1455,9 @@ window.toggleShowArchive = function(checked) {
 };
 
 window.toggleArchiveTask = async function() {
-    if (!currentEditingTaskId) return;
-    const task = state.tasks.find(t => t.id === currentEditingTaskId);
+    const taskId = document.getElementById('modal-task-id').value;
+    if (!taskId) return;
+    const task = state.tasks.find(t => t.id === taskId);
     if (task) {
         task.archived = !task.archived;
         closeTaskModal();
