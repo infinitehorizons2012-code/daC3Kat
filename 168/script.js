@@ -1212,12 +1212,15 @@ function updateHeader() {
     // Ẩn form nhập và danh sách công việc nếu là tab Tầm Nhìn hoặc tab Kat
     const quickAddForm = document.getElementById('quick-add-form');
     const masterList = document.getElementById('master-task-list');
+    const listControls = document.getElementById('list-controls');
     if (currentActiveTab === 'vision' || currentActiveTab === 'kat' || currentActiveTab === 'dream' || currentActiveTab === 'prinberk' || currentActiveTab === 'portfolio' || currentActiveTab === 'scm') {
         if (quickAddForm) quickAddForm.style.display = 'none';
         if (masterList) masterList.style.display = 'none';
+        if (listControls) listControls.style.display = 'none';
     } else {
         if (quickAddForm) quickAddForm.style.display = 'flex';
         if (masterList) masterList.style.display = '';
+        if (listControls) listControls.style.display = 'flex';
     }
 
     const stratDropdown = document.getElementById('quick-add-strategy-type');
