@@ -416,7 +416,13 @@ const tabConfigs = {
                         <i class="fa-solid fa-calculator"></i> Maths
                     </summary>
                     <div style="margin-top: 15px; font-size: 0.95rem; color: #334155;">
-                        <p>Algebra 1, Geometry, Algebra 2, SAT Prep, Precalculus</p>
+                        <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                            <li>Algebra 1</li>
+                            <li>Geometry</li>
+                            <li>Algebra 2</li>
+                            <li>SAT Prep (tự chọn)</li>
+                            <li>Precalculus (tự chọn)</li>
+                        </ul>
                     </div>
                 </details>
 
