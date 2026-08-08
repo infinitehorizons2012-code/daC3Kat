@@ -180,3 +180,7 @@ body {
 .task-expand-btn { background: none; border: none; font-size: 1rem; color: var(--text-muted); cursor: pointer; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; padding: 0; margin-right: 4px; }
 .task-expand-btn:hover { color: var(--primary-color); }
 .task-info-wrapper { display: flex; align-items: center; flex: 1; }
+
+/* Archive Styles */
+.task-item.archived { opacity: 0.85; background: #f8fafc; border: 1px dashed #cbd5e1; }
+.excel-table tr.archived { opacity: 0.85; background: #f8fafc; font-style: italic; }

@@ -6,7 +6,7 @@
     <title>Siêu Nhân Thời Gian 168</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
     <div class="background-shapes">
@@ -93,6 +93,13 @@
                 <input type="text" id="quick-add-input" placeholder="Nhập việc mới..." required style="flex-grow: 1;">
                 <button type="submit" style="margin-left: 10px;"><i class="fa-solid fa-plus"></i> Thêm</button>
             </form>
+
+            <div class="list-controls" style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                <label style="font-size: 0.95rem; color: #64748b; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <input type="checkbox" id="toggle-archive" onchange="toggleShowArchive(this.checked)" style="cursor: pointer; width: 16px; height: 16px;">
+                    <i class="fa-solid fa-box-archive"></i> Hiển thị Lưu trữ
+                </label>
+            </div>
 
             <div class="task-list" id="master-task-list">
                 <!-- Master Task List rendered here -->
@@ -248,12 +255,17 @@
                 </div>
 
             </div>
-            <div class="modal-footer">
-                <button class="btn-save" onclick="saveTaskDetails()"><i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi</button>
+            <div class="modal-footer" style="display: flex; justify-content: space-between; gap: 10px;">
+                <button type="button" id="btn-archive-task" class="btn-archive" style="background: #64748b; color: white; padding: 12px 24px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;" onclick="toggleArchiveTask()">
+                    <i class="fa-solid fa-box-archive"></i> Lưu trữ
+                </button>
+                <button type="button" class="btn-save" style="padding: 12px 24px; border: none; border-radius: 12px; background: var(--success-color); color: white; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;" onclick="saveTaskDetails()">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi
+                </button>
             </div>
         </div>
     </div>
 
-    <script src="script.js?v=2"></script>
+    <script src="script.js?v=3"></script>
 </body>
 </html>

@@ -1367,6 +1367,17 @@ window.openTaskModal = function(taskId) {
     document.getElementById('modal-task-goal').value = task.goalRef || "";
     document.getElementById('modal-task-vision').value = task.visionRef || "";
     document.getElementById('modal-task-mission').value = task.missionRef || "";
+    
+    // Set Archive button text
+    const archiveBtn = document.getElementById('btn-archive-task');
+    if (task.archived) {
+        archiveBtn.innerHTML = '<i class="fa-solid fa-box-open"></i> Bỏ lưu trữ';
+        archiveBtn.style.background = '#3b82f6';
+    } else {
+        archiveBtn.innerHTML = '<i class="fa-solid fa-box-archive"></i> Lưu trữ';
+        archiveBtn.style.background = '#64748b';
+    }
+
 
     window.toggleGroupFields();
     taskModal.classList.add('show');
@@ -1437,6 +1448,23 @@ window.saveTaskDetails = async function() {
 
 // --- Filters & Render ---
 
+window.showArchived = false;
+window.toggleShowArchive = function(checked) {
+    window.showArchived = checked;
+    window.renderTasks();
+};
+
+window.toggleArchiveTask = async function() {
+    if (!currentEditingTaskId) return;
+    const task = state.tasks.find(t => t.id === currentEditingTaskId);
+    if (task) {
+        task.archived = !task.archived;
+        closeTaskModal();
+        window.renderTasks();
+        await saveData();
+    }
+};
+
 window.collapsedTasks = new Set();
 window.toggleTaskExpand = function(taskId) {
     if (window.collapsedTasks.has(taskId)) {
@@ -1484,7 +1512,9 @@ function buildTaskTree(filteredTasks) {
 function renderTaskNode(node) {
     const hasChildren = node.children && node.children.length > 0;
     // Default expanded
-    const isExpanded = !window.collapsedTasks.has(node.id); 
+    const isExpanded = !window.collapsedTasks.has(node.id);
+    const archivedTag = node.archived ? `<span class="tag tag-sys" style="background:#cbd5e1;color:#334155;"><i class="fa-solid fa-box-archive"></i> Đã lưu trữ</span>` : '';
+ 
     
     let tagsHTML = '';
     if (['Project', 'Goal', 'Vision', 'Mission'].includes(node.workCategory)) {
@@ -1496,6 +1526,7 @@ function renderTaskNode(node) {
         tagsHTML += `<span class="tag tag-sys" style="background:#dcfce3;color:#166534;"><i class="fa-solid fa-layer-group"></i> ${escapeHTML(node.taskGroup)}</span>`;
     }
     
+    tagsHTML += archivedTag;
     if (node.area) tagsHTML += `<span class="tag tag-sys" style="background:#f3e8ff;color:#6b21a8;">${escapeHTML(node.area)}</span>`;
     if (node.systemCategory && node.systemCategory !== 'N/A' && !['Project', 'Goal', 'Vision', 'Mission'].includes(node.workCategory)) {
         tagsHTML += `<span class="tag tag-sys">${escapeHTML(node.systemCategory)}</span>`;
@@ -1518,7 +1549,7 @@ function renderTaskNode(node) {
     
     let html = `
     <div class="task-node">
-        <div class="task-item ${node.done ? 'done' : ''}">
+        <div class="task-item ${node.done ? 'done' : ''} ${node.archived ? 'archived' : ''}">
             <div class="task-main">
                 <div class="task-info-wrapper">
                     ${hasChildren ? `
@@ -1564,6 +1595,12 @@ window.renderTasks = function() {
         filteredTasks = filteredTasks.filter(t => t.workCategory === expectedWorkCat);
     }
 
+    // Archive filtering
+    if (!window.showArchived) {
+        filteredTasks = filteredTasks.filter(t => !t.archived);
+    }
+
+
     if (filteredTasks.length === 0) {
         masterListEl.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-style:italic; padding:20px 0;">Không có công việc nào khớp với điều kiện lọc!</p>';
         return;
@@ -1594,7 +1631,7 @@ window.renderTasks = function() {
                     </thead>
                     <tbody>
                         ${filteredTasks.map(task => `
-                            <tr class="${task.done ? 'done' : ''}">
+                            <tr class="${task.done ? 'done' : ''} ${task.archived ? 'archived' : ''}">
                                 <td class="checkbox-cell">
                                     <div class="checkbox" style="margin:0 auto;" onclick="toggleTask('${task.id}')">
                                         <i class="fa-solid fa-check"></i>
