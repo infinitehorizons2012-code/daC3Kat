@@ -1,4 +1,4 @@
-// Cloudflare Worker API URL (User needs to replace this with their actual deployed worker URL)
+﻿// Cloudflare Worker API URL (User needs to replace this with their actual deployed worker URL)
 const CLOUDFLARE_API_URL = 'https://time-app-api.infinite-horizons-2012.workers.dev'; 
 
 // Khởi tạo state (Kiến trúc Master Task List)
@@ -30,7 +30,7 @@ const tabConfigs = {
         defaultWorkCat: 'Vision', 
         defaultSysCat: 'N/A',
         guide: `
-            <div class="gtd-guide">
+            <div class="tab-guide-content">
                 <h4><i class="fa-solid fa-map"></i> Ghi chú:</h4>
                 
                 <div style="margin-bottom: 15px; padding: 12px 15px; background: rgba(234, 179, 8, 0.1); border-radius: 8px; border-left: 4px solid #eab308; font-size: 0.95rem; line-height: 1.5;">
@@ -224,7 +224,7 @@ const tabConfigs = {
                     </div>
                 </details>
 
-                <div class="gtd-tip" style="margin-bottom: 15px;"><i class="fa-solid fa-lightbulb"></i> <strong>Tránh bẫy ôm đồm:</strong> Gom dự án theo Lĩnh vực trách nhiệm (Tài chính, Sức khỏe, Gia đình, Sự nghiệp...) để cân bằng nguồn lực, tránh lệch vai.</div>
+                <div class="tab-tip" style="margin-bottom: 15px;"><i class="fa-solid fa-lightbulb"></i> <strong>Tránh bẫy ôm đồm:</strong> Gom dự án theo Lĩnh vực trách nhiệm (Tài chính, Sức khỏe, Gia đình, Sự nghiệp...) để cân bằng nguồn lực, tránh lệch vai.</div>
 
                 <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; border-radius: 8px; padding: 15px; font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px;">
                     <h5 style="color: #d97706; margin-bottom: 10px;"><i class="fa-solid fa-arrows-rotate"></i> Tính linh hoạt (Adaptability):</h5>
@@ -357,7 +357,7 @@ const tabConfigs = {
         defaultWorkCat: 'Vision',
         defaultSysCat: 'N/A',
         guide: `
-            <div class="gtd-guide">
+            <div class="tab-guide-content">
                 <h4><i class="fa-solid fa-gem"></i> YÊU CẦU TỐT NGHIỆP THPT (Path 2)</h4>
                 
                 <div style="margin-bottom: 20px; padding: 15px; background: rgba(20, 184, 166, 0.1); border-radius: 8px; border-left: 4px solid #14b8a6; font-size: 0.95rem; line-height: 1.5;">
@@ -493,7 +493,7 @@ const tabConfigs = {
         defaultWorkCat: 'Vision',
         defaultSysCat: 'N/A',
         guide: `
-            <div class="gtd-guide">
+            <div class="tab-guide-content">
                 <h4><i class="fa-solid fa-rocket"></i> DA Dream Map</h4>
                 <div style="margin-bottom: 20px; padding: 15px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 4px solid #8b5cf6; font-size: 0.95rem; line-height: 1.5;">
                     <p style="margin-bottom: 8px;"><strong style="color: #5b21b6;">50,000 ft (Sứ mệnh):</strong> Sống tự chủ, làm chủ năng lực học tập suốt đời và tự tạo giá trị cho xã hội.</p>
@@ -636,7 +636,7 @@ const tabConfigs = {
         defaultWorkCat: 'Vision',
         defaultSysCat: 'N/A',
         guide: `
-<div class="gtd-guide">
+<div class="tab-guide-content">
                 <h4><i class="fa-solid fa-truck-fast"></i> SCM & AI: DA Dream Map & DA Tín chỉ</h4>
     <div style="margin-bottom: 20px; padding: 15px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border-left: 4px solid #3b82f6; font-size: 0.95rem; line-height: 1.5;">
         <p style="margin-bottom: 12px;">Sự kết hợp giữa <strong>Supply Chain (Chuỗi cung ứng)</strong> và <strong>Trí tuệ nhân tạo (AI)</strong> đang tạo ra bước ngoặt lớn, giúp chuyển đổi các chuỗi cung ứng truyền thống (vốn thụ động, xử lý dữ liệu chậm) thành chuỗi cung ứng thông minh (Smart Supply Chain) với khả năng tự động hóa, dự báo chính xác và ứng phó linh hoạt.</p>
@@ -913,7 +913,7 @@ const tabConfigs = {
         defaultWorkCat: 'Vision',
         defaultSysCat: 'N/A',
         guide: `
-            <div class="gtd-guide">
+            <div class="tab-guide-content">
                 <h4><i class="fa-solid fa-house-chimney"></i> Homeconomie</h4>
                 <div style="margin-bottom: 20px; padding: 15px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border-left: 4px solid #f59e0b; font-size: 0.95rem; line-height: 1.5;">
                     <p>Nội dung đang cập nhật...</p>
@@ -929,7 +929,7 @@ const tabConfigs = {
         defaultWorkCat: 'Vision',
         defaultSysCat: 'N/A',
         guide: `
-            <div class="gtd-guide">
+            <div class="tab-guide-content">
                 <h4><i class="fa-solid fa-graduation-cap"></i> Kế hoạch của Kat:</h4>
                 <div style="margin-bottom: 20px; padding: 15px; background: rgba(236, 72, 153, 0.1); border-radius: 8px; border-left: 4px solid #ec4899; font-size: 0.95rem; line-height: 1.5;">
                     <p style="margin-bottom: 8px;"><strong style="color: #be185d;">Sứ mệnh (50k ft):</strong> Theo đuổi tri thức tự do, tự chủ con đường học tập và tạo giá trị.</p>
@@ -988,7 +988,7 @@ const tabConfigs = {
                                 <li style="margin-bottom: 4px;"><strong>Dự án Học thuật Core:</strong> Hoàn thành 20 High School Credits + Ôn thi SAT đạt mục tiêu 1500+.</li>
                                 <li style="margin-bottom: 4px;"><strong>Dự án Tín chỉ Chuyên sâu:</strong> Hoàn thành 3 môn Tích hợp (Mechatronics + Python / Data Science + Intro to Business).</li>
                                 <li style="margin-bottom: 4px;"><strong>Dự án Dream Map (Sản phẩm Thực chiến):</strong> Triển khai Hệ thống Giám sát & Tự động hóa Thiết bị Kho bãi (Áp dụng khung 5 bước Better Than College).</li>
-                                <li><strong>Dự án Hồ sơ & Bài luận:</strong> Đóng gói Unschooling Portfolio & Viết Bài luận cá nhân về Tâm thế Nhà nghiên cứu liên môn: Kiến tạo thay vì thụ động tiếp thu.</li>
+                                <li><strong>Dự án Hồ sơ & Bài luận:</strong> Đóng gói Portfolio & Viết Bài luận cá nhân về Tâm thế Nhà nghiên cứu liên môn: Kiến tạo thay vì thụ động tiếp thu.</li>
                             </ul>
                         </div>
 
@@ -1222,7 +1222,7 @@ const tabConfigs = {
         defaultWorkCat: 'Vision',
         defaultSysCat: 'N/A',
         guide: `
-            <div class="gtd-guide">
+            <div class="tab-guide-content">
                 <h4><i class="fa-solid fa-briefcase"></i> DA Hồ sơ</h4>
                 <div style="margin-bottom: 20px; padding: 15px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border-left: 4px solid #f59e0b; font-size: 0.95rem; line-height: 1.5;">
                     <ul style="margin: 0; padding-left: 20px; list-style-type: square; color: #334155;">
@@ -1635,7 +1635,7 @@ window.saveTaskDetails = async function() {
         task.missionRef = "";
     }
 
-    // Logic GTD: Nếu thêm Context/Time mà đang ở Defining -> Tự động chuyển qua Pre-defined
+    // Logic: Nếu thêm Context/Time mà đang ở Defining -> Tự động chuyển qua Pre-defined
     if (task.workCategory === 'Defining Work' && (task.context || task.time)) {
         task.workCategory = 'Pre-defined Work';
         if (task.systemCategory === 'Inbox (Stuff)') {
