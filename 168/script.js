@@ -878,6 +878,30 @@ const tabConfigs = {
             <p style="margin-top: 15px; padding: 10px; background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; border-radius: 4px; font-weight: bold; color: #1e40af;">Tóm lại: Cách phối hợp 3 Credits này chính là nguyên liệu hoàn hảo cho Mô hình 1. Nó giúp con bạn biến việc học các môn lý thuyết thành một Dự án Dream Map thực chiến, từ đó đóng gói ra một Portfolio ứng tuyển Đại học độc nhất vô nhị!</p>
         </div>
     </details>
+
+    <div style="margin-top: 20px; padding: 15px; background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 8px;">
+        <h5 style="color: #b45309; margin-bottom: 10px; font-size: 1.05rem;"><i class="fa-solid fa-sticky-note"></i> Ghi chú: Cách hoàn thiện trọn vẹn đủ 3.0 Tín chỉ (Credits) khi trường thiếu môn CTE/Kỹ thuật</h5>
+        <p style="margin-bottom: 15px; font-size: 0.95rem; color: #451a03;">Nếu trường không có các môn xưởng cơ khí, điện tử hay kinh doanh thực hành, bạn có thể ghép 3.0 tín chỉ hoàn chỉnh theo một trong các phương án sau:</p>
+        
+        <strong style="color: #d97706; display: block; margin-bottom: 5px;">Phương án A: Thêm 1 môn Cốt lõi nâng cao nữa (Tổng: 3 môn x 1.0 credit = 3.0 credits)</strong>
+        <ul style="padding-left: 20px; font-size: 0.95rem; color: #334155; margin-bottom: 15px;">
+            <li><strong>1.0 credit:</strong> AP Computer Science A (Khoa học máy tính)</li>
+            <li><strong>1.0 credit:</strong> AP Statistics (Toán thống kê - cực kỳ quan trọng cho AI & Supply Chain)</li>
+            <li><strong>1.0 credit:</strong> AP Microeconomics / Macroeconomics (Kinh tế học vi mô/vĩ mô) HOẶC AP Physics (Vật lý nâng cao - giúp hiểu nguyên lý cơ học của xe cẩu/xe nâng).</li>
+        </ul>
+
+        <strong style="color: #d97706; display: block; margin-bottom: 5px;">Phương án B: Kết hợp 2 môn năm (2.0 credits) + 2 môn kỳ (1.0 credit)</strong>
+        <ul style="padding-left: 20px; font-size: 0.95rem; color: #334155; margin-bottom: 15px;">
+            <li><strong>1.0 credit:</strong> AP Computer Science A (học 1 năm)</li>
+            <li><strong>1.0 credit:</strong> AP Statistics (học 1 năm)</li>
+            <li><strong>0.5 credit:</strong> Microeconomics / Financial Literacy (học 1 học kỳ)</li>
+            <li><strong>0.5 credit:</strong> Public Speaking / Psychology / CAD-Engineering Design (học 1 học kỳ)</li>
+        </ul>
+
+        <strong style="color: #d97706; display: block; margin-bottom: 5px;">Phương án C: Học khóa học trực tuyến (Online CTE Courses)</strong>
+        <p style="font-size: 0.95rem; color: #334155; margin-bottom: 0;">Nhiều trường Mỹ cho phép học sinh đăng ký các môn CTE (như Auto Tech, Electronics, Python, Intro to Business) qua các nền tảng trực tuyến được công nhận (như Florida Virtual School - FLVS hoặc Edmentum) để lấy đủ 1.0 credit CTE còn thiếu, ghép chung với 2.0 credits môn Cốt lõi nâng cao ở trên.</p>
+    </div>
+
 </div>
         `
     },
