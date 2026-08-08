@@ -413,10 +413,10 @@ const tabConfigs = {
 
                 <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #99f6e4; border-radius: 8px; padding: 10px 15px;">
                     <summary style="font-weight: bold; cursor: pointer; color: #0f766e; font-size: 1.05rem;">
-                        <i class="fa-solid fa-calculator"></i> Maths: Algebra 1
+                        <i class="fa-solid fa-calculator"></i> Maths
                     </summary>
                     <div style="margin-top: 15px; font-size: 0.95rem; color: #334155;">
-                        <p>Nội dung đang được cập nhật...</p>
+                        <p>Algebra 1, Geometry, Algebra 2, SAT Prep, Precalculus</p>
                     </div>
                 </details>
 
