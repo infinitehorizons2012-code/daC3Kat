@@ -1,5 +1,5 @@
 // Cloudflare Worker API URL (User needs to replace this with their actual deployed worker URL)
-const CLOUDFLARE_API_URL = ''; 
+const CLOUDFLARE_API_URL = 'https://time-app-api.infinite-horizons-2012.workers.dev'; 
 
 // Khởi tạo state (Kiến trúc Master Task List)
 let state = {
