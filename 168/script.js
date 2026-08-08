@@ -1000,6 +1000,15 @@ const tabConfigs = {
                                 <li><strong>Kỷ luật (Ethos):</strong> Cập nhật tiến độ bài tập SAT trên Khan Academy đúng khung giờ đã cam kết.</li>
                             </ul>
                         </div>
+
+                        <div style="margin-top: 15px; padding: 15px; background: rgba(255, 255, 255, 0.9); border-radius: 6px; border-left: 4px solid #be185d;">
+                            <strong style="color: #9d174d; font-size: 1.05em;"><i class="fa-solid fa-lightbulb"></i> Ghi chú:</strong>
+                            <ol style="margin-top: 10px; margin-left: 5px; margin-bottom: 0; padding-left: 20px;">
+                                <li style="margin-bottom: 6px;"><strong>Theo đuổi Chân lý & Tri thức gốc rễ (Logos):</strong> Luôn giữ cho bộ não khát khao học hỏi (Intellectually Curious), tư duy logic mạch lạc và không ngừng khám phá bản chất vận hành của thế giới.</li>
+                                <li style="margin-bottom: 6px;"><strong>Rèn luyện Bản lĩnh & Đạo đức (Ethos / Egos):</strong> Giữ cho thể chất dẻo dai (Physically Strong), sống kỷ luật, tôn trọng các cam kết và giữ vững đạo đức chuẩn mực (Morally Straight).</li>
+                                <li><strong>Thấu cảm & Phụng sự Xã hội (Pathos):</strong> Luôn tỉnh thức (Mentally Awake), sẵn sàng giúp đỡ mọi người và dùng tri thức để kiến tạo giá trị tốt đẹp cho cộng đồng.</li>
+                            </ol>
+                        </div>
                     </div>
                 </details>
 
