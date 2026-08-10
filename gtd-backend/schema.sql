@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS Goals (
     vision_id TEXT REFERENCES Vision(vision_id) ON DELETE SET NULL, -- Quy tắc 4: Cho phép NULL khi Pended/Someday
     statement TEXT NOT NULL,
     category TEXT NOT NULL, -- 'Strategic' / 'Maintenance'
+    milestone TEXT,
     status TEXT DEFAULT 'Active', -- 'Active' / 'Pended' / 'Completed'
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

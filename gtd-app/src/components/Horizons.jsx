@@ -7,7 +7,7 @@ export default function Horizons() {
   const [loading, setLoading] = useState(true);
   const [modalType, setModalType] = useState(null); // 'mission', 'vision', 'goal', 'edit-mission', 'edit-vision', 'edit-goal'
   const [editId, setEditId] = useState(null);
-  const [formData, setFormData] = useState({ statement: '', category: 'Strategic', parentId: null, status: 'Active' });
+  const [formData, setFormData] = useState({ statement: '', goalType: 'strategic-vision', parentId: null, status: 'Active', milestone: '' });
 
   const fetchData = () => {
     fetch(`${API_URL}/horizons`)
@@ -39,10 +39,20 @@ export default function Horizons() {
       endpoint = '/visions';
       payload.mission_id = formData.parentId;
     }
-    if (modalType === 'goal') {
+    if (modalType === 'goal' || modalType === 'goal-independent') {
       endpoint = '/goals';
-      payload.vision_id = formData.parentId;
       payload.status = 'Active';
+      if (formData.goalType === 'strategic-independent') {
+        payload.category = 'Strategic';
+        payload.vision_id = null;
+      } else if (formData.goalType === 'maintenance-milestone') {
+        payload.category = 'Maintenance';
+        payload.vision_id = modalType === 'goal-independent' ? null : formData.parentId;
+        payload.milestone = formData.milestone;
+      } else {
+        payload.category = 'Strategic';
+        payload.vision_id = formData.parentId;
+      }
     }
     
     if (modalType === 'edit-mission') {
@@ -59,6 +69,17 @@ export default function Horizons() {
       endpoint = `/goals/${editId}`;
       method = 'PATCH';
       payload.status = formData.status;
+      if (formData.goalType === 'strategic-independent') {
+        payload.category = 'Strategic';
+        payload.vision_id = null;
+      } else if (formData.goalType === 'maintenance-milestone') {
+        payload.category = 'Maintenance';
+        payload.vision_id = formData.parentId; // keep existing if linked, or null if it was unlinked
+        payload.milestone = formData.milestone;
+      } else {
+        payload.category = 'Strategic';
+        payload.vision_id = formData.parentId;
+      }
     }
 
     try {
@@ -69,7 +90,7 @@ export default function Horizons() {
       });
       setModalType(null);
       setEditId(null);
-      setFormData({ statement: '', category: 'Strategic', parentId: null });
+      setFormData({ statement: '', goalType: 'strategic-vision', parentId: null, status: 'Active', milestone: '' });
       fetchData();
     } catch (e) {
       console.error(e);
@@ -122,9 +143,14 @@ export default function Horizons() {
         <h2 className="text-2xl font-bold text-emerald-700"><i className="fa-solid fa-tree"></i> Cây Horizons</h2>
         <div className="flex gap-2">
           {data.missions.length > 0 && (
-            <button onClick={() => setModalType('mission')} className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-4 py-2 rounded-xl transition-colors font-bold shadow-sm text-sm">
-              <i className="fa-solid fa-plus mr-2"></i> Sứ mệnh mới
-            </button>
+            <>
+              <button onClick={() => setModalType('goal-independent')} className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-xl transition-colors font-bold shadow-sm text-sm">
+                <i className="fa-solid fa-plus mr-2"></i> Mục tiêu Độc lập
+              </button>
+              <button onClick={() => setModalType('mission')} className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-4 py-2 rounded-xl transition-colors font-bold shadow-sm text-sm">
+                <i className="fa-solid fa-plus mr-2"></i> Sứ mệnh mới
+              </button>
+            </>
           )}
           {!mission.mission_id && (
             <button onClick={() => setModalType('mission')} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl transition-colors font-bold shadow-md">
@@ -141,6 +167,7 @@ export default function Horizons() {
               {modalType === 'mission' && 'Định nghĩa Sứ mệnh'}
               {modalType === 'vision' && 'Thêm Tầm nhìn 3-5 năm'}
               {modalType === 'goal' && 'Thêm Mục tiêu'}
+              {modalType === 'goal-independent' && 'Thêm Mục tiêu (Độc lập)'}
               {modalType === 'edit-mission' && 'Sửa Sứ mệnh'}
               {modalType === 'edit-vision' && 'Sửa Tầm nhìn'}
               {modalType === 'edit-goal' && 'Sửa Mục tiêu'}
@@ -159,15 +186,27 @@ export default function Horizons() {
                 className="border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-emerald-400 min-h-[100px]"
                 autoFocus
               />
-              {(modalType === 'goal' || modalType === 'edit-goal') && (
-                <select 
-                  value={formData.category}
-                  onChange={e => setFormData({...formData, category: e.target.value})}
-                  className="border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-emerald-400"
-                >
-                  <option value="Strategic">Strategic (Chiến lược)</option>
-                  <option value="Maintenance">Maintenance (Bảo trì)</option>
-                </select>
+              {(modalType === 'goal' || modalType === 'goal-independent' || modalType === 'edit-goal') && (
+                <>
+                  <select 
+                    value={formData.goalType}
+                    onChange={e => setFormData({...formData, goalType: e.target.value})}
+                    className="border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-emerald-400"
+                  >
+                    {modalType !== 'goal-independent' && <option value="strategic-vision">Strategic (Có Vision)</option>}
+                    <option value="strategic-independent">Strategic (Không có Vision)</option>
+                    <option value="maintenance-milestone">Maintenance (Kèm cột mốc)</option>
+                  </select>
+                  {formData.goalType === 'maintenance-milestone' && (
+                    <input 
+                      type="text" 
+                      placeholder="Cột mốc (VD: Đạt 1 tỷ VND)"
+                      value={formData.milestone}
+                      onChange={e => setFormData({...formData, milestone: e.target.value})}
+                      className="border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-emerald-400"
+                    />
+                  )}
+                </>
               )}
               {(modalType === 'edit-mission' || modalType === 'edit-vision' || modalType === 'edit-goal') && (
                 <div>
@@ -263,6 +302,9 @@ export default function Horizons() {
                               <h3 className={`font-medium pr-4 ${goal.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
                                 {goal.statement}
                               </h3>
+                              {goal.milestone && (
+                                <p className="text-xs text-blue-600 mt-1 italic"><i className="fa-solid fa-flag text-xs mr-1"></i> {goal.milestone}</p>
+                              )}
                               {goal.status === 'Active' && projects.filter(p => p.goal_id === goal.goal_id).length === 0 && (
                                 <p className="text-xs text-orange-600 mt-2 font-medium bg-orange-50 inline-block px-2 py-1 rounded">
                                   <i className="fa-solid fa-triangle-exclamation mr-1"></i> Cần tạo dự án cho mục tiêu này
@@ -271,7 +313,7 @@ export default function Horizons() {
                             </div>
                             <div className="flex flex-col gap-2 shrink-0">
                               <div className="flex gap-2 justify-end mb-1">
-                                <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, category: goal.category, status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
+                                <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, goalType: goal.category === 'Maintenance' ? 'maintenance-milestone' : (goal.vision_id ? 'strategic-vision' : 'strategic-independent'), parentId: goal.vision_id, milestone: goal.milestone || '', status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                                 <button onClick={() => handleDelete('goals', goal.goal_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                               </div>
                               <button onClick={() => toggleGoalStatus(goal.goal_id, goal.status)} className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${goal.status === 'Pended' ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
@@ -288,6 +330,50 @@ export default function Horizons() {
               </div>
             ))
           )}
+
+          {/* Independent Goals */}
+          {goals.filter(g => !g.vision_id).length > 0 && (
+            <div className="mt-8 pt-6 border-t-2 border-dashed border-emerald-200">
+              <h3 className="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
+                <i className="fa-solid fa-bolt text-amber-500"></i> Mục tiêu ngắn hạn & Độc lập
+              </h3>
+              <div className="flex flex-col gap-4 pl-4">
+                {goals.filter(g => !g.vision_id).map(goal => (
+                  <div key={goal.goal_id} className="relative">
+                    <div className="absolute w-4 h-0.5 bg-amber-200 top-4 -left-4"></div>
+                    <div className="bg-white border-2 border-amber-100 p-4 rounded-xl shadow-sm flex justify-between items-center">
+                      <div className="flex-1">
+                        <span className={`text-xs font-bold uppercase tracking-wider mb-1 block ${goal.status === 'Pended' ? 'text-slate-400' : 'text-amber-600'}`}>
+                          30,000 ft - Mục tiêu ({goal.status})
+                        </span>
+                        <h3 className={`font-medium pr-4 ${goal.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
+                          {goal.statement}
+                        </h3>
+                        {goal.milestone && (
+                          <p className="text-xs text-blue-600 mt-1 italic"><i className="fa-solid fa-flag text-xs mr-1"></i> {goal.milestone}</p>
+                        )}
+                        {goal.status === 'Active' && projects.filter(p => p.goal_id === goal.goal_id).length === 0 && (
+                          <p className="text-xs text-orange-600 mt-2 font-medium bg-orange-50 inline-block px-2 py-1 rounded">
+                            <i className="fa-solid fa-triangle-exclamation mr-1"></i> Cần tạo dự án cho mục tiêu này
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex flex-col gap-2 shrink-0">
+                        <div className="flex gap-2 justify-end mb-1">
+                          <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, goalType: goal.category === 'Maintenance' ? 'maintenance-milestone' : 'strategic-independent', parentId: null, milestone: goal.milestone || '', status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
+                          <button onClick={() => handleDelete('goals', goal.goal_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
+                        </div>
+                        <button onClick={() => toggleGoalStatus(goal.goal_id, goal.status)} className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${goal.status === 'Pended' ? 'bg-amber-100 text-amber-700 hover:bg-amber-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+                          {goal.status === 'Pended' ? 'Kích hoạt' : 'Đóng băng'}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
     </div>

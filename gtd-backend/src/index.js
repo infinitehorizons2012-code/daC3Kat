@@ -195,11 +195,12 @@ app.delete('/api/visions/:id', async (c) => {
 
 app.post('/api/goals', async (c) => {
   const db = c.env.DB
-  const body = await c.req.json()
-  const id = `gol-${Date.now()}`
+  const id = `goal-${Date.now()}`
+  const { vision_id, statement, category, status, milestone } = await c.req.json()
+  
   try {
-    await db.prepare(`INSERT INTO Goals (goal_id, vision_id, statement, category, status) VALUES (?, ?, ?, ?, ?)`).bind(id, body.vision_id || null, body.statement, body.category || 'Strategic', body.status || 'Active').run()
-    return c.json({ success: true })
+    await db.prepare(`INSERT INTO Goals (goal_id, vision_id, statement, category, status, milestone) VALUES (?, ?, ?, ?, ?, ?)`).bind(id, vision_id || null, statement, category, status || 'Active', milestone || null).run()
+    return c.json({ id, success: true }, 201)
   } catch (e) {
     return c.json({ error: e.message }, 500)
   }
@@ -221,10 +222,10 @@ app.patch('/api/goals/:id/status', async (c) => {
 app.patch('/api/goals/:id', async (c) => {
   const db = c.env.DB
   const id = c.req.param('id')
-  const { statement, category, status } = await c.req.json()
+  const { statement, category, status, milestone } = await c.req.json()
   
   try {
-    await db.prepare(`UPDATE Goals SET statement = ?, category = ?, status = ? WHERE goal_id = ?`).bind(statement, category, status, id).run()
+    await db.prepare(`UPDATE Goals SET statement = ?, category = ?, status = ?, milestone = ? WHERE goal_id = ?`).bind(statement, category, status, milestone || null, id).run()
     return c.json({ success: true })
   } catch (e) {
     return c.json({ error: e.message }, 500)
