@@ -82,6 +82,13 @@ app.post('/api/projects', async (c) => {
   const id = `prj-${Date.now()}`
   
   try {
+    const areaId = body.area_id || 'AREA-DEFAULT';
+    
+    // Ensure default area exists to satisfy foreign key
+    if (areaId === 'AREA-DEFAULT') {
+      await db.prepare(`INSERT OR IGNORE INTO Areas (area_id, name, type) VALUES ('AREA-DEFAULT', 'Default Area', 'Maintenance')`).run()
+    }
+    
     await db.prepare(`
       INSERT INTO Projects (project_id, area_id, goal_id, vision_id, name, category, status)
       VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -152,6 +159,11 @@ app.post('/api/actions', async (c) => {
   const id = `act-${Date.now()}`
   
   try {
+    // Ensure default area exists to satisfy foreign key
+    if (body.area_id === 'AREA-DEFAULT') {
+      await db.prepare(`INSERT OR IGNORE INTO Areas (area_id, name, type) VALUES ('AREA-DEFAULT', 'Default Area', 'Maintenance')`).run()
+    }
+    
     await db.prepare(`
       INSERT INTO Actions (action_id, area_id, project_id, name, context, time_needed_mins, energy_level, work_type)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)

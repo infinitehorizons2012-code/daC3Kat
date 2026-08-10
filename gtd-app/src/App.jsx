@@ -46,7 +46,7 @@ function App() {
         </div>
 
         {/* Khu vực 2: GTD Dashboard */}
-        <nav className="glass-panel rounded-[24px] p-2 flex flex-wrap justify-center gap-2">
+        <nav className="glass-panel rounded-[24px] p-2 flex flex-wrap justify-center gap-2 sticky bottom-4 z-50">
           <button onClick={() => setActiveTab('focus')} className={`px-4 py-2 rounded-[20px] font-semibold transition-all ${activeTab === 'focus' ? 'bg-blue-100 text-blue-700 shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-blue-600'}`}>
             <i className="fa-solid fa-plane-departure mr-2"></i> Runway / Next Actions
           </button>

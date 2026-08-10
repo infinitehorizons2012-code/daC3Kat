@@ -40,11 +40,11 @@ export default function FocusMode() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: unplannedInput,
-          area_id: 'AREA-DEFAULT', // Dummy for now
+          area_id: 'AREA-DEFAULT',
           work_type: 'Unplanned Work',
-          context: '@Bất_kỳ',
-          time_needed_mins: 15,
-          energy_level: 'Medium'
+          context: context,
+          time_needed_mins: parseInt(time),
+          energy_level: energy
         })
       });
       setUnplannedInput('');
