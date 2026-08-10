@@ -121,8 +121,33 @@ app.post('/api/missions', async (c) => {
   const db = c.env.DB
   const body = await c.req.json()
   const id = `mis-${Date.now()}`
+  
   try {
     await db.prepare(`INSERT INTO Mission (mission_id, statement) VALUES (?, ?)`).bind(id, body.statement).run()
+    return c.json({ success: true, id })
+  } catch (e) {
+    return c.json({ error: e.message }, 500)
+  }
+})
+
+app.patch('/api/missions/:id', async (c) => {
+  const db = c.env.DB
+  const id = c.req.param('id')
+  const { statement } = await c.req.json()
+  try {
+    await db.prepare(`UPDATE Mission SET statement = ? WHERE mission_id = ?`).bind(statement, id).run()
+    return c.json({ success: true })
+  } catch (e) {
+    return c.json({ error: e.message }, 500)
+  }
+})
+
+app.delete('/api/missions/:id', async (c) => {
+  const db = c.env.DB
+  const id = c.req.param('id')
+  try {
+    // Delete mission, cascading normally handled by foreign keys or manually here
+    await db.prepare(`DELETE FROM Mission WHERE mission_id = ?`).bind(id).run()
     return c.json({ success: true })
   } catch (e) {
     return c.json({ error: e.message }, 500)
@@ -133,8 +158,35 @@ app.post('/api/visions', async (c) => {
   const db = c.env.DB
   const body = await c.req.json()
   const id = `vis-${Date.now()}`
+  
   try {
-    await db.prepare(`INSERT INTO Vision (vision_id, mission_id, statement, category) VALUES (?, ?, ?, ?)`).bind(id, body.mission_id || null, body.statement, body.category || 'Strategic').run()
+    await db.prepare(`
+      INSERT INTO Vision (vision_id, mission_id, statement, category)
+      VALUES (?, ?, ?, ?)
+    `).bind(id, body.mission_id, body.statement, body.category).run()
+    return c.json({ success: true, id })
+  } catch (e) {
+    return c.json({ error: e.message }, 500)
+  }
+})
+
+app.patch('/api/visions/:id', async (c) => {
+  const db = c.env.DB
+  const id = c.req.param('id')
+  const { statement, category } = await c.req.json()
+  try {
+    await db.prepare(`UPDATE Vision SET statement = ?, category = ? WHERE vision_id = ?`).bind(statement, category, id).run()
+    return c.json({ success: true })
+  } catch (e) {
+    return c.json({ error: e.message }, 500)
+  }
+})
+
+app.delete('/api/visions/:id', async (c) => {
+  const db = c.env.DB
+  const id = c.req.param('id')
+  try {
+    await db.prepare(`DELETE FROM Vision WHERE vision_id = ?`).bind(id).run()
     return c.json({ success: true })
   } catch (e) {
     return c.json({ error: e.message }, 500)
@@ -169,10 +221,21 @@ app.patch('/api/goals/:id/status', async (c) => {
 app.patch('/api/goals/:id', async (c) => {
   const db = c.env.DB
   const id = c.req.param('id')
-  const { statement } = await c.req.json()
+  const { statement, category } = await c.req.json()
   
   try {
-    await db.prepare(`UPDATE Goals SET statement = ? WHERE goal_id = ?`).bind(statement, id).run()
+    await db.prepare(`UPDATE Goals SET statement = ?, category = ? WHERE goal_id = ?`).bind(statement, category, id).run()
+    return c.json({ success: true })
+  } catch (e) {
+    return c.json({ error: e.message }, 500)
+  }
+})
+
+app.delete('/api/goals/:id', async (c) => {
+  const db = c.env.DB
+  const id = c.req.param('id')
+  try {
+    await db.prepare(`DELETE FROM Goals WHERE goal_id = ?`).bind(id).run()
     return c.json({ success: true })
   } catch (e) {
     return c.json({ error: e.message }, 500)
