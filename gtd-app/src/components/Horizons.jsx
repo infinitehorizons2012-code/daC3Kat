@@ -7,7 +7,7 @@ export default function Horizons() {
   const [loading, setLoading] = useState(true);
   const [modalType, setModalType] = useState(null); // 'mission', 'vision', 'goal', 'edit-mission', 'edit-vision', 'edit-goal'
   const [editId, setEditId] = useState(null);
-  const [formData, setFormData] = useState({ statement: '', category: 'Strategic', parentId: null });
+  const [formData, setFormData] = useState({ statement: '', category: 'Strategic', parentId: null, status: 'Active' });
 
   const fetchData = () => {
     fetch(`${API_URL}/horizons`)
@@ -48,6 +48,7 @@ export default function Horizons() {
     if (modalType === 'edit-mission') {
       endpoint = `/missions/${editId}`;
       method = 'PATCH';
+      payload.status = formData.status;
     }
     if (modalType === 'edit-vision') {
       endpoint = `/visions/${editId}`;
@@ -159,6 +160,20 @@ export default function Horizons() {
                   <option value="Maintenance">Maintenance (Bảo trì)</option>
                 </select>
               )}
+              {modalType === 'edit-mission' && (
+                <div>
+                  <label className="text-xs font-bold text-slate-500 mb-1 block">Trạng thái Sứ mệnh</label>
+                  <select 
+                    value={formData.status}
+                    onChange={e => setFormData({...formData, status: e.target.value})}
+                    className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-emerald-400"
+                  >
+                    <option value="Active">Active (Đang theo đuổi)</option>
+                    <option value="Completed">Completed (Đã hoàn thành)</option>
+                    <option value="Pended">Pended (Tạm gác lại)</option>
+                  </select>
+                </div>
+              )}
             </div>
             <div className="flex justify-end gap-2">
               <button type="button" onClick={() => { setModalType(null); setEditId(null); }} className="px-4 py-2 rounded-lg font-medium text-slate-600 hover:bg-slate-100">Hủy</button>
@@ -187,7 +202,7 @@ export default function Horizons() {
                 )}
                 {mission.mission_id && (
                   <div className="flex gap-2 mt-2">
-                    <button onClick={() => { setModalType('edit-mission'); setEditId(mission.mission_id); setFormData({...formData, statement: mission.statement}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
+                    <button onClick={() => { setModalType('edit-mission'); setEditId(mission.mission_id); setFormData({...formData, statement: mission.statement, status: mission.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                     <button onClick={() => handleDelete('missions', mission.mission_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                   </div>
                 )}

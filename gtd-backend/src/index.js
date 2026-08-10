@@ -133,9 +133,9 @@ app.post('/api/missions', async (c) => {
 app.patch('/api/missions/:id', async (c) => {
   const db = c.env.DB
   const id = c.req.param('id')
-  const { statement } = await c.req.json()
+  const { statement, status } = await c.req.json()
   try {
-    await db.prepare(`UPDATE Mission SET statement = ? WHERE mission_id = ?`).bind(statement, id).run()
+    await db.prepare(`UPDATE Mission SET statement = ?, status = ? WHERE mission_id = ?`).bind(statement, status, id).run()
     return c.json({ success: true })
   } catch (e) {
     return c.json({ error: e.message }, 500)
