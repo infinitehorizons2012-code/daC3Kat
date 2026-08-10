@@ -176,7 +176,7 @@ export default function Horizons() {
           <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-xl shadow-sm">
             <div className="flex justify-between items-start">
               <div className="flex-1">
-                <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 block">50,000 ft - Sứ mệnh</span>
+                <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 block">50,000 ft - Sứ mệnh {mission.mission_id ? `(${mission.status || 'Active'})` : ''}</span>
                 <h3 className="font-medium text-slate-800 pr-4">{mission.statement}</h3>
               </div>
               <div className="flex flex-col items-end gap-2 shrink-0">
