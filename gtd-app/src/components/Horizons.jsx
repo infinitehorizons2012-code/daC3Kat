@@ -120,11 +120,18 @@ export default function Horizons() {
     <div className="glass-panel p-8 rounded-2xl min-h-[500px] relative">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-emerald-700"><i className="fa-solid fa-tree"></i> Cây Horizons</h2>
-        {!mission.mission_id && (
-          <button onClick={() => setModalType('mission')} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl transition-colors font-bold shadow-md">
-            <i className="fa-solid fa-plus mr-2"></i> Định nghĩa Sứ mệnh
-          </button>
-        )}
+        <div className="flex gap-2">
+          {data.missions.length > 0 && (
+            <button onClick={() => setModalType('mission')} className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-4 py-2 rounded-xl transition-colors font-bold shadow-sm text-sm">
+              <i className="fa-solid fa-plus mr-2"></i> Sứ mệnh mới
+            </button>
+          )}
+          {!mission.mission_id && (
+            <button onClick={() => setModalType('mission')} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl transition-colors font-bold shadow-md">
+              <i className="fa-solid fa-plus mr-2"></i> Định nghĩa Sứ mệnh
+            </button>
+          )}
+        </div>
       </div>
 
       {modalType && (
