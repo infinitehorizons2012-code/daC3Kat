@@ -207,7 +207,7 @@ export default function Horizons() {
                   >
                     <option value="strategic-vision">Strategic (Có Vision)</option>
                     <option value="strategic-independent">Strategic (Không có Vision)</option>
-                    <option value="maintenance-milestone">Maintenance (Kèm cột mốc)</option>
+                    <option value="maintenance-milestone">Maintenance (Duy trì)</option>
                   </select>
                   
                   {formData.goalType === 'strategic-vision' && (
