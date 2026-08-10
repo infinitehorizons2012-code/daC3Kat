@@ -106,19 +106,7 @@ export default function Horizons() {
     }
   };
 
-  const toggleGoalStatus = async (goalId, currentStatus) => {
-    const newStatus = currentStatus === 'Pended' ? 'Active' : 'Pended';
-    try {
-      await fetch(`${API_URL}/goals/${goalId}/status`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
-      });
-      fetchData();
-    } catch (e) {
-      console.error(e);
-    }
-  };
+
 
   const handleDelete = async (type, id) => {
     if (!window.confirm("Bạn có chắc chắn muốn xóa không?")) return;
@@ -363,9 +351,6 @@ export default function Horizons() {
                                 <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, goalType: goal.category === 'Maintenance' ? 'maintenance-milestone' : (goal.vision_id ? 'strategic-vision' : 'strategic-independent'), parentId: goal.vision_id, milestone: goal.milestone || '', status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                                 <button onClick={() => handleDelete('goals', goal.goal_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                               </div>
-                              <button onClick={() => toggleGoalStatus(goal.goal_id, goal.status)} className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${goal.status === 'Pended' ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-                                {goal.status === 'Pended' ? 'Kích hoạt' : 'Đóng băng'}
-                              </button>
                             </div>
                           </div>
                         </div>
@@ -410,9 +395,6 @@ export default function Horizons() {
                           <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, goalType: 'strategic-independent', parentId: null, milestone: goal.milestone || '', status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                           <button onClick={() => handleDelete('goals', goal.goal_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                         </div>
-                        <button onClick={() => toggleGoalStatus(goal.goal_id, goal.status)} className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${goal.status === 'Pended' ? 'bg-amber-100 text-amber-700 hover:bg-amber-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-                          {goal.status === 'Pended' ? 'Kích hoạt' : 'Đóng băng'}
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -453,9 +435,6 @@ export default function Horizons() {
                           <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, goalType: 'maintenance-milestone', parentId: null, milestone: goal.milestone || '', status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                           <button onClick={() => handleDelete('goals', goal.goal_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                         </div>
-                        <button onClick={() => toggleGoalStatus(goal.goal_id, goal.status)} className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${goal.status === 'Pended' ? 'bg-sky-100 text-sky-700 hover:bg-sky-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-                          {goal.status === 'Pended' ? 'Kích hoạt' : 'Đóng băng'}
-                        </button>
                       </div>
                     </div>
                   </div>
