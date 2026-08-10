@@ -173,9 +173,13 @@ app.post('/api/visions', async (c) => {
 app.patch('/api/visions/:id', async (c) => {
   const db = c.env.DB
   const id = c.req.param('id')
-  const { statement, category, status } = await c.req.json()
+  const { statement, category, status, mission_id } = await c.req.json()
   try {
-    await db.prepare(`UPDATE Vision SET statement = ?, category = ?, status = ? WHERE vision_id = ?`).bind(statement, category, status, id).run()
+    if (mission_id !== undefined) {
+      await db.prepare(`UPDATE Vision SET statement = ?, category = ?, status = ?, mission_id = ? WHERE vision_id = ?`).bind(statement, category, status, mission_id, id).run()
+    } else {
+      await db.prepare(`UPDATE Vision SET statement = ?, category = ?, status = ? WHERE vision_id = ?`).bind(statement, category, status, id).run()
+    }
     return c.json({ success: true })
   } catch (e) {
     return c.json({ error: e.message }, 500)
@@ -222,10 +226,14 @@ app.patch('/api/goals/:id/status', async (c) => {
 app.patch('/api/goals/:id', async (c) => {
   const db = c.env.DB
   const id = c.req.param('id')
-  const { statement, category, status, milestone } = await c.req.json()
+  const body = await c.req.json()
   
   try {
-    await db.prepare(`UPDATE Goals SET statement = ?, category = ?, status = ?, milestone = ? WHERE goal_id = ?`).bind(statement, category, status, milestone || null, id).run()
+    if (body.vision_id !== undefined) {
+      await db.prepare(`UPDATE Goals SET statement = ?, category = ?, status = ?, milestone = ?, vision_id = ? WHERE goal_id = ?`).bind(body.statement, body.category, body.status, body.milestone || null, body.vision_id, id).run()
+    } else {
+      await db.prepare(`UPDATE Goals SET statement = ?, category = ?, status = ?, milestone = ? WHERE goal_id = ?`).bind(body.statement, body.category, body.status, body.milestone || null, id).run()
+    }
     return c.json({ success: true })
   } catch (e) {
     return c.json({ error: e.message }, 500)
