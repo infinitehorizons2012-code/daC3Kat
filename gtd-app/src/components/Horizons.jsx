@@ -153,16 +153,16 @@ export default function Horizons() {
         <div className="flex gap-2">
           {data.missions.length > 0 && (
             <>
-              <button onClick={() => setModalType('goal-independent')} className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-xl transition-colors font-bold shadow-sm text-sm">
+              <button onClick={() => { setModalType('goal-independent'); setFormData({ statement: '', goalType: 'strategic-independent', parentId: null, status: 'Active', milestone: '' }); }} className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-xl transition-colors font-bold shadow-sm text-sm">
                 <i className="fa-solid fa-plus mr-2"></i> Mục tiêu Độc lập
               </button>
-              <button onClick={() => setModalType('mission')} className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-4 py-2 rounded-xl transition-colors font-bold shadow-sm text-sm">
+              <button onClick={() => { setModalType('mission'); setFormData({ statement: '', goalType: 'strategic-vision', parentId: null, status: 'Active', milestone: '' }); }} className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-4 py-2 rounded-xl transition-colors font-bold shadow-sm text-sm">
                 <i className="fa-solid fa-plus mr-2"></i> Sứ mệnh mới
               </button>
             </>
           )}
           {!mission.mission_id && (
-            <button onClick={() => setModalType('mission')} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl transition-colors font-bold shadow-md">
+            <button onClick={() => { setModalType('mission'); setFormData({ statement: '', goalType: 'strategic-vision', parentId: null, status: 'Active', milestone: '' }); }} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl transition-colors font-bold shadow-md">
               <i className="fa-solid fa-plus mr-2"></i> Định nghĩa Sứ mệnh
             </button>
           )}
@@ -285,7 +285,7 @@ export default function Horizons() {
               </div>
               <div className="flex flex-col items-end gap-2 shrink-0">
                 {mission.mission_id && (
-                  <button onClick={() => { setModalType('vision'); setFormData({...formData, parentId: mission.mission_id}); }} className="text-xs text-emerald-700 hover:bg-emerald-200 bg-emerald-100 px-2 py-1 rounded font-bold">
+                  <button onClick={() => { setModalType('vision'); setFormData({ statement: '', goalType: 'strategic-vision', parentId: mission.mission_id, status: 'Active', milestone: '' }); }} className="text-xs text-emerald-700 hover:bg-emerald-200 bg-emerald-100 px-2 py-1 rounded font-bold">
                     + Thêm Tầm nhìn
                   </button>
                 )}
@@ -319,7 +319,7 @@ export default function Horizons() {
                         )}
                       </div>
                       <div className="flex flex-col items-end gap-2 shrink-0">
-                        <button onClick={() => { setModalType('goal'); setFormData({...formData, parentId: vision.vision_id}); }} className="text-xs text-blue-600 hover:bg-blue-200 bg-blue-100 px-2 py-1 rounded font-bold">
+                        <button onClick={() => { setModalType('goal'); setFormData({ statement: '', goalType: 'strategic-vision', parentId: vision.vision_id, status: 'Active', milestone: '' }); }} className="text-xs text-blue-600 hover:bg-blue-200 bg-blue-100 px-2 py-1 rounded font-bold">
                           + Thêm Mục tiêu
                         </button>
                         <div className="flex gap-2 mt-2">
