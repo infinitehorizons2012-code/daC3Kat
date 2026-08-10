@@ -6,7 +6,7 @@
     <title>Siêu Nhân Thời Gian 168</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=9">
+    <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
     <div class="background-shapes">
@@ -136,129 +136,146 @@
             <div class="modal-body">
                 <input type="hidden" id="modal-task-id">
                 
-                <div class="form-group">
-                    <label>Tên Hành Động:</label>
-                    <input type="text" id="modal-task-name" class="full-width">
+                <div class="modal-tabs">
+                    <button type="button" class="modal-tab-btn active" onclick="openModalTab(event, 'modal-tab-action')"><i class="fa-solid fa-person-running"></i> Hành động</button>
+                    <button type="button" class="modal-tab-btn" onclick="openModalTab(event, 'modal-tab-strategy')"><i class="fa-solid fa-chess-knight"></i> Chiến lược</button>
+                    <button type="button" class="modal-tab-btn" onclick="openModalTab(event, 'modal-tab-system')"><i class="fa-solid fa-server"></i> Hệ thống</button>
                 </div>
 
-                <div class="form-row" id="action-details-row">
-                    <div class="form-group third">
-                        <label>Bối cảnh (Context):</label>
-                        <select id="modal-task-context">
-                            <option value="">-- Chọn --</option>
-                            <option value="@Máy_tính">@Máy_tính</option>
-                            <option value="@Điện_thoại">@Điện_thoại</option>
-                            <option value="@Nhà">@Nhà</option>
-                            <option value="@Văn_phòng">@Văn_phòng</option>
-                            <option value="@Gặp_ai">@Gặp_ai</option>
-                        </select>
+                <!-- Tab 1: Hành động -->
+                <div id="modal-tab-action" class="modal-tab-content" style="display: block;">
+                    <div class="form-group">
+                        <label>Tên Hành Động:</label>
+                        <input type="text" id="modal-task-name" class="full-width">
                     </div>
-                    <div class="form-group third">
-                        <label>Thời gian:</label>
-                        <select id="modal-task-time">
-                            <option value="">-- Chọn --</option>
-                            <option value="< 5 phút">&lt; 5 phút</option>
-                            <option value="15 phút">15 phút</option>
-                            <option value="30 phút">30 phút</option>
-                            <option value="1 tiếng">1 tiếng</option>
-                        </select>
-                    </div>
-                    <div class="form-group third">
-                        <label>Năng lượng:</label>
-                        <select id="modal-task-energy">
-                            <option value="">-- Chọn --</option>
-                            <option value="Năng lượng cao">Cao</option>
-                            <option value="Năng lượng thấp">Thấp</option>
-                        </select>
-                    </div>
-                </div>
 
-                <div class="form-row">
-                    <div class="form-group half" id="workcat-container">
-                        <label>Bản chất công việc:</label>
-                        <select id="modal-task-workcat" onchange="handleWorkCatChange()">
-                            <option value="Defining Work">Defining Work</option>
-                            <option value="Pre-defined Work">Pre-defined Work</option>
-                            <option value="Unplanned Work">Unplanned Work</option>
-                        </select>
-                    </div>
-                    <div class="form-group half" id="strategy-type-container" style="display: none;">
-                        <label>Loại Chiến Lược:</label>
-                        <select id="modal-task-strategy-type" onchange="handleWorkCatChange()">
-                            <option value="Project">Dự án (10k)</option>
-                            <option value="Goal">Mục tiêu (30k)</option>
-                            <option value="Vision">Tầm nhìn (40k)</option>
-                            <option value="Mission">Sứ mệnh (50k)</option>
-                        </select>
-                    </div>
-                    <div class="form-group half" id="syscat-container">
-                        <label>Hệ thống lưu giữ:</label>
-                        <select id="modal-task-syscat">
-                            <option value="Inbox (Stuff)">Inbox (Stuff)</option>
-                            <option value="Next Actions">Next Actions (Làm ngay)</option>
-                            <option value="Calendar">Calendar (Có lịch)</option>
-                            <option value="Waiting For">Waiting For (Đợi người khác)</option>
-                            <option value="Someday-Maybe">Someday-Maybe (Có lúc nào đó)</option>
-                            <option value="N/A">Không có</option>
-                        </select>
+                    <div class="form-row" id="action-details-row">
+                        <div class="form-group third">
+                            <label>Bối cảnh (Context):</label>
+                            <select id="modal-task-context">
+                                <option value="">-- Chọn --</option>
+                                <option value="@Máy_tính">@Máy_tính</option>
+                                <option value="@Điện_thoại">@Điện_thoại</option>
+                                <option value="@Nhà">@Nhà</option>
+                                <option value="@Văn_phòng">@Văn_phòng</option>
+                                <option value="@Gặp_ai">@Gặp_ai</option>
+                            </select>
+                        </div>
+                        <div class="form-group third">
+                            <label>Thời gian:</label>
+                            <select id="modal-task-time">
+                                <option value="">-- Chọn --</option>
+                                <option value="< 5 phút">&lt; 5 phút</option>
+                                <option value="15 phút">15 phút</option>
+                                <option value="30 phút">30 phút</option>
+                                <option value="1 tiếng">1 tiếng</option>
+                            </select>
+                        </div>
+                        <div class="form-group third">
+                            <label>Năng lượng:</label>
+                            <select id="modal-task-energy">
+                                <option value="">-- Chọn --</option>
+                                <option value="Năng lượng cao">Cao</option>
+                                <option value="Năng lượng thấp">Thấp</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group half" id="group-container">
-                        <label>Nhóm (Group):</label>
-                        <select id="modal-task-group" onchange="toggleGroupFields()">
-                            <option value="Maintenance">Maintenance (Bảo trì)</option>
-                            <option value="Strategic">Strategic (Chiến lược)</option>
-                        </select>
-                    </div>
-                    <div class="form-group half">
-                        <label>Lĩnh vực (Area - 20k ft):</label>
-                        <select id="modal-task-area">
-                            <option value="">-- Chọn lĩnh vực --</option>
-                            <option value="Sinh mệnh">Sinh mệnh</option>
-                            <option value="Sức khỏe">Sức khỏe cá nhân</option>
-                            <option value="Gia đình">Gia đình</option>
-                            <option value="Nhà cửa">Nhà cửa & Đời sống (Manual)</option>
-                            <option value="Mối quan hệ">Mối quan hệ</option>
-                            <option value="Sự nghiệp">Sự nghiệp</option>
-                            <option value="Học tập">Phát triển cá nhân (Liberal)</option>
-                            <option value="Tài chính">Tài chính</option>
-                            <option value="Giải trí">Sở thích & Giải trí (Fine Art)</option>
-                            <option value="Khác">Khác</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="strategic-fields" style="display: none;">
-                    <div class="form-group" id="field-project">
-                        <label>Thuộc Dự án (Project 10k ft):</label>
-                        <select id="modal-task-project" class="full-width">
-                            <option value="">-- Không có --</option>
-                        </select>
-                    </div>
+                <!-- Tab 2: Chiến lược -->
+                <div id="modal-tab-strategy" class="modal-tab-content" style="display: none;">
                     <div class="form-row">
-                        <div class="form-group half" id="field-goal">
-                            <label>Mục tiêu (30k ft):</label>
-                            <select id="modal-task-goal" class="full-width">
-                                <option value="">-- Không có --</option>
+                        <div class="form-group half" id="group-container">
+                            <label>Nhóm (Group):</label>
+                            <select id="modal-task-group" onchange="toggleGroupFields()">
+                                <option value="Maintenance">Maintenance (Bảo trì)</option>
+                                <option value="Strategic">Strategic (Chiến lược)</option>
                             </select>
                         </div>
-                        <div class="form-group half" id="field-vision">
-                            <label>Tầm nhìn (40k ft):</label>
-                            <select id="modal-task-vision" class="full-width">
-                                <option value="">-- Không có --</option>
+                        <div class="form-group half">
+                            <label>Lĩnh vực (Area - 20k ft):</label>
+                            <select id="modal-task-area">
+                                <option value="">-- Chọn lĩnh vực --</option>
+                                <option value="Sinh mệnh">Sinh mệnh</option>
+                                <option value="Sức khỏe">Sức khỏe cá nhân</option>
+                                <option value="Gia đình">Gia đình</option>
+                                <option value="Nhà cửa">Nhà cửa & Đời sống (Manual)</option>
+                                <option value="Mối quan hệ">Mối quan hệ</option>
+                                <option value="Sự nghiệp">Sự nghiệp</option>
+                                <option value="Học tập">Phát triển cá nhân (Liberal)</option>
+                                <option value="Tài chính">Tài chính</option>
+                                <option value="Giải trí">Sở thích & Giải trí (Fine Art)</option>
+                                <option value="Khác">Khác</option>
                             </select>
                         </div>
                     </div>
-                    <div class="form-group" id="field-mission">
-                        <label>Sứ mệnh (50k ft):</label>
-                        <select id="modal-task-mission" class="full-width">
-                            <option value="">-- Không có --</option>
-                        </select>
+
+                    <div id="strategic-fields" style="display: none;">
+                        <div class="form-group" id="field-project">
+                            <label>Thuộc Dự án (Project 10k ft):</label>
+                            <select id="modal-task-project" class="full-width">
+                                <option value="">-- Không có --</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half" id="field-goal">
+                                <label>Mục tiêu (30k ft):</label>
+                                <select id="modal-task-goal" class="full-width">
+                                    <option value="">-- Không có --</option>
+                                </select>
+                            </div>
+                            <div class="form-group half" id="field-vision">
+                                <label>Tầm nhìn (40k ft):</label>
+                                <select id="modal-task-vision" class="full-width">
+                                    <option value="">-- Không có --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="field-mission">
+                            <label>Sứ mệnh (50k ft):</label>
+                            <select id="modal-task-mission" class="full-width">
+                                <option value="">-- Không có --</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Tab 3: Hệ thống -->
+                <div id="modal-tab-system" class="modal-tab-content" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group half" id="workcat-container">
+                            <label>Bản chất công việc:</label>
+                            <select id="modal-task-workcat" onchange="handleWorkCatChange()">
+                                <option value="Defining Work">Defining Work</option>
+                                <option value="Pre-defined Work">Pre-defined Work</option>
+                                <option value="Unplanned Work">Unplanned Work</option>
+                            </select>
+                        </div>
+                        <div class="form-group half" id="syscat-container">
+                            <label>Hệ thống lưu giữ:</label>
+                            <select id="modal-task-syscat">
+                                <option value="Inbox (Stuff)">Inbox (Stuff)</option>
+                                <option value="Next Actions">Next Actions (Làm ngay)</option>
+                                <option value="Calendar">Calendar (Có lịch)</option>
+                                <option value="Waiting For">Waiting For (Đợi người khác)</option>
+                                <option value="Someday-Maybe">Someday-Maybe (Có lúc nào đó)</option>
+                                <option value="N/A">Không có</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group half" id="strategy-type-container" style="display: none;">
+                            <label>Loại Chiến Lược:</label>
+                            <select id="modal-task-strategy-type" onchange="handleWorkCatChange()">
+                                <option value="Project">Dự án (10k)</option>
+                                <option value="Goal">Mục tiêu (30k)</option>
+                                <option value="Vision">Tầm nhìn (40k)</option>
+                                <option value="Mission">Sứ mệnh (50k)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer" style="display: flex; justify-content: space-between; gap: 10px;">
                 <button type="button" id="btn-archive-task" class="btn-archive" style="background: #64748b; color: white; padding: 12px 24px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;" onclick="toggleArchiveTask()">
@@ -271,6 +288,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=23"></script>
+    <script src="script.js?v=24"></script>
 </body>
 </html>

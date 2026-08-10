@@ -213,3 +213,35 @@ body {
 
 .btn-move { background: transparent; border: none; color: #94a3b8; font-size: 1.1rem; cursor: pointer; padding: 5px; border-radius: 5px; transition: all 0.2s; }
 .btn-move:hover { color: var(--primary-color); background: #f1f5f9; }
+/* Modal Tabs */
+.modal-tabs {
+    display: flex;
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    gap: 15px;
+}
+.modal-tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.modal-tab-btn:hover {
+    color: var(--secondary-color);
+}
+.modal-tab-btn.active {
+    color: var(--secondary-color);
+    border-bottom: 3px solid var(--secondary-color);
+}
+.modal-tab-content {
+    animation: fadeIn 0.3s ease-in-out;
+}

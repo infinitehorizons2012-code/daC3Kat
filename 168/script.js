@@ -1952,3 +1952,17 @@ function showCelebration() {
 function escapeHTML(str) {
     return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
 }
+
+
+window.openModalTab = function(event, tabId) {
+    const tabContents = document.querySelectorAll('.modal-tab-content');
+    tabContents.forEach(content => content.style.display = 'none');
+    
+    const tabBtns = document.querySelectorAll('.modal-tab-btn');
+    tabBtns.forEach(btn => btn.classList.remove('active'));
+    
+    document.getElementById(tabId).style.display = 'block';
+    if (event) {
+        event.currentTarget.classList.add('active');
+    }
+};
