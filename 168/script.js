@@ -1284,16 +1284,6 @@ const tabConfigs = {
             </div>
         `
     },
-    'project': {
-        title: 'Dự Án',
-        desc: 'Mục tiêu cần nhiều bước để hoàn thành.',
-        icon: 'fa-layer-group',
-        color: 'var(--primary-color)',
-        defaultWorkCat: 'Project',
-        defaultSysCat: 'N/A',
-        guide: `
-        `
-    },
     'unplanned': { title: 'Đột Xuất', desc: 'Những việc bất ngờ nhảy vào! Làm ngay.', icon: 'fa-bolt', color: 'var(--warning-color)', defaultWorkCat: 'Unplanned Work', defaultSysCat: 'Next Actions' },
     'predefined': { title: 'Định Trước', desc: 'Những việc đã lên kế hoạch!', icon: 'fa-bullseye', color: 'var(--success-color)', defaultWorkCat: 'Pre-defined Work', defaultSysCat: 'Next Actions' },
     'defining': { title: 'Định Hình', desc: 'Ghi chép ý tưởng, dọn dẹp hòm thư.', icon: 'fa-box-archive', color: '#6366f1', defaultWorkCat: 'Defining Work', defaultSysCat: 'Inbox (Stuff)' }
@@ -1353,7 +1343,7 @@ function updateHeader() {
 
     const stratDropdown = document.getElementById('quick-add-strategy-type');
     if (stratDropdown) {
-        stratDropdown.style.display = currentActiveTab === 'project' ? 'block' : 'none';
+        stratDropdown.style.display = 'none';
     }
 
     // Đổi placeholder input
@@ -1506,9 +1496,7 @@ window.handleQuickAdd = async function(event) {
 
     const conf = tabConfigs[currentActiveTab];
     const strategyDropdown = document.getElementById('quick-add-strategy-type');
-    const workCat = (currentActiveTab === 'project' && strategyDropdown && strategyDropdown.style.display !== 'none') 
-        ? strategyDropdown.value 
-        : conf.defaultWorkCat;
+    const workCat = conf.defaultWorkCat;
 
     const newTask = {
         id: 't-' + Date.now(),
@@ -1746,9 +1734,7 @@ window.swapTasksInState = async function(taskId1, taskId2) {
 
 window.moveTaskUp = function(taskId) {
     let currentFiltered = state.tasks;
-    if (currentActiveTab === 'project') {
-        currentFiltered = currentFiltered.filter(t => ['Project', 'Goal', 'Vision', 'Mission'].includes(t.workCategory));
-    } else if (currentActiveTab !== 'action') {
+    if (currentActiveTab !== 'action') {
         const conf = tabConfigs[currentActiveTab];
         currentFiltered = currentFiltered.filter(t => t.workCategory === conf.defaultWorkCat);
     }
@@ -1766,9 +1752,7 @@ window.moveTaskUp = function(taskId) {
 
 window.moveTaskDown = function(taskId) {
     let currentFiltered = state.tasks;
-    if (currentActiveTab === 'project') {
-        currentFiltered = currentFiltered.filter(t => ['Project', 'Goal', 'Vision', 'Mission'].includes(t.workCategory));
-    } else if (currentActiveTab !== 'action') {
+    if (currentActiveTab !== 'action') {
         const conf = tabConfigs[currentActiveTab];
         currentFiltered = currentFiltered.filter(t => t.workCategory === conf.defaultWorkCat);
     }
@@ -1910,9 +1894,7 @@ window.renderTasks = function() {
 
     // Lọc theo Tab (Nếu không phải tab Hành Động)
     let filteredTasks = state.tasks;
-    if (currentActiveTab === 'project') {
-        filteredTasks = filteredTasks.filter(t => ['Project', 'Goal', 'Vision', 'Mission'].includes(t.workCategory));
-    } else if (currentActiveTab !== 'action') {
+    if (currentActiveTab !== 'action') {
         filteredTasks = filteredTasks.filter(t => t.workCategory === expectedWorkCat);
     }
 
