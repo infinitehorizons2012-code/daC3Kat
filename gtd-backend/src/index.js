@@ -152,6 +152,19 @@ app.post('/api/goals', async (c) => {
   }
 })
 
+app.patch('/api/goals/:id/status', async (c) => {
+  const db = c.env.DB
+  const id = c.req.param('id')
+  const { status } = await c.req.json()
+  
+  try {
+    await db.prepare(`UPDATE Goals SET status = ? WHERE goal_id = ?`).bind(status, id).run()
+    return c.json({ success: true })
+  } catch (e) {
+    return c.json({ error: e.message }, 500)
+  }
+})
+
 app.post('/api/actions', async (c) => {
   const db = c.env.DB
   const body = await c.req.json()

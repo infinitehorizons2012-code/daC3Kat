@@ -56,10 +56,24 @@ export default function Horizons() {
     }
   };
 
+  const toggleGoalStatus = async (goalId, currentStatus) => {
+    const newStatus = currentStatus === 'Pended' ? 'Active' : 'Pended';
+    try {
+      await fetch(`${API_URL}/goals/${goalId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+      fetchData();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   if (loading) {
     return (
       <div className="glass-panel p-8 rounded-2xl min-h-[500px] flex items-center justify-center">
-        <i className="fa-solid fa-spinner fa-spin text-4xl text-emerald-500"></i>
+        <i className="fa-solid fa-spinner fa-spin text-4xl text-blue-500"></i>
       </div>
     );
   }
@@ -132,56 +146,55 @@ export default function Horizons() {
             <h3 className="font-medium text-slate-800">{mission.statement}</h3>
           </div>
           
-          {/* Visions Level */}
+          {/* Visions */}
           {visions.length === 0 ? (
-            <div className="pl-8 mt-4 text-sm text-slate-500 italic">Chưa có tầm nhìn nào.</div>
+            <div className="pl-8 mt-4 text-sm text-slate-400 italic">Chưa có tầm nhìn nào.</div>
           ) : (
-            visions.map(vision => {
-              const relatedGoals = goals.filter(g => g.vision_id === vision.vision_id);
-              
-              return (
-                <div key={vision.vision_id} className="flex flex-col gap-4 pl-8 mt-4 border-l-2 border-emerald-200">
-                  <div className="relative">
-                    <div className="absolute w-4 h-0.5 bg-emerald-200 top-4 -left-4"></div>
-                    <div className="bg-white/60 border border-slate-200 p-4 rounded-xl shadow-sm">
-                      <div className="flex justify-between">
-                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">40,000 ft - Tầm nhìn</span>
-                        <button onClick={() => { setModalType('goal'); setFormData({...formData, parentId: vision.vision_id}); }} className="text-xs text-blue-600 hover:bg-blue-200 bg-blue-100 px-2 py-1 rounded font-bold">
-                          + Thêm Mục tiêu
-                        </button>
-                      </div>
-                      <h3 className="font-medium text-slate-800">{vision.statement}</h3>
+            visions.map(vision => (
+              <div key={vision.vision_id} className="flex flex-col gap-4 pl-8 mt-4 border-l-2 border-emerald-200">
+                
+                {/* Vision Level */}
+                <div className="relative">
+                  <div className="absolute w-4 h-0.5 bg-emerald-200 top-4 -left-4"></div>
+                  <div className="bg-white/60 border border-slate-200 p-4 rounded-xl shadow-sm">
+                    <div className="flex justify-between">
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">40,000 ft - Tầm nhìn</span>
+                      <button onClick={() => { setModalType('goal'); setFormData({...formData, parentId: vision.vision_id}); }} className="text-xs text-blue-600 hover:bg-blue-200 bg-blue-100 px-2 py-1 rounded font-bold">
+                        + Thêm Mục tiêu
+                      </button>
                     </div>
-                    
-                    {/* Goals Level */}
-                    {relatedGoals.length === 0 ? (
-                      <div className="pl-8 mt-4 text-sm text-slate-400 italic">Chưa có mục tiêu nào gắn với tầm nhìn này.</div>
-                    ) : (
-                      relatedGoals.map(goal => (
-                        <div key={goal.goal_id} className="flex flex-col gap-4 pl-8 mt-4 border-l-2 border-slate-200">
-                          <div className="relative">
-                            <div className="absolute w-4 h-0.5 bg-slate-200 top-4 -left-4"></div>
-                            <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex justify-between items-center">
-                              <div>
-                                <span className={`text-xs font-bold uppercase tracking-wider mb-1 block ${goal.status === 'Pended' ? 'text-slate-400' : 'text-blue-500'}`}>
-                                  30,000 ft - Mục tiêu ({goal.status})
-                                </span>
-                                <h3 className={`font-medium ${goal.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
-                                  {goal.statement}
-                                </h3>
-                              </div>
-                              <button className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${goal.status === 'Pended' ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-                                {goal.status === 'Pended' ? 'Kích hoạt' : 'Đóng băng'}
-                              </button>
+                    <h3 className="font-medium text-slate-800">{vision.statement}</h3>
+                  </div>
+                  
+                  {/* Goals */}
+                  {goals.filter(g => g.vision_id === vision.vision_id).length === 0 ? (
+                    <div className="pl-8 mt-4 text-sm text-slate-400 italic">Chưa có mục tiêu nào gắn với tầm nhìn này.</div>
+                  ) : (
+                    goals.filter(g => g.vision_id === vision.vision_id).map(goal => (
+                      <div key={goal.goal_id} className="flex flex-col gap-4 pl-8 mt-4 border-l-2 border-slate-200">
+                        <div className="relative">
+                          <div className="absolute w-4 h-0.5 bg-slate-200 top-4 -left-4"></div>
+                          <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex justify-between items-center">
+                            <div>
+                              <span className={`text-xs font-bold uppercase tracking-wider mb-1 block ${goal.status === 'Pended' ? 'text-slate-400' : 'text-blue-500'}`}>
+                                30,000 ft - Mục tiêu ({goal.status})
+                              </span>
+                              <h3 className={`font-medium ${goal.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
+                                {goal.statement}
+                              </h3>
                             </div>
+                            <button onClick={() => toggleGoalStatus(goal.goal_id, goal.status)} className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${goal.status === 'Pended' ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+                              {goal.status === 'Pended' ? 'Kích hoạt' : 'Đóng băng'}
+                            </button>
                           </div>
                         </div>
-                      ))
-                    )}
-                  </div>
+                      </div>
+                    ))
+                  )}
                 </div>
-              );
-            })
+
+              </div>
+            ))
           )}
         </div>
       </div>
