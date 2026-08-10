@@ -3,9 +3,10 @@ import React, { useState, useEffect } from 'react';
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
 export default function Horizons() {
-  const [data, setData] = useState({ missions: [], visions: [], goals: [] });
+  const [data, setData] = useState({ missions: [], visions: [], goals: [], projects: [] });
   const [loading, setLoading] = useState(true);
-  const [modalType, setModalType] = useState(null); // 'mission', 'vision', 'goal'
+  const [modalType, setModalType] = useState(null); // 'mission', 'vision', 'goal', 'edit-goal'
+  const [editGoalId, setEditGoalId] = useState(null);
   const [formData, setFormData] = useState({ statement: '', category: 'Strategic', parentId: null });
 
   const fetchData = () => {
@@ -31,6 +32,8 @@ export default function Horizons() {
 
     let endpoint = '';
     let payload = { statement: formData.statement, category: formData.category };
+    let method = 'POST';
+    
     if (modalType === 'mission') endpoint = '/missions';
     if (modalType === 'vision') {
       endpoint = '/visions';
@@ -41,14 +44,20 @@ export default function Horizons() {
       payload.vision_id = formData.parentId;
       payload.status = 'Active';
     }
+    if (modalType === 'edit-goal') {
+      endpoint = `/goals/${editGoalId}`;
+      method = 'PATCH';
+      // Only statement is updated in this edit
+    }
 
     try {
       await fetch(`${API_URL}${endpoint}`, {
-        method: 'POST',
+        method: method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
       setModalType(null);
+      setEditGoalId(null);
       setFormData({ statement: '', category: 'Strategic', parentId: null });
       fetchData();
     } catch (e) {
@@ -79,9 +88,10 @@ export default function Horizons() {
   }
 
   // Fallback data if DB is empty
-  const mission = data.missions[0] || { statement: 'Chưa có sứ mệnh nào được định nghĩa.' };
+  const mission = data.missions[0] || {};
   const visions = data.visions;
   const goals = data.goals;
+  const projects = data.projects || [];
 
   return (
     <div className="glass-panel p-8 rounded-2xl min-h-[500px] relative">
@@ -101,6 +111,7 @@ export default function Horizons() {
               {modalType === 'mission' && 'Định nghĩa Sứ mệnh'}
               {modalType === 'vision' && 'Thêm Tầm nhìn 3-5 năm'}
               {modalType === 'goal' && 'Thêm Mục tiêu'}
+              {modalType === 'edit-goal' && 'Sửa Mục tiêu'}
             </h3>
             <div className="flex flex-col gap-3 mb-6">
               <textarea 
@@ -110,7 +121,7 @@ export default function Horizons() {
                 className="border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-emerald-400 min-h-[100px]"
                 autoFocus
               />
-              {modalType !== 'mission' && (
+              {(modalType !== 'mission' && modalType !== 'edit-goal') && (
                 <select 
                   value={formData.category}
                   onChange={e => setFormData({...formData, category: e.target.value})}
@@ -175,17 +186,27 @@ export default function Horizons() {
                         <div className="relative">
                           <div className="absolute w-4 h-0.5 bg-slate-200 top-4 -left-4"></div>
                           <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex justify-between items-center">
-                            <div>
+                            <div className="flex-1">
                               <span className={`text-xs font-bold uppercase tracking-wider mb-1 block ${goal.status === 'Pended' ? 'text-slate-400' : 'text-blue-500'}`}>
                                 30,000 ft - Mục tiêu ({goal.status})
                               </span>
-                              <h3 className={`font-medium ${goal.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
+                              <h3 className={`font-medium pr-4 ${goal.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
                                 {goal.statement}
                               </h3>
+                              {goal.status === 'Active' && projects.filter(p => p.goal_id === goal.goal_id).length === 0 && (
+                                <p className="text-xs text-orange-600 mt-2 font-medium bg-orange-50 inline-block px-2 py-1 rounded">
+                                  <i className="fa-solid fa-triangle-exclamation mr-1"></i> Cần tạo dự án cho mục tiêu này
+                                </p>
+                              )}
                             </div>
-                            <button onClick={() => toggleGoalStatus(goal.goal_id, goal.status)} className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${goal.status === 'Pended' ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-                              {goal.status === 'Pended' ? 'Kích hoạt' : 'Đóng băng'}
-                            </button>
+                            <div className="flex flex-col gap-2 shrink-0">
+                              <button onClick={() => { setModalType('edit-goal'); setEditGoalId(goal.goal_id); setFormData({...formData, statement: goal.statement}); }} className="text-xs px-3 py-1 rounded-full font-medium transition-colors bg-slate-100 text-slate-600 hover:bg-slate-200">
+                                <i className="fa-solid fa-pen"></i> Sửa
+                              </button>
+                              <button onClick={() => toggleGoalStatus(goal.goal_id, goal.status)} className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${goal.status === 'Pended' ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+                                {goal.status === 'Pended' ? 'Kích hoạt' : 'Đóng băng'}
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>

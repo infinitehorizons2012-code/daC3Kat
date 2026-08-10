@@ -109,11 +109,12 @@ app.post('/api/projects', async (c) => {
 
 app.get('/api/horizons', async (c) => {
   const db = c.env.DB
-  // Fetch missions, visions, and goals
+  // Fetch missions, visions, goals, and projects (to check if goals have projects)
   const { results: missions } = await db.prepare(`SELECT * FROM Mission`).all()
   const { results: visions } = await db.prepare(`SELECT * FROM Vision`).all()
   const { results: goals } = await db.prepare(`SELECT * FROM Goals`).all()
-  return c.json({ missions, visions, goals })
+  const { results: projects } = await db.prepare(`SELECT * FROM Projects`).all()
+  return c.json({ missions, visions, goals, projects })
 })
 
 app.post('/api/missions', async (c) => {
@@ -159,6 +160,19 @@ app.patch('/api/goals/:id/status', async (c) => {
   
   try {
     await db.prepare(`UPDATE Goals SET status = ? WHERE goal_id = ?`).bind(status, id).run()
+    return c.json({ success: true })
+  } catch (e) {
+    return c.json({ error: e.message }, 500)
+  }
+})
+
+app.patch('/api/goals/:id', async (c) => {
+  const db = c.env.DB
+  const id = c.req.param('id')
+  const { statement } = await c.req.json()
+  
+  try {
+    await db.prepare(`UPDATE Goals SET statement = ? WHERE goal_id = ?`).bind(statement, id).run()
     return c.json({ success: true })
   } catch (e) {
     return c.json({ error: e.message }, 500)
