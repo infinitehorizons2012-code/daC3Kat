@@ -173,9 +173,9 @@ app.post('/api/visions', async (c) => {
 app.patch('/api/visions/:id', async (c) => {
   const db = c.env.DB
   const id = c.req.param('id')
-  const { statement, category } = await c.req.json()
+  const { statement, category, status } = await c.req.json()
   try {
-    await db.prepare(`UPDATE Vision SET statement = ?, category = ? WHERE vision_id = ?`).bind(statement, category, id).run()
+    await db.prepare(`UPDATE Vision SET statement = ?, category = ?, status = ? WHERE vision_id = ?`).bind(statement, category, status, id).run()
     return c.json({ success: true })
   } catch (e) {
     return c.json({ error: e.message }, 500)
@@ -221,10 +221,10 @@ app.patch('/api/goals/:id/status', async (c) => {
 app.patch('/api/goals/:id', async (c) => {
   const db = c.env.DB
   const id = c.req.param('id')
-  const { statement, category } = await c.req.json()
+  const { statement, category, status } = await c.req.json()
   
   try {
-    await db.prepare(`UPDATE Goals SET statement = ?, category = ? WHERE goal_id = ?`).bind(statement, category, id).run()
+    await db.prepare(`UPDATE Goals SET statement = ?, category = ?, status = ? WHERE goal_id = ?`).bind(statement, category, status, id).run()
     return c.json({ success: true })
   } catch (e) {
     return c.json({ error: e.message }, 500)

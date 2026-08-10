@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS Vision (
     mission_id TEXT REFERENCES Mission(mission_id),
     statement TEXT NOT NULL,
     category TEXT DEFAULT 'Strategic', -- 'Strategic' / 'Maintenance'
+    status TEXT DEFAULT 'Active',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

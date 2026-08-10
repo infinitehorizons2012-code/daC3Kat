@@ -53,10 +53,12 @@ export default function Horizons() {
     if (modalType === 'edit-vision') {
       endpoint = `/visions/${editId}`;
       method = 'PATCH';
+      payload.status = formData.status;
     }
     if (modalType === 'edit-goal') {
       endpoint = `/goals/${editId}`;
       method = 'PATCH';
+      payload.status = formData.status;
     }
 
     try {
@@ -160,15 +162,15 @@ export default function Horizons() {
                   <option value="Maintenance">Maintenance (Bảo trì)</option>
                 </select>
               )}
-              {modalType === 'edit-mission' && (
+              {(modalType === 'edit-mission' || modalType === 'edit-vision' || modalType === 'edit-goal') && (
                 <div>
-                  <label className="text-xs font-bold text-slate-500 mb-1 block">Trạng thái Sứ mệnh</label>
+                  <label className="text-xs font-bold text-slate-500 mb-1 block">Trạng thái</label>
                   <select 
                     value={formData.status}
                     onChange={e => setFormData({...formData, status: e.target.value})}
                     className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-emerald-400"
                   >
-                    <option value="Active">Active (Đang theo đuổi)</option>
+                    <option value="Active">Active (Đang thực hiện)</option>
                     <option value="Completed">Completed (Đã hoàn thành)</option>
                     <option value="Pended">Pended (Tạm gác lại)</option>
                   </select>
@@ -223,15 +225,15 @@ export default function Horizons() {
                   <div className="bg-white/60 border border-slate-200 p-4 rounded-xl shadow-sm">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">40,000 ft - Tầm nhìn ({vision.category})</span>
-                        <h3 className="font-medium text-slate-800 pr-4">{vision.statement}</h3>
+                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">40,000 ft - Tầm nhìn ({vision.category}) {vision.status ? `- ${vision.status}` : ''}</span>
+                        <h3 className={`font-medium pr-4 ${vision.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>{vision.statement}</h3>
                       </div>
                       <div className="flex flex-col items-end gap-2 shrink-0">
                         <button onClick={() => { setModalType('goal'); setFormData({...formData, parentId: vision.vision_id}); }} className="text-xs text-blue-600 hover:bg-blue-200 bg-blue-100 px-2 py-1 rounded font-bold">
                           + Thêm Mục tiêu
                         </button>
                         <div className="flex gap-2 mt-2">
-                          <button onClick={() => { setModalType('edit-vision'); setEditId(vision.vision_id); setFormData({...formData, statement: vision.statement, category: vision.category}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
+                          <button onClick={() => { setModalType('edit-vision'); setEditId(vision.vision_id); setFormData({...formData, statement: vision.statement, category: vision.category, status: vision.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                           <button onClick={() => handleDelete('visions', vision.vision_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                         </div>
                       </div>
@@ -262,7 +264,7 @@ export default function Horizons() {
                             </div>
                             <div className="flex flex-col gap-2 shrink-0">
                               <div className="flex gap-2 justify-end mb-1">
-                                <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, category: goal.category}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
+                                <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, category: goal.category, status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                                 <button onClick={() => handleDelete('goals', goal.goal_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                               </div>
                               <button onClick={() => toggleGoalStatus(goal.goal_id, goal.status)} className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${goal.status === 'Pended' ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
