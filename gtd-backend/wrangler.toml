@@ -6,7 +6,7 @@ compatibility_flags = [ "nodejs_compat" ]
 [[d1_databases]]
 binding = "DB"
 database_name = "gtd-db"
-database_id = "00000000-0000-0000-0000-000000000000" # NOTE: User must replace this with real ID from `wrangler d1 create`
+database_id = "e31e57f7-4148-420a-bce5-60d3fb00fa00"
 migrations_dir = "./migrations"
 
 [observability]
