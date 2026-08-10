@@ -30,6 +30,15 @@ export default function Horizons() {
     e.preventDefault();
     if (!formData.statement.trim()) return;
 
+    if ((modalType === 'vision' || modalType === 'edit-vision') && !formData.parentId) {
+      alert("Vui lòng chọn Sứ mệnh liên đới!");
+      return;
+    }
+    if ((modalType === 'goal' || modalType === 'goal-independent' || modalType === 'edit-goal') && formData.goalType === 'strategic-vision' && !formData.parentId) {
+      alert("Vui lòng chọn Tầm nhìn liên đới!");
+      return;
+    }
+
     let endpoint = '';
     let payload = { statement: formData.statement, category: formData.category };
     let method = 'POST';
