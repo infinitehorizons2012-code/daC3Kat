@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import FocusMode from './components/FocusMode';
 import Kanban from './components/Kanban';
 import Horizons from './components/Horizons';
+import Review from './components/Review';
 
 function App() {
   const [activeTab, setActiveTab] = useState('focus');
@@ -41,6 +42,7 @@ function App() {
           {activeTab === 'focus' && <FocusMode />}
           {activeTab === 'kanban' && <Kanban />}
           {activeTab === 'horizons' && <Horizons />}
+          {activeTab === 'review' && <Review />}
         </div>
 
         {/* Khu vực 2: GTD Dashboard */}
@@ -53,6 +55,9 @@ function App() {
           </button>
           <button onClick={() => setActiveTab('horizons')} className={`px-4 py-2 rounded-[20px] font-semibold transition-all ${activeTab === 'horizons' ? 'bg-emerald-100 text-emerald-700 shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-emerald-600'}`}>
             <i className="fa-solid fa-tree mr-2"></i> Cây Horizons
+          </button>
+          <button onClick={() => setActiveTab('review')} className={`px-4 py-2 rounded-[20px] font-semibold transition-all ${activeTab === 'review' ? 'bg-orange-100 text-orange-700 shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-orange-600'}`}>
+            <i className="fa-solid fa-chart-pie mr-2"></i> Review Cuối Tuần
           </button>
         </nav>
 

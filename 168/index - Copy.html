@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siêu Nhân Thời Gian 168</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=10">
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <div class="app-container glass-panel">
+        
+        <div class="sticky-header">
+            <header class="app-header">
+                <div class="logo" onclick="promptForApiKey()" style="cursor: pointer;" title="Nhấn để cấu hình Database">
+                    <i class="fa-solid fa-rocket"></i>
+                    <h1 id="app-title">168</h1>
+                </div>
+                
+                <nav class="tabs" style="margin-bottom: 0; flex-wrap: nowrap; overflow-x: auto;">
+                    <button class="tab-btn" data-tab="vision">
+                        <i class="fa-solid fa-eye"></i><span>Lý thuyết</span>
+                    </button>
+
+                    <button class="tab-btn" data-tab="kat">
+                        <i class="fa-solid fa-graduation-cap"></i><span>Kat</span>
+                    </button>
+                    <button class="tab-btn" data-tab="prinberk">
+                        <i class="fa-solid fa-gem"></i><span>Prinberk</span>
+                    </button>
+                    <button class="tab-btn" data-tab="dream">
+                        <i class="fa-solid fa-rocket"></i><span>Dream</span>
+                    </button>
+                    <button class="tab-btn" data-tab="scm">
+                        <i class="fa-solid fa-truck-fast"></i><span>SCM & AI</span>
+                    </button>
+                    <button class="tab-btn" data-tab="homeconomie">
+                        <i class="fa-solid fa-house-chimney"></i><span>Homeconomie</span>
+                    </button>
+                    <button class="tab-btn" data-tab="portfolio">
+                        <i class="fa-solid fa-briefcase"></i><span>Hồ sơ</span>
+                    </button>
+                </nav>
+
+                <div class="gamification">
+                    <div class="stars-badge">
+                        <i class="fa-solid fa-star"></i>
+                        <span id="star-count">0</span>
+                    </div>
+                    <div class="sync-status" id="sync-status" title="Trạng thái đồng bộ">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Navigation (Work Categories / Horizons) -->
+            <nav class="tabs">
+                <button class="tab-btn" data-tab="unplanned">
+                    <i class="fa-solid fa-bolt"></i><span>Đột Xuất</span>
+                </button>
+                <button class="tab-btn active" data-tab="predefined">
+                    <i class="fa-solid fa-bullseye"></i><span>Định Trước</span>
+                </button>
+                <button class="tab-btn" data-tab="defining">
+                    <i class="fa-solid fa-box-archive"></i><span>Định Hình</span>
+                </button>
+            </nav>
+        </div>
+
+
+
+        <main class="content-area">
+            
+            <div class="tab-header" id="current-tab-header">
+                <h2 id="header-title">Việc Định Trước</h2>
+                <p id="header-desc">Những việc đã lên kế hoạch!</p>
+            </div>
+            
+            <div id="tab-guide" class="tab-guide" style="display: none;"></div>
+            
+            <form class="task-form" id="quick-add-form" onsubmit="handleQuickAdd(event)" style="display: flex;">
+                <select id="quick-add-strategy-type" style="display: none; padding: 12px 15px; border: 2px solid transparent; border-radius: 8px; background: white; font-size: 1rem; color: var(--text-color); outline: none; margin-right: 10px;">
+                    <option value="Project">Dự án (10k)</option>
+                    <option value="Goal">Mục tiêu (30k)</option>
+                    <option value="Vision">Tầm nhìn (40k)</option>
+                    <option value="Mission">Sứ mệnh (50k)</option>
+                </select>
+                <input type="text" id="quick-add-input" placeholder="Nhập việc mới..." required style="flex-grow: 1;">
+                <button type="submit" style="margin-left: 10px;"><i class="fa-solid fa-plus"></i> Thêm</button>
+            </form>
+
+            <div class="list-controls" id="list-controls" style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                <label style="font-size: 0.95rem; color: #64748b; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <input type="checkbox" id="toggle-archive" onchange="toggleShowArchive(this.checked)" style="cursor: pointer; width: 16px; height: 16px;">
+                    <i class="fa-solid fa-box-archive"></i> Hiển thị Lưu trữ
+                </label>
+            </div>
+
+            <div class="task-list" id="master-task-list">
+                <!-- Master Task List rendered here -->
+            </div>
+
+        </main>
+
+        <footer class="app-footer">
+            <p>Trạm điều khiển không gian 168 © 2026</p>
+        </footer>
+    </div>
+
+    <!-- Celebration Overlay -->
+    <div class="celebration-overlay" id="celebration">
+        <div class="star-pop">
+            <i class="fa-solid fa-star"></i>
+            <h3>Tuyệt Vời!</h3>
+            <p>Con nhận được 1 sao vàng!</p>
+        </div>
+    </div>
+
+    <!-- Task Detail Modal -->
+    <div class="modal-overlay" id="task-modal">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-sliders"></i> Chi tiết Công việc</h3>
+                <button class="close-btn" onclick="closeTaskModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modal-task-id">
+                
+                <div class="modal-tabs">
+                    <button type="button" class="modal-tab-btn active" onclick="openModalTab(event, 'modal-tab-action')"><i class="fa-solid fa-person-running"></i> Hành động</button>
+                    <button type="button" class="modal-tab-btn" onclick="openModalTab(event, 'modal-tab-strategy')"><i class="fa-solid fa-chess-knight"></i> Chiến lược</button>
+                    <button type="button" class="modal-tab-btn" onclick="openModalTab(event, 'modal-tab-system')"><i class="fa-solid fa-server"></i> Hệ thống</button>
+                </div>
+
+                <!-- Tab 1: Hành động -->
+                <div id="modal-tab-action" class="modal-tab-content" style="display: block;">
+                    <div class="form-group">
+                        <label>Tên Hành Động:</label>
+                        <input type="text" id="modal-task-name" class="full-width">
+                    </div>
+
+                    <div class="form-row" id="action-details-row">
+                        <div class="form-group third">
+                            <label>Bối cảnh (Context):</label>
+                            <select id="modal-task-context">
+                                <option value="">-- Chọn --</option>
+                                <option value="@Máy_tính">@Máy_tính</option>
+                                <option value="@Điện_thoại">@Điện_thoại</option>
+                                <option value="@Nhà">@Nhà</option>
+                                <option value="@Văn_phòng">@Văn_phòng</option>
+                                <option value="@Gặp_ai">@Gặp_ai</option>
+                            </select>
+                        </div>
+                        <div class="form-group third">
+                            <label>Thời gian:</label>
+                            <select id="modal-task-time">
+                                <option value="">-- Chọn --</option>
+                                <option value="< 5 phút">&lt; 5 phút</option>
+                                <option value="15 phút">15 phút</option>
+                                <option value="30 phút">30 phút</option>
+                                <option value="1 tiếng">1 tiếng</option>
+                            </select>
+                        </div>
+                        <div class="form-group third">
+                            <label>Năng lượng:</label>
+                            <select id="modal-task-energy">
+                                <option value="">-- Chọn --</option>
+                                <option value="Năng lượng cao">Cao</option>
+                                <option value="Năng lượng thấp">Thấp</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Chiến lược -->
+                <div id="modal-tab-strategy" class="modal-tab-content" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group half" id="group-container">
+                            <label>Nhóm (Group):</label>
+                            <select id="modal-task-group" onchange="toggleGroupFields()">
+                                <option value="Maintenance">Maintenance (Bảo trì)</option>
+                                <option value="Strategic">Strategic (Chiến lược)</option>
+                            </select>
+                        </div>
+                        <div class="form-group half">
+                            <label>Lĩnh vực (Area - 20k ft):</label>
+                            <select id="modal-task-area">
+                                <option value="">-- Chọn lĩnh vực --</option>
+                                <option value="Sinh mệnh">Sinh mệnh</option>
+                                <option value="Sức khỏe">Sức khỏe cá nhân</option>
+                                <option value="Gia đình">Gia đình</option>
+                                <option value="Nhà cửa">Nhà cửa & Đời sống (Manual)</option>
+                                <option value="Mối quan hệ">Mối quan hệ</option>
+                                <option value="Sự nghiệp">Sự nghiệp</option>
+                                <option value="Học tập">Phát triển cá nhân (Liberal)</option>
+                                <option value="Tài chính">Tài chính</option>
+                                <option value="Giải trí">Sở thích & Giải trí (Fine Art)</option>
+                                <option value="Khác">Khác</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="strategic-fields" style="display: none;">
+                        <div class="form-group" id="field-project">
+                            <label>Thuộc Dự án (Project 10k ft):</label>
+                            <select id="modal-task-project" class="full-width">
+                                <option value="">-- Không có --</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half" id="field-goal">
+                                <label>Mục tiêu (30k ft):</label>
+                                <select id="modal-task-goal" class="full-width">
+                                    <option value="">-- Không có --</option>
+                                </select>
+                            </div>
+                            <div class="form-group half" id="field-vision">
+                                <label>Tầm nhìn (40k ft):</label>
+                                <select id="modal-task-vision" class="full-width">
+                                    <option value="">-- Không có --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="field-mission">
+                            <label>Sứ mệnh (50k ft):</label>
+                            <select id="modal-task-mission" class="full-width">
+                                <option value="">-- Không có --</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Hệ thống -->
+                <div id="modal-tab-system" class="modal-tab-content" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group half" id="workcat-container">
+                            <label>Bản chất công việc:</label>
+                            <select id="modal-task-workcat" onchange="handleWorkCatChange()">
+                                <option value="Defining Work">Defining Work</option>
+                                <option value="Pre-defined Work">Pre-defined Work</option>
+                                <option value="Unplanned Work">Unplanned Work</option>
+                            </select>
+                        </div>
+                        <div class="form-group half" id="syscat-container">
+                            <label>Hệ thống lưu giữ:</label>
+                            <select id="modal-task-syscat">
+                                <option value="Inbox (Stuff)">Inbox (Stuff)</option>
+                                <option value="Next Actions">Next Actions (Làm ngay)</option>
+                                <option value="Calendar">Calendar (Có lịch)</option>
+                                <option value="Waiting For">Waiting For (Đợi người khác)</option>
+                                <option value="Someday-Maybe">Someday-Maybe (Có lúc nào đó)</option>
+                                <option value="N/A">Không có</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group half" id="strategy-type-container" style="display: none;">
+                            <label>Loại Chiến Lược:</label>
+                            <select id="modal-task-strategy-type" onchange="handleWorkCatChange()">
+                                <option value="Project">Dự án (10k)</option>
+                                <option value="Goal">Mục tiêu (30k)</option>
+                                <option value="Vision">Tầm nhìn (40k)</option>
+                                <option value="Mission">Sứ mệnh (50k)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-between; gap: 10px;">
+                <button type="button" id="btn-archive-task" class="btn-archive" style="background: #64748b; color: white; padding: 12px 24px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;" onclick="toggleArchiveTask()">
+                    <i class="fa-solid fa-box-archive"></i> Lưu trữ
+                </button>
+                <button type="button" class="btn-save" style="padding: 12px 24px; border: none; border-radius: 12px; background: var(--success-color); color: white; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;" onclick="saveTaskDetails()">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=29"></script>
+</body>
+</html>
