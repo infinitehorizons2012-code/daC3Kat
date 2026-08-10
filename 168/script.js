@@ -1012,6 +1012,56 @@ const tabConfigs = {
                     </div>
                 </details>
 
+                <details style="margin-top: 15px; background: rgba(255,255,255,0.9); border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 15px;">
+                    <summary style="font-weight: bold; cursor: pointer; color: #1d4ed8; font-size: 1.05rem;">
+                        <i class="fa-solid fa-compass"></i> Bức tranh Tổng thể về "Cùng Đích" theo Baden-Powell
+                    </summary>
+                    <div style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+                        
+                        <div style="background: rgba(243, 244, 246, 0.8); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #3b82f6;">
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <strong style="width: 220px; color: #1e40af; flex-shrink: 0;">PHƯƠNG TIỆN (Means)</strong>
+                                <span style="color: #64748b; margin-right: 10px; flex-shrink: 0;"><i class="fa-solid fa-arrow-right"></i></span>
+                                <span>Kỹ năng, Hoạt động thực hành, Bài tập, Kỷ luật</span>
+                            </div>
+                            <div style="margin-left: 100px; color: #64748b; font-size: 0.85em; margin-bottom: 5px;">
+                                <i class="fa-solid fa-arrow-down"></i> (Tôi luyện)
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <strong style="width: 220px; color: #1e40af; flex-shrink: 0;">TÍNH KHÍ (Character)</strong>
+                                <span style="color: #64748b; margin-right: 10px; flex-shrink: 0;"><i class="fa-solid fa-arrow-right"></i></span>
+                                <span>Tự chủ, Bản lĩnh, Sự trung thực, Tinh thần trách nhiệm</span>
+                            </div>
+                            <div style="margin-left: 100px; color: #64748b; font-size: 0.85em; margin-bottom: 5px;">
+                                <i class="fa-solid fa-arrow-down"></i> (Hướng tới)
+                            </div>
+                            
+                            <div style="display: flex; align-items: center;">
+                                <strong style="width: 220px; color: #1e40af; flex-shrink: 0;">CHỦ ĐÍCH / CÙNG ĐÍCH (The End)</strong>
+                                <span style="color: #64748b; margin-right: 10px; flex-shrink: 0;"><i class="fa-solid fa-arrow-right"></i></span>
+                                <strong style="color: #b91c1c;">PHỤNG SỰ & TẠO GIÁ TRỊ TỐT ĐẸP CHO XÃ HỘI</strong>
+                            </div>
+                        </div>
+
+                        <ul style="margin-left: 15px; margin-bottom: 15px; list-style-type: none; padding-left: 0;">
+                            <li style="margin-bottom: 8px;"><strong style="color: #1e40af;">Phương tiện (Means) <i class="fa-solid fa-arrow-right" style="color:#64748b; font-size:0.85em;"></i> Ground / Runway & 10,000 ft (Dự án):</strong><br>Điểm SAT 1500+, High School Credits, code Python, kiến thức Mechatronics... tất cả chỉ là phương tiện. Chúng không phải là "cùng đích" của cuộc đời.</li>
+                            <li style="margin-bottom: 8px;"><strong style="color: #1e40af;">Tính khí (Character) <i class="fa-solid fa-arrow-right" style="color:#64748b; font-size:0.85em;"></i> 20,000 ft (Lĩnh vực) & Ethos (Bản lĩnh):</strong><br>Sự kỷ luật hoàn thành deadline, tinh thần tự học, danh tính Self-directed Scholar.</li>
+                            <li style="margin-bottom: 8px;"><strong style="color: #1e40af;">Chủ đích / Cùng đích (Purpose / End) <i class="fa-solid fa-arrow-right" style="color:#64748b; font-size:0.85em;"></i> 40,000 & 50,000 ft (Tầm nhìn & Sứ mệnh / Pathos):</strong><br>Dùng tri thức liên môn để tháo dỡ, tái tạo và kiến tạo giá trị mới, giải quyết bài toán thực tế giúp xã hội tốt đẹp hơn. Bước vào Đại học tinh hoa (MIT) cũng chỉ là một phương tiện tầm cao để thực hiện cùng đích phụng sự đó.</li>
+                        </ul>
+
+                        <p style="margin-bottom: 15px; padding: 12px; background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; border-radius: 6px;">
+                            <strong style="color: #b45309;">Tóm lại:</strong> Lời nhắc nhở của Baden-Powell giúp con bạn và hệ thống quản lý không rơi vào cái bẫy "nghiện phương tiện" (chạy theo điểm số, bằng cấp hay chứng chỉ). Điểm số hay kỹ năng chỉ là công cụ để rèn luyện Tính khí, và Tính khí đó được dùng để thực hiện Chủ đích tối thượng của con người: Là Phụng sự người khác và đạt được Hạnh phúc chân thật (Service & Happiness).
+                        </p>
+
+                        <div style="background: rgba(16, 185, 129, 0.1); border-radius: 8px; padding: 15px; border-left: 4px solid #10b981; font-style: italic;">
+                            <p style="margin-bottom: 8px; font-weight: bold; color: #047857; font-style: normal;"><i class="fa-solid fa-quote-left"></i> Câu nói kinh điển của Baden-Powell về Cùng đích:</p>
+                            <p style="margin-bottom: 8px; color: #065f46;">"Cách duy nhất để đạt được hạnh phúc là ban phát hạnh phúc cho người khác. Hãy cố gắng để lại thế giới này tốt đẹp hơn một chút so với khi bạn bước vào nó."</p>
+                            <p style="margin-bottom: 0; color: #065f46; font-size: 0.9em;">(The real way to get happiness is by giving out happiness to other people. Try and leave this world a little better than you found it.)</p>
+                        </div>
+                    </div>
+                </details>
+
                 <details style="margin-top: 15px; background: rgba(255,255,255,0.8); border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 15px;">
                     <summary style="font-weight: bold; cursor: pointer; color: #1d4ed8; font-size: 1.05rem;">
                         <i class="fa-solid fa-book-open"></i> Phân tích: DỰ ÁN HỌC THUẬT (ACADEMIC PROJECT)
