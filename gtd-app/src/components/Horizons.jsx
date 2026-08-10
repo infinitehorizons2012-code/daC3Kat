@@ -152,7 +152,7 @@ export default function Horizons() {
                 className="border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-emerald-400 min-h-[100px]"
                 autoFocus
               />
-              {(modalType !== 'mission' && modalType !== 'edit-mission') && (
+              {(modalType === 'goal' || modalType === 'edit-goal') && (
                 <select 
                   value={formData.category}
                   onChange={e => setFormData({...formData, category: e.target.value})}
@@ -225,7 +225,7 @@ export default function Horizons() {
                   <div className="bg-white/60 border border-slate-200 p-4 rounded-xl shadow-sm">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">40,000 ft - Tầm nhìn ({vision.category}) {vision.status ? `- ${vision.status}` : ''}</span>
+                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">40,000 ft - Tầm nhìn {vision.status ? `- ${vision.status}` : ''}</span>
                         <h3 className={`font-medium pr-4 ${vision.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>{vision.statement}</h3>
                       </div>
                       <div className="flex flex-col items-end gap-2 shrink-0">
@@ -233,7 +233,7 @@ export default function Horizons() {
                           + Thêm Mục tiêu
                         </button>
                         <div className="flex gap-2 mt-2">
-                          <button onClick={() => { setModalType('edit-vision'); setEditId(vision.vision_id); setFormData({...formData, statement: vision.statement, category: vision.category, status: vision.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
+                          <button onClick={() => { setModalType('edit-vision'); setEditId(vision.vision_id); setFormData({...formData, statement: vision.statement, status: vision.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                           <button onClick={() => handleDelete('visions', vision.vision_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                         </div>
                       </div>
