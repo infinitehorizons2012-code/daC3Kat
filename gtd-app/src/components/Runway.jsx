@@ -108,10 +108,10 @@ export default function Runway() {
       scheduled_end_datetime: storage_system === 'Calendar' ? formData.scheduled_end_datetime : null,
       defer_until_date: storage_system === 'Deferred' ? formData.defer_until_date : null,
       depends_on_action_id: storage_system === 'Project_Backlog' ? formData.depends_on_action_id : null,
-      context: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog') ? formData.context : null,
-      time_needed_mins: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog') ? formData.time_needed_mins : null,
-      energy_level: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog') ? formData.energy_level : null,
-      work_type: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog') ? formData.work_type : 'Defined Work',
+      context: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog' || storage_system === 'Inbox') ? formData.context : null,
+      time_needed_mins: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog' || storage_system === 'Inbox') ? formData.time_needed_mins : null,
+      energy_level: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog' || storage_system === 'Inbox') ? formData.energy_level : null,
+      work_type: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog' || storage_system === 'Inbox') ? formData.work_type : 'Defined Work',
     };
 
     let endpoint = '/actions';
@@ -188,7 +188,7 @@ export default function Runway() {
       category: a.category, reference_link: a.reference_link || '',
       step1_twomins: a.storage_system === 'Do_It_Now',
       step2_who: a.storage_system === 'Waiting_For' ? 'other' : 'me',
-      step3_when: a.storage_system === 'Calendar' ? 'fixed' : (a.storage_system === 'Deferred' ? 'deferred' : (a.storage_system === 'Floating_Backlog' ? 'floating' : (a.storage_system === 'Project_Backlog' ? 'dependent' : (a.storage_system === 'Someday_Maybe' ? 'someday' : 'asap')))),
+      step3_when: a.storage_system === 'Calendar' ? 'fixed' : (a.storage_system === 'Deferred' ? 'deferred' : (a.storage_system === 'Floating_Backlog' ? 'floating' : (a.storage_system === 'Project_Backlog' ? 'dependent' : (a.storage_system === 'Someday_Maybe' ? 'someday' : (a.storage_system === 'Inbox' ? 'inbox' : 'asap'))))),
       assigned_to: a.assigned_to || '',
       scheduled_datetime: a.scheduled_datetime || '', scheduled_end_datetime: a.scheduled_end_datetime || '', defer_until_date: a.defer_until_date || '', depends_on_action_id: a.depends_on_action_id || '',
       context: a.context || '@Máy_tính', time_needed_mins: a.time_needed_mins || 30, energy_level: a.energy_level || 'Medium', work_type: a.work_type || 'Defined Work'
@@ -218,7 +218,7 @@ export default function Runway() {
       <div className="glass-panel p-6 rounded-2xl flex flex-col md:flex-row justify-between md:items-center gap-4 shadow-sm relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
         <div>
-          <h2 className="text-2xl font-black text-slate-800"><i className="fa-solid fa-plane-departure text-blue-600 mr-2"></i> Runway (Trạm Điều Khiển) v1.0.4</h2>
+          <h2 className="text-2xl font-black text-slate-800"><i className="fa-solid fa-plane-departure text-blue-600 mr-2"></i> Runway (Trạm Điều Khiển) v1.0.5</h2>
           <p className="text-sm text-slate-500 mt-1 font-medium">Trung tâm phân luồng và thực thi 5 Hệ thống Lưu trữ Hành động GTD.</p>
         </div>
         <button onClick={openCreateModal} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl transition-all shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.4)] hover:-translate-y-0.5 font-bold flex items-center justify-center relative overflow-hidden group">
@@ -583,7 +583,9 @@ export default function Runway() {
                  <button type="submit" disabled={!formData.project_id} className="px-6 py-2.5 rounded-xl font-black text-white bg-rose-600 hover:bg-rose-700 shadow-[0_4px_15px_rgba(225,29,72,0.3)] transition-all flex items-center disabled:opacity-50"><i className="fa-solid fa-link mr-2"></i> Lưu vào Project Backlog</button>
               ) : formData.step3_when === 'floating' ? (
                  <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-cyan-600 hover:bg-cyan-700 shadow-[0_4px_15px_rgba(8,145,178,0.3)] transition-all flex items-center"><i className="fa-solid fa-parachute-box mr-2"></i> Lưu vào Khay Thả Nổi</button>
-              ) : formData.step3_when === 'someday' ? (
+              ) : formData.step3_when === 'inbox' ? (
+                  <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-gray-600 hover:bg-gray-700 shadow-[0_4px_15px_rgba(75,85,99,0.3)] transition-all flex items-center"><i className="fa-solid fa-inbox mr-2"></i> Lưu vào Inbox</button>
+               ) : formData.step3_when === 'someday' ? (
                  <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-purple-500 hover:bg-purple-600 shadow-[0_4px_15px_rgba(168,85,247,0.3)] transition-all flex items-center"><i className="fa-solid fa-bed mr-2"></i> Đưa vào Kho Ấp ủ</button>
               ) : (
                  <button type="button" disabled className="px-6 py-2.5 rounded-xl font-black text-white bg-slate-300 cursor-not-allowed">Hoàn thiện Phễu để Lưu</button>
@@ -636,6 +638,11 @@ function ActionCard({ action, data, onToggle, onEdit, onDelete, onPull }) {
             </span>
             
             {/* System specific badges */}
+            {action.storage_system === 'Inbox' && (
+              <span className="text-[10px] font-black uppercase tracking-widest bg-gray-100 text-gray-800 px-2 py-1 rounded-md flex items-center border border-gray-200">
+                <i className="fa-solid fa-inbox mr-1"></i> Chưa Xử Lý
+              </span>
+            )}
             {action.storage_system === 'Waiting_For' && (
               <span className="text-[10px] font-black uppercase tracking-widest bg-amber-100 text-amber-800 px-2 py-1 rounded-md flex items-center border border-amber-200">
                 <i className="fa-solid fa-user-clock mr-1"></i> Chờ: {action.assigned_to}
@@ -702,7 +709,7 @@ function ActionCard({ action, data, onToggle, onEdit, onDelete, onPull }) {
         </div>
         
         {/* Context Filters (Only for Next Actions) */}
-        {action.storage_system === 'Next_Actions' && action.context && (
+        { (action.storage_system === 'Next_Actions' || action.storage_system === 'Inbox') && action.context && (
           <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100 border-dashed">
             <span className="text-[11px] bg-white text-slate-600 px-2.5 py-1 rounded-md font-bold border border-slate-200 shadow-sm">
               <i className="fa-solid fa-location-dot mr-1.5 text-blue-400"></i>{action.context}

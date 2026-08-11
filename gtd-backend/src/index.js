@@ -410,24 +410,6 @@ app.post('/api/actions', async (c) => {
       body.depends_on_action_id || null,
       body.recurrence_rule || null,
       body.deadline_date || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.depends_on_action_id || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.defer_until_date || null,
-      body.depends_on_action_id || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.depends_on_action_id || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
       body.category || 'Strategic',
       body.context || null,
       body.time_needed_mins || null,
@@ -449,54 +431,29 @@ app.patch('/api/actions/:id', async (c) => {
   const body = await c.req.json()
   
   try {
-    await db.prepare(`
-      UPDATE Actions 
-      SET area_id = ?, project_id = ?, goal_id = ?, vision_id = ?, mission_id = ?, 
-          name = ?, storage_system = ?, assigned_to = ?, scheduled_datetime = ?, scheduled_end_datetime = ?, defer_until_date = ?, depends_on_action_id = ?, recurrence_rule = ?, deadline_date = ?, 
-          category = ?, context = ?, time_needed_mins = ?, energy_level = ?, work_type = ?, reference_link = ?, status = ?
-      WHERE action_id = ?
-    `).bind(
-      body.area_id,
-      body.project_id || null,
-      body.goal_id || null,
-      body.vision_id || null,
-      body.mission_id || null,
-      body.name,
-      body.storage_system,
-      body.assigned_to || null,
-      body.scheduled_datetime || null,
-      body.scheduled_end_datetime || null,
-      body.defer_until_date || null,
-      body.depends_on_action_id || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.depends_on_action_id || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.defer_until_date || null,
-      body.depends_on_action_id || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.depends_on_action_id || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.recurrence_rule || null,
-      body.deadline_date || null,
-      body.category,
-      body.context || null,
-      body.time_needed_mins || null,
-      body.energy_level || null,
-      body.work_type,
-      body.reference_link || '',
-      body.status,
-      id
-    ).run()
+    const updates = [];
+    const values = [];
+    
+    const fields = [
+      'area_id', 'project_id', 'goal_id', 'vision_id', 'mission_id',
+      'name', 'storage_system', 'assigned_to', 'scheduled_datetime', 'scheduled_end_datetime',
+      'defer_until_date', 'depends_on_action_id', 'recurrence_rule', 'deadline_date',
+      'category', 'context', 'time_needed_mins', 'energy_level', 'work_type', 'reference_link', 'status'
+    ];
+    
+    for (const field of fields) {
+      if (body[field] !== undefined) {
+        updates.push(`${field} = ?`);
+        // Convert empty string to null to avoid SQLite FOREIGN KEY and type constraint errors
+        values.push(body[field] === '' ? null : body[field]);
+      }
+    }
+    
+    if (updates.length > 0) {
+      values.push(id);
+      const sql = `UPDATE Actions SET ${updates.join(', ')} WHERE action_id = ?`;
+      await db.prepare(sql).bind(...values).run();
+    }
     
     return c.json({ success: true })
   } catch (e) {
