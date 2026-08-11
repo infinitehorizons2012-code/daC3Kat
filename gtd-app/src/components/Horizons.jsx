@@ -360,7 +360,7 @@ export default function Horizons() {
                                     {goal.statement}
                                   </h3>
                                   {/* Milestone display removed */}
-                                  {goal.status === 'Active' && projects.filter(p => p.goal_id === goal.goal_id).length === 0 && (
+                                  {goal.status === 'Active' && projects.filter(p => p.goal_ids && p.goal_ids.includes(goal.goal_id)).length === 0 && (
                                     <p className="text-xs text-orange-600 mt-2 font-medium bg-orange-50 inline-block px-2 py-1 rounded">
                                       <i className="fa-solid fa-triangle-exclamation mr-1"></i> Cần tạo dự án cho mục tiêu này
                                     </p>
@@ -408,7 +408,7 @@ export default function Horizons() {
                           {goal.statement}
                         </h3>
                         {/* Milestone display removed */}
-                        {goal.status === 'Active' && projects.filter(p => p.goal_id === goal.goal_id).length === 0 && (
+                        {goal.status === 'Active' && projects.filter(p => p.goal_ids && p.goal_ids.includes(goal.goal_id)).length === 0 && (
                           <p className="text-xs text-orange-600 mt-2 font-medium bg-orange-50 inline-block px-2 py-1 rounded">
                             <i className="fa-solid fa-triangle-exclamation mr-1"></i> Cần tạo dự án cho mục tiêu này
                           </p>
@@ -446,7 +446,7 @@ export default function Horizons() {
                           {goal.statement}
                         </h3>
                         {/* Milestone display removed */}
-                        {goal.status === 'Active' && projects.filter(p => p.goal_id === goal.goal_id).length === 0 && (
+                        {goal.status === 'Active' && projects.filter(p => p.goal_ids && p.goal_ids.includes(goal.goal_id)).length === 0 && (
                           <p className="text-xs text-orange-600 mt-2 font-medium bg-orange-50 inline-block px-2 py-1 rounded">
                             <i className="fa-solid fa-triangle-exclamation mr-1"></i> Cần tạo dự án cho mục tiêu này
                           </p>
