@@ -130,12 +130,12 @@ function ProjectDetailModal({ project, data, onClose, onRefresh }) {
 
               <div>
                 <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1"><i className="fa-solid fa-rotate mr-1"></i> Lặp lại định kỳ</label>
-                <select value={newAction.recurrence_rule} onChange={e => setNewAction({...newAction, recurrence_rule: e.target.value})} className="w-full p-3 rounded-xl border border-slate-300 text-sm outline-none focus:border-indigo-500">
-                  <option value="">Không lặp lại</option>
-                  <option value="Daily">Hàng ngày</option>
-                  <option value="Weekly">Hàng tuần</option>
-                  <option value="Monthly">Hàng tháng</option>
-                </select>
+                <input type="text" list="recurrence_options" value={newAction.recurrence_rule} onChange={e => setNewAction({...newAction, recurrence_rule: e.target.value})} className="w-full p-3 rounded-xl border border-slate-300 text-sm outline-none focus:border-indigo-500" placeholder="VD: Hàng ngày, Thứ 2 & Thứ 5 hàng tuần..." />
+                <datalist id="recurrence_options">
+                  <option value="Hàng ngày" />
+                  <option value="Hàng tuần" />
+                  <option value="Hàng tháng" />
+                </datalist>
               </div>
 
               <div>
