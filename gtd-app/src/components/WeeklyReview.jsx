@@ -2,6 +2,17 @@ import React, { useState, useEffect } from 'react';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
+
+const getWeekString = (offsetWeeks = 0) => {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetWeeks * 7);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
+  const week1 = new Date(d.getFullYear(), 0, 4);
+  const week = 1 + Math.round(((d.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+  return `${d.getFullYear()}-W${week.toString().padStart(2, '0')}`;
+};
+
 export default function WeeklyReview() {
   const [data, setData] = useState({ actions: [], projects: [], areas: [] });
   const [loading, setLoading] = useState(true);
@@ -10,10 +21,15 @@ export default function WeeklyReview() {
   const [newActionName, setNewActionName] = useState('');
   const [weeklyCapacityHrs, setWeeklyCapacityHrs] = useState(40);
 
+  const [capacities, setCapacities] = useState({});
+  const [isCapacityModalOpen, setIsCapacityModalOpen] = useState(false);
+  const currentWeek = getWeekString(0);
+
+
   const fetchData = async () => {
     try {
       const [actionsRes, horizonsRes, areasRes] = await Promise.all([
-        fetch(`${API_URL}/actions`), fetch(`${API_URL}/horizons`), fetch(`${API_URL}/areas`)
+        fetch(`${API_URL}/actions`), fetch(`${API_URL}/horizons`), fetch(`${API_URL}/areas`), fetch(`${API_URL}/weekly-capacities`)
       ]);
       const acData = await actionsRes.json();
       const hData = await horizonsRes.json();
@@ -154,8 +170,10 @@ export default function WeeklyReview() {
           <div className="p-4 bg-slate-800 text-white flex justify-between items-center">
             <h3 className="font-black uppercase tracking-widest text-xs"><i className="fa-solid fa-battery-three-quarters text-green-400 mr-2"></i> Dạ Dày Tuần Này (Core 168h)</h3>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Sức chứa (Giờ):</span>
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest bg-slate-700 px-2 py-1 rounded">{currentWeek}</span>
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-2">Sức chứa (Giờ):</span>
               <input type="number" min="1" max="168" value={weeklyCapacityHrs} onChange={e => setWeeklyCapacityHrs(Number(e.target.value) || 1)} className="w-16 bg-slate-700 text-white border border-slate-600 rounded text-center text-xs font-bold p-1 outline-none focus:border-green-400" />
+              <button onClick={() => setIsCapacityModalOpen(true)} className="w-7 h-7 bg-indigo-600 hover:bg-indigo-500 rounded text-white flex items-center justify-center transition-colors ml-1"><i className="fa-solid fa-calendar-week"></i></button>
             </div>
           </div>
           
@@ -210,6 +228,88 @@ export default function WeeklyReview() {
           </div>
         </div>
       </div>
+
+      <WeeklyCapacityModal 
+        isOpen={isCapacityModalOpen} 
+        onClose={() => setIsCapacityModalOpen(false)} 
+        capacities={capacities} 
+        onRefresh={fetchData} 
+      />
+
+    </div>
+  );
+}
+
+
+
+function WeeklyCapacityModal({ isOpen, onClose, capacities, onRefresh }) {
+  const [localCaps, setLocalCaps] = useState({});
+  const [saving, setSaving] = useState(false);
+  
+  useEffect(() => {
+    if (isOpen) setLocalCaps({...capacities});
+  }, [isOpen, capacities]);
+
+  if (!isOpen) return null;
+
+  const weeks = Array.from({length: 5}).map((_, i) => getWeekString(i));
+
+  const handleSave = async () => {
+    setSaving(true);
+    const payload = Object.keys(localCaps).map(w => ({ week_id: w, capacity_hrs: localCaps[w] }));
+    try {
+      await fetch(`https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api/weekly-capacities`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      onRefresh();
+      onClose();
+    } catch (e) { console.error(e); }
+    setSaving(false);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-slate-900/60 z-[200] flex justify-center items-center backdrop-blur-sm animate-fade-in">
+      <div className="bg-white p-6 rounded-2xl w-full max-w-sm shadow-2xl animate-slide-up">
+        <h3 className="text-lg font-black text-slate-800 mb-1"><i className="fa-solid fa-calendar-week text-indigo-500 mr-2"></i> Lập kế hoạch Dạ dày</h3>
+        <p className="text-xs text-slate-500 mb-5">Thiết lập số giờ muốn làm việc cho các tuần tới.</p>
+        
+        <div className="space-y-3 mb-6">
+          {weeks.map((week, idx) => (
+            <div key={week} className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div>
+                <div className="font-bold text-slate-700 text-sm">{week}</div>
+                <div className="text-[10px] font-bold text-slate-400 uppercase">{idx === 0 ? 'Tuần này' : `Sau ${idx} tuần`}</div>
+              </div>
+              <div className="flex items-center gap-2">
+                <input 
+                  type="number" min="1" max="168"
+                  value={localCaps[week] || 40}
+                  onChange={(e) => setLocalCaps({...localCaps, [week]: Number(e.target.value) || 0})}
+                  className="w-16 bg-white border border-slate-300 rounded-lg text-center font-bold p-1.5 outline-none focus:border-indigo-500 text-sm"
+                />
+                <span className="text-xs font-bold text-slate-400">giờ</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="flex gap-3">
+          <button onClick={onClose} className="flex-1 py-2.5 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">Hủy</button>
+          <button onClick={handleSave} disabled={saving} className="flex-1 py-2.5 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-md">
+            {saving ? <i className="fa-solid fa-spinner fa-spin"></i> : 'Lưu cài đặt'}
+          </button>
+        </div>
+      </div>
+
+      <WeeklyCapacityModal 
+        isOpen={isCapacityModalOpen} 
+        onClose={() => setIsCapacityModalOpen(false)} 
+        capacities={capacities} 
+        onRefresh={fetchData} 
+      />
+
     </div>
   );
 }
