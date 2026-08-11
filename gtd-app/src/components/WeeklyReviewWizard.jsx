@@ -104,7 +104,7 @@ export default function WeeklyReviewWizard({ onExit }) {
     stepTitle = "Dọn sạch Inbox & Nháp (In-tray Zero)";
     stepDesc = "Phân loại mọi ý tưởng, ghi chú thả nổi sinh ra trong tuần qua.";
     icon = "fa-inbox text-indigo-500";
-    const inbox = actions.filter(a => a.storage_system === 'Floating_Backlog' && a.status !== 'Done' && a.status !== 'Cancelled');
+    const inbox = actions.filter(a => (a.storage_system === 'Inbox' || a.storage_system === 'Floating_Backlog') && a.status !== 'Done' && a.status !== 'Cancelled');
     stepContent = (
       <div className="space-y-3">
         {inbox.length === 0 ? <p className="text-center text-slate-400 py-10">Inbox đã sạch sẽ! ✨</p> : null}

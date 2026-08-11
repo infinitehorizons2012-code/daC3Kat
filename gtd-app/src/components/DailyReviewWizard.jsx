@@ -61,7 +61,7 @@ export default function DailyReviewWizard({ onExit }) {
     stepDesc = "Chuyển các ý tưởng thả nổi thành Hành động cụ thể hoặc cất đi.";
     icon = "fa-inbox text-emerald-500";
     
-    const inbox = actions.filter(a => a.storage_system === 'Floating_Backlog' && a.status !== 'Done' && a.status !== 'Cancelled');
+    const inbox = actions.filter(a => (a.storage_system === 'Inbox' || a.storage_system === 'Floating_Backlog') && a.status !== 'Done' && a.status !== 'Cancelled');
     
     stepContent = (
       <div className="space-y-3">
