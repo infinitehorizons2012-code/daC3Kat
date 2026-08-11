@@ -63,7 +63,7 @@ export default function WeeklyReviewWizard({ onExit }) {
   if (loading) return <div className="text-center py-20"><i className="fa-solid fa-spinner fa-spin text-3xl text-slate-300"></i></div>;
 
   const handleNext = () => {
-    if (step < 6) setStep(step + 1);
+    if (step < 7) setStep(step + 1);
     else onExit();
   };
 
@@ -73,7 +73,7 @@ export default function WeeklyReviewWizard({ onExit }) {
   };
 
   // If step 6, just render the WeeklyReview component (Khóa 168h)
-  if (step === 6) {
+  if (step === 7) {
     return (
       <div className="animate-fade-in relative">
         <div className="flex items-center gap-4 mb-4">
@@ -81,9 +81,9 @@ export default function WeeklyReviewWizard({ onExit }) {
             <i className="fa-solid fa-arrow-left"></i>
           </button>
           <div className="flex-1 flex justify-between items-center glass-panel rounded-2xl p-2 px-6">
-            <div className="text-sm font-black text-slate-400 uppercase tracking-widest">Weekly Review - Bước 6: Khóa 168h</div>
+            <div className="text-sm font-black text-slate-400 uppercase tracking-widest">Weekly Review - Bước 7: Khóa 168h</div>
             <div className="flex gap-2">
-              {[1,2,3,4,5,6].map(s => (
+              {[1,2,3,4,5,6,7].map(s => (
                 <div key={s} className={`w-6 h-2 rounded-full transition-all ${s === step ? 'bg-indigo-500' : s < step ? 'bg-indigo-200' : 'bg-slate-200'}`}></div>
               ))}
             </div>
@@ -161,7 +161,7 @@ export default function WeeklyReviewWizard({ onExit }) {
       </div>
     );
   }
-  else if (step === 4) {
+  else if (step === 6) {
     stepTitle = "Rà soát Dự án (10k ft)";
     stepDesc = "Dự án nào đang bị ĐÓNG BĂNG? Mọi dự án Active đều phải có ít nhất 1 Next Action!";
     icon = "fa-layer-group text-orange-500";
@@ -196,7 +196,7 @@ export default function WeeklyReviewWizard({ onExit }) {
       </div>
     );
   }
-  else if (step === 5) {
+  else if (step === 6) {
     stepTitle = "Kiểm tra van kích hoạt Mục tiêu (30k, 40k, 50k)";
     stepDesc = "Nhìn lại Sứ mệnh và xem có Mục tiêu nào đang Pended muốn kích hoạt (Active) không?";
     icon = "fa-tree text-emerald-500";
@@ -235,7 +235,7 @@ export default function WeeklyReviewWizard({ onExit }) {
         <div className="flex-1 flex justify-between items-center glass-panel rounded-2xl p-2 px-6">
           <div className="text-sm font-black text-slate-400 uppercase tracking-widest">Weekly Review</div>
           <div className="flex gap-2">
-            {[1,2,3,4,5,6].map(s => (
+            {[1,2,3,4,5,6,7].map(s => (
               <div key={s} className={`w-6 h-2 rounded-full transition-all ${s === step ? 'bg-indigo-500' : s < step ? 'bg-indigo-200' : 'bg-slate-200'}`}></div>
             ))}
           </div>
