@@ -416,9 +416,9 @@ app.post('/api/actions', async (c) => {
       INSERT INTO Actions (
         action_id, area_id, project_id, goal_id, vision_id, mission_id, 
         name, storage_system, assigned_to, scheduled_datetime, scheduled_end_datetime, defer_until_date, depends_on_action_id, recurrence_rule, deadline_date, 
-        category, context, time_needed_mins, energy_level, work_type, reference_link, status, is_big_rock
+        category, context, time_needed_mins, energy_level, work_type, reference_link, status, is_big_rock, notes
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       id,
       areaId,
@@ -442,7 +442,8 @@ app.post('/api/actions', async (c) => {
       body.work_type || 'Defined Work',
       body.reference_link || '',
       body.status || 'Pending',
-      body.is_big_rock ? 1 : 0
+      body.is_big_rock ? 1 : 0,
+      body.notes || null
     ).run()
     
     return c.json({ success: true, action_id: id }, 201)
@@ -464,7 +465,7 @@ app.patch('/api/actions/:id', async (c) => {
       'area_id', 'project_id', 'goal_id', 'vision_id', 'mission_id',
       'name', 'storage_system', 'assigned_to', 'scheduled_datetime', 'scheduled_end_datetime',
       'defer_until_date', 'depends_on_action_id', 'recurrence_rule', 'deadline_date',
-      'category', 'context', 'time_needed_mins', 'energy_level', 'work_type', 'reference_link', 'status', 'is_big_rock'
+      'category', 'context', 'time_needed_mins', 'energy_level', 'work_type', 'reference_link', 'status', 'is_big_rock', 'notes'
     ];
     
     for (const field of fields) {

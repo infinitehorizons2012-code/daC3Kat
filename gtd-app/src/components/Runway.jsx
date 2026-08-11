@@ -22,7 +22,7 @@ export default function Runway() {
     step3_when: null, // 'fixed' / 'asap' / 'someday'
     // Specific fields
     assigned_to: '',
-    scheduled_datetime: '', scheduled_end_datetime: '', defer_until_date: '', depends_on_action_id: '',
+    scheduled_datetime: '', scheduled_end_datetime: '', notes: '', defer_until_date: '', depends_on_action_id: '',
     context: '@Máy_tính', time_needed_mins: 30, energy_level: 'Medium', work_type: 'Defined Work'
   };
   const [formData, setFormData] = useState(initialFormData);
@@ -109,12 +109,14 @@ export default function Runway() {
       status,
       // Clear irrelevant fields based on system
       assigned_to: storage_system === 'Waiting_For' ? formData.assigned_to : null,
-      scheduled_datetime: storage_system === 'Calendar' ? formData.scheduled_datetime : null,
+      scheduled_datetime: formData.scheduled_datetime || null,
+        scheduled_end_datetime: formData.scheduled_end_datetime || null,
       scheduled_end_datetime: storage_system === 'Calendar' ? formData.scheduled_end_datetime : null,
       defer_until_date: storage_system === 'Deferred' ? formData.defer_until_date : null,
       depends_on_action_id: storage_system === 'Project_Backlog' ? formData.depends_on_action_id : null,
       context: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog' || storage_system === 'Inbox') ? formData.context : null,
-      time_needed_mins: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog' || storage_system === 'Inbox') ? formData.time_needed_mins : null,
+      notes: formData.notes,
+        time_needed_mins: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog' || storage_system === 'Inbox') ? formData.time_needed_mins : null,
       energy_level: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog' || storage_system === 'Inbox') ? formData.energy_level : null,
       work_type: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog' || storage_system === 'Inbox') ? formData.work_type : 'Defined Work',
     };
@@ -223,7 +225,7 @@ export default function Runway() {
       step2_who: a.storage_system === 'Waiting_For' ? 'other' : 'me',
       step3_when: a.storage_system === 'Calendar' ? 'fixed' : (a.storage_system === 'Deferred' ? 'deferred' : (a.storage_system === 'Floating_Backlog' ? 'floating' : (a.storage_system === 'Project_Backlog' ? 'dependent' : (a.storage_system === 'Someday_Maybe' ? 'someday' : (a.storage_system === 'Inbox' ? 'inbox' : 'asap'))))),
       assigned_to: a.assigned_to || '',
-      scheduled_datetime: a.scheduled_datetime || '', scheduled_end_datetime: a.scheduled_end_datetime || '', defer_until_date: a.defer_until_date || '', depends_on_action_id: a.depends_on_action_id || '',
+      scheduled_datetime: a.scheduled_datetime || '', scheduled_end_datetime: a.scheduled_end_datetime || '', notes: a.notes || '', defer_until_date: a.defer_until_date || '', depends_on_action_id: a.depends_on_action_id || '',
       context: a.context || '@Máy_tính', time_needed_mins: a.time_needed_mins || 30, energy_level: a.energy_level || 'Medium', work_type: a.work_type || 'Defined Work'
     });
     setModalOpen(true);
@@ -475,6 +477,11 @@ export default function Runway() {
                   </div>
                 </div>
 
+                <div className="mb-4">
+                  <label className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Ghi chú chi tiết</label>
+                  <textarea value={formData.notes || ''} onChange={e => setFormData({...formData, notes: e.target.value})} className="w-full border-2 border-slate-200 rounded-xl p-3 outline-none focus:border-blue-500 text-sm text-slate-700 transition-colors custom-scrollbar" rows="2" placeholder="Ghi chú thêm thông tin, checklist, v.v..."></textarea>
+                </div>
+
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
                   <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3"><i className="fa-solid fa-link"></i> Liên Kết Vượt Tầng (Tùy chọn)</h4>
                   <div className="grid grid-cols-2 gap-3">
@@ -557,7 +564,7 @@ export default function Runway() {
                 {formData.step1_twomins === false && formData.step2_who === 'me' && (
                   <div className="bg-slate-100 p-5 rounded-2xl border-2 border-slate-200 transition-all animate-fade-in-up">
                     <h4 className="font-black text-slate-700 mb-3 text-sm"><span className="bg-slate-800 text-white w-6 h-6 inline-flex justify-center items-center rounded-full mr-2 text-xs">3</span> Quyết định: Khi nào làm?</h4>
-                    <div className="grid grid-cols-6 gap-2 mb-3">
+                    <div className="grid grid-cols-7 gap-2 mb-3">
                       <button type="button" onClick={() => setFormData({...formData, step3_when: 'fixed'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'fixed' ? 'bg-emerald-100 border-emerald-500 text-emerald-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-emerald-300 hover:text-emerald-600'}`}>
                         <i className="fa-regular fa-calendar-check text-lg mb-1 block"></i> Lịch Hẹn
                       </button>
@@ -576,20 +583,23 @@ export default function Runway() {
                       <button type="button" onClick={() => setFormData({...formData, step3_when: 'someday'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'someday' ? 'bg-purple-100 border-purple-500 text-purple-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-purple-300 hover:text-purple-600'}`}>
                         <i className="fa-solid fa-cloud-moon text-lg mb-1 block"></i> Ấp ủ
                       </button>
+                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'inbox'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'inbox' ? 'bg-gray-200 border-gray-600 text-gray-800 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-gray-400 hover:text-gray-700'}`}>
+                        <i className="fa-solid fa-inbox text-lg mb-1 block"></i> Inbox
+                      </button>
                     </div>
 
-                    {/* Sub-form for Calendar */}
-                    {formData.step3_when === 'fixed' && (
-                      <div className="animate-fade-in-up p-4 bg-emerald-50 rounded-xl border border-emerald-200 flex flex-col gap-3">
-                        <label className="block text-xs font-bold text-emerald-800 uppercase tracking-widest"><i className="fa-regular fa-calendar-check"></i> Khung Giờ Diễn Ra</label>
+                    {/* Khung Giờ Diễn Ra - Hiện cho mọi trạng thái (trừ Inbox) */}
+                    {formData.step3_when !== 'inbox' && (
+                      <div className="animate-fade-in-up p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col gap-3 mt-3">
+                        <label className="block text-xs font-bold text-slate-800 uppercase tracking-widest"><i className="fa-regular fa-calendar-check"></i> Khung Giờ Diễn Ra <span className="text-[10px] font-normal lowercase text-slate-500 ml-2">(Bắt buộc nếu là Lịch Hẹn)</span></label>
                         <div className="grid grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-[10px] font-bold text-emerald-700 mb-1">Bắt đầu</label>
-                            <input type="datetime-local" required value={formData.scheduled_datetime} onChange={e => setFormData({...formData, scheduled_datetime: e.target.value})} className="w-full p-2 rounded-lg border border-emerald-300 outline-none focus:border-emerald-500 text-sm font-medium" />
+                            <label className="block text-[10px] font-bold text-slate-700 mb-1">Bắt đầu</label>
+                            <input type="datetime-local" required={formData.step3_when === 'fixed'} value={formData.scheduled_datetime} onChange={e => setFormData({...formData, scheduled_datetime: e.target.value})} className="w-full p-2 rounded-lg border border-slate-300 outline-none focus:border-blue-500 text-sm font-medium" />
                           </div>
                           <div>
-                            <label className="block text-[10px] font-bold text-emerald-700 mb-1">Kết thúc</label>
-                            <input type="datetime-local" required value={formData.scheduled_end_datetime} onChange={e => setFormData({...formData, scheduled_end_datetime: e.target.value})} className="w-full p-2 rounded-lg border border-emerald-300 outline-none focus:border-emerald-500 text-sm font-medium" />
+                            <label className="block text-[10px] font-bold text-slate-700 mb-1">Kết thúc</label>
+                            <input type="datetime-local" required={formData.step3_when === 'fixed'} value={formData.scheduled_end_datetime} onChange={e => setFormData({...formData, scheduled_end_datetime: e.target.value})} className="w-full p-2 rounded-lg border border-slate-300 outline-none focus:border-blue-500 text-sm font-medium" />
                           </div>
                         </div>
                       </div>
