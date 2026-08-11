@@ -2,7 +2,24 @@ import React, { useState } from 'react';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
-export default function ProjectDetailModal({ project, data, onClose, onRefresh }) {
+export default function ProjectDetailModalWrapper(props) {
+  try {
+    return <ProjectDetailModal {...props} />;
+  } catch (err) {
+    console.error("ProjectDetailModal CRASH:", err);
+    return (
+      <div className="fixed inset-0 bg-slate-900/60 z-[100] flex justify-center items-center">
+        <div className="bg-white p-10 rounded-xl text-center">
+          <h2 className="text-red-500 font-bold text-2xl mb-4">Lỗi giao diện!</h2>
+          <p className="text-slate-600 mb-4">{err.toString()}</p>
+          <button onClick={props.onClose} className="bg-slate-200 px-4 py-2 rounded">Đóng</button>
+        </div>
+      </div>
+    );
+  }
+}
+
+function ProjectDetailModal({ project, data, onClose, onRefresh }) {
   const [activeTab, setActiveTab] = useState('backlog');
   const [newAction, setNewAction] = useState({
     name: '',
@@ -11,10 +28,10 @@ export default function ProjectDetailModal({ project, data, onClose, onRefresh }
     depends_on_action_id: ''
   });
 
-  const projectActions = data.actions.filter(a => a.project_id === project.project_id);
-  const backlogActions = projectActions.filter(a => a.status !== 'Done' && a.storage_system === 'Project_Backlog');
-  const activeActions = projectActions.filter(a => a.status !== 'Done' && (a.storage_system === 'Next_Actions' || a.storage_system === 'Calendar' || a.storage_system === 'Floating_Backlog'));
-  const doneActions = projectActions.filter(a => a.status === 'Done');
+  const projectActions = (data?.actions || []).filter(a => a.project_id === project.project_id);
+  const backlogActions = (projectActions || []).filter(a => a.status !== 'Done' && a.storage_system === 'Project_Backlog');
+  const activeActions = (projectActions || []).filter(a => a.status !== 'Done' && (a.storage_system === 'Next_Actions' || a.storage_system === 'Calendar' || a.storage_system === 'Floating_Backlog'));
+  const doneActions = (projectActions || []).filter(a => a.status === 'Done');
 
   const handleAddAction = async (e) => {
     e.preventDefault();
@@ -87,7 +104,7 @@ export default function ProjectDetailModal({ project, data, onClose, onRefresh }
             </div>
             <h2 className="text-2xl sm:text-3xl font-black">{project.name}</h2>
             <p className="text-sm text-slate-400 mt-1">
-              <i className="fa-solid fa-map-location-dot mr-1"></i> {data.areas.find(a => a.area_id === project.area_id)?.name}
+              <i className="fa-solid fa-map-location-dot mr-1"></i> {(data?.areas || []).find(a => a.area_id === project.area_id)?.name}
             </p>
           </div>
           <button onClick={onClose} className="w-10 h-10 rounded-full bg-slate-700 text-slate-300 hover:bg-rose-500 hover:text-white transition-colors flex items-center justify-center">
@@ -196,7 +213,7 @@ function ActionItem({ action, data, onToggle, onDelete }) {
           )}
           {action.depends_on_action_id && (
             <span className="text-[10px] font-black uppercase tracking-widest bg-rose-50 text-rose-700 px-2 py-1 rounded border border-rose-200 flex items-center truncate max-w-[200px]">
-              <i className="fa-solid fa-link mr-1"></i> Chờ: {data.actions.find(a => a.action_id === action.depends_on_action_id)?.name || 'Việc đã xóa'}
+              <i className="fa-solid fa-link mr-1"></i> Chờ: {(data?.actions || []).find(a => a.action_id === action.depends_on_action_id)?.name || 'Việc đã xóa'}
             </span>
           )}
         </div>

@@ -379,7 +379,7 @@ function ProjectCard({ project, onEdit, onDelete, onMoveLeft, onMoveRight, area,
           {project.category}
         </p>
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button onClick={onOpenDetail} className="text-xs text-slate-400 hover:text-indigo-600 px-1" title="Mở Hồ Sơ Dự Án"><i className="fa-solid fa-folder-open"></i></button>
+          <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); console.log('Opening Detail Modal', project); onOpenDetail(); }} className="text-xs text-slate-400 hover:text-indigo-600 px-1 bg-indigo-50 border border-indigo-100 rounded-md py-1" title="Mở Hồ Sơ Dự Án"><i className="fa-solid fa-folder-open text-indigo-500"></i> Mở Hồ Sơ</button>
           <button onClick={onEdit} className="text-xs text-slate-400 hover:text-blue-600 px-1" title="Sửa tên Dự Án"><i className="fa-solid fa-pen"></i></button>
           <button onClick={onDelete} className="text-xs text-slate-400 hover:text-red-600 px-1" title="Xóa Dự Án"><i className="fa-solid fa-trash"></i></button>
         </div>
