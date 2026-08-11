@@ -19,7 +19,7 @@ export default function Runway() {
     step3_when: null, // 'fixed' / 'asap' / 'someday'
     // Specific fields
     assigned_to: '',
-    scheduled_datetime: '',
+    scheduled_datetime: '', scheduled_end_datetime: '',
     context: '@Máy_tính', time_needed_mins: 30, energy_level: 'Medium', work_type: 'Defined Work'
   };
   const [formData, setFormData] = useState(initialFormData);
@@ -68,6 +68,33 @@ export default function Runway() {
       }
     }
 
+        if (storage_system === 'Calendar') {
+      if (!formData.scheduled_datetime || !formData.scheduled_end_datetime) {
+        return alert("Vui lòng chọn Giờ Bắt đầu và Giờ Kết thúc cho Lịch Hẹn!");
+      }
+      const newStart = new Date(formData.scheduled_datetime);
+      const newEnd = new Date(formData.scheduled_end_datetime);
+      if (newEnd <= newStart) {
+        return alert("Giờ kết thúc phải lớn hơn Giờ bắt đầu!");
+      }
+      
+      // Conflict check
+      const conflicts = data.actions.filter(a => 
+        a.storage_system === 'Calendar' && 
+        a.status !== 'Done' && 
+        a.action_id !== editId &&
+        new Date(a.scheduled_datetime) < newEnd &&
+        new Date(a.scheduled_end_datetime) > newStart
+      );
+      
+      if (conflicts.length > 0) {
+        const conflictNames = conflicts.map(c => `• ${c.name}`).join('\n');
+        if (!window.confirm(`⚠️ Cảnh báo Trùng Lịch!\nThời gian bạn chọn bị trùng với:\n${conflictNames}\n\nBạn có chắc chắn muốn chèn lịch không?`)) {
+          return; // User cancelled
+        }
+      }
+    }
+
     const payload = {
       ...formData,
       storage_system,
@@ -75,6 +102,7 @@ export default function Runway() {
       // Clear irrelevant fields based on system
       assigned_to: storage_system === 'Waiting_For' ? formData.assigned_to : null,
       scheduled_datetime: storage_system === 'Calendar' ? formData.scheduled_datetime : null,
+      scheduled_end_datetime: storage_system === 'Calendar' ? formData.scheduled_end_datetime : null,
       context: storage_system === 'Next_Actions' ? formData.context : null,
       time_needed_mins: storage_system === 'Next_Actions' ? formData.time_needed_mins : null,
       energy_level: storage_system === 'Next_Actions' ? formData.energy_level : null,
@@ -100,6 +128,7 @@ export default function Runway() {
         body: JSON.stringify(payload)
       });
       setModalOpen(false); setEditId(null);
+      setActiveTab(storage_system);
       fetchData();
     } catch (e) {
       console.error(e);
@@ -109,11 +138,13 @@ export default function Runway() {
   const handleToggleStatus = async (action) => {
     const newStatus = action.status === 'Done' ? 'Pending' : 'Done';
     try {
-      await fetch(`${API_URL}/actions/${action.action_id}`, {
-        method: 'PATCH',
+      await fetch(`${API_URL}${endpoint}`, {
+        method: method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...action, status: newStatus })
+        body: JSON.stringify(payload)
       });
+      setModalOpen(false); setEditId(null);
+      setActiveTab(storage_system);
       fetchData();
     } catch (e) {
       console.error(e);
@@ -123,7 +154,13 @@ export default function Runway() {
   const handleDelete = async (id) => {
     if (!window.confirm("Xóa hành động này?")) return;
     try {
-      await fetch(`${API_URL}/actions/${id}`, { method: 'DELETE' });
+      await fetch(`${API_URL}${endpoint}`, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      setModalOpen(false); setEditId(null);
+      setActiveTab(storage_system);
       fetchData();
     } catch (e) { console.error(e); }
   };
@@ -145,7 +182,7 @@ export default function Runway() {
       step2_who: a.storage_system === 'Waiting_For' ? 'other' : 'me',
       step3_when: a.storage_system === 'Calendar' ? 'fixed' : (a.storage_system === 'Someday_Maybe' ? 'someday' : 'asap'),
       assigned_to: a.assigned_to || '',
-      scheduled_datetime: a.scheduled_datetime || '',
+      scheduled_datetime: a.scheduled_datetime || '', scheduled_end_datetime: a.scheduled_end_datetime || '',
       context: a.context || '@Máy_tính', time_needed_mins: a.time_needed_mins || 30, energy_level: a.energy_level || 'Medium', work_type: a.work_type || 'Defined Work'
     });
     setModalOpen(true);
@@ -418,9 +455,18 @@ export default function Runway() {
 
                     {/* Sub-form for Calendar */}
                     {formData.step3_when === 'fixed' && (
-                      <div className="animate-fade-in-up p-4 bg-emerald-50 rounded-xl border border-emerald-200 flex flex-col gap-2">
-                        <label className="block text-xs font-bold text-emerald-800">Thời gian diễn ra (Calendar Appointment):</label>
-                        <input type="datetime-local" required value={formData.scheduled_datetime} onChange={e => setFormData({...formData, scheduled_datetime: e.target.value})} className="w-full p-2.5 rounded-lg border border-emerald-300 outline-none focus:border-emerald-500 text-sm font-medium" />
+                      <div className="animate-fade-in-up p-4 bg-emerald-50 rounded-xl border border-emerald-200 flex flex-col gap-3">
+                        <label className="block text-xs font-bold text-emerald-800 uppercase tracking-widest"><i className="fa-regular fa-calendar-check"></i> Khung Giờ Diễn Ra</label>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[10px] font-bold text-emerald-700 mb-1">Bắt đầu</label>
+                            <input type="datetime-local" required value={formData.scheduled_datetime} onChange={e => setFormData({...formData, scheduled_datetime: e.target.value})} className="w-full p-2 rounded-lg border border-emerald-300 outline-none focus:border-emerald-500 text-sm font-medium" />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-emerald-700 mb-1">Kết thúc</label>
+                            <input type="datetime-local" required value={formData.scheduled_end_datetime} onChange={e => setFormData({...formData, scheduled_end_datetime: e.target.value})} className="w-full p-2 rounded-lg border border-emerald-300 outline-none focus:border-emerald-500 text-sm font-medium" />
+                          </div>
+                        </div>
                       </div>
                     )}
 
@@ -536,8 +582,8 @@ function ActionCard({ action, data, onToggle, onEdit, onDelete }) {
               </span>
             )}
             {action.storage_system === 'Calendar' && (
-              <span className="text-[10px] font-black uppercase tracking-widest bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md flex items-center border border-emerald-200">
-                <i className="fa-regular fa-calendar-check mr-1"></i> {new Date(action.scheduled_datetime).toLocaleString('vi-VN')}
+              <span className="text-[10px] font-black uppercase tracking-widest bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md flex items-center border border-emerald-200 shadow-sm">
+                <i className="fa-regular fa-calendar-check mr-1.5 text-emerald-600"></i> {new Date(action.scheduled_datetime).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})} - {new Date(action.scheduled_end_datetime).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})} ({new Date(action.scheduled_datetime).toLocaleDateString('vi-VN')})
               </span>
             )}
             
