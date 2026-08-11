@@ -4,6 +4,7 @@ import Kanban from './components/Kanban';
 import Horizons from './components/Horizons';
 import Review from './components/Review';
 import WeeklyReview from './components/WeeklyReview';
+import ReviewHub from './components/ReviewHub';
 import Areas from './components/Areas';
 
 const tabs = {
@@ -11,8 +12,7 @@ const tabs = {
   areas: { label: 'Khu vực (20,000 ft)', icon: 'fa-solid fa-map-location-dot', color: 'text-teal-600', bg: 'bg-teal-100' },
   kanban: { label: 'Kanban Dự án', icon: 'fa-solid fa-layer-group', color: 'text-purple-600', bg: 'bg-purple-100' },
   horizons: { label: 'Cây Horizons', icon: 'fa-solid fa-tree', color: 'text-emerald-600', bg: 'bg-emerald-100' },
-  review: { label: 'Review', icon: 'fa-solid fa-chart-pie', color: 'text-orange-600', bg: 'bg-orange-100' },
-  weekly_review: { label: 'Kế Hoạch Tuần', icon: 'fa-solid fa-scale-balanced', color: 'text-indigo-600', bg: 'bg-indigo-100' },
+  reviews: { label: 'Trạm Kiểm Duyệt', icon: 'fa-solid fa-satellite-dish', color: 'text-indigo-600', bg: 'bg-indigo-100' },
 };
 
 function App() {
@@ -89,8 +89,7 @@ function App() {
           {activeTab === 'areas' && <Areas />}
           {activeTab === 'kanban' && <Kanban />}
           {activeTab === 'horizons' && <Horizons />}
-          {activeTab === 'review' && <Review />}
-          {activeTab === 'weekly_review' && <WeeklyReview />}
+          {activeTab === 'reviews' && <ReviewHub />}
         </div>
 
       </div>

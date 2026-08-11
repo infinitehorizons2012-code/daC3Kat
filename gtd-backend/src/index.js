@@ -5,6 +5,31 @@ const app = new Hono()
 
 app.use('*', cors())
 
+// --- AUTO MIGRATIONS ---
+app.use('*', async (c, next) => {
+  // We run migrations lazily on first request. In production, this should be a scheduled task or deploy script.
+  if (!global.migrationsRun) {
+    try {
+      await c.env.DB.prepare(`
+        CREATE TABLE IF NOT EXISTS WeeklyCapacities (
+            week_id TEXT PRIMARY KEY,
+            capacity_hrs INTEGER NOT NULL,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      `).run();
+    } catch (e) { console.error("Migration 1 error", e); }
+    
+    try {
+      await c.env.DB.prepare(`ALTER TABLE Actions ADD COLUMN is_big_rock BOOLEAN DEFAULT 0;`).run();
+    } catch (e) { 
+      // Column might already exist
+    }
+    global.migrationsRun = true;
+  }
+  await next();
+});
+
+
 // --- ACTIONS API ---
 
 // Lấy danh sách hành động tiếp theo dựa trên bộ lọc
@@ -391,9 +416,9 @@ app.post('/api/actions', async (c) => {
       INSERT INTO Actions (
         action_id, area_id, project_id, goal_id, vision_id, mission_id, 
         name, storage_system, assigned_to, scheduled_datetime, scheduled_end_datetime, defer_until_date, depends_on_action_id, recurrence_rule, deadline_date, 
-        category, context, time_needed_mins, energy_level, work_type, reference_link, status
+        category, context, time_needed_mins, energy_level, work_type, reference_link, status, is_big_rock
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       id,
       areaId,
@@ -416,7 +441,8 @@ app.post('/api/actions', async (c) => {
       body.energy_level || null,
       body.work_type || 'Defined Work',
       body.reference_link || '',
-      body.status || 'Pending'
+      body.status || 'Pending',
+      body.is_big_rock ? 1 : 0
     ).run()
     
     return c.json({ success: true, action_id: id }, 201)
@@ -438,7 +464,7 @@ app.patch('/api/actions/:id', async (c) => {
       'area_id', 'project_id', 'goal_id', 'vision_id', 'mission_id',
       'name', 'storage_system', 'assigned_to', 'scheduled_datetime', 'scheduled_end_datetime',
       'defer_until_date', 'depends_on_action_id', 'recurrence_rule', 'deadline_date',
-      'category', 'context', 'time_needed_mins', 'energy_level', 'work_type', 'reference_link', 'status'
+      'category', 'context', 'time_needed_mins', 'energy_level', 'work_type', 'reference_link', 'status', 'is_big_rock'
     ];
     
     for (const field of fields) {
@@ -471,5 +497,31 @@ app.delete('/api/actions/:id', async (c) => {
     return c.json({ error: e.message }, 500)
   }
 })
+
+
+// --- WEEKLY CAPACITIES API ---
+app.get('/api/weekly-capacities', async (c) => {
+  const { results } = await c.env.DB.prepare('SELECT * FROM WeeklyCapacities').all();
+  return c.json(results || []);
+});
+
+app.post('/api/weekly-capacities', async (c) => {
+  const body = await c.req.json();
+  const capacities = Array.isArray(body) ? body : [body];
+  
+  for (const cap of capacities) {
+    if (!cap.week_id || cap.capacity_hrs === undefined) continue;
+    
+    const existing = await c.env.DB.prepare('SELECT * FROM WeeklyCapacities WHERE week_id = ?').bind(cap.week_id).first();
+    if (existing) {
+      await c.env.DB.prepare('UPDATE WeeklyCapacities SET capacity_hrs = ?, updated_at = CURRENT_TIMESTAMP WHERE week_id = ?')
+        .bind(cap.capacity_hrs, cap.week_id).run();
+    } else {
+      await c.env.DB.prepare('INSERT INTO WeeklyCapacities (week_id, capacity_hrs) VALUES (?, ?)')
+        .bind(cap.week_id, cap.capacity_hrs).run();
+    }
+  }
+  return c.json({ success: true });
+});
 
 export default app
