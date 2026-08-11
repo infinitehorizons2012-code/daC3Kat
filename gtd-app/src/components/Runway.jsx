@@ -248,7 +248,7 @@ export default function Runway() {
       <div className="glass-panel p-6 rounded-2xl flex flex-col md:flex-row justify-between md:items-center gap-4 shadow-sm relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
         <div>
-          <h2 className="text-2xl font-black text-slate-800"><i className="fa-solid fa-plane-departure text-blue-600 mr-2"></i> Runway (Trạm Điều Khiển) v1.0.7</h2>
+          <h2 className="text-2xl font-black text-slate-800"><i className="fa-solid fa-plane-departure text-blue-600 mr-2"></i> Runway (Trạm Điều Khiển) v1.0.8</h2>
           <p className="text-sm text-slate-500 mt-1 font-medium">Trung tâm phân luồng và thực thi 5 Hệ thống Lưu trữ Hành động GTD.</p>
         </div>
         <button onClick={() => setShowQuickInbox(true)} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl transition-all shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.4)] hover:-translate-y-0.5 font-bold flex items-center justify-center relative overflow-hidden group">
@@ -259,6 +259,10 @@ export default function Runway() {
 
       {/* TABS NATIVE NAV */}
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <button onClick={() => setActiveTab('Inbox')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Inbox' ? 'bg-gray-800 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-gray-100 border border-slate-200'}`}>
+          <i className="fa-solid fa-inbox mr-2"></i> Inbox (Chờ xử lý)
+          <span className="ml-2 bg-gray-500/30 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Inbox' && a.status!=='Done').length}</span>
+        </button>
         <button onClick={() => setActiveTab('Next_Actions')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Next_Actions' ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-blue-50 border border-slate-200'}`}>
           <i className="fa-solid fa-list-check mr-2"></i> ⚡ Next Actions
           <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Next_Actions' && a.status!=='Done').length}</span>
