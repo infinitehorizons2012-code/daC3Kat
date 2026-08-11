@@ -267,7 +267,7 @@ export default function Runway() {
         </div>
         <button onClick={() => setShowQuickInbox(true)} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl transition-all shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.4)] hover:-translate-y-0.5 font-bold flex items-center justify-center relative overflow-hidden group">
           <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-          <i className="fa-solid fa-bolt mr-2 relative z-10"></i> <span className="relative z-10">Nhập Đột Xuất (Inbox)</span>
+          <i className="fa-solid fa-bolt mr-2 relative z-10"></i> <span className="relative z-10">Thêm Hành động</span>
         </button>
       </div>
 
