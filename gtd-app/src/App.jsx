@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import FocusMode from './components/FocusMode';
+import Runway from './components/Runway';
 import Kanban from './components/Kanban';
 import Horizons from './components/Horizons';
 import Review from './components/Review';
@@ -40,7 +40,7 @@ function App() {
 
         {/* Content Area */}
         <div className="min-h-[500px]">
-          {activeTab === 'focus' && <FocusMode />}
+          {activeTab === 'focus' && <Runway />}
           {activeTab === 'areas' && <Areas />}
           {activeTab === 'kanban' && <Kanban />}
           {activeTab === 'horizons' && <Horizons />}
