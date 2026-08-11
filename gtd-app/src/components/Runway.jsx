@@ -10,6 +10,8 @@ export default function Runway() {
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [showQuickInbox, setShowQuickInbox] = useState(false);
+  const [quickInboxName, setQuickInboxName] = useState('');
   
   const initialFormData = {
     name: '', area_id: '', project_id: '', goal_id: '', vision_id: '', mission_id: '', reference_link: '', category: 'Strategic',
@@ -173,6 +175,34 @@ export default function Runway() {
     } catch (e) { console.error(e); }
   };
 
+  
+  const handleQuickInboxSubmit = async (e) => {
+    e.preventDefault();
+    if (!quickInboxName.trim()) return;
+
+    try {
+      await fetch(`${API_URL}/actions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: quickInboxName,
+          storage_system: 'Inbox',
+          work_type: 'Unplanned Work',
+          status: 'Pending',
+          category: 'Strategic',
+          context: '',
+          time_needed_mins: null,
+          energy_level: null
+        })
+      });
+      setShowQuickInbox(false);
+      setQuickInboxName('');
+      fetchData();
+    } catch (error) {
+      console.error('Lỗi khi lưu Inbox:', error);
+    }
+  };
+
   const openCreateModal = () => {
     setEditId(null);
     setFormData({ ...initialFormData });
@@ -218,10 +248,10 @@ export default function Runway() {
       <div className="glass-panel p-6 rounded-2xl flex flex-col md:flex-row justify-between md:items-center gap-4 shadow-sm relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
         <div>
-          <h2 className="text-2xl font-black text-slate-800"><i className="fa-solid fa-plane-departure text-blue-600 mr-2"></i> Runway (Trạm Điều Khiển) v1.0.5</h2>
+          <h2 className="text-2xl font-black text-slate-800"><i className="fa-solid fa-plane-departure text-blue-600 mr-2"></i> Runway (Trạm Điều Khiển) v1.0.6</h2>
           <p className="text-sm text-slate-500 mt-1 font-medium">Trung tâm phân luồng và thực thi 5 Hệ thống Lưu trữ Hành động GTD.</p>
         </div>
-        <button onClick={openCreateModal} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl transition-all shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.4)] hover:-translate-y-0.5 font-bold flex items-center justify-center relative overflow-hidden group">
+        <button onClick={() => setShowQuickInbox(true)} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl transition-all shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.4)] hover:-translate-y-0.5 font-bold flex items-center justify-center relative overflow-hidden group">
           <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           <i className="fa-solid fa-bolt mr-2 relative z-10"></i> <span className="relative z-10">Nhập Đột Xuất (Inbox)</span>
         </button>
