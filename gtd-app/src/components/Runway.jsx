@@ -1,41 +1,43 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
 export default function Runway() {
   const [data, setData] = useState({ actions: [], areas: [], projects: [], goals: [], visions: [], missions: [] });
   const [loading, setLoading] = useState(true);
-  const [modalType, setModalType] = useState(null); // 'create', 'edit'
+  const [activeTab, setActiveTab] = useState('Next_Actions'); // Next_Actions, Calendar, Waiting_For, Someday_Maybe
+  
+  // Modal state
+  const [modalOpen, setModalOpen] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [formData, setFormData] = useState({
-    name: '', category: 'Strategic', area_id: '', project_id: '',
-    goal_id: '', vision_id: '', mission_id: '',
-    context: '@Máy_tính', time_needed_mins: 30, energy_level: 'Medium',
-    work_type: 'Defined Work', reference_link: '', status: 'Next'
-  });
+  
+  const initialFormData = {
+    name: '', area_id: '', project_id: '', goal_id: '', vision_id: '', mission_id: '', reference_link: '', category: 'Strategic',
+    // Routing flow
+    step1_twomins: null, // true/false
+    step2_who: null, // 'me' / 'other'
+    step3_when: null, // 'fixed' / 'asap' / 'someday'
+    // Specific fields
+    assigned_to: '',
+    scheduled_datetime: '',
+    context: '@Máy_tính', time_needed_mins: 30, energy_level: 'Medium', work_type: 'Defined Work'
+  };
+  const [formData, setFormData] = useState(initialFormData);
 
-  // Filters
-  const [filters, setFilters] = useState({
-    context: 'All', time: 'All', energy: 'All', work_type: 'All'
-  });
+  // Filters for Next Actions
+  const [filters, setFilters] = useState({ context: 'All', time: 'All', energy: 'All', work_type: 'All' });
 
   const fetchData = async () => {
     try {
       const [actionsRes, horizonsRes, areasRes] = await Promise.all([
-        fetch(`${API_URL}/actions`),
-        fetch(`${API_URL}/horizons`),
-        fetch(`${API_URL}/areas`)
+        fetch(`${API_URL}/actions`), fetch(`${API_URL}/horizons`), fetch(`${API_URL}/areas`)
       ]);
       const acData = await actionsRes.json();
       const hData = await horizonsRes.json();
       const arData = await areasRes.json();
       setData({ 
-        actions: acData, 
-        areas: arData, 
-        projects: hData.projects || [],
-        goals: hData.goals || [],
-        visions: hData.visions || [],
-        missions: hData.missions || []
+        actions: acData, areas: arData, projects: hData.projects || [],
+        goals: hData.goals || [], visions: hData.visions || [], missions: hData.missions || []
       });
       setLoading(false);
     } catch (e) {
@@ -50,20 +52,54 @@ export default function Runway() {
     e.preventDefault();
     if (!formData.name.trim() || !formData.area_id) return alert("Vui lòng nhập tên hành động và Khu vực!");
     
+    let storage_system = 'Next_Actions';
+    let status = 'Pending';
+    
+    if (formData.step1_twomins) {
+      storage_system = 'Do_It_Now';
+      status = 'Done';
+    } else {
+      if (formData.step2_who === 'other') {
+        storage_system = 'Waiting_For';
+      } else {
+        if (formData.step3_when === 'fixed') storage_system = 'Calendar';
+        else if (formData.step3_when === 'someday') storage_system = 'Someday_Maybe';
+        else storage_system = 'Next_Actions';
+      }
+    }
+
+    const payload = {
+      ...formData,
+      storage_system,
+      status,
+      // Clear irrelevant fields based on system
+      assigned_to: storage_system === 'Waiting_For' ? formData.assigned_to : null,
+      scheduled_datetime: storage_system === 'Calendar' ? formData.scheduled_datetime : null,
+      context: storage_system === 'Next_Actions' ? formData.context : null,
+      time_needed_mins: storage_system === 'Next_Actions' ? formData.time_needed_mins : null,
+      energy_level: storage_system === 'Next_Actions' ? formData.energy_level : null,
+      work_type: storage_system === 'Next_Actions' ? formData.work_type : 'Defined Work',
+    };
+
     let endpoint = '/actions';
     let method = 'POST';
-    if (modalType === 'edit') {
+    if (editId) {
       endpoint = `/actions/${editId}`;
       method = 'PATCH';
+      // if we are editing and user didn't change routing, preserve status unless it was Do_It_Now recalculation
+      if (!formData.step1_twomins && payload.status === 'Pending') {
+         const existingAction = data.actions.find(a => a.action_id === editId);
+         if (existingAction) payload.status = existingAction.status;
+      }
     }
 
     try {
       await fetch(`${API_URL}${endpoint}`, {
         method: method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
-      setModalType(null); setEditId(null);
+      setModalOpen(false); setEditId(null);
       fetchData();
     } catch (e) {
       console.error(e);
@@ -71,7 +107,7 @@ export default function Runway() {
   };
 
   const handleToggleStatus = async (action) => {
-    const newStatus = action.status === 'Done' ? 'Next' : 'Done';
+    const newStatus = action.status === 'Done' ? 'Pending' : 'Done';
     try {
       await fetch(`${API_URL}/actions/${action.action_id}`, {
         method: 'PATCH',
@@ -93,30 +129,34 @@ export default function Runway() {
   };
 
   const openCreateModal = () => {
-    setModalType('create');
-    setFormData({
-      name: '', category: 'Strategic', area_id: '', project_id: '',
-      goal_id: '', vision_id: '', mission_id: '',
-      context: '@Máy_tính', time_needed_mins: 30, energy_level: 'Medium',
-      work_type: 'Defined Work', reference_link: '', status: 'Next'
-    });
+    setEditId(null);
+    setFormData({ ...initialFormData });
+    setModalOpen(true);
   };
 
   const openEditModal = (a) => {
-    setModalType('edit'); setEditId(a.action_id);
+    setEditId(a.action_id);
     setFormData({
-      name: a.name, category: a.category, area_id: a.area_id || '', 
-      project_id: a.project_id || '', goal_id: a.goal_id || '', vision_id: a.vision_id || '', mission_id: a.mission_id || '',
-      context: a.context, time_needed_mins: a.time_needed_mins, energy_level: a.energy_level,
-      work_type: a.work_type, reference_link: a.reference_link || '', status: a.status
+      ...initialFormData,
+      name: a.name, area_id: a.area_id || '', project_id: a.project_id || '', 
+      goal_id: a.goal_id || '', vision_id: a.vision_id || '', mission_id: a.mission_id || '',
+      category: a.category, reference_link: a.reference_link || '',
+      step1_twomins: a.storage_system === 'Do_It_Now',
+      step2_who: a.storage_system === 'Waiting_For' ? 'other' : 'me',
+      step3_when: a.storage_system === 'Calendar' ? 'fixed' : (a.storage_system === 'Someday_Maybe' ? 'someday' : 'asap'),
+      assigned_to: a.assigned_to || '',
+      scheduled_datetime: a.scheduled_datetime || '',
+      context: a.context || '@Máy_tính', time_needed_mins: a.time_needed_mins || 30, energy_level: a.energy_level || 'Medium', work_type: a.work_type || 'Defined Work'
     });
+    setModalOpen(true);
   };
 
-  // Lọc dữ liệu
-  const unplannedActions = data.actions.filter(a => a.work_type === 'Unplanned Work' && a.status !== 'Done');
+  // Lọc dữ liệu theo Hệ thống lưu trữ
+  const tabActions = data.actions.filter(a => a.storage_system === activeTab);
   
-  const filteredActions = data.actions.filter(a => {
-    if (a.status === 'Done') return false; // Hide done tasks by default (can add a tab later if needed)
+  // Áp dụng bộ lọc cho Next Actions
+  const filteredNextActions = tabActions.filter(a => {
+    if (a.status === 'Done') return false; 
     if (filters.work_type !== 'All' && a.work_type !== filters.work_type) return false;
     if (filters.context !== 'All' && a.context !== filters.context) return false;
     if (filters.time !== 'All' && a.time_needed_mins !== parseInt(filters.time)) return false;
@@ -124,254 +164,324 @@ export default function Runway() {
     return true;
   });
 
-  // Extract unique contexts for the filter buttons
-  const uniqueContexts = [...new Set(data.actions.map(a => a.context))];
+  const unplannedActions = data.actions.filter(a => a.storage_system === 'Next_Actions' && a.work_type === 'Unplanned Work' && a.status !== 'Done');
+  const uniqueContexts = [...new Set(data.actions.filter(a => a.storage_system === 'Next_Actions').map(a => a.context))].filter(Boolean);
   const timeOptions = [5, 10, 15, 30, 45, 60, 90, 120];
 
   return (
     <div className="flex flex-col gap-6 min-h-[500px]">
-      <div className="glass-panel p-6 rounded-2xl flex justify-between items-center shadow-sm">
+      <div className="glass-panel p-6 rounded-2xl flex flex-col md:flex-row justify-between md:items-center gap-4 shadow-sm relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
         <div>
-          <h2 className="text-2xl font-bold text-blue-700"><i className="fa-solid fa-plane-departure mr-2"></i> Runway (Bảng Thực Thi)</h2>
-          <p className="text-sm text-slate-500 mt-1">Nơi mọi kế hoạch chạm đất và cất cánh thành hành động.</p>
+          <h2 className="text-2xl font-black text-slate-800"><i className="fa-solid fa-plane-departure text-blue-600 mr-2"></i> Runway (Trạm Điều Khiển)</h2>
+          <p className="text-sm text-slate-500 mt-1 font-medium">Trung tâm phân luồng và thực thi 5 Hệ thống Lưu trữ Hành động GTD.</p>
         </div>
-        <button onClick={openCreateModal} className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl transition-colors font-bold shadow-md">
-          <i className="fa-solid fa-bolt mr-2"></i> Thêm Hành động
+        <button onClick={openCreateModal} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl transition-all shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.4)] hover:-translate-y-0.5 font-bold flex items-center justify-center relative overflow-hidden group">
+          <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+          <i className="fa-solid fa-bolt mr-2 relative z-10"></i> <span className="relative z-10">Nhập Đột Xuất (Inbox)</span>
+        </button>
+      </div>
+
+      {/* TABS NATIVE NAV */}
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <button onClick={() => setActiveTab('Next_Actions')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Next_Actions' ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-blue-50 border border-slate-200'}`}>
+          <i className="fa-solid fa-list-check mr-2"></i> ⚡ Next Actions
+          <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Next_Actions' && a.status!=='Done').length}</span>
+        </button>
+        <button onClick={() => setActiveTab('Calendar')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Calendar' ? 'bg-emerald-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-emerald-50 border border-slate-200'}`}>
+          <i className="fa-regular fa-calendar mr-2"></i> 📅 Lịch Hẹn
+          <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Calendar' && a.status!=='Done').length}</span>
+        </button>
+        <button onClick={() => setActiveTab('Waiting_For')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Waiting_For' ? 'bg-amber-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-amber-50 border border-slate-200'}`}>
+          <i className="fa-solid fa-hourglass-half mr-2"></i> ⏳ Chờ Phản Hồi
+          <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Waiting_For' && a.status!=='Done').length}</span>
+        </button>
+        <button onClick={() => setActiveTab('Someday_Maybe')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Someday_Maybe' ? 'bg-purple-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-purple-50 border border-slate-200'}`}>
+          <i className="fa-solid fa-cloud-moon mr-2"></i> 💤 Someday / Maybe
         </button>
       </div>
 
       {loading ? (
-        <div className="text-center py-20 text-slate-500"><i className="fa-solid fa-spinner fa-spin text-3xl"></i></div>
+        <div className="text-center py-20 text-slate-400"><i className="fa-solid fa-spinner fa-spin text-3xl"></i></div>
       ) : (
         <div className="flex flex-col md:flex-row gap-6 items-start">
           
-          {/* Cột 1: Thuật toán lọc (Bộ lọc 3 Bước) */}
-          <div className="glass-panel w-full md:w-80 p-5 rounded-2xl flex-shrink-0 flex flex-col gap-5 sticky top-24">
-            <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2 uppercase tracking-wide text-sm">Thuật toán Lọc (3 Bước)</h3>
-            
-            {/* Bước 1 */}
-            <div>
-              <p className="text-xs font-bold text-slate-500 mb-2 uppercase">Bước 1: Loại công việc</p>
-              {unplannedActions.length > 0 && (
-                <div 
-                  className={`p-3 rounded-lg border-2 cursor-pointer transition-all mb-3 ${filters.work_type === 'Unplanned Work' ? 'bg-red-50 border-red-500 shadow-md' : 'bg-red-50/50 border-red-200 hover:border-red-400'}`}
-                  onClick={() => setFilters({...filters, work_type: filters.work_type === 'Unplanned Work' ? 'All' : 'Unplanned Work'})}
-                >
-                  <h4 className="text-red-700 font-bold text-sm flex items-center justify-between">
-                    <span><i className="fa-solid fa-triangle-exclamation mr-1.5 animate-pulse"></i> Việc Khẩn Cấp!</span>
-                    <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">{unplannedActions.length}</span>
-                  </h4>
-                  <p className="text-[11px] text-red-600 mt-1">Xử lý ngay lập tức (In-the-moment)</p>
-                </div>
-              )}
-              <div className="flex flex-col gap-2">
-                <button 
-                  onClick={() => setFilters({...filters, work_type: 'All'})}
-                  className={`text-left px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${filters.work_type === 'All' ? 'bg-slate-200 text-slate-800' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'}`}
-                >Tất cả công việc</button>
-                <button 
-                  onClick={() => setFilters({...filters, work_type: 'Defined Work'})}
-                  className={`text-left px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${filters.work_type === 'Defined Work' ? 'bg-blue-100 text-blue-800' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'}`}
-                >Việc đã lên kế hoạch (Defined)</button>
-                <button 
-                  onClick={() => setFilters({...filters, work_type: 'Defining Work'})}
-                  className={`text-left px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${filters.work_type === 'Defining Work' ? 'bg-orange-100 text-orange-800' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'}`}
-                >Dọn dẹp hệ thống (Defining)</button>
-              </div>
-            </div>
-
-            {/* Bước 2 */}
-            <div>
-              <p className="text-xs font-bold text-slate-500 mb-2 uppercase">Bước 2: Lọc Bối cảnh</p>
+          {/* CỘT LỌC (Chỉ hiện khi ở tab Next Actions) */}
+          {activeTab === 'Next_Actions' && (
+            <div className="glass-panel w-full md:w-80 p-5 rounded-2xl flex-shrink-0 flex flex-col gap-5 sticky top-24 shadow-sm border border-slate-100">
+              <h3 className="font-black text-slate-800 border-b border-slate-200 pb-2 uppercase tracking-wide text-sm flex items-center justify-between">
+                <span>Thuật toán Lọc (3 Bước)</span>
+                <i className="fa-solid fa-filter text-blue-500"></i>
+              </h3>
               
-              <div className="mb-3">
-                <label className="text-[11px] text-slate-400 block mb-1">@Context (Nơi chốn/Công cụ)</label>
-                <div className="flex flex-wrap gap-1.5">
-                  <span onClick={() => setFilters({...filters, context: 'All'})} className={`cursor-pointer px-2 py-1 rounded text-xs border ${filters.context === 'All' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}>Tất cả</span>
-                  {uniqueContexts.map(ctx => (
-                    <span key={ctx} onClick={() => setFilters({...filters, context: ctx})} className={`cursor-pointer px-2 py-1 rounded text-xs border ${filters.context === ctx ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}>{ctx}</span>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="mb-3">
-                <label className="text-[11px] text-slate-400 block mb-1">Thời gian rảnh</label>
-                <div className="flex flex-wrap gap-1.5">
-                  <span onClick={() => setFilters({...filters, time: 'All'})} className={`cursor-pointer px-2 py-1 rounded text-xs border ${filters.time === 'All' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}>Mọi mốc</span>
-                  {timeOptions.map(t => (
-                    <span key={t} onClick={() => setFilters({...filters, time: t})} className={`cursor-pointer px-2 py-1 rounded text-xs border ${filters.time === t ? 'bg-teal-600 text-white border-teal-600 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}>{t}m</span>
-                  ))}
+              <div>
+                <p className="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-wider">Bước 1: Loại công việc</p>
+                {unplannedActions.length > 0 && (
+                  <div 
+                    className={`p-3 rounded-xl border-2 cursor-pointer transition-all mb-3 ${filters.work_type === 'Unplanned Work' ? 'bg-red-50 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : 'bg-red-50/50 border-red-200 hover:border-red-400'}`}
+                    onClick={() => setFilters({...filters, work_type: filters.work_type === 'Unplanned Work' ? 'All' : 'Unplanned Work'})}
+                  >
+                    <h4 className="text-red-700 font-bold text-sm flex items-center justify-between">
+                      <span><i className="fa-solid fa-triangle-exclamation mr-1.5 animate-pulse"></i> Khẩn Cấp (Unplanned)!</span>
+                      <span className="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">{unplannedActions.length}</span>
+                    </h4>
+                  </div>
+                )}
+                <div className="flex flex-col gap-1.5">
+                  <button onClick={() => setFilters({...filters, work_type: 'All'})} className={`text-left px-3 py-2 rounded-lg text-xs font-bold transition-all border ${filters.work_type === 'All' ? 'bg-slate-800 text-white border-slate-800 shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'}`}>Tất cả công việc</button>
+                  <button onClick={() => setFilters({...filters, work_type: 'Defined Work'})} className={`text-left px-3 py-2 rounded-lg text-xs font-bold transition-all border ${filters.work_type === 'Defined Work' ? 'bg-blue-100 text-blue-800 border-blue-200 shadow-sm' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'}`}>Đã lên kế hoạch (Defined)</button>
+                  <button onClick={() => setFilters({...filters, work_type: 'Defining Work'})} className={`text-left px-3 py-2 rounded-lg text-xs font-bold transition-all border ${filters.work_type === 'Defining Work' ? 'bg-orange-100 text-orange-800 border-orange-200 shadow-sm' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'}`}>Dọn dẹp hệ thống (Defining)</button>
                 </div>
               </div>
 
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Năng lượng não bộ</label>
-                <div className="flex flex-wrap gap-1.5">
-                  <span onClick={() => setFilters({...filters, energy: 'All'})} className={`cursor-pointer px-2 py-1 rounded text-xs border ${filters.energy === 'All' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}>Tất cả</span>
-                  <span onClick={() => setFilters({...filters, energy: 'High'})} className={`cursor-pointer px-2 py-1 rounded text-xs border ${filters.energy === 'High' ? 'bg-rose-500 text-white border-rose-500' : 'bg-white text-rose-600 border-rose-200 hover:border-rose-400'}`}>High (Deep Work)</span>
-                  <span onClick={() => setFilters({...filters, energy: 'Medium'})} className={`cursor-pointer px-2 py-1 rounded text-xs border ${filters.energy === 'Medium' ? 'bg-amber-500 text-white border-amber-500' : 'bg-white text-amber-600 border-amber-200 hover:border-amber-400'}`}>Medium</span>
-                  <span onClick={() => setFilters({...filters, energy: 'Low'})} className={`cursor-pointer px-2 py-1 rounded text-xs border ${filters.energy === 'Low' ? 'bg-green-500 text-white border-green-500' : 'bg-white text-green-600 border-green-200 hover:border-green-400'}`}>Low (Routine)</span>
+                <p className="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-wider">Bước 2 & 3: Lọc Bối cảnh</p>
+                <div className="mb-3">
+                  <label className="text-[10px] text-slate-400 font-bold block mb-1">@Context (Nơi chốn)</label>
+                  <div className="flex flex-wrap gap-1.5">
+                    <span onClick={() => setFilters({...filters, context: 'All'})} className={`cursor-pointer px-2 py-1 rounded-md text-[10px] font-bold border transition-colors ${filters.context === 'All' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'}`}>Tất cả</span>
+                    {uniqueContexts.map(ctx => (
+                      <span key={ctx} onClick={() => setFilters({...filters, context: ctx})} className={`cursor-pointer px-2 py-1 rounded-md text-[10px] font-bold border transition-colors ${filters.context === ctx ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'}`}>{ctx}</span>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="mb-3">
+                  <label className="text-[10px] text-slate-400 font-bold block mb-1">Thời gian rảnh</label>
+                  <div className="flex flex-wrap gap-1.5">
+                    <span onClick={() => setFilters({...filters, time: 'All'})} className={`cursor-pointer px-2 py-1 rounded-md text-[10px] font-bold border transition-colors ${filters.time === 'All' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'}`}>Mọi mốc</span>
+                    {timeOptions.map(t => (
+                      <span key={t} onClick={() => setFilters({...filters, time: t})} className={`cursor-pointer px-2 py-1 rounded-md text-[10px] font-bold border transition-colors ${filters.time === t ? 'bg-teal-600 text-white border-teal-600 shadow-sm' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'}`}>{t}m</span>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[10px] text-slate-400 font-bold block mb-1">Năng lượng não bộ</label>
+                  <div className="flex flex-wrap gap-1.5">
+                    <span onClick={() => setFilters({...filters, energy: 'All'})} className={`cursor-pointer px-2 py-1 rounded-md text-[10px] font-bold border transition-colors ${filters.energy === 'All' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'}`}>Tất cả</span>
+                    <span onClick={() => setFilters({...filters, energy: 'High'})} className={`cursor-pointer px-2 py-1 rounded-md text-[10px] font-bold border transition-colors ${filters.energy === 'High' ? 'bg-rose-500 text-white border-rose-500' : 'bg-white text-rose-500 border-rose-200 hover:border-rose-400'}`}>High (Deep Work)</span>
+                    <span onClick={() => setFilters({...filters, energy: 'Medium'})} className={`cursor-pointer px-2 py-1 rounded-md text-[10px] font-bold border transition-colors ${filters.energy === 'Medium' ? 'bg-amber-500 text-white border-amber-500' : 'bg-white text-amber-600 border-amber-200 hover:border-amber-400'}`}>Medium</span>
+                    <span onClick={() => setFilters({...filters, energy: 'Low'})} className={`cursor-pointer px-2 py-1 rounded-md text-[10px] font-bold border transition-colors ${filters.energy === 'Low' ? 'bg-green-500 text-white border-green-500' : 'bg-white text-green-600 border-green-200 hover:border-green-400'}`}>Low (Routine)</span>
+                  </div>
                 </div>
               </div>
+              
+              <button onClick={() => setFilters({context: 'All', time: 'All', energy: 'All', work_type: 'All'})} className="mt-2 text-xs text-slate-400 hover:text-slate-600 underline text-center font-bold">Xóa tất cả bộ lọc</button>
             </div>
-            
-            {/* Nút reset */}
-            <button 
-              onClick={() => setFilters({context: 'All', time: 'All', energy: 'All', work_type: 'All'})}
-              className="mt-2 text-xs text-slate-400 hover:text-slate-600 underline text-center"
-            >Xóa tất cả bộ lọc</button>
-          </div>
+          )}
 
-          {/* Cột 2: Danh sách Actions */}
+          {/* CỘT 2: Danh sách Actions */}
           <div className="flex-1 flex flex-col gap-4">
-            {filteredActions.length === 0 ? (
-              <div className="glass-panel rounded-2xl p-10 flex flex-col items-center justify-center text-slate-400">
-                <i className="fa-solid fa-mug-hot text-4xl mb-4 opacity-50"></i>
-                <p>Không có công việc nào khớp với bộ lọc hiện tại.</p>
-              </div>
+            {activeTab === 'Next_Actions' ? (
+              filteredNextActions.length === 0 ? (
+                <EmptyState icon="fa-mug-hot" text="Không có công việc nào khớp với bộ lọc hiện tại." />
+              ) : filteredNextActions.map(a => <ActionCard key={a.action_id} action={a} data={data} onToggle={() => handleToggleStatus(a)} onEdit={() => openEditModal(a)} onDelete={() => handleDelete(a.action_id)} />)
             ) : (
-              filteredActions.map(a => (
-                <ActionCard 
-                  key={a.action_id} 
-                  action={a} 
-                  area={data.areas.find(ar => ar.area_id === a.area_id)}
-                  project={data.projects.find(p => p.project_id === a.project_id)}
-                  goal={data.goals.find(g => g.goal_id === a.goal_id)}
-                  vision={data.visions.find(v => v.vision_id === a.vision_id)}
-                  mission={data.missions.find(m => m.mission_id === a.mission_id)}
-                  onToggle={() => handleToggleStatus(a)}
-                  onEdit={() => openEditModal(a)}
-                  onDelete={() => handleDelete(a.action_id)}
-                />
-              ))
+              tabActions.length === 0 ? (
+                <EmptyState icon="fa-folder-open" text={`Chưa có dữ liệu trong kho ${activeTab.replace('_', ' ')}.`} />
+              ) : tabActions.map(a => <ActionCard key={a.action_id} action={a} data={data} onToggle={() => handleToggleStatus(a)} onEdit={() => openEditModal(a)} onDelete={() => handleDelete(a.action_id)} />)
             )}
           </div>
         </div>
       )}
 
-      {/* MODAL */}
-      {modalType && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4">
-          <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl shadow-xl w-[700px] max-h-[95vh] overflow-y-auto">
-            <h3 className="text-xl font-black text-slate-800 mb-4">{modalType === 'create' ? 'Tạo Hành động mới' : 'Sửa Hành động'}</h3>
-            
-            <div className="flex flex-col gap-4 mb-6">
-              {/* Định danh */}
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Tên Hành động</label>
-                <input 
-                  type="text" required autoFocus
-                  value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
-                  className="w-full border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-500 text-lg font-medium"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Khu vực / Nan xe (Bắt buộc - 20k ft)</label>
-                <select required value={formData.area_id} onChange={e => setFormData({...formData, area_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none font-bold text-slate-700 bg-slate-50">
-                  <option value="" disabled>-- Chọn Khu vực Trách nhiệm --</option>
-                  {data.areas.map(a => <option key={a.area_id} value={a.area_id}>{a.icon || '🎯'} {a.name}</option>)}
-                </select>
-              </div>
-
-              {/* KHU VỰC LIÊN KẾT NÂNG CAO (OPTIONAL LINKS) */}
-              <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
-                <h4 className="text-[11px] font-black text-blue-800 uppercase tracking-wider mb-3"><i className="fa-solid fa-link"></i> Liên Kết Vượt Tầng (Tùy chọn)</h4>
-              <div className="grid grid-cols-2 gap-4 mt-2">
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase"><i className="fa-solid fa-layer-group text-purple-500 mr-1"></i> Dự án (10k ft)</label>
-                  <select value={formData.project_id} onChange={e => setFormData({...formData, project_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none text-sm">
-                    <option value="">[Trống - Không liên kết]</option>
-                    {data.projects.filter(p => p.status === 'Active').map(p => <option key={p.project_id} value={p.project_id}>{p.name}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase"><i className="fa-solid fa-bullseye text-blue-500 mr-1"></i> Mục tiêu (30k ft)</label>
-                  <select value={formData.goal_id} onChange={e => setFormData({...formData, goal_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none text-sm">
-                    <option value="">[Trống - Không liên kết]</option>
-                    {data.goals.filter(g => g.status === 'Active').map(g => <option key={g.goal_id} value={g.goal_id}>{g.statement}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase"><i className="fa-solid fa-telescope text-teal-500 mr-1"></i> Tầm nhìn (40k ft)</label>
-                  <select value={formData.vision_id} onChange={e => setFormData({...formData, vision_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none text-sm">
-                    <option value="">[Trống - Không liên kết]</option>
-                    {data.visions.filter(v => v.status === 'Active').map(v => <option key={v.vision_id} value={v.vision_id}>{v.statement}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase"><i className="fa-solid fa-rocket text-red-500 mr-1"></i> Sứ mệnh (50k ft)</label>
-                  <select value={formData.mission_id} onChange={e => setFormData({...formData, mission_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none text-sm">
-                    <option value="">[Trống - Không liên kết]</option>
-                    {data.missions.map(m => <option key={m.mission_id} value={m.mission_id}>{m.statement}</option>)}
-                  </select>
-                </div>
-              </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Phân loại</label>
-                  <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none">
-                    <option value="Strategic">Strategic (Bứt phá)</option>
-                    <option value="Maintenance">Maintenance (Duy trì)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Loại công việc (3 Types)</label>
-                  <select value={formData.work_type} onChange={e => setFormData({...formData, work_type: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none">
-                    <option value="Defined Work">Defined Work (Đã lên lịch)</option>
-                    <option value="Defining Work">Defining Work (Dọn dẹp Inbox)</option>
-                    <option value="Unplanned Work">Unplanned Work (Việc khẩn cấp)</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Bối cảnh */}
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mt-2">
-                <h4 className="text-sm font-bold text-slate-700 mb-3"><i className="fa-solid fa-filter mr-1"></i> Bối cảnh & Điều kiện</h4>
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-500 mb-1">@Context</label>
-                    <input type="text" placeholder="@Máy_tính, @Gọi_điện..." required value={formData.context} onChange={e => setFormData({...formData, context: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-500 mb-1">Thời gian cần (Phút)</label>
-                    <select required value={formData.time_needed_mins} onChange={e => setFormData({...formData, time_needed_mins: parseInt(e.target.value)})} className="w-full border border-slate-300 rounded-lg p-2 outline-none">
-                      {timeOptions.map(t => <option key={t} value={t}>{t} phút</option>)}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-500 mb-1">Năng lượng</label>
-                    <select required value={formData.energy_level} onChange={e => setFormData({...formData, energy_level: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none">
-                      <option value="High">Cao (Deep Work)</option>
-                      <option value="Medium">Trung bình</option>
-                      <option value="Low">Thấp (Routine)</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              {/* Reference */}
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Link Hệ thống lưu trữ (Reference/Archive)</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                    <i className="fa-solid fa-link"></i>
-                  </div>
-                  <input 
-                    type="text" placeholder="https://docs.google.com/... hoặc [Ref: Book_Chap1]"
-                    value={formData.reference_link} onChange={e => setFormData({...formData, reference_link: e.target.value})}
-                    className="w-full border border-slate-300 rounded-lg p-2 pl-9 outline-none focus:border-blue-500 text-sm"
-                  />
-                </div>
-                <p className="text-[10px] text-slate-400 mt-1">Dán link tài liệu để mở nhanh ở Bước 3. Phân biệt rõ giữa việc cần làm và kho lưu trữ.</p>
-              </div>
-
+      {/* MODAL PHÂN LUỒNG GTD */}
+      {modalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 overflow-y-auto">
+          <form onSubmit={handleSubmit} className="bg-white rounded-[24px] shadow-2xl w-full max-w-2xl my-8 flex flex-col max-h-[90vh]">
+            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 rounded-t-[24px]">
+              <h3 className="text-xl font-black text-slate-800"><i className="fa-solid fa-sitemap text-blue-600 mr-2"></i> {editId ? 'Sửa Hành động' : 'Phễu Xử lý Hành động (Inbox Routing)'}</h3>
+              <button type="button" onClick={() => setModalOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 transition-colors"><i className="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
-              <button type="button" onClick={() => setModalType(null)} className="px-4 py-2 rounded-lg font-medium text-slate-600 hover:bg-slate-100">Hủy</button>
-              <button type="submit" className="px-6 py-2 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md">Lưu Hành động</button>
+            <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
+              {/* KHỐI 1: THÔNG TIN CƠ BẢN & ĐA TẦNG */}
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-6 relative">
+                <div className="absolute top-0 right-8 -translate-y-1/2 bg-white px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">Định danh & Liên kết</div>
+                
+                <div className="mb-4">
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Tên Hành động <span className="text-red-500">*</span></label>
+                  <input type="text" required autoFocus value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full border-2 border-slate-200 rounded-xl p-3 outline-none focus:border-blue-500 text-lg font-bold text-slate-800 transition-colors" placeholder="Ví dụ: Gọi điện cho thợ sửa ống nước..." />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Khu vực (Nan xe - 20k ft) <span className="text-red-500">*</span></label>
+                    <select required value={formData.area_id} onChange={e => setFormData({...formData, area_id: e.target.value})} className="w-full border-2 border-slate-200 rounded-xl p-2.5 outline-none focus:border-blue-500 font-bold text-slate-700 bg-slate-50">
+                      <option value="" disabled>-- Chọn --</option>
+                      {data.areas.map(a => <option key={a.area_id} value={a.area_id}>{a.icon || '🎯'} {a.name}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Phân loại tính chất</label>
+                    <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full border-2 border-slate-200 rounded-xl p-2.5 outline-none focus:border-blue-500 font-bold text-slate-700">
+                      <option value="Strategic">Strategic (Chiến lược)</option>
+                      <option value="Maintenance">Maintenance (Bảo trì)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+                  <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3"><i className="fa-solid fa-link"></i> Liên Kết Vượt Tầng (Tùy chọn)</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <div className="text-[10px] font-bold text-purple-600 mb-1"><i className="fa-solid fa-layer-group"></i> Dự án (10k)</div>
+                      <select value={formData.project_id} onChange={e => setFormData({...formData, project_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none text-xs font-medium">
+                        <option value="">[Không liên kết]</option>
+                        {data.projects.filter(p => p.status === 'Active').map(p => <option key={p.project_id} value={p.project_id}>{p.name}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-bold text-blue-600 mb-1"><i className="fa-solid fa-bullseye"></i> Mục tiêu (30k)</div>
+                      <select value={formData.goal_id} onChange={e => setFormData({...formData, goal_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none text-xs font-medium">
+                        <option value="">[Không liên kết]</option>
+                        {data.goals.filter(g => g.status === 'Active').map(g => <option key={g.goal_id} value={g.goal_id}>{g.statement}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-bold text-teal-600 mb-1"><i className="fa-solid fa-telescope"></i> Tầm nhìn (40k)</div>
+                      <select value={formData.vision_id} onChange={e => setFormData({...formData, vision_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none text-xs font-medium">
+                        <option value="">[Không liên kết]</option>
+                        {data.visions.filter(v => v.status === 'Active').map(v => <option key={v.vision_id} value={v.vision_id}>{v.statement}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-bold text-red-600 mb-1"><i className="fa-solid fa-rocket"></i> Sứ mệnh (50k)</div>
+                      <select value={formData.mission_id} onChange={e => setFormData({...formData, mission_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none text-xs font-medium">
+                        <option value="">[Không liên kết]</option>
+                        {data.missions.map(m => <option key={m.mission_id} value={m.mission_id}>{m.statement}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider"><i className="fa-solid fa-box-archive"></i> Link Tài liệu / Lưu trữ</label>
+                  <input type="text" placeholder="https://docs.google.com/... hoặc [Ref: Folder_A]" value={formData.reference_link} onChange={e => setFormData({...formData, reference_link: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:border-blue-500 text-sm" />
+                </div>
+              </div>
+
+              {/* KHỐI 2: PHỄU ĐIỀU HƯỚNG (ROUTING FUNNEL) */}
+              <div className="relative">
+                <div className="absolute top-0 right-8 -translate-y-1/2 bg-white px-2 text-[10px] font-black text-blue-500 uppercase tracking-widest z-10">Phễu Điều Hướng GTD</div>
+                
+                {/* Bước 1 */}
+                <div className="bg-slate-100 p-5 rounded-2xl border-2 border-slate-200 mb-4 transition-all">
+                  <h4 className="font-black text-slate-700 mb-3 text-sm"><span className="bg-slate-800 text-white w-6 h-6 inline-flex justify-center items-center rounded-full mr-2 text-xs">1</span> Quy tắc 2 phút: Việc này làm mất dưới 2 phút không?</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button type="button" onClick={() => setFormData({...formData, step1_twomins: true})} className={`p-3 rounded-xl border-2 font-bold transition-all ${formData.step1_twomins === true ? 'bg-green-100 border-green-500 text-green-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-green-300 hover:text-green-600'}`}>
+                      <i className="fa-solid fa-bolt text-lg mb-1 block"></i> Có, Tôi vừa làm luôn!
+                    </button>
+                    <button type="button" onClick={() => setFormData({...formData, step1_twomins: false, step2_who: formData.step2_who || 'me'})} className={`p-3 rounded-xl border-2 font-bold transition-all ${formData.step1_twomins === false ? 'bg-blue-100 border-blue-500 text-blue-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300 hover:text-blue-600'}`}>
+                      <i className="fa-solid fa-box-open text-lg mb-1 block"></i> Không, Cần lưu lại
+                    </button>
+                  </div>
+                </div>
+
+                {/* Bước 2 */}
+                {formData.step1_twomins === false && (
+                  <div className="bg-slate-100 p-5 rounded-2xl border-2 border-slate-200 mb-4 transition-all animate-fade-in-up">
+                    <h4 className="font-black text-slate-700 mb-3 text-sm"><span className="bg-slate-800 text-white w-6 h-6 inline-flex justify-center items-center rounded-full mr-2 text-xs">2</span> Phân quyền: Ai là người làm việc này?</h4>
+                    <div className="grid grid-cols-2 gap-3 mb-3">
+                      <button type="button" onClick={() => setFormData({...formData, step2_who: 'me', step3_when: formData.step3_when || 'asap'})} className={`p-3 rounded-xl border-2 font-bold transition-all ${formData.step2_who === 'me' ? 'bg-blue-100 border-blue-500 text-blue-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300 hover:text-blue-600'}`}>
+                        <i className="fa-solid fa-user text-lg mb-1 block"></i> Chính tôi
+                      </button>
+                      <button type="button" onClick={() => setFormData({...formData, step2_who: 'other'})} className={`p-3 rounded-xl border-2 font-bold transition-all ${formData.step2_who === 'other' ? 'bg-amber-100 border-amber-500 text-amber-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-amber-300 hover:text-amber-600'}`}>
+                        <i className="fa-solid fa-users text-lg mb-1 block"></i> Người khác (Giao việc)
+                      </button>
+                    </div>
+                    {formData.step2_who === 'other' && (
+                      <div className="animate-fade-in-up mt-2 p-3 bg-amber-50 rounded-xl border border-amber-200">
+                        <label className="block text-xs font-bold text-amber-800 mb-1">Giao cho ai? / Chờ ai?</label>
+                        <input type="text" required value={formData.assigned_to} onChange={e => setFormData({...formData, assigned_to: e.target.value})} placeholder="Tên người, thợ thầu, mentor..." className="w-full p-2 rounded-lg border border-amber-300 outline-none focus:border-amber-500 text-sm" />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Bước 3 */}
+                {formData.step1_twomins === false && formData.step2_who === 'me' && (
+                  <div className="bg-slate-100 p-5 rounded-2xl border-2 border-slate-200 transition-all animate-fade-in-up">
+                    <h4 className="font-black text-slate-700 mb-3 text-sm"><span className="bg-slate-800 text-white w-6 h-6 inline-flex justify-center items-center rounded-full mr-2 text-xs">3</span> Quyết định: Khi nào làm?</h4>
+                    <div className="grid grid-cols-3 gap-3 mb-3">
+                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'fixed'})} className={`p-3 rounded-xl border-2 font-bold text-xs transition-all flex flex-col items-center justify-center ${formData.step3_when === 'fixed' ? 'bg-emerald-100 border-emerald-500 text-emerald-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-emerald-300 hover:text-emerald-600'}`}>
+                        <i className="fa-regular fa-calendar-check text-xl mb-1 block"></i> Giờ Cố Định
+                      </button>
+                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'asap'})} className={`p-3 rounded-xl border-2 font-bold text-xs transition-all flex flex-col items-center justify-center ${formData.step3_when === 'asap' ? 'bg-blue-100 border-blue-500 text-blue-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300 hover:text-blue-600'}`}>
+                        <i className="fa-solid fa-rocket text-xl mb-1 block"></i> Làm Sớm Nhất
+                      </button>
+                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'someday'})} className={`p-3 rounded-xl border-2 font-bold text-xs transition-all flex flex-col items-center justify-center ${formData.step3_when === 'someday' ? 'bg-purple-100 border-purple-500 text-purple-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-purple-300 hover:text-purple-600'}`}>
+                        <i className="fa-solid fa-cloud-moon text-xl mb-1 block"></i> Chưa Xác Định
+                      </button>
+                    </div>
+
+                    {/* Sub-form for Calendar */}
+                    {formData.step3_when === 'fixed' && (
+                      <div className="animate-fade-in-up p-4 bg-emerald-50 rounded-xl border border-emerald-200 flex flex-col gap-2">
+                        <label className="block text-xs font-bold text-emerald-800">Thời gian diễn ra (Calendar Appointment):</label>
+                        <input type="datetime-local" required value={formData.scheduled_datetime} onChange={e => setFormData({...formData, scheduled_datetime: e.target.value})} className="w-full p-2.5 rounded-lg border border-emerald-300 outline-none focus:border-emerald-500 text-sm font-medium" />
+                      </div>
+                    )}
+
+                    {/* Sub-form for Next Actions */}
+                    {formData.step3_when === 'asap' && (
+                      <div className="animate-fade-in-up p-4 bg-blue-50 rounded-xl border border-blue-200 flex flex-col gap-3">
+                        <label className="block text-xs font-bold text-blue-800 uppercase tracking-widest"><i className="fa-solid fa-filter"></i> Bối Cảnh Lọc (Next Actions)</label>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[10px] font-bold text-slate-600 mb-1">@Context</label>
+                            <input type="text" required placeholder="@Máy_tính..." value={formData.context} onChange={e => setFormData({...formData, context: e.target.value})} className="w-full p-2 border border-blue-200 rounded-lg outline-none text-sm" />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-slate-600 mb-1">Loại công việc</label>
+                            <select required value={formData.work_type} onChange={e => setFormData({...formData, work_type: e.target.value})} className="w-full p-2 border border-blue-200 rounded-lg outline-none text-sm">
+                              <option value="Defined Work">Đã lên lịch (Defined)</option>
+                              <option value="Defining Work">Dọn dẹp (Defining)</option>
+                              <option value="Unplanned Work">Khẩn cấp (Unplanned)</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[10px] font-bold text-slate-600 mb-1">Thời gian (Phút)</label>
+                            <select required value={formData.time_needed_mins} onChange={e => setFormData({...formData, time_needed_mins: parseInt(e.target.value)})} className="w-full p-2 border border-blue-200 rounded-lg outline-none text-sm">
+                              {[5,10,15,30,45,60,90,120].map(t => <option key={t} value={t}>{t}m</option>)}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-slate-600 mb-1">Năng lượng</label>
+                            <select required value={formData.energy_level} onChange={e => setFormData({...formData, energy_level: e.target.value})} className="w-full p-2 border border-blue-200 rounded-lg outline-none text-sm">
+                              <option value="High">Cao (High)</option>
+                              <option value="Medium">Trung bình (Med)</option>
+                              <option value="Low">Thấp (Low)</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="p-5 border-t border-slate-100 bg-slate-50/50 rounded-b-[24px] flex justify-end gap-3">
+              <button type="button" onClick={() => setModalOpen(false)} className="px-5 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors">Hủy</button>
+              
+              {/* Nút Save thông minh theo context */}
+              {formData.step1_twomins === true ? (
+                 <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-green-500 hover:bg-green-600 shadow-[0_4px_15px_rgba(34,197,94,0.3)] transition-all flex items-center"><i className="fa-solid fa-check-double mr-2"></i> Lưu & Hoàn Thành (Do It Now)</button>
+              ) : formData.step2_who === 'other' ? (
+                 <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-amber-500 hover:bg-amber-600 shadow-[0_4px_15px_rgba(245,158,11,0.3)] transition-all flex items-center"><i className="fa-solid fa-paper-plane mr-2"></i> Chuyển vào Waiting For</button>
+              ) : formData.step3_when === 'fixed' ? (
+                 <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-emerald-500 hover:bg-emerald-600 shadow-[0_4px_15px_rgba(16,185,129,0.3)] transition-all flex items-center"><i className="fa-regular fa-calendar-plus mr-2"></i> Đặt Lịch Hẹn (Calendar)</button>
+              ) : formData.step3_when === 'asap' ? (
+                 <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-blue-600 hover:bg-blue-700 shadow-[0_4px_15px_rgba(37,99,235,0.3)] transition-all flex items-center"><i className="fa-solid fa-bolt mr-2"></i> Lưu vào Next Actions</button>
+              ) : formData.step3_when === 'someday' ? (
+                 <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-purple-500 hover:bg-purple-600 shadow-[0_4px_15px_rgba(168,85,247,0.3)] transition-all flex items-center"><i className="fa-solid fa-bed mr-2"></i> Đưa vào Kho Ấp ủ</button>
+              ) : (
+                 <button type="button" disabled className="px-6 py-2.5 rounded-xl font-black text-white bg-slate-300 cursor-not-allowed">Hoàn thiện Phễu để Lưu</button>
+              )}
             </div>
           </form>
         </div>
@@ -380,92 +490,123 @@ export default function Runway() {
   );
 }
 
-function ActionCard({ action, area, project, goal, vision, mission, onToggle, onEdit, onDelete }) {
+function EmptyState({ icon, text }) {
+  return (
+    <div className="glass-panel rounded-3xl p-12 flex flex-col items-center justify-center text-slate-400 border border-slate-100 shadow-sm h-full min-h-[300px]">
+      <i className={`fa-solid ${icon} text-5xl mb-5 opacity-40 text-blue-300`}></i>
+      <p className="font-medium text-slate-500 text-lg">{text}</p>
+    </div>
+  );
+}
+
+function ActionCard({ action, data, onToggle, onEdit, onDelete }) {
   const isUrl = action.reference_link && (action.reference_link.startsWith('http://') || action.reference_link.startsWith('https://'));
   const isUnplanned = action.work_type === 'Unplanned Work';
   
+  const area = data.areas.find(ar => ar.area_id === action.area_id);
+  const project = data.projects.find(p => p.project_id === action.project_id);
+  const goal = data.goals.find(g => g.goal_id === action.goal_id);
+  const vision = data.visions.find(v => v.vision_id === action.vision_id);
+  const mission = data.missions.find(m => m.mission_id === action.mission_id);
+  
   return (
-    <div className={`bg-white rounded-xl shadow-sm border p-4 flex gap-4 transition-all hover:shadow-md group ${isUnplanned ? 'border-red-300' : 'border-slate-200'}`}>
+    <div className={`bg-white rounded-2xl shadow-sm border p-5 flex gap-4 transition-all hover:shadow-md group ${isUnplanned && action.storage_system==='Next_Actions' ? 'border-red-300 bg-red-50/20' : 'border-slate-200'}`}>
       {/* Checkbox */}
       <div className="pt-1">
         <button 
           onClick={onToggle}
-          className={`w-6 h-6 rounded-md flex items-center justify-center border-2 transition-colors ${action.status === 'Done' ? 'bg-green-500 border-green-500 text-white' : 'border-slate-300 text-transparent hover:border-blue-400'}`}
+          className={`w-7 h-7 rounded-lg flex items-center justify-center border-2 transition-all shadow-sm ${action.status === 'Done' ? 'bg-green-500 border-green-500 text-white' : 'bg-slate-50 border-slate-300 text-transparent hover:border-blue-400 hover:bg-blue-50'}`}
         >
-          <i className="fa-solid fa-check text-xs"></i>
+          <i className="fa-solid fa-check text-sm"></i>
         </button>
       </div>
       
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <div className="flex justify-between items-start mb-1">
+        <div className="flex justify-between items-start mb-1.5">
           <div className="flex gap-2 items-center flex-wrap">
-            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${action.category === 'Strategic' ? 'bg-amber-100 text-amber-700' : 'bg-sky-100 text-sky-700'}`}>
+            <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md ${action.category === 'Strategic' ? 'bg-amber-100 text-amber-700' : 'bg-sky-100 text-sky-700'}`}>
               {action.category}
             </span>
-            {isUnplanned && <span className="text-[10px] font-bold uppercase bg-red-100 text-red-700 px-2 py-0.5 rounded animate-pulse">Unplanned</span>}
-            {action.work_type === 'Defining Work' && <span className="text-[10px] font-bold uppercase bg-orange-100 text-orange-700 px-2 py-0.5 rounded">Defining</span>}
+            
+            {/* System specific badges */}
+            {action.storage_system === 'Waiting_For' && (
+              <span className="text-[10px] font-black uppercase tracking-widest bg-amber-100 text-amber-800 px-2 py-1 rounded-md flex items-center border border-amber-200">
+                <i className="fa-solid fa-user-clock mr-1"></i> Chờ: {action.assigned_to}
+              </span>
+            )}
+            {action.storage_system === 'Calendar' && (
+              <span className="text-[10px] font-black uppercase tracking-widest bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md flex items-center border border-emerald-200">
+                <i className="fa-regular fa-calendar-check mr-1"></i> {new Date(action.scheduled_datetime).toLocaleString('vi-VN')}
+              </span>
+            )}
+            
+            {isUnplanned && action.storage_system==='Next_Actions' && <span className="text-[10px] font-black uppercase tracking-widest bg-red-500 text-white px-2 py-1 rounded-md shadow-sm shadow-red-500/30 animate-pulse">Unplanned</span>}
+            {action.work_type === 'Defining Work' && action.storage_system==='Next_Actions' && <span className="text-[10px] font-black uppercase tracking-widest bg-orange-100 text-orange-700 px-2 py-1 rounded-md">Defining</span>}
           </div>
+          
           <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button onClick={onEdit} className="text-slate-400 hover:text-blue-600 text-sm"><i className="fa-solid fa-pen"></i></button>
-            <button onClick={onDelete} className="text-slate-400 hover:text-red-600 text-sm"><i className="fa-solid fa-trash"></i></button>
+            <button onClick={onEdit} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-blue-100 hover:text-blue-600 transition-colors flex items-center justify-center"><i className="fa-solid fa-pen text-xs"></i></button>
+            <button onClick={onDelete} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-red-100 hover:text-red-600 transition-colors flex items-center justify-center"><i className="fa-solid fa-trash text-xs"></i></button>
           </div>
         </div>
         
-        <h4 className={`text-lg font-bold ${action.status === 'Done' ? 'text-slate-400 line-through' : 'text-slate-800'} mb-2`}>{action.name}</h4>
+        <h4 className={`text-xl font-black ${action.status === 'Done' ? 'text-slate-400 line-through' : 'text-slate-800'} mb-3`}>{action.name}</h4>
         
-        {/* Meta tags */}
-        <div className="flex flex-wrap gap-x-3 gap-y-2 mt-2">
+        {/* Multi-Level Links */}
+        <div className="flex flex-wrap gap-x-2.5 gap-y-2 mt-2">
           {area && (
-            <div className="text-[11px] text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md flex items-center gap-1 border border-slate-200">
-              <span>{area.icon || '🎯'}</span> <span className="font-semibold">{area.name}</span>
+            <div className="text-[11px] text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md flex items-center gap-1.5 border border-slate-200">
+              <span>{area.icon || '🎯'}</span> <span className="font-bold">{area.name}</span>
             </div>
           )}
           {project && (
-            <div className="text-[11px] text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md flex items-center gap-1 border border-purple-200 shadow-sm">
-              <i className="fa-solid fa-layer-group"></i> <span className="font-semibold truncate max-w-[150px]">{project.name}</span>
+            <div className="text-[11px] text-purple-800 bg-purple-50 px-2.5 py-1 rounded-md flex items-center gap-1.5 border border-purple-200">
+              <i className="fa-solid fa-layer-group opacity-60"></i> <span className="font-bold truncate max-w-[150px]">{project.name}</span>
             </div>
           )}
           {goal && (
-            <div className="text-[11px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md flex items-center gap-1 border border-blue-200 shadow-sm">
-              <i className="fa-solid fa-bullseye"></i> <span className="font-semibold truncate max-w-[150px]">{goal.statement}</span>
+            <div className="text-[11px] text-blue-800 bg-blue-50 px-2.5 py-1 rounded-md flex items-center gap-1.5 border border-blue-200">
+              <i className="fa-solid fa-bullseye opacity-60"></i> <span className="font-bold truncate max-w-[150px]">{goal.statement}</span>
             </div>
           )}
           {vision && (
-            <div className="text-[11px] text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md flex items-center gap-1 border border-teal-200 shadow-sm">
-              <i className="fa-solid fa-telescope"></i> <span className="font-semibold truncate max-w-[150px]">{vision.statement}</span>
+            <div className="text-[11px] text-teal-800 bg-teal-50 px-2.5 py-1 rounded-md flex items-center gap-1.5 border border-teal-200">
+              <i className="fa-solid fa-telescope opacity-60"></i> <span className="font-bold truncate max-w-[150px]">{vision.statement}</span>
             </div>
           )}
           {mission && (
-            <div className="text-[11px] text-red-700 bg-red-50 px-2 py-0.5 rounded-md flex items-center gap-1 border border-red-200 shadow-sm">
-              <i className="fa-solid fa-rocket animate-pulse"></i> <span className="font-semibold truncate max-w-[150px]">{mission.statement}</span>
+            <div className="text-[11px] text-red-800 bg-red-50 px-2.5 py-1 rounded-md flex items-center gap-1.5 border border-red-200">
+              <i className="fa-solid fa-rocket animate-pulse text-red-600"></i> <span className="font-bold truncate max-w-[150px]">{mission.statement}</span>
             </div>
           )}
         </div>
         
-        {/* Context Filters */}
-        <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100">
-          <span className="text-[11px] bg-slate-100 text-slate-600 px-2 py-1 rounded font-medium border border-slate-200">
-            <i className="fa-solid fa-location-dot mr-1 text-slate-400"></i>{action.context}
-          </span>
-          <span className="text-[11px] bg-slate-100 text-slate-600 px-2 py-1 rounded font-medium border border-slate-200">
-            <i className="fa-regular fa-clock mr-1 text-slate-400"></i>{action.time_needed_mins}m
-          </span>
-          <span className={`text-[11px] px-2 py-1 rounded font-medium border ${action.energy_level === 'High' ? 'bg-rose-50 text-rose-700 border-rose-200' : action.energy_level === 'Medium' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-green-50 text-green-700 border-green-200'}`}>
-            <i className="fa-solid fa-bolt mr-1 opacity-70"></i>{action.energy_level}
-          </span>
-        </div>
+        {/* Context Filters (Only for Next Actions) */}
+        {action.storage_system === 'Next_Actions' && action.context && (
+          <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100 border-dashed">
+            <span className="text-[11px] bg-white text-slate-600 px-2.5 py-1 rounded-md font-bold border border-slate-200 shadow-sm">
+              <i className="fa-solid fa-location-dot mr-1.5 text-blue-400"></i>{action.context}
+            </span>
+            <span className="text-[11px] bg-white text-slate-600 px-2.5 py-1 rounded-md font-bold border border-slate-200 shadow-sm">
+              <i className="fa-regular fa-clock mr-1.5 text-teal-400"></i>{action.time_needed_mins} phút
+            </span>
+            <span className={`text-[11px] px-2.5 py-1 rounded-md font-bold border shadow-sm ${action.energy_level === 'High' ? 'bg-rose-50 text-rose-700 border-rose-200' : action.energy_level === 'Medium' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-green-50 text-green-700 border-green-200'}`}>
+              <i className="fa-solid fa-bolt mr-1.5 opacity-70"></i>Năng lượng: {action.energy_level}
+            </span>
+          </div>
+        )}
         
         {/* Reference Link */}
         {action.reference_link && (
           <div className="mt-3">
             {isUrl ? (
-              <a href={action.reference_link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-[11px] font-bold text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-colors shadow-sm">
-                <i className="fa-solid fa-arrow-up-right-from-square"></i> Mở Tài Liệu
+              <a href={action.reference_link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-[11px] font-black text-white bg-slate-800 hover:bg-black px-3.5 py-1.5 rounded-lg transition-colors shadow-md hover:-translate-y-0.5">
+                <i className="fa-solid fa-arrow-up-right-from-square"></i> MỞ TÀI LIỆU
               </a>
             ) : (
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
-                <i className="fa-solid fa-box-archive text-slate-400"></i> {action.reference_link}
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-600 bg-slate-50 px-3.5 py-1.5 rounded-lg border border-slate-200">
+                <i className="fa-solid fa-box-archive text-slate-400"></i> Ref: {action.reference_link}
               </span>
             )}
           </div>
