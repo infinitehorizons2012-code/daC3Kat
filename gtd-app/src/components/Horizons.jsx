@@ -129,7 +129,7 @@ export default function Horizons() {
   }
 
   // Fallback data if DB is empty
-  const mission = data.missions[0] || {};
+  const missions = data.missions || [];
   const visions = data.visions;
   const goals = data.goals;
   const projects = data.projects || [];
@@ -149,7 +149,7 @@ export default function Horizons() {
               </button>
             </>
           )}
-          {!mission.mission_id && (
+          {missions.length === 0 && (
             <button onClick={() => { setModalType('mission'); setFormData({ statement: '', goalType: 'strategic-vision', parentId: null, status: 'Active', milestone: '' }); }} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl transition-colors font-bold shadow-md">
               <i className="fa-solid fa-plus mr-2"></i> Định nghĩa Sứ mệnh
             </button>
@@ -254,103 +254,103 @@ export default function Horizons() {
       
       <div className="flex flex-col gap-4 pl-4 border-l-2 border-emerald-300">
         
-        {/* Mission Level */}
-        <div className="relative">
-          <div className="absolute w-4 h-0.5 bg-emerald-300 top-4 -left-4"></div>
-          <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-xl shadow-sm">
-            <div className="flex justify-between items-start">
-              <div className="flex-1">
-                <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 block">50,000 ft - Sứ mệnh {mission.mission_id ? `(${mission.status || 'Active'})` : ''}</span>
-                <h3 className="font-medium text-slate-800 pr-4">{mission.statement}</h3>
-              </div>
-              <div className="flex flex-col items-end gap-2 shrink-0">
-                {mission.mission_id && (
-                  <button onClick={() => { setModalType('vision'); setFormData({ statement: '', goalType: 'strategic-vision', parentId: mission.mission_id, status: 'Active', milestone: '' }); }} className="text-xs text-emerald-700 hover:bg-emerald-200 bg-emerald-100 px-2 py-1 rounded font-bold">
-                    + Thêm Tầm nhìn
-                  </button>
-                )}
-                {mission.mission_id && (
-                  <div className="flex gap-2 mt-2">
-                    <button onClick={() => { setModalType('edit-mission'); setEditId(mission.mission_id); setFormData({...formData, statement: mission.statement, status: mission.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
-                    <button onClick={() => handleDelete('missions', mission.mission_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
-                  </div>
-                )}
-              </div>
-            </div>
+        {/* Mission Level Loop */}
+        {missions.length === 0 ? (
+          <div className="bg-emerald-50 border border-dashed border-emerald-300 p-8 rounded-xl shadow-sm text-center mb-8">
+            <h3 className="font-bold text-emerald-700 mb-2">Chưa có Sứ mệnh nào</h3>
+            <p className="text-sm text-slate-500">Hãy bắt đầu bằng cách định nghĩa Sứ mệnh đầu tiên của bạn ở nút góc trên bên phải.</p>
           </div>
-          
-          {/* Visions */}
-          {visions.length === 0 ? (
-            <div className="pl-8 mt-4 text-sm text-slate-400 italic">Chưa có tầm nhìn nào.</div>
-          ) : (
-            visions.map(vision => (
-              <div key={vision.vision_id} className="flex flex-col gap-4 pl-8 mt-4 border-l-2 border-emerald-200">
-                
-                {/* Vision Level */}
-                <div className="relative">
-                  <div className="absolute w-4 h-0.5 bg-emerald-200 top-4 -left-4"></div>
-                  <div className="bg-white/60 border border-slate-200 p-4 rounded-xl shadow-sm">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">40,000 ft - Tầm nhìn {vision.status ? `- ${vision.status}` : ''}</span>
-                        <h3 className={`font-medium pr-4 ${vision.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>{vision.statement}</h3>
-                        {data.missions.find(m => m.mission_id === vision.mission_id) && (
-                          <p className="text-xs text-slate-500 mt-1 italic"><i className="fa-solid fa-link text-[10px] mr-1"></i> Thuộc Sứ mệnh: {data.missions.find(m => m.mission_id === vision.mission_id).statement}</p>
-                        )}
-                      </div>
-                      <div className="flex flex-col items-end gap-2 shrink-0">
-                        <button onClick={() => { setModalType('goal'); setFormData({ statement: '', goalType: 'strategic-vision', parentId: vision.vision_id, status: 'Active', milestone: '' }); }} className="text-xs text-blue-600 hover:bg-blue-200 bg-blue-100 px-2 py-1 rounded font-bold">
-                          + Thêm Mục tiêu
-                        </button>
-                        <div className="flex gap-2 mt-2">
-                          <button onClick={() => { setModalType('edit-vision'); setEditId(vision.vision_id); setFormData({...formData, statement: vision.statement, status: vision.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
-                          <button onClick={() => handleDelete('visions', vision.vision_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
-                        </div>
-                      </div>
+        ) : (
+          missions.map(mission => (
+            <div key={mission.mission_id} className="relative mb-12">
+              <div className="absolute w-4 h-0.5 bg-emerald-300 top-4 -left-4"></div>
+              <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-xl shadow-sm">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 block">50,000 ft - Sứ mệnh {mission.mission_id ? `(${mission.status || 'Active'})` : ''}</span>
+                    <h3 className="font-medium text-slate-800 pr-4">{mission.statement}</h3>
+                  </div>
+                  <div className="flex flex-col items-end gap-2 shrink-0">
+                    <button onClick={() => { setModalType('vision'); setFormData({ statement: '', goalType: 'strategic-vision', parentId: mission.mission_id, status: 'Active', milestone: '' }); }} className="text-xs text-emerald-700 hover:bg-emerald-200 bg-emerald-100 px-2 py-1 rounded font-bold">
+                      + Thêm Tầm nhìn
+                    </button>
+                    <div className="flex gap-2 mt-2">
+                      <button onClick={() => { setModalType('edit-mission'); setEditId(mission.mission_id); setFormData({...formData, statement: mission.statement, status: mission.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
+                      <button onClick={() => handleDelete('missions', mission.mission_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                     </div>
                   </div>
-                  
-                  {/* Goals */}
-                  {goals.filter(g => g.vision_id === vision.vision_id).length === 0 ? (
-                    <div className="pl-8 mt-4 text-sm text-slate-400 italic">Chưa có mục tiêu nào gắn với tầm nhìn này.</div>
-                  ) : (
-                    goals.filter(g => g.vision_id === vision.vision_id).map(goal => (
-                      <div key={goal.goal_id} className="flex flex-col gap-4 pl-8 mt-4 border-l-2 border-slate-200">
-                        <div className="relative">
-                          <div className="absolute w-4 h-0.5 bg-slate-200 top-4 -left-4"></div>
-                          <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex justify-between items-center">
-                            <div className="flex-1">
-                              <span className={`text-xs font-bold uppercase tracking-wider mb-1 block ${goal.status === 'Pended' ? 'text-slate-400' : 'text-blue-500'}`}>
-                                30,000 ft - Mục tiêu ({goal.status})
-                              </span>
-                              <h3 className={`font-medium pr-4 ${goal.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
-                                {goal.statement}
-                              </h3>
-                              {data.visions.find(v => v.vision_id === goal.vision_id) && (
-                                <p className="text-xs text-slate-500 mt-1 italic"><i className="fa-solid fa-link text-[10px] mr-1"></i> Thuộc Tầm nhìn: {data.visions.find(v => v.vision_id === goal.vision_id).statement}</p>
-                              )}
-                              {/* Milestone display removed */}
-                              {goal.status === 'Active' && projects.filter(p => p.goal_id === goal.goal_id).length === 0 && (
-                                <p className="text-xs text-orange-600 mt-2 font-medium bg-orange-50 inline-block px-2 py-1 rounded">
-                                  <i className="fa-solid fa-triangle-exclamation mr-1"></i> Cần tạo dự án cho mục tiêu này
-                                </p>
-                              )}
-                            </div>
-                            <div className="flex flex-col gap-2 shrink-0">
-                              <div className="flex gap-2 justify-end mb-1">
-                                <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, goalType: goal.category === 'Maintenance' ? 'maintenance-milestone' : (goal.vision_id ? 'strategic-vision' : 'strategic-independent'), parentId: goal.vision_id, milestone: goal.milestone || '', status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
-                                <button onClick={() => handleDelete('goals', goal.goal_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
-                              </div>
+                </div>
+              </div>
+              
+              {/* Visions for this Mission */}
+              {visions.filter(v => v.mission_id === mission.mission_id).length === 0 ? (
+                <div className="pl-8 mt-4 text-sm text-slate-400 italic">Chưa có tầm nhìn nào cho sứ mệnh này.</div>
+              ) : (
+                visions.filter(v => v.mission_id === mission.mission_id).map(vision => (
+                  <div key={vision.vision_id} className="flex flex-col gap-4 pl-8 mt-4 border-l-2 border-emerald-200">
+                    
+                    {/* Vision Level */}
+                    <div className="relative">
+                      <div className="absolute w-4 h-0.5 bg-emerald-200 top-4 -left-4"></div>
+                      <div className="bg-white/60 border border-slate-200 p-4 rounded-xl shadow-sm">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">40,000 ft - Tầm nhìn {vision.status ? `- ${vision.status}` : ''}</span>
+                            <h3 className={`font-medium pr-4 ${vision.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>{vision.statement}</h3>
+                          </div>
+                          <div className="flex flex-col items-end gap-2 shrink-0">
+                            <button onClick={() => { setModalType('goal'); setFormData({ statement: '', goalType: 'strategic-vision', parentId: vision.vision_id, status: 'Active', milestone: '' }); }} className="text-xs text-blue-600 hover:bg-blue-200 bg-blue-100 px-2 py-1 rounded font-bold">
+                              + Thêm Mục tiêu
+                            </button>
+                            <div className="flex gap-2 mt-2">
+                              <button onClick={() => { setModalType('edit-vision'); setEditId(vision.vision_id); setFormData({...formData, statement: vision.statement, status: vision.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
+                              <button onClick={() => handleDelete('visions', vision.vision_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                             </div>
                           </div>
                         </div>
                       </div>
-                    ))
-                  )}
-                </div>
-
-              </div>
-            ))
+                      
+                      {/* Goals */}
+                      {goals.filter(g => g.vision_id === vision.vision_id).length === 0 ? (
+                        <div className="pl-8 mt-4 text-sm text-slate-400 italic">Chưa có mục tiêu nào gắn với tầm nhìn này.</div>
+                      ) : (
+                        goals.filter(g => g.vision_id === vision.vision_id).map(goal => (
+                          <div key={goal.goal_id} className="flex flex-col gap-4 pl-8 mt-4 border-l-2 border-slate-200">
+                            <div className="relative">
+                              <div className="absolute w-4 h-0.5 bg-slate-200 top-4 -left-4"></div>
+                              <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex justify-between items-center">
+                                <div className="flex-1">
+                                  <span className={`text-xs font-bold uppercase tracking-wider mb-1 block ${goal.status === 'Pended' ? 'text-slate-400' : 'text-blue-500'}`}>
+                                    30,000 ft - Mục tiêu ({goal.status})
+                                  </span>
+                                  <h3 className={`font-medium pr-4 ${goal.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
+                                    {goal.statement}
+                                  </h3>
+                                  {/* Milestone display removed */}
+                                  {goal.status === 'Active' && projects.filter(p => p.goal_id === goal.goal_id).length === 0 && (
+                                    <p className="text-xs text-orange-600 mt-2 font-medium bg-orange-50 inline-block px-2 py-1 rounded">
+                                      <i className="fa-solid fa-triangle-exclamation mr-1"></i> Cần tạo dự án cho mục tiêu này
+                                    </p>
+                                  )}
+                                </div>
+                                <div className="flex flex-col gap-2 shrink-0">
+                                  <div className="flex gap-2 justify-end mb-1">
+                                    <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, goalType: goal.category === 'Maintenance' ? 'maintenance-milestone' : (goal.vision_id ? 'strategic-vision' : 'strategic-independent'), parentId: goal.vision_id, milestone: goal.milestone || '', status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
+                                    <button onClick={() => handleDelete('goals', goal.goal_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          ))
+        )}
           )}
 
           {/* Independent Goals */}
