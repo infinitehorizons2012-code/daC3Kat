@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import HorizonProfileModal from './HorizonProfileModal';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
@@ -10,6 +11,7 @@ export default function Horizons() {
   const [formData, setFormData] = useState({ statement: '', goalType: 'strategic-vision', parentId: null, status: 'Active', milestone: '' });
   const [collapsedMissions, setCollapsedMissions] = useState(new Set());
   const [collapsedVisions, setCollapsedVisions] = useState(new Set());
+  const [profileHorizon, setProfileHorizon] = useState(null);
   
   const toggleMission = (id) => {
     setCollapsedMissions(prev => {
@@ -155,6 +157,16 @@ export default function Horizons() {
 
   return (
     <div className="glass-panel p-8 rounded-2xl min-h-[500px] relative">
+      {profileHorizon && (
+        <HorizonProfileModal 
+          horizonType={profileHorizon.type}
+          horizonData={profileHorizon.data}
+          data={data}
+          onClose={() => setProfileHorizon(null)}
+          onRefresh={fetchData}
+        />
+      )}
+
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-emerald-700"><i className="fa-solid fa-tree"></i> Cây Horizons</h2>
         <div className="flex gap-2">
@@ -299,6 +311,7 @@ export default function Horizons() {
                       + Thêm Tầm nhìn
                     </button>
                     <div className="flex gap-2 mt-2">
+                      <button onClick={() => setProfileHorizon({ type: 'mission', data: mission })} className="text-xs text-slate-500 hover:text-emerald-600 bg-white px-2 py-1 rounded shadow-sm border border-slate-200"><i className="fa-solid fa-folder-open mr-1"></i> Hồ sơ</button>
                       <button onClick={() => { setModalType('edit-mission'); setEditId(mission.mission_id); setFormData({...formData, statement: mission.statement, status: mission.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                       <button onClick={() => handleDelete('missions', mission.mission_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                     </div>
@@ -334,6 +347,7 @@ export default function Horizons() {
                               + Thêm Mục tiêu
                             </button>
                             <div className="flex gap-2 mt-2">
+                              <button onClick={() => setProfileHorizon({ type: 'vision', data: vision })} className="text-xs text-slate-500 hover:text-blue-600 bg-white px-2 py-1 rounded shadow-sm border border-slate-200"><i className="fa-solid fa-folder-open mr-1"></i> Hồ sơ</button>
                               <button onClick={() => { setModalType('edit-vision'); setEditId(vision.vision_id); setFormData({...formData, statement: vision.statement, status: vision.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                               <button onClick={() => handleDelete('visions', vision.vision_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                             </div>
@@ -368,6 +382,7 @@ export default function Horizons() {
                                 </div>
                                 <div className="flex flex-col gap-2 shrink-0">
                                   <div className="flex gap-2 justify-end mb-1">
+                                    <button onClick={() => setProfileHorizon({ type: 'goal', data: goal })} className="text-xs text-slate-500 hover:text-blue-600 bg-slate-100 px-2 py-0.5 rounded mr-1"><i className="fa-solid fa-folder-open"></i></button>
                                     <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, goalType: goal.category === 'Maintenance' ? 'maintenance-milestone' : (goal.vision_id ? 'strategic-vision' : 'strategic-independent'), parentId: goal.vision_id, milestone: goal.milestone || '', status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                                     <button onClick={() => handleDelete('goals', goal.goal_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                                   </div>
@@ -416,7 +431,8 @@ export default function Horizons() {
                       </div>
                       <div className="flex flex-col gap-2 shrink-0">
                         <div className="flex gap-2 justify-end mb-1">
-                          <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, goalType: 'strategic-independent', parentId: null, milestone: goal.milestone || '', status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
+                          <button onClick={() => setProfileHorizon({ type: 'goal', data: goal })} className="text-xs text-slate-500 hover:text-blue-600 bg-slate-100 px-2 py-0.5 rounded mr-1"><i className="fa-solid fa-folder-open"></i></button>
+                                    <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, goalType: 'strategic-independent', parentId: null, milestone: goal.milestone || '', status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                           <button onClick={() => handleDelete('goals', goal.goal_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                         </div>
                       </div>
@@ -454,7 +470,8 @@ export default function Horizons() {
                       </div>
                       <div className="flex flex-col gap-2 shrink-0">
                         <div className="flex gap-2 justify-end mb-1">
-                          <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, goalType: 'maintenance-milestone', parentId: null, milestone: goal.milestone || '', status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
+                          <button onClick={() => setProfileHorizon({ type: 'goal', data: goal })} className="text-xs text-slate-500 hover:text-blue-600 bg-slate-100 px-2 py-0.5 rounded mr-1"><i className="fa-solid fa-folder-open"></i></button>
+                                    <button onClick={() => { setModalType('edit-goal'); setEditId(goal.goal_id); setFormData({...formData, statement: goal.statement, goalType: 'maintenance-milestone', parentId: null, milestone: goal.milestone || '', status: goal.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                           <button onClick={() => handleDelete('goals', goal.goal_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                         </div>
                       </div>
