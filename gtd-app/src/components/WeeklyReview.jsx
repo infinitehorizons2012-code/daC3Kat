@@ -8,6 +8,7 @@ export default function WeeklyReview() {
   const [selectedProject, setSelectedProject] = useState(null);
   
   const [newActionName, setNewActionName] = useState('');
+  const [weeklyCapacityHrs, setWeeklyCapacityHrs] = useState(40);
 
   const fetchData = async () => {
     try {
@@ -152,6 +153,18 @@ export default function WeeklyReview() {
         <div className="glass-panel rounded-2xl flex flex-col overflow-hidden border border-slate-200">
           <div className="p-4 bg-slate-800 text-white flex justify-between items-center">
             <h3 className="font-black uppercase tracking-widest text-xs"><i className="fa-solid fa-battery-three-quarters text-green-400 mr-2"></i> Dạ Dày Tuần Này (Core 168h)</h3>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Sức chứa (Giờ):</span>
+              <input type="number" min="1" max="168" value={weeklyCapacityHrs} onChange={e => setWeeklyCapacityHrs(Number(e.target.value) || 1)} className="w-16 bg-slate-700 text-white border border-slate-600 rounded text-center text-xs font-bold p-1 outline-none focus:border-green-400" />
+            </div>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="bg-slate-800 h-1.5 w-full overflow-hidden flex">
+            <div 
+              className={`h-full transition-all duration-500 ${totalMins > weeklyCapacityHrs * 60 ? 'bg-red-500' : 'bg-green-500'}`} 
+              style={{ width: `${Math.min((totalMins / (weeklyCapacityHrs * 60)) * 100, 100)}%` }}
+            ></div>
           </div>
           
           <div className="p-4 bg-slate-700 text-slate-200 grid grid-cols-3 gap-4 border-b border-slate-600">
