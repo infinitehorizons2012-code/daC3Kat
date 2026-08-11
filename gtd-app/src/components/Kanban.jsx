@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
 export default function Kanban() {
-  const [data, setData] = useState({ areas: [], visions: [], goals: [], projects: [] });
+  const [data, setData] = useState({ areas: [], visions: [], goals: [], missions: [], projects: [] });
   const [loading, setLoading] = useState(true);
   const [modalType, setModalType] = useState(null); // 'create', 'edit'
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({ 
-    name: '', category: 'Strategic', area_id: '', goal_id: '', vision_id: '', status: 'Active' 
+    name: '', category: 'Strategic', area_id: '', goal_ids: [], vision_ids: [], mission_ids: [], status: 'Active' 
   });
 
   const fetchData = async () => {
@@ -47,8 +47,6 @@ export default function Kanban() {
     }
 
     const payload = { ...formData };
-    if (!payload.goal_id) payload.goal_id = null;
-    if (!payload.vision_id) payload.vision_id = null;
 
     try {
       await fetch(`${API_URL}${endpoint}`, {
@@ -98,7 +96,7 @@ export default function Kanban() {
 
   const openCreateModal = () => {
     setModalType('create');
-    setFormData({ name: '', category: 'Strategic', area_id: '', goal_id: '', vision_id: '', status: 'Active' });
+    setFormData({ name: '', category: 'Strategic', area_id: '', goal_ids: [], vision_ids: [], mission_ids: [], status: 'Active' });
   };
 
   const openEditModal = (project) => {
@@ -108,8 +106,9 @@ export default function Kanban() {
       name: project.name,
       category: project.category,
       area_id: project.area_id || '',
-      goal_id: project.goal_id || '',
-      vision_id: project.vision_id || '',
+      goal_ids: project.goal_ids || [],
+      vision_ids: project.vision_ids || [],
+      mission_ids: project.mission_ids || [],
       status: project.status || 'Active'
     });
   };
@@ -118,10 +117,16 @@ export default function Kanban() {
   const onHoldProjects = data.projects.filter(p => p.status === 'On-Hold');
   const completedProjects = data.projects.filter(p => p.status === 'Completed');
 
-  // Helpers to get names for display
-  const getAreaName = (id) => data.areas.find(a => a.area_id === id)?.name || 'Unknown Area';
-  const getGoalName = (id) => data.goals.find(g => g.goal_id === id)?.statement || '';
-  const getVisionName = (id) => data.visions.find(v => v.vision_id === id)?.statement || '';
+  // Helpers to get names
+  const getArea = (id) => data.areas.find(a => a.area_id === id);
+  const getGoals = (ids) => (ids || []).map(id => data.goals.find(g => g.goal_id === id)).filter(Boolean);
+  const getVisions = (ids) => (ids || []).map(id => data.visions.find(v => v.vision_id === id)).filter(Boolean);
+  const getMissions = (ids) => (ids || []).map(id => data.missions.find(m => m.mission_id === id)).filter(Boolean);
+
+  const toggleArrayItem = (array, item) => {
+    if (array.includes(item)) return array.filter(i => i !== item);
+    return [...array, item];
+  };
 
   return (
     <div className="flex flex-col gap-6 min-h-[500px] relative">
@@ -133,8 +138,8 @@ export default function Kanban() {
       </div>
 
       {modalType && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm rounded-2xl">
-          <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl shadow-xl w-[500px] max-h-[80vh] overflow-y-auto">
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm rounded-2xl p-4">
+          <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl shadow-xl w-[700px] max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-bold text-slate-800 mb-4">{modalType === 'create' ? 'Thêm Dự án mới' : 'Sửa Dự án'}</h3>
             <div className="flex flex-col gap-4 mb-6">
               <div>
@@ -152,6 +157,20 @@ export default function Kanban() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">Khu vực / Area (bắt buộc)</label>
+                  <select 
+                    value={formData.area_id}
+                    onChange={e => setFormData({...formData, area_id: e.target.value})}
+                    className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-purple-400"
+                    required
+                  >
+                    <option value="" disabled>-- Chọn Khu vực --</option>
+                    {data.areas.map(a => (
+                      <option key={a.area_id} value={a.area_id}>{a.icon || '🎯'} {a.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1">Phân loại</label>
                   <select 
                     value={formData.category}
@@ -162,70 +181,87 @@ export default function Kanban() {
                     <option value="Maintenance">Maintenance (Bảo trì)</option>
                   </select>
                 </div>
-                {modalType === 'edit' && (
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1">Trạng thái Kanban</label>
-                    <select 
-                      value={formData.status}
-                      onChange={e => setFormData({...formData, status: e.target.value})}
-                      className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-purple-400 font-bold"
-                    >
-                      <option value="Active">Đang thực hiện (Active)</option>
-                      <option value="On-Hold">Đóng băng (On-Hold)</option>
-                      <option value="Completed">Đã hoàn thành (Completed)</option>
-                    </select>
+              </div>
+
+              {modalType === 'edit' && (
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">Trạng thái Kanban</label>
+                  <select 
+                    value={formData.status}
+                    onChange={e => setFormData({...formData, status: e.target.value})}
+                    className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-purple-400 font-bold"
+                  >
+                    <option value="Active">Đang thực hiện (Active)</option>
+                    <option value="On-Hold">Đóng băng (On-Hold)</option>
+                    <option value="Completed">Đã hoàn thành (Completed)</option>
+                  </select>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
+                {/* Missions */}
+                <div className="border border-slate-200 rounded-lg p-3 bg-slate-50">
+                  <label className="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wide border-b border-slate-200 pb-1"><i className="fa-solid fa-flag text-red-500 mr-1"></i> Sứ mệnh liên quan</label>
+                  <div className="flex flex-col gap-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
+                    {data.missions.map(m => (
+                      <label key={m.mission_id} className="flex items-start gap-2 text-sm text-slate-700 cursor-pointer hover:bg-slate-100 p-1 rounded">
+                        <input 
+                          type="checkbox" 
+                          checked={formData.mission_ids.includes(m.mission_id)}
+                          onChange={() => setFormData({...formData, mission_ids: toggleArrayItem(formData.mission_ids, m.mission_id)})}
+                          className="mt-1"
+                        />
+                        <span className="leading-tight">{m.statement}</span>
+                      </label>
+                    ))}
+                    {data.missions.length === 0 && <span className="text-xs text-slate-400 italic">Chưa có sứ mệnh</span>}
                   </div>
-                )}
-              </div>
+                </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Khu vực / Area (bắt buộc)</label>
-                <select 
-                  value={formData.area_id}
-                  onChange={e => setFormData({...formData, area_id: e.target.value})}
-                  className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-purple-400"
-                  required
-                >
-                  <option value="" disabled>-- Chọn Khu vực --</option>
-                  {data.areas.map(a => (
-                    <option key={a.area_id} value={a.area_id}>{a.name}</option>
-                  ))}
-                </select>
-              </div>
+                {/* Visions */}
+                <div className={`border border-slate-200 rounded-lg p-3 ${formData.category === 'Maintenance' ? 'bg-slate-100 opacity-60' : 'bg-slate-50'}`}>
+                  <label className="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wide border-b border-slate-200 pb-1"><i className="fa-solid fa-eye text-blue-500 mr-1"></i> Tầm nhìn liên quan</label>
+                  <div className="flex flex-col gap-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
+                    {data.visions.map(v => (
+                      <label key={v.vision_id} className="flex items-start gap-2 text-sm text-slate-700 cursor-pointer hover:bg-slate-100 p-1 rounded">
+                        <input 
+                          type="checkbox" 
+                          disabled={formData.category === 'Maintenance'}
+                          checked={formData.vision_ids.includes(v.vision_id)}
+                          onChange={() => setFormData({...formData, vision_ids: toggleArrayItem(formData.vision_ids, v.vision_id)})}
+                          className="mt-1"
+                        />
+                        <span className="leading-tight">{v.statement}</span>
+                      </label>
+                    ))}
+                    {data.visions.length === 0 && <span className="text-xs text-slate-400 italic">Chưa có tầm nhìn</span>}
+                  </div>
+                </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Tầm nhìn / Vision (tùy chọn)</label>
-                <select 
-                  value={formData.vision_id}
-                  onChange={e => setFormData({...formData, vision_id: e.target.value})}
-                  className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-purple-400"
-                  disabled={formData.category === 'Maintenance'}
-                >
-                  <option value="">[N/A] Không liên đới</option>
-                  {data.visions.map(v => (
-                    <option key={v.vision_id} value={v.vision_id}>{v.statement}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Mục tiêu / Goal (tùy chọn)</label>
-                <select 
-                  value={formData.goal_id}
-                  onChange={e => setFormData({...formData, goal_id: e.target.value})}
-                  className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-purple-400"
-                >
-                  <option value="">[N/A] Không liên đới</option>
-                  {data.goals.filter(g => formData.category === 'Maintenance' ? g.category === 'Maintenance' : g.category === 'Strategic').map(g => (
-                    <option key={g.goal_id} value={g.goal_id}>{g.statement}</option>
-                  ))}
-                </select>
+                {/* Goals */}
+                <div className="border border-slate-200 rounded-lg p-3 bg-slate-50">
+                  <label className="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wide border-b border-slate-200 pb-1"><i className="fa-solid fa-bullseye text-orange-500 mr-1"></i> Mục tiêu liên quan</label>
+                  <div className="flex flex-col gap-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
+                    {data.goals.filter(g => formData.category === 'Maintenance' ? g.category === 'Maintenance' : g.category === 'Strategic').map(g => (
+                      <label key={g.goal_id} className="flex items-start gap-2 text-sm text-slate-700 cursor-pointer hover:bg-slate-100 p-1 rounded">
+                        <input 
+                          type="checkbox" 
+                          checked={formData.goal_ids.includes(g.goal_id)}
+                          onChange={() => setFormData({...formData, goal_ids: toggleArrayItem(formData.goal_ids, g.goal_id)})}
+                          className="mt-1"
+                        />
+                        <span className="leading-tight">{g.statement}</span>
+                      </label>
+                    ))}
+                    {data.goals.length === 0 && <span className="text-xs text-slate-400 italic">Chưa có mục tiêu phù hợp</span>}
+                  </div>
+                </div>
               </div>
 
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
               <button type="button" onClick={() => setModalType(null)} className="px-4 py-2 rounded-lg font-medium text-slate-600 hover:bg-slate-100">Hủy</button>
-              <button type="submit" className="px-4 py-2 rounded-lg font-bold text-white bg-purple-600 hover:bg-purple-700 shadow-md">Lưu</button>
+              <button type="submit" className="px-4 py-2 rounded-lg font-bold text-white bg-purple-600 hover:bg-purple-700 shadow-md">Lưu Dự án</button>
             </div>
           </form>
         </div>
@@ -253,9 +289,10 @@ export default function Kanban() {
                   onDelete={() => handleDelete(p.project_id)}
                   onMoveLeft={null}
                   onMoveRight={() => handleMove(p.project_id, 'Active', 1)}
-                  areaName={getAreaName(p.area_id)}
-                  goalName={getGoalName(p.goal_id)}
-                  visionName={getVisionName(p.vision_id)}
+                  area={getArea(p.area_id)}
+                  goals={getGoals(p.goal_ids)}
+                  visions={getVisions(p.vision_ids)}
+                  missions={getMissions(p.mission_ids)}
                 />
               ))
             )}
@@ -278,9 +315,10 @@ export default function Kanban() {
                   onDelete={() => handleDelete(p.project_id)}
                   onMoveLeft={() => handleMove(p.project_id, 'On-Hold', -1)}
                   onMoveRight={() => handleMove(p.project_id, 'On-Hold', 1)}
-                  areaName={getAreaName(p.area_id)}
-                  goalName={getGoalName(p.goal_id)}
-                  visionName={getVisionName(p.vision_id)}
+                  area={getArea(p.area_id)}
+                  goals={getGoals(p.goal_ids)}
+                  visions={getVisions(p.vision_ids)}
+                  missions={getMissions(p.mission_ids)}
                   muted={true}
                 />
               ))
@@ -304,9 +342,10 @@ export default function Kanban() {
                   onDelete={() => handleDelete(p.project_id)}
                   onMoveLeft={() => handleMove(p.project_id, 'Completed', -1)}
                   onMoveRight={null}
-                  areaName={getAreaName(p.area_id)}
-                  goalName={getGoalName(p.goal_id)}
-                  visionName={getVisionName(p.vision_id)}
+                  area={getArea(p.area_id)}
+                  goals={getGoals(p.goal_ids)}
+                  visions={getVisions(p.vision_ids)}
+                  missions={getMissions(p.mission_ids)}
                   completed={true}
                 />
               ))
@@ -315,11 +354,18 @@ export default function Kanban() {
 
         </div>
       )}
+      
+      <style dangerouslySetInnerHTML={{__html: `
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+      `}} />
     </div>
   );
 }
 
-function ProjectCard({ project, onEdit, onDelete, onMoveLeft, onMoveRight, areaName, goalName, visionName, muted, completed }) {
+function ProjectCard({ project, onEdit, onDelete, onMoveLeft, onMoveRight, area, goals, visions, missions, muted, completed }) {
   return (
     <div className={`bg-white p-4 rounded-xl shadow-sm border-l-4 ${completed ? 'border-green-500 opacity-60' : muted ? 'border-slate-400 opacity-80' : 'border-purple-500'} hover:shadow-md transition-all group`}>
       <div className="flex justify-between items-start mb-2">
@@ -332,23 +378,43 @@ function ProjectCard({ project, onEdit, onDelete, onMoveLeft, onMoveRight, areaN
         </div>
       </div>
       
-      <h4 className={`font-bold ${completed ? 'text-slate-500 line-through' : 'text-slate-800'} mb-2`}>{project.name}</h4>
+      <h4 className={`font-bold ${completed ? 'text-slate-500 line-through' : 'text-slate-800'} mb-3`}>{project.name}</h4>
       
-      <div className="flex flex-col gap-1 mt-3">
-        <div className="text-[11px] text-slate-600 flex items-start gap-1.5">
-          <i className="fa-solid fa-map-location-dot mt-0.5 text-teal-600 w-3"></i>
-          <span className="font-medium text-teal-700 leading-tight">{areaName}</span>
-        </div>
-        {visionName && (
-          <div className="text-[11px] text-slate-500 flex items-start gap-1.5">
-            <i className="fa-solid fa-eye mt-0.5 w-3"></i>
-            <span className="leading-tight">{visionName}</span>
+      <div className="flex flex-col gap-2 mt-2">
+        {area && (
+          <div className="text-[11px] bg-teal-50 text-teal-800 px-2 py-1 rounded inline-flex items-center w-fit border border-teal-100">
+            <span className="mr-1.5">{area.icon || '🎯'}</span>
+            <span className="font-semibold">{area.name}</span>
           </div>
         )}
-        {goalName && (
-          <div className="text-[11px] text-slate-500 flex items-start gap-1.5">
-            <i className="fa-solid fa-bullseye mt-0.5 w-3"></i>
-            <span className="leading-tight">{goalName}</span>
+        
+        {missions.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {missions.map((m, i) => (
+              <span key={i} className="text-[10px] bg-red-50 text-red-700 border border-red-100 px-1.5 py-0.5 rounded truncate max-w-[200px]" title={m.statement}>
+                <i className="fa-solid fa-flag mr-1 opacity-70"></i>{m.statement}
+              </span>
+            ))}
+          </div>
+        )}
+        
+        {visions.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {visions.map((v, i) => (
+              <span key={i} className="text-[10px] bg-blue-50 text-blue-700 border border-blue-100 px-1.5 py-0.5 rounded truncate max-w-[200px]" title={v.statement}>
+                <i className="fa-solid fa-eye mr-1 opacity-70"></i>{v.statement}
+              </span>
+            ))}
+          </div>
+        )}
+        
+        {goals.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {goals.map((g, i) => (
+              <span key={i} className="text-[10px] bg-orange-50 text-orange-700 border border-orange-100 px-1.5 py-0.5 rounded truncate max-w-[200px]" title={g.statement}>
+                <i className="fa-solid fa-bullseye mr-1 opacity-70"></i>{g.statement}
+              </span>
+            ))}
           </div>
         )}
       </div>
