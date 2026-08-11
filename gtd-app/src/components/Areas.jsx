@@ -7,7 +7,7 @@ export default function Areas() {
   const [loading, setLoading] = useState(true);
   const [modalType, setModalType] = useState(null); // 'create', 'edit'
   const [editId, setEditId] = useState(null);
-  const [formData, setFormData] = useState({ name: '', type: 'Strategic', description: '' });
+  const [formData, setFormData] = useState({ name: '', icon: '🎯', description: '' });
 
   const fetchAreas = () => {
     fetch(`${API_URL}/areas`)
@@ -46,7 +46,7 @@ export default function Areas() {
       });
       setModalType(null);
       setEditId(null);
-      setFormData({ name: '', type: 'Strategic', description: '' });
+      setFormData({ name: '', icon: '🎯', description: '' });
       fetchAreas();
     } catch (e) {
       console.error(e);
@@ -69,7 +69,7 @@ export default function Areas() {
     <div className="glass-panel p-8 rounded-2xl min-h-[500px] relative">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-teal-700"><i className="fa-solid fa-map-location-dot mr-2"></i> Khu vực (20,000 ft)</h2>
-        <button onClick={() => { setModalType('create'); setFormData({ name: '', type: 'Strategic', description: '' }); }} className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-xl transition-colors font-bold shadow-md">
+        <button onClick={() => { setModalType('create'); setFormData({ name: '', icon: '🎯', description: '' }); }} className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-xl transition-colors font-bold shadow-md">
           <i className="fa-solid fa-plus mr-2"></i> Thêm Lĩnh vực
         </button>
       </div>
@@ -92,15 +92,14 @@ export default function Areas() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Phân loại</label>
-                <select 
-                  value={formData.type}
-                  onChange={e => setFormData({...formData, type: e.target.value})}
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Biểu tượng (Icon)</label>
+                <input 
+                  type="text" 
+                  placeholder="Ví dụ: 🎯, 🎓, 💼, 🏠..." 
+                  value={formData.icon}
+                  onChange={e => setFormData({...formData, icon: e.target.value})}
                   className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-teal-400"
-                >
-                  <option value="Strategic">Strategic (Phát triển/Chiến lược)</option>
-                  <option value="Maintenance">Maintenance (Duy trì/Bảo vệ)</option>
-                </select>
+                />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1">Mô tả chi tiết</label>
@@ -131,14 +130,14 @@ export default function Areas() {
             </div>
           ) : (
             areas.map(area => (
-              <div key={area.area_id} className={`bg-white border-l-4 p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between ${area.type === 'Strategic' ? 'border-amber-400' : 'border-sky-400'}`}>
+              <div key={area.area_id} className={`bg-white border-l-4 p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between border-teal-400`}>
                 <div>
                   <div className="flex justify-between items-start mb-2">
-                    <span className={`text-xs font-bold px-2 py-1 rounded uppercase tracking-wider ${area.type === 'Strategic' ? 'bg-amber-100 text-amber-700' : 'bg-sky-100 text-sky-700'}`}>
-                      {area.type}
+                    <span className="text-xl">
+                      {area.icon || '🎯'}
                     </span>
                     <div className="flex gap-2">
-                      <button onClick={() => { setModalType('edit'); setEditId(area.area_id); setFormData({ name: area.name, type: area.type, description: area.description || '' }); }} className="text-sm text-slate-400 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
+                      <button onClick={() => { setModalType('edit'); setEditId(area.area_id); setFormData({ name: area.name, icon: area.icon, description: area.description || '' }); }} className="text-sm text-slate-400 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                       <button onClick={() => handleDelete(area.area_id)} className="text-sm text-slate-400 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                     </div>
                   </div>
