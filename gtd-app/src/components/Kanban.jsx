@@ -4,7 +4,7 @@ import ProjectDetailModal from './ProjectDetailModal';
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
 export default function Kanban() {
-  const [data, setData] = useState({ areas: [], visions: [], goals: [], missions: [], projects: [] });
+  const [data, setData] = useState({ areas: [], visions: [], goals: [], missions: [], projects: [], actions: [] });
   const [loading, setLoading] = useState(true);
   const [modalType, setModalType] = useState(null); // 'create', 'edit'
   const [editId, setEditId] = useState(null);
