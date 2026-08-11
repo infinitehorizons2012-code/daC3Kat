@@ -3,6 +3,7 @@ import Runway from './components/Runway';
 import Kanban from './components/Kanban';
 import Horizons from './components/Horizons';
 import Review from './components/Review';
+import WeeklyReview from './components/WeeklyReview';
 import Areas from './components/Areas';
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
           {activeTab === 'kanban' && <Kanban />}
           {activeTab === 'horizons' && <Horizons />}
           {activeTab === 'review' && <Review />}
+          {activeTab === 'weekly_review' && <WeeklyReview />}
         </div>
 
         {/* Khu vực 2: GTD Dashboard */}
@@ -61,8 +63,11 @@ function App() {
           <button onClick={() => setActiveTab('horizons')} className={`px-4 py-2 rounded-[20px] font-semibold transition-all ${activeTab === 'horizons' ? 'bg-emerald-100 text-emerald-700 shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-emerald-600'}`}>
             <i className="fa-solid fa-tree mr-2"></i> Cây Horizons
           </button>
-          <button onClick={() => setActiveTab('review')} className={`px-4 py-2 rounded-[20px] font-semibold transition-all ${activeTab === 'review' ? 'bg-orange-100 text-orange-700 shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-orange-600'}`}>
+                    <button onClick={() => setActiveTab('review')} className={`px-4 py-2 rounded-[20px] font-semibold transition-all ${activeTab === 'review' ? 'bg-orange-100 text-orange-700 shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-orange-600'}`}>
             <i className="fa-solid fa-chart-pie mr-2"></i> Review
+          </button>
+          <button onClick={() => setActiveTab('weekly_review')} className={`px-4 py-2 rounded-[20px] font-semibold transition-all ${activeTab === 'weekly_review' ? 'bg-indigo-100 text-indigo-700 shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-indigo-600'}`}>
+            <i className="fa-solid fa-scale-balanced mr-2"></i> Kế Hoạch Tuần
           </button>
         </nav>
 

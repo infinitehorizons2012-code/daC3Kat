@@ -19,7 +19,7 @@ export default function Runway() {
     step3_when: null, // 'fixed' / 'asap' / 'someday'
     // Specific fields
     assigned_to: '',
-    scheduled_datetime: '', scheduled_end_datetime: '', defer_until_date: '',
+    scheduled_datetime: '', scheduled_end_datetime: '', defer_until_date: '', depends_on_action_id: '',
     context: '@Máy_tính', time_needed_mins: 30, energy_level: 'Medium', work_type: 'Defined Work'
   };
   const [formData, setFormData] = useState(initialFormData);
@@ -65,6 +65,7 @@ export default function Runway() {
         if (formData.step3_when === 'fixed') storage_system = 'Calendar';
         else if (formData.step3_when === 'deferred') storage_system = 'Deferred';
         else if (formData.step3_when === 'floating') storage_system = 'Floating_Backlog';
+        else if (formData.step3_when === 'dependent') storage_system = 'Project_Backlog';
         else if (formData.step3_when === 'someday') storage_system = 'Someday_Maybe';
         else storage_system = 'Next_Actions';
       }
@@ -106,10 +107,11 @@ export default function Runway() {
       scheduled_datetime: storage_system === 'Calendar' ? formData.scheduled_datetime : null,
       scheduled_end_datetime: storage_system === 'Calendar' ? formData.scheduled_end_datetime : null,
       defer_until_date: storage_system === 'Deferred' ? formData.defer_until_date : null,
-      context: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog') ? formData.context : null,
-      time_needed_mins: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog') ? formData.time_needed_mins : null,
-      energy_level: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog') ? formData.energy_level : null,
-      work_type: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog') ? formData.work_type : 'Defined Work',
+      depends_on_action_id: storage_system === 'Project_Backlog' ? formData.depends_on_action_id : null,
+      context: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog') ? formData.context : null,
+      time_needed_mins: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog') ? formData.time_needed_mins : null,
+      energy_level: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog') ? formData.energy_level : null,
+      work_type: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog' || storage_system === 'Project_Backlog') ? formData.work_type : 'Defined Work',
     };
 
     let endpoint = '/actions';
@@ -194,9 +196,9 @@ export default function Runway() {
       category: a.category, reference_link: a.reference_link || '',
       step1_twomins: a.storage_system === 'Do_It_Now',
       step2_who: a.storage_system === 'Waiting_For' ? 'other' : 'me',
-      step3_when: a.storage_system === 'Calendar' ? 'fixed' : (a.storage_system === 'Deferred' ? 'deferred' : (a.storage_system === 'Floating_Backlog' ? 'floating' : (a.storage_system === 'Someday_Maybe' ? 'someday' : 'asap'))),
+      step3_when: a.storage_system === 'Calendar' ? 'fixed' : (a.storage_system === 'Deferred' ? 'deferred' : (a.storage_system === 'Floating_Backlog' ? 'floating' : (a.storage_system === 'Project_Backlog' ? 'dependent' : (a.storage_system === 'Someday_Maybe' ? 'someday' : 'asap')))),
       assigned_to: a.assigned_to || '',
-      scheduled_datetime: a.scheduled_datetime || '', scheduled_end_datetime: a.scheduled_end_datetime || '', defer_until_date: a.defer_until_date || '',
+      scheduled_datetime: a.scheduled_datetime || '', scheduled_end_datetime: a.scheduled_end_datetime || '', defer_until_date: a.defer_until_date || '', depends_on_action_id: a.depends_on_action_id || '',
       context: a.context || '@Máy_tính', time_needed_mins: a.time_needed_mins || 30, energy_level: a.energy_level || 'Medium', work_type: a.work_type || 'Defined Work'
     });
     setModalOpen(true);
@@ -463,7 +465,7 @@ export default function Runway() {
                 {formData.step1_twomins === false && formData.step2_who === 'me' && (
                   <div className="bg-slate-100 p-5 rounded-2xl border-2 border-slate-200 transition-all animate-fade-in-up">
                     <h4 className="font-black text-slate-700 mb-3 text-sm"><span className="bg-slate-800 text-white w-6 h-6 inline-flex justify-center items-center rounded-full mr-2 text-xs">3</span> Quyết định: Khi nào làm?</h4>
-                    <div className="grid grid-cols-5 gap-2 mb-3">
+                    <div className="grid grid-cols-6 gap-2 mb-3">
                       <button type="button" onClick={() => setFormData({...formData, step3_when: 'fixed'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'fixed' ? 'bg-emerald-100 border-emerald-500 text-emerald-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-emerald-300 hover:text-emerald-600'}`}>
                         <i className="fa-regular fa-calendar-check text-lg mb-1 block"></i> Lịch Hẹn
                       </button>
@@ -473,8 +475,11 @@ export default function Runway() {
                       <button type="button" onClick={() => setFormData({...formData, step3_when: 'asap'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'asap' ? 'bg-blue-100 border-blue-500 text-blue-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300 hover:text-blue-600'}`}>
                         <i className="fa-solid fa-rocket text-lg mb-1 block"></i> Tuần này
                       </button>
-                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'floating'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'floating' ? 'bg-cyan-100 border-cyan-500 text-cyan-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-cyan-300 hover:text-cyan-600'}`}>
+                                            <button type="button" onClick={() => setFormData({...formData, step3_when: 'floating'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'floating' ? 'bg-cyan-100 border-cyan-500 text-cyan-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-cyan-300 hover:text-cyan-600'}`}>
                         <i className="fa-solid fa-parachute-box text-lg mb-1 block"></i> Rảnh thì làm
+                      </button>
+                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'dependent'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'dependent' ? 'bg-rose-100 border-rose-500 text-rose-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-rose-300 hover:text-rose-600'}`}>
+                        <i className="fa-solid fa-link text-lg mb-1 block"></i> Việc Chuỗi
                       </button>
                       <button type="button" onClick={() => setFormData({...formData, step3_when: 'someday'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'someday' ? 'bg-purple-100 border-purple-500 text-purple-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-purple-300 hover:text-purple-600'}`}>
                         <i className="fa-solid fa-cloud-moon text-lg mb-1 block"></i> Ấp ủ
@@ -498,6 +503,25 @@ export default function Runway() {
                       </div>
                     )}
 
+                                        {/* Sub-form for Dependent */}
+                    {formData.step3_when === 'dependent' && (
+                      <div className="animate-fade-in-up p-4 bg-rose-50 rounded-xl border border-rose-200 flex flex-col gap-3">
+                        <label className="block text-xs font-bold text-rose-800 uppercase tracking-widest"><i className="fa-solid fa-link"></i> Chọn việc đi trước (Phải xong việc đó mới làm việc này)</label>
+                        {formData.project_id ? (
+                          <select required value={formData.depends_on_action_id} onChange={e => setFormData({...formData, depends_on_action_id: e.target.value})} className="w-full p-2 rounded-lg border border-rose-200 outline-none focus:border-rose-500 text-sm font-medium">
+                            <option value="">-- Chọn công việc --</option>
+                            {data.actions.filter(a => a.project_id === formData.project_id && a.action_id !== formData.action_id && a.status !== 'Done').map(a => (
+                              <option key={a.action_id} value={a.action_id}>{a.name}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <div className="text-sm text-rose-600 font-bold bg-white p-3 rounded-lg border border-rose-200">
+                            Vui lòng chọn Dự án ở Bước 2 trước khi thiết lập chuỗi công việc.
+                          </div>
+                        )}
+                      </div>
+                    )}
+
                     {/* Sub-form for Deferred */}
                     {formData.step3_when === 'deferred' && (
                       <div className="animate-fade-in-up p-4 bg-slate-100 rounded-xl border border-slate-300 flex flex-col gap-3">
@@ -509,7 +533,7 @@ export default function Runway() {
                     )}
                     
                     {/* Sub-form for Next Actions & Floating */}
-                    {(formData.step3_when === 'asap' || formData.step3_when === 'floating') && (
+                    {(formData.step3_when === 'asap' || formData.step3_when === 'floating' || formData.step3_when === 'dependent') && (
                       <div className="animate-fade-in-up p-4 bg-blue-50 rounded-xl border border-blue-200 flex flex-col gap-3">
                         <label className="block text-xs font-bold text-blue-800 uppercase tracking-widest"><i className="fa-solid fa-filter"></i> Bối Cảnh Lọc (Context & Resources)</label>
                         <div className="grid grid-cols-2 gap-3">
@@ -563,6 +587,8 @@ export default function Runway() {
                  <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-slate-700 hover:bg-slate-800 shadow-[0_4px_15px_rgba(51,65,85,0.3)] transition-all flex items-center"><i className="fa-solid fa-lock mr-2"></i> Đóng Băng (Deferred)</button>
               ) : formData.step3_when === 'asap' ? (
                  <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-blue-600 hover:bg-blue-700 shadow-[0_4px_15px_rgba(37,99,235,0.3)] transition-all flex items-center"><i className="fa-solid fa-bolt mr-2"></i> Cài vào Kế Hoạch Tuần (Core)</button>
+                            ) : formData.step3_when === 'dependent' ? (
+                 <button type="submit" disabled={!formData.project_id || !formData.depends_on_action_id} className="px-6 py-2.5 rounded-xl font-black text-white bg-rose-600 hover:bg-rose-700 shadow-[0_4px_15px_rgba(225,29,72,0.3)] transition-all flex items-center disabled:opacity-50"><i className="fa-solid fa-link mr-2"></i> Lưu vào Project Backlog</button>
               ) : formData.step3_when === 'floating' ? (
                  <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-cyan-600 hover:bg-cyan-700 shadow-[0_4px_15px_rgba(8,145,178,0.3)] transition-all flex items-center"><i className="fa-solid fa-parachute-box mr-2"></i> Lưu vào Khay Thả Nổi</button>
               ) : formData.step3_when === 'someday' ? (
