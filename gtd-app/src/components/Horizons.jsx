@@ -430,6 +430,5 @@ export default function Horizons() {
 
         </div>
       </div>
-    </div>
   );
 }
