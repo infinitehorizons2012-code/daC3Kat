@@ -302,14 +302,6 @@ function WeeklyCapacityModal({ isOpen, onClose, capacities, onRefresh }) {
           </button>
         </div>
       </div>
-
-      <WeeklyCapacityModal 
-        isOpen={isCapacityModalOpen} 
-        onClose={() => setIsCapacityModalOpen(false)} 
-        capacities={capacities} 
-        onRefresh={fetchData} 
-      />
-
     </div>
   );
 }
