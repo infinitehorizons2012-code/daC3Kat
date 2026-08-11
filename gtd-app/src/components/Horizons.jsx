@@ -8,6 +8,25 @@ export default function Horizons() {
   const [modalType, setModalType] = useState(null); // 'mission', 'vision', 'goal', 'edit-mission', 'edit-vision', 'edit-goal'
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({ statement: '', goalType: 'strategic-vision', parentId: null, status: 'Active', milestone: '' });
+  const [collapsedMissions, setCollapsedMissions] = useState(new Set());
+  const [collapsedVisions, setCollapsedVisions] = useState(new Set());
+  
+  const toggleMission = (id) => {
+    setCollapsedMissions(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleVision = (id) => {
+    setCollapsedVisions(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
 
   const fetchData = () => {
     fetch(`${API_URL}/horizons`)
@@ -267,7 +286,12 @@ export default function Horizons() {
               <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-xl shadow-sm">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
-                    <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 block">50,000 ft - Sứ mệnh {mission.mission_id ? `(${mission.status || 'Active'})` : ''}</span>
+                    <div className="flex items-center gap-2 mb-1">
+                      <button onClick={() => toggleMission(mission.mission_id)} className="text-emerald-600 hover:text-emerald-800 focus:outline-none transition-transform" style={{ transform: collapsedMissions.has(mission.mission_id) ? 'rotate(-90deg)' : 'rotate(0deg)' }}>
+                        <i className="fa-solid fa-chevron-down"></i>
+                      </button>
+                      <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider block">50,000 ft - Sứ mệnh {mission.mission_id ? `(${mission.status || 'Active'})` : ''}</span>
+                    </div>
                     <h3 className="font-medium text-slate-800 pr-4">{mission.statement}</h3>
                   </div>
                   <div className="flex flex-col items-end gap-2 shrink-0">
@@ -283,6 +307,8 @@ export default function Horizons() {
               </div>
               
               {/* Visions for this Mission */}
+              {!collapsedMissions.has(mission.mission_id) && (
+                <>
               {visions.filter(v => v.mission_id === mission.mission_id).length === 0 ? (
                 <div className="pl-8 mt-4 text-sm text-slate-400 italic">Chưa có tầm nhìn nào cho sứ mệnh này.</div>
               ) : (
@@ -295,7 +321,12 @@ export default function Horizons() {
                       <div className="bg-white/60 border border-slate-200 p-4 rounded-xl shadow-sm">
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
-                            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">40,000 ft - Tầm nhìn {vision.status ? `- ${vision.status}` : ''}</span>
+                            <div className="flex items-center gap-2 mb-1">
+                              <button onClick={() => toggleVision(vision.vision_id)} className="text-slate-400 hover:text-slate-600 focus:outline-none transition-transform" style={{ transform: collapsedVisions.has(vision.vision_id) ? 'rotate(-90deg)' : 'rotate(0deg)' }}>
+                                <i className="fa-solid fa-chevron-down"></i>
+                              </button>
+                              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">40,000 ft - Tầm nhìn {vision.status ? `- ${vision.status}` : ''}</span>
+                            </div>
                             <h3 className={`font-medium pr-4 ${vision.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>{vision.statement}</h3>
                           </div>
                           <div className="flex flex-col items-end gap-2 shrink-0">
@@ -311,6 +342,8 @@ export default function Horizons() {
                       </div>
                       
                       {/* Goals */}
+                      {!collapsedVisions.has(vision.vision_id) && (
+                        <>
                       {goals.filter(g => g.vision_id === vision.vision_id).length === 0 ? (
                         <div className="pl-8 mt-4 text-sm text-slate-400 italic">Chưa có mục tiêu nào gắn với tầm nhìn này.</div>
                       ) : (
@@ -344,9 +377,13 @@ export default function Horizons() {
                           </div>
                         ))
                       )}
+                        </>
+                      )}
                     </div>
                   </div>
                 ))
+              )}
+                </>
               )}
             </div>
           ))
