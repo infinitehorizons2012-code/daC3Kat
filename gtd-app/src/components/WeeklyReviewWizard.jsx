@@ -161,6 +161,26 @@ export default function WeeklyReviewWizard({ onExit }) {
       </div>
     );
   }
+  else if (step === 4) {
+    stepTitle = "Đánh thức Someday/Maybe (Ấp ủ)";
+    stepDesc = "Có ý tưởng ấp ủ nào đã đến thời điểm chín muồi để bắt đầu làm chưa?";
+    icon = "fa-cloud-moon text-pink-500";
+    const someday = actions.filter(a => a.storage_system === 'Someday_Maybe' && a.status !== 'Done' && a.status !== 'Cancelled');
+    stepContent = (
+      <div className="space-y-3">
+        {someday.length === 0 ? <p className="text-center text-slate-400 py-10">Không có ý tưởng nào đang ấp ủ. ✨</p> : null}
+        {someday.map(a => (
+          <div key={a.action_id} className="p-4 border border-pink-200 rounded-xl bg-pink-50 flex justify-between items-center">
+            <span className="font-bold text-slate-700">{a.name}</span>
+            <div className="flex gap-2">
+              <button onClick={() => updateAction(a.action_id, {storage_system: 'Next_Actions'})} className="px-3 py-1.5 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded text-xs font-bold">Lôi ra làm</button>
+              <button onClick={() => updateAction(a.action_id, {storage_system: 'Project_Backlog'})} className="px-3 py-1.5 bg-orange-100 text-orange-700 hover:bg-orange-200 rounded text-xs font-bold">Lưu kho dự án</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
   else if (step === 5) {
     stepTitle = "Rà soát Dự án (10k ft)";
     stepDesc = "Dự án nào đang bị ĐÓNG BĂNG? Mọi dự án Active đều phải có ít nhất 1 Next Action!";
