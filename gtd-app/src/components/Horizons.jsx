@@ -226,15 +226,7 @@ export default function Horizons() {
                     </div>
                   )}
 
-                  {formData.goalType === 'maintenance-milestone' && (
-                    <input 
-                      type="text" 
-                      placeholder="Cột mốc (VD: Đạt 1 tỷ VND)"
-                      value={formData.milestone}
-                      onChange={e => setFormData({...formData, milestone: e.target.value})}
-                      className="border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-emerald-400"
-                    />
-                  )}
+                  {/* Milestone field removed */}
                 </>
               )}
               {(modalType === 'edit-mission' || modalType === 'edit-vision' || modalType === 'edit-goal') && (
@@ -337,9 +329,7 @@ export default function Horizons() {
                               {data.visions.find(v => v.vision_id === goal.vision_id) && (
                                 <p className="text-xs text-slate-500 mt-1 italic"><i className="fa-solid fa-link text-[10px] mr-1"></i> Thuộc Tầm nhìn: {data.visions.find(v => v.vision_id === goal.vision_id).statement}</p>
                               )}
-                              {goal.milestone && (
-                                <p className="text-xs text-blue-600 mt-1 italic"><i className="fa-solid fa-flag text-xs mr-1"></i> {goal.milestone}</p>
-                              )}
+                              {/* Milestone display removed */}
                               {goal.status === 'Active' && projects.filter(p => p.goal_id === goal.goal_id).length === 0 && (
                                 <p className="text-xs text-orange-600 mt-2 font-medium bg-orange-50 inline-block px-2 py-1 rounded">
                                   <i className="fa-solid fa-triangle-exclamation mr-1"></i> Cần tạo dự án cho mục tiêu này
@@ -381,9 +371,7 @@ export default function Horizons() {
                         <h3 className={`font-medium pr-4 ${goal.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
                           {goal.statement}
                         </h3>
-                        {goal.milestone && (
-                          <p className="text-xs text-blue-600 mt-1 italic"><i className="fa-solid fa-flag text-xs mr-1"></i> {goal.milestone}</p>
-                        )}
+                        {/* Milestone display removed */}
                         {goal.status === 'Active' && projects.filter(p => p.goal_id === goal.goal_id).length === 0 && (
                           <p className="text-xs text-orange-600 mt-2 font-medium bg-orange-50 inline-block px-2 py-1 rounded">
                             <i className="fa-solid fa-triangle-exclamation mr-1"></i> Cần tạo dự án cho mục tiêu này
@@ -421,9 +409,7 @@ export default function Horizons() {
                         <h3 className={`font-medium pr-4 ${goal.status === 'Pended' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
                           {goal.statement}
                         </h3>
-                        {goal.milestone && (
-                          <p className="text-xs text-blue-600 mt-1 italic"><i className="fa-solid fa-flag text-xs mr-1"></i> {goal.milestone}</p>
-                        )}
+                        {/* Milestone display removed */}
                         {goal.status === 'Active' && projects.filter(p => p.goal_id === goal.goal_id).length === 0 && (
                           <p className="text-xs text-orange-600 mt-2 font-medium bg-orange-50 inline-block px-2 py-1 rounded">
                             <i className="fa-solid fa-triangle-exclamation mr-1"></i> Cần tạo dự án cho mục tiêu này
