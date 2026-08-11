@@ -230,7 +230,7 @@ export default function Runway() {
   };
 
   // Lọc dữ liệu theo Hệ thống lưu trữ
-  const tabActions = data.actions.filter(a => a.storage_system === activeTab);
+  const tabActions = activeTab === 'All_Actions' ? data.actions.filter(a => a.status !== 'Done') : data.actions.filter(a => a.storage_system === activeTab);
   
   // Áp dụng bộ lọc cho Next Actions
   const filteredNextActions = tabActions.filter(a => {
@@ -248,6 +248,7 @@ export default function Runway() {
 
   
   const runwayTabsDef = {
+    'All_Actions': { label: 'Tất cả Hành động', icon: 'fa-solid fa-layer-group', color: 'text-rose-600', bg: 'bg-rose-100' },
     'Inbox': { label: 'Inbox (Chờ xử lý)', icon: 'fa-solid fa-inbox', color: 'text-gray-800', bg: 'bg-gray-100' },
     'Next_Actions': { label: '⚡ Next Actions', icon: 'fa-solid fa-list-check', color: 'text-blue-600', bg: 'bg-blue-100' },
     'Floating_Backlog': { label: '🎈 Thả nổi', icon: 'fa-solid fa-parachute-box', color: 'text-cyan-600', bg: 'bg-cyan-100' },
@@ -277,14 +278,23 @@ export default function Runway() {
           <button className={`glass-panel px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm ${runwayTabsDef[activeTab].color} ${runwayTabsDef[activeTab].bg}`}>
             <i className={runwayTabsDef[activeTab].icon}></i> {runwayTabsDef[activeTab].label} 
             {activeTab !== 'Someday_Maybe' && (
-               <span className="ml-1 bg-white/50 px-1.5 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system===activeTab && a.status!=='Done').length}</span>
+               <span className="ml-1 bg-white/50 px-1.5 py-0.5 rounded-full text-[10px]">
+                 {activeTab === 'All_Actions' 
+                    ? data.actions.filter(a => a.status !== 'Done').length 
+                    : data.actions.filter(a => a.storage_system===activeTab && a.status!=='Done').length}
+               </span>
             )}
             <i className="fa-solid fa-chevron-down text-[10px] ml-1 opacity-50"></i>
           </button>
           
           <div className={`absolute top-full left-0 mt-2 w-56 glass-panel rounded-xl p-2 transition-all flex flex-col gap-1 shadow-xl border border-slate-200/50 z-[110] ${isDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
             {Object.entries(runwayTabsDef).map(([key, tab]) => {
-              const count = key !== 'Someday_Maybe' ? data.actions.filter(a => a.storage_system===key && a.status!=='Done').length : null;
+              let count = null;
+              if (key === 'All_Actions') {
+                count = data.actions.filter(a => a.status !== 'Done').length;
+              } else if (key !== 'Someday_Maybe') {
+                count = data.actions.filter(a => a.storage_system === key && a.status !== 'Done').length;
+              }
               return (
                 <button 
                   key={key}
@@ -706,6 +716,7 @@ export default function Runway() {
 function EmptyState({ icon, text }) {
   
   const runwayTabsDef = {
+    'All_Actions': { label: 'Tất cả Hành động', icon: 'fa-solid fa-layer-group', color: 'text-rose-600', bg: 'bg-rose-100' },
     'Inbox': { label: 'Inbox (Chờ xử lý)', icon: 'fa-solid fa-inbox', color: 'text-gray-800', bg: 'bg-gray-100' },
     'Next_Actions': { label: '⚡ Next Actions', icon: 'fa-solid fa-list-check', color: 'text-blue-600', bg: 'bg-blue-100' },
     'Floating_Backlog': { label: '🎈 Thả nổi', icon: 'fa-solid fa-parachute-box', color: 'text-cyan-600', bg: 'bg-cyan-100' },
@@ -735,6 +746,7 @@ function ActionCard({ action, data, onToggle, onEdit, onDelete, onPull }) {
   
   
   const runwayTabsDef = {
+    'All_Actions': { label: 'Tất cả Hành động', icon: 'fa-solid fa-layer-group', color: 'text-rose-600', bg: 'bg-rose-100' },
     'Inbox': { label: 'Inbox (Chờ xử lý)', icon: 'fa-solid fa-inbox', color: 'text-gray-800', bg: 'bg-gray-100' },
     'Next_Actions': { label: '⚡ Next Actions', icon: 'fa-solid fa-list-check', color: 'text-blue-600', bg: 'bg-blue-100' },
     'Floating_Backlog': { label: '🎈 Thả nổi', icon: 'fa-solid fa-parachute-box', color: 'text-cyan-600', bg: 'bg-cyan-100' },
