@@ -377,8 +377,9 @@ function ProjectCard({ project, onEdit, onDelete, onMoveLeft, onMoveRight, area,
           {project.category}
         </p>
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button onClick={onEdit} className="text-xs text-slate-400 hover:text-blue-600 px-1"><i className="fa-solid fa-pen"></i></button>
-          <button onClick={onDelete} className="text-xs text-slate-400 hover:text-red-600 px-1"><i className="fa-solid fa-trash"></i></button>
+          <button onClick={onOpenDetail} className="text-xs text-slate-400 hover:text-indigo-600 px-1" title="Mở Hồ Sơ Dự Án"><i className="fa-solid fa-folder-open"></i></button>
+          <button onClick={onEdit} className="text-xs text-slate-400 hover:text-blue-600 px-1" title="Sửa tên Dự Án"><i className="fa-solid fa-pen"></i></button>
+          <button onClick={onDelete} className="text-xs text-slate-400 hover:text-red-600 px-1" title="Xóa Dự Án"><i className="fa-solid fa-trash"></i></button>
         </div>
       </div>
       
