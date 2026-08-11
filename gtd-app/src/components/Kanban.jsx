@@ -14,13 +14,15 @@ export default function Kanban() {
 
   const fetchData = async () => {
     try {
-      const [horizonsRes, areasRes] = await Promise.all([
+      const [horizonsRes, areasRes, actionsRes] = await Promise.all([
         fetch(`${API_URL}/horizons`),
-        fetch(`${API_URL}/areas`)
+        fetch(`${API_URL}/areas`),
+        fetch(`${API_URL}/actions`)
       ]);
       const hData = await horizonsRes.json();
       const aData = await areasRes.json();
-      setData({ ...hData, areas: aData });
+      const acData = await actionsRes.json();
+      setData({ ...hData, areas: aData, actions: acData || [] });
       setLoading(false);
     } catch (e) {
       console.error(e);
