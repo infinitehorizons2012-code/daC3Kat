@@ -3,6 +3,7 @@ import FocusMode from './components/FocusMode';
 import Kanban from './components/Kanban';
 import Horizons from './components/Horizons';
 import Review from './components/Review';
+import Areas from './components/Areas';
 
 function App() {
   const [activeTab, setActiveTab] = useState('focus');
@@ -40,6 +41,7 @@ function App() {
         {/* Content Area */}
         <div className="min-h-[500px]">
           {activeTab === 'focus' && <FocusMode />}
+          {activeTab === 'areas' && <Areas />}
           {activeTab === 'kanban' && <Kanban />}
           {activeTab === 'horizons' && <Horizons />}
           {activeTab === 'review' && <Review />}
@@ -50,6 +52,9 @@ function App() {
           <button onClick={() => setActiveTab('focus')} className={`px-4 py-2 rounded-[20px] font-semibold transition-all ${activeTab === 'focus' ? 'bg-blue-100 text-blue-700 shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-blue-600'}`}>
             <i className="fa-solid fa-plane-departure mr-2"></i> Runway / Next Actions
           </button>
+          <button onClick={() => setActiveTab('areas')} className={`px-4 py-2 rounded-[20px] font-semibold transition-all ${activeTab === 'areas' ? 'bg-teal-100 text-teal-700 shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-teal-600'}`}>
+            <i className="fa-solid fa-map-location-dot mr-2"></i> Khu vực (20,000 ft)
+          </button>
           <button onClick={() => setActiveTab('kanban')} className={`px-4 py-2 rounded-[20px] font-semibold transition-all ${activeTab === 'kanban' ? 'bg-purple-100 text-purple-700 shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-purple-600'}`}>
             <i className="fa-solid fa-layer-group mr-2"></i> Kanban Dự án
           </button>
@@ -57,7 +62,7 @@ function App() {
             <i className="fa-solid fa-tree mr-2"></i> Cây Horizons
           </button>
           <button onClick={() => setActiveTab('review')} className={`px-4 py-2 rounded-[20px] font-semibold transition-all ${activeTab === 'review' ? 'bg-orange-100 text-orange-700 shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-orange-600'}`}>
-            <i className="fa-solid fa-chart-pie mr-2"></i> Review Cuối Tuần
+            <i className="fa-solid fa-chart-pie mr-2"></i> Review
           </button>
         </nav>
 
