@@ -163,7 +163,7 @@ app.post('/api/visions', async (c) => {
     await db.prepare(`
       INSERT INTO Vision (vision_id, mission_id, statement, category)
       VALUES (?, ?, ?, ?)
-    `).bind(id, body.mission_id, body.statement, body.category).run()
+    `).bind(id, body.mission_id, body.statement, body.category || 'Strategic').run()
     return c.json({ success: true, id })
   } catch (e) {
     return c.json({ error: e.message }, 500)

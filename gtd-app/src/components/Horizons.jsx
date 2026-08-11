@@ -351,7 +351,6 @@ export default function Horizons() {
             </div>
           ))
         )}
-          )}
 
           {/* Independent Goals */}
           {goals.filter(g => g.category === 'Strategic' && !g.vision_id).length > 0 && (
