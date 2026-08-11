@@ -245,14 +245,27 @@ export default function WeeklyReview() {
 function WeeklyCapacityModal({ isOpen, onClose, capacities, onRefresh }) {
   const [localCaps, setLocalCaps] = useState({});
   const [saving, setSaving] = useState(false);
+  const [weeks, setWeeks] = useState([]);
+  const [newWeekStr, setNewWeekStr] = useState('');
   
   useEffect(() => {
-    if (isOpen) setLocalCaps({...capacities});
+    if (isOpen) {
+      setLocalCaps({...capacities});
+      const defaultWeeks = Array.from({length: 5}).map((_, i) => getWeekString(i));
+      setWeeks(defaultWeeks);
+      setNewWeekStr('');
+    }
   }, [isOpen, capacities]);
 
   if (!isOpen) return null;
 
-  const weeks = Array.from({length: 5}).map((_, i) => getWeekString(i));
+  const handleAddWeek = () => {
+    if (newWeekStr && !weeks.includes(newWeekStr)) {
+      setWeeks([newWeekStr, ...weeks].sort());
+      setLocalCaps(prev => ({...prev, [newWeekStr]: prev[newWeekStr] || 40}));
+      setNewWeekStr('');
+    }
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -270,32 +283,52 @@ function WeeklyCapacityModal({ isOpen, onClose, capacities, onRefresh }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/60 z-[200] flex justify-center items-center backdrop-blur-sm animate-fade-in">
-      <div className="bg-white p-6 rounded-2xl w-full max-w-sm shadow-2xl animate-slide-up">
+    <div className="fixed inset-0 bg-slate-900/60 z-[200] flex justify-center items-center backdrop-blur-sm animate-fade-in p-4">
+      <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-2xl animate-slide-up flex flex-col max-h-[90vh]">
         <h3 className="text-lg font-black text-slate-800 mb-1"><i className="fa-solid fa-calendar-week text-indigo-500 mr-2"></i> Lập kế hoạch Dạ dày</h3>
-        <p className="text-xs text-slate-500 mb-5">Thiết lập số giờ muốn làm việc cho các tuần tới.</p>
+        <p className="text-xs text-slate-500 mb-4">Thiết lập số giờ muốn làm việc cho các tuần bất kỳ.</p>
         
-        <div className="space-y-3 mb-6">
-          {weeks.map((week, idx) => (
-            <div key={week} className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
-              <div>
-                <div className="font-bold text-slate-700 text-sm">{week}</div>
-                <div className="text-[10px] font-bold text-slate-400 uppercase">{idx === 0 ? 'Tuần này' : `Sau ${idx} tuần`}</div>
+        {/* Nhập tuần chủ động */}
+        <div className="flex gap-2 mb-4 bg-indigo-50 p-3 rounded-xl border border-indigo-100">
+          <input 
+            type="week" 
+            value={newWeekStr}
+            onChange={e => setNewWeekStr(e.target.value)}
+            className="flex-1 p-2 rounded-lg border border-indigo-200 outline-none focus:border-indigo-500 text-sm font-bold text-slate-700"
+          />
+          <button 
+            onClick={handleAddWeek}
+            disabled={!newWeekStr}
+            className="px-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white rounded-lg font-bold text-sm transition-colors"
+          >
+            Thêm
+          </button>
+        </div>
+
+        <div className="space-y-3 mb-6 overflow-y-auto custom-scrollbar flex-1 pr-2">
+          {weeks.map((week) => {
+            const isCurrent = week === getWeekString(0);
+            return (
+              <div key={week} className={`flex justify-between items-center p-3 rounded-xl border ${isCurrent ? 'bg-amber-50 border-amber-200' : 'bg-slate-50 border-slate-100'}`}>
+                <div>
+                  <div className="font-bold text-slate-700 text-sm">{week}</div>
+                  {isCurrent && <div className="text-[10px] font-black text-amber-600 uppercase">Tuần này</div>}
+                </div>
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="number" min="1" max="168"
+                    value={localCaps[week] || 40}
+                    onChange={(e) => setLocalCaps({...localCaps, [week]: Number(e.target.value) || 0})}
+                    className="w-16 bg-white border border-slate-300 rounded-lg text-center font-bold p-1.5 outline-none focus:border-indigo-500 text-sm"
+                  />
+                  <span className="text-xs font-bold text-slate-400">giờ</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <input 
-                  type="number" min="1" max="168"
-                  value={localCaps[week] || 40}
-                  onChange={(e) => setLocalCaps({...localCaps, [week]: Number(e.target.value) || 0})}
-                  className="w-16 bg-white border border-slate-300 rounded-lg text-center font-bold p-1.5 outline-none focus:border-indigo-500 text-sm"
-                />
-                <span className="text-xs font-bold text-slate-400">giờ</span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         
-        <div className="flex gap-3">
+        <div className="flex gap-3 mt-auto pt-2 border-t border-slate-100">
           <button onClick={onClose} className="flex-1 py-2.5 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">Hủy</button>
           <button onClick={handleSave} disabled={saving} className="flex-1 py-2.5 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-md">
             {saving ? <i className="fa-solid fa-spinner fa-spin"></i> : 'Lưu cài đặt'}
