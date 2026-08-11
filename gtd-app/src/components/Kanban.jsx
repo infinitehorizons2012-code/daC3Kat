@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ProjectDetailModal from './ProjectDetailModal';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
@@ -287,6 +288,7 @@ export default function Kanban() {
                   project={p} 
                   onEdit={() => openEditModal(p)} 
                   onDelete={() => handleDelete(p.project_id)}
+                  onOpenDetail={() => setSelectedDetailProject(p)}
                   onMoveLeft={null}
                   onMoveRight={() => handleMove(p.project_id, 'Active', 1)}
                   area={getArea(p.area_id)}
@@ -313,6 +315,7 @@ export default function Kanban() {
                   project={p} 
                   onEdit={() => openEditModal(p)} 
                   onDelete={() => handleDelete(p.project_id)}
+                  onOpenDetail={() => setSelectedDetailProject(p)}
                   onMoveLeft={() => handleMove(p.project_id, 'On-Hold', -1)}
                   onMoveRight={() => handleMove(p.project_id, 'On-Hold', 1)}
                   area={getArea(p.area_id)}
@@ -340,6 +343,7 @@ export default function Kanban() {
                   project={p} 
                   onEdit={() => openEditModal(p)} 
                   onDelete={() => handleDelete(p.project_id)}
+                  onOpenDetail={() => setSelectedDetailProject(p)}
                   onMoveLeft={() => handleMove(p.project_id, 'Completed', -1)}
                   onMoveRight={null}
                   area={getArea(p.area_id)}
@@ -365,9 +369,9 @@ export default function Kanban() {
   );
 }
 
-function ProjectCard({ project, onEdit, onDelete, onMoveLeft, onMoveRight, area, goals, visions, missions, muted, completed }) {
+function ProjectCard({ project, onEdit, onDelete, onMoveLeft, onMoveRight, area, goals, visions, missions, muted, completed, onOpenDetail }) {
   return (
-    <div className={`bg-white p-4 rounded-xl shadow-sm border-l-4 ${completed ? 'border-green-500 opacity-60' : muted ? 'border-slate-400 opacity-80' : 'border-purple-500'} hover:shadow-md transition-all group`}>
+    <div onClick={(e) => { if (e.target.closest('button')) return; onOpenDetail(); }} className={`bg-white p-4 rounded-xl shadow-sm border-l-4 cursor-pointer ${completed ? 'border-green-500 opacity-60' : muted ? 'border-slate-400 opacity-80' : 'border-purple-500'} hover:shadow-md hover:scale-[1.02] transition-all group`}>
       <div className="flex justify-between items-start mb-2">
         <p className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${project.category === 'Strategic' ? 'bg-amber-100 text-amber-700' : 'bg-sky-100 text-sky-700'}`}>
           {project.category}
