@@ -25,28 +25,28 @@ function App() {
       <div className="w-full max-w-[1200px] flex flex-col gap-6">
         
         {/* Header Area */}
-        <div className="relative flex items-center justify-center my-4 h-14 z-[100]">
+        <div className="flex flex-col md:flex-row justify-between items-center my-4 gap-4 z-[100] relative">
           
           {/* Left Controls (Dropdowns) */}
-          <div className="absolute left-0 top-0 flex gap-3 h-full items-center">
+          <div className="flex flex-wrap gap-3 items-center justify-center w-full md:w-auto">
             
             {/* Dropdown 1: Triết lý */}
             <div className="relative group" onMouseEnter={() => setIsMenu1Open(true)} onMouseLeave={() => setIsMenu1Open(false)}>
-              <button className="glass-panel px-4 py-2 rounded-xl font-bold text-slate-600 flex items-center gap-2 hover:bg-slate-100 transition-colors shadow-sm">
-                <i className="fa-solid fa-book-open text-primary"></i> Triết lý <i className="fa-solid fa-chevron-down text-[10px] ml-1 opacity-50"></i>
+              <button className="glass-panel px-4 py-2 rounded-2xl font-black text-slate-600 flex items-center gap-2 hover:bg-white transition-all shadow-md">
+                <i className="fa-solid fa-book-open text-rose-500"></i> Triết lý <i className="fa-solid fa-chevron-down text-[10px] ml-1 opacity-50"></i>
               </button>
               
-              <div className={`absolute top-full left-0 mt-2 w-48 glass-panel rounded-xl p-2 transition-all flex flex-col gap-1 shadow-xl border border-slate-200/50 ${isMenu1Open ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
-                <button className="text-left px-4 py-2.5 rounded-lg font-semibold text-slate-600 hover:bg-slate-100 hover:text-primary transition-colors text-sm flex items-center">
+              <div className={`absolute top-full left-0 mt-2 w-48 glass-panel rounded-2xl p-2 transition-all flex flex-col gap-1 shadow-xl border border-white z-50 ${isMenu1Open ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
+                <button className="text-left px-4 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-rose-50 hover:text-rose-600 transition-colors text-sm flex items-center">
                   <i className="fa-solid fa-book w-6 text-center opacity-70"></i> Lý thuyết
                 </button>
-                <button className="text-left px-4 py-2.5 rounded-lg font-semibold text-slate-600 hover:bg-slate-100 hover:text-primary transition-colors text-sm flex items-center">
+                <button className="text-left px-4 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm flex items-center">
                   <i className="fa-solid fa-graduation-cap w-6 text-center opacity-70"></i> Kat
                 </button>
-                <button className="text-left px-4 py-2.5 rounded-lg font-semibold text-slate-600 hover:bg-slate-100 hover:text-primary transition-colors text-sm flex items-center">
+                <button className="text-left px-4 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-amber-50 hover:text-amber-600 transition-colors text-sm flex items-center">
                   <i className="fa-regular fa-gem w-6 text-center opacity-70"></i> Prinberk
                 </button>
-                <button className="text-left px-4 py-2.5 rounded-lg font-semibold text-slate-600 hover:bg-slate-100 hover:text-primary transition-colors text-sm flex items-center">
+                <button className="text-left px-4 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-purple-50 hover:text-purple-600 transition-colors text-sm flex items-center">
                   <i className="fa-solid fa-rocket w-6 text-center opacity-70"></i> Dream
                 </button>
               </div>
@@ -54,16 +54,16 @@ function App() {
 
             {/* Dropdown 2: Phân hệ GTD */}
             <div className="relative group" onMouseEnter={() => setIsMenu2Open(true)} onMouseLeave={() => setIsMenu2Open(false)}>
-              <button className={`glass-panel px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm ${tabs[activeTab].color} ${tabs[activeTab].bg}`}>
+              <button className={`glass-panel px-4 py-2 rounded-2xl font-black flex items-center gap-2 transition-all shadow-md border-2 border-white/60 hover:scale-105 ${tabs[activeTab].color} ${tabs[activeTab].bg}`}>
                 <i className={tabs[activeTab].icon}></i> {tabs[activeTab].label} <i className="fa-solid fa-chevron-down text-[10px] ml-1 opacity-50"></i>
               </button>
               
-              <div className={`absolute top-full left-0 mt-2 w-64 glass-panel rounded-xl p-2 transition-all flex flex-col gap-1 shadow-xl border border-slate-200/50 ${isMenu2Open ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
+              <div className={`absolute top-full left-0 mt-2 w-64 glass-panel rounded-2xl p-2 transition-all flex flex-col gap-1 shadow-xl border border-white/80 z-50 ${isMenu2Open ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
                 {Object.entries(tabs).map(([key, tab]) => (
                   <button 
                     key={key}
                     onClick={() => { setActiveTab(key); setIsMenu2Open(false); }} 
-                    className={`text-left px-4 py-2.5 rounded-lg font-semibold transition-colors text-sm flex items-center ${activeTab === key ? `${tab.bg} ${tab.color}` : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
+                    className={`text-left px-4 py-2.5 rounded-xl font-bold transition-all text-sm flex items-center ${activeTab === key ? `${tab.bg} ${tab.color} shadow-sm border border-white` : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
                   >
                     <i className={`${tab.icon} w-6 text-center ${activeTab === key ? '' : 'opacity-70'}`}></i> {tab.label}
                   </button>
@@ -76,11 +76,11 @@ function App() {
 
           </div>
 
-          {/* Center Logo */}
-          <div className="relative cursor-pointer transition-transform hover:scale-110 active:scale-95 duration-200">
-            <div className="absolute -inset-2 bg-primary/20 rounded-full blur-md animate-pulse"></div>
-            <div className="relative text-white font-black text-3xl tracking-wider px-5 py-2 glass-panel rounded-full border border-white/40 shadow-[0_4px_15px_rgba(59,130,246,0.3)] bg-gradient-to-r from-blue-600 to-indigo-600">
-              168
+          {/* Right Logo */}
+          <div className="relative cursor-pointer transition-transform hover:scale-110 hover:-rotate-3 active:scale-95 duration-200 flex-shrink-0 mt-2 md:mt-0">
+            <div className="absolute -inset-2 bg-pink-400/40 rounded-full blur-md animate-pulse"></div>
+            <div className="relative text-white font-black text-3xl tracking-wider px-6 py-2 glass-panel rounded-full border-4 border-white/80 shadow-[0_4px_15px_rgba(244,63,94,0.4)] bg-gradient-to-r from-rose-400 to-orange-400 flex items-center gap-2">
+              <i className="fa-solid fa-star text-yellow-200 text-2xl animate-bounce"></i> 168
             </div>
           </div>
 
