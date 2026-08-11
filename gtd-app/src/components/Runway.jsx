@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
@@ -28,6 +29,8 @@ export default function Runway() {
 
   // Filters for Next Actions
   const [filters, setFilters] = useState({ context: 'All', time: 'All', energy: 'All', work_type: 'All' });
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const portalTarget = document.getElementById('runway-dropdown-portal-target');
 
   const fetchData = async () => {
     try {
@@ -243,6 +246,17 @@ export default function Runway() {
   const uniqueContexts = [...new Set(data.actions.filter(a => a.storage_system === 'Next_Actions').map(a => a.context))].filter(Boolean);
   const timeOptions = [5, 10, 15, 30, 45, 60, 90, 120];
 
+  
+  const runwayTabsDef = {
+    'Inbox': { label: 'Inbox (Chờ xử lý)', icon: 'fa-solid fa-inbox', color: 'text-gray-800', bg: 'bg-gray-100' },
+    'Next_Actions': { label: '⚡ Next Actions', icon: 'fa-solid fa-list-check', color: 'text-blue-600', bg: 'bg-blue-100' },
+    'Floating_Backlog': { label: '🎈 Thả nổi', icon: 'fa-solid fa-parachute-box', color: 'text-cyan-600', bg: 'bg-cyan-100' },
+    'Calendar': { label: '📅 Lịch Hẹn', icon: 'fa-regular fa-calendar', color: 'text-emerald-600', bg: 'bg-emerald-100' },
+    'Deferred': { label: '🔒 Đóng băng', icon: 'fa-solid fa-lock', color: 'text-slate-700', bg: 'bg-slate-200' },
+    'Waiting_For': { label: '⏳ Chờ Phản Hồi', icon: 'fa-solid fa-hourglass-half', color: 'text-amber-600', bg: 'bg-amber-100' },
+    'Someday_Maybe': { label: '💤 Someday / Maybe', icon: 'fa-solid fa-cloud-moon', color: 'text-purple-600', bg: 'bg-purple-100' }
+  };
+
   return (
     <div className="flex flex-col gap-6 min-h-[500px]">
       <div className="glass-panel p-6 rounded-2xl flex flex-col md:flex-row justify-between md:items-center gap-4 shadow-sm relative overflow-hidden">
@@ -257,36 +271,37 @@ export default function Runway() {
         </button>
       </div>
 
-      {/* TABS NATIVE NAV */}
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-        <button onClick={() => setActiveTab('Inbox')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Inbox' ? 'bg-gray-800 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-gray-100 border border-slate-200'}`}>
-          <i className="fa-solid fa-inbox mr-2"></i> Inbox (Chờ xử lý)
-          <span className="ml-2 bg-gray-500/30 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Inbox' && a.status!=='Done').length}</span>
-        </button>
-        <button onClick={() => setActiveTab('Next_Actions')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Next_Actions' ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-blue-50 border border-slate-200'}`}>
-          <i className="fa-solid fa-list-check mr-2"></i> ⚡ Next Actions
-          <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Next_Actions' && a.status!=='Done').length}</span>
-        </button>
-        <button onClick={() => setActiveTab('Floating_Backlog')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Floating_Backlog' ? 'bg-cyan-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-cyan-50 border border-slate-200'}`}>
-          <i className="fa-solid fa-parachute-box mr-2"></i> 🎈 Thả nổi
-          <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Floating_Backlog' && a.status!=='Done').length}</span>
-        </button>
-        <button onClick={() => setActiveTab('Calendar')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Calendar' ? 'bg-emerald-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-emerald-50 border border-slate-200'}`}>
-          <i className="fa-regular fa-calendar mr-2"></i> 📅 Lịch Hẹn
-          <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Calendar' && a.status!=='Done').length}</span>
-        </button>
-        <button onClick={() => setActiveTab('Deferred')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Deferred' ? 'bg-slate-700 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}>
-          <i className="fa-solid fa-lock mr-2"></i> 🔒 Đóng băng
-          <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Deferred' && a.status!=='Done').length}</span>
-        </button>
-        <button onClick={() => setActiveTab('Waiting_For')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Waiting_For' ? 'bg-amber-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-amber-50 border border-slate-200'}`}>
-          <i className="fa-solid fa-hourglass-half mr-2"></i> ⏳ Chờ Phản Hồi
-          <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Waiting_For' && a.status!=='Done').length}</span>
-        </button>
-        <button onClick={() => setActiveTab('Someday_Maybe')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Someday_Maybe' ? 'bg-purple-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-purple-50 border border-slate-200'}`}>
-          <i className="fa-solid fa-cloud-moon mr-2"></i> 💤 Someday / Maybe
-        </button>
-      </div>
+      {/* PORTAL TO HEADER FOR DROPDOWN TABS */}
+      {portalTarget && createPortal(
+        <div className="relative group" onMouseEnter={() => setIsDropdownOpen(true)} onMouseLeave={() => setIsDropdownOpen(false)}>
+          <button className={`glass-panel px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm ${runwayTabsDef[activeTab].color} ${runwayTabsDef[activeTab].bg}`}>
+            <i className={runwayTabsDef[activeTab].icon}></i> {runwayTabsDef[activeTab].label} 
+            {activeTab !== 'Someday_Maybe' && (
+               <span className="ml-1 bg-white/50 px-1.5 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system===activeTab && a.status!=='Done').length}</span>
+            )}
+            <i className="fa-solid fa-chevron-down text-[10px] ml-1 opacity-50"></i>
+          </button>
+          
+          <div className={`absolute top-full left-0 mt-2 w-56 glass-panel rounded-xl p-2 transition-all flex flex-col gap-1 shadow-xl border border-slate-200/50 z-[110] ${isDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
+            {Object.entries(runwayTabsDef).map(([key, tab]) => {
+              const count = key !== 'Someday_Maybe' ? data.actions.filter(a => a.storage_system===key && a.status!=='Done').length : null;
+              return (
+                <button 
+                  key={key}
+                  onClick={() => { setActiveTab(key); setIsDropdownOpen(false); }} 
+                  className={`text-left px-3 py-2 rounded-lg font-bold transition-colors text-sm flex items-center justify-between ${activeTab === key ? `${tab.bg} ${tab.color}` : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
+                >
+                  <span><i className={`${tab.icon} w-6 text-center ${activeTab === key ? '' : 'opacity-70'}`}></i> {tab.label}</span>
+                  {count !== null && (
+                    <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${activeTab === key ? 'bg-white/50' : 'bg-slate-200 text-slate-500'}`}>{count}</span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        </div>,
+        portalTarget
+      )}
 
       {loading ? (
         <div className="text-center py-20 text-slate-400"><i className="fa-solid fa-spinner fa-spin text-3xl"></i></div>
@@ -689,6 +704,17 @@ export default function Runway() {
 }
 
 function EmptyState({ icon, text }) {
+  
+  const runwayTabsDef = {
+    'Inbox': { label: 'Inbox (Chờ xử lý)', icon: 'fa-solid fa-inbox', color: 'text-gray-800', bg: 'bg-gray-100' },
+    'Next_Actions': { label: '⚡ Next Actions', icon: 'fa-solid fa-list-check', color: 'text-blue-600', bg: 'bg-blue-100' },
+    'Floating_Backlog': { label: '🎈 Thả nổi', icon: 'fa-solid fa-parachute-box', color: 'text-cyan-600', bg: 'bg-cyan-100' },
+    'Calendar': { label: '📅 Lịch Hẹn', icon: 'fa-regular fa-calendar', color: 'text-emerald-600', bg: 'bg-emerald-100' },
+    'Deferred': { label: '🔒 Đóng băng', icon: 'fa-solid fa-lock', color: 'text-slate-700', bg: 'bg-slate-200' },
+    'Waiting_For': { label: '⏳ Chờ Phản Hồi', icon: 'fa-solid fa-hourglass-half', color: 'text-amber-600', bg: 'bg-amber-100' },
+    'Someday_Maybe': { label: '💤 Someday / Maybe', icon: 'fa-solid fa-cloud-moon', color: 'text-purple-600', bg: 'bg-purple-100' }
+  };
+
   return (
     <div className="glass-panel rounded-3xl p-12 flex flex-col items-center justify-center text-slate-400 border border-slate-100 shadow-sm h-full min-h-[300px]">
       <i className={`fa-solid ${icon} text-5xl mb-5 opacity-40 text-blue-300`}></i>
@@ -707,6 +733,17 @@ function ActionCard({ action, data, onToggle, onEdit, onDelete, onPull }) {
   const vision = data.visions.find(v => v.vision_id === action.vision_id);
   const mission = data.missions.find(m => m.mission_id === action.mission_id);
   
+  
+  const runwayTabsDef = {
+    'Inbox': { label: 'Inbox (Chờ xử lý)', icon: 'fa-solid fa-inbox', color: 'text-gray-800', bg: 'bg-gray-100' },
+    'Next_Actions': { label: '⚡ Next Actions', icon: 'fa-solid fa-list-check', color: 'text-blue-600', bg: 'bg-blue-100' },
+    'Floating_Backlog': { label: '🎈 Thả nổi', icon: 'fa-solid fa-parachute-box', color: 'text-cyan-600', bg: 'bg-cyan-100' },
+    'Calendar': { label: '📅 Lịch Hẹn', icon: 'fa-regular fa-calendar', color: 'text-emerald-600', bg: 'bg-emerald-100' },
+    'Deferred': { label: '🔒 Đóng băng', icon: 'fa-solid fa-lock', color: 'text-slate-700', bg: 'bg-slate-200' },
+    'Waiting_For': { label: '⏳ Chờ Phản Hồi', icon: 'fa-solid fa-hourglass-half', color: 'text-amber-600', bg: 'bg-amber-100' },
+    'Someday_Maybe': { label: '💤 Someday / Maybe', icon: 'fa-solid fa-cloud-moon', color: 'text-purple-600', bg: 'bg-purple-100' }
+  };
+
   return (
     <div className={`bg-white rounded-2xl shadow-sm border p-5 flex gap-4 transition-all hover:shadow-md group ${isUnplanned && action.storage_system==='Next_Actions' ? 'border-red-300 bg-red-50/20' : 'border-slate-200'}`}>
       {/* Checkbox */}

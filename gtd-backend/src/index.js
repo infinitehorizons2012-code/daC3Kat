@@ -5,10 +5,10 @@ const app = new Hono()
 
 app.use('*', cors())
 
-// --- AUTO MIGRATIONS ---
+let migrationsRun = false;
 app.use('*', async (c, next) => {
   // We run migrations lazily on first request. In production, this should be a scheduled task or deploy script.
-  if (!global.migrationsRun) {
+  if (!migrationsRun) {
     try {
       await c.env.DB.prepare(`
         CREATE TABLE IF NOT EXISTS WeeklyCapacities (
@@ -24,7 +24,7 @@ app.use('*', async (c, next) => {
     } catch (e) { 
       // Column might already exist
     }
-    global.migrationsRun = true;
+    migrationsRun = true;
   }
   await next();
 });
