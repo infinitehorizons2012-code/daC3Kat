@@ -143,13 +143,11 @@ export default function Runway() {
   const handleToggleStatus = async (action) => {
     const newStatus = action.status === 'Done' ? 'Pending' : 'Done';
     try {
-      await fetch(`${API_URL}${endpoint}`, {
-        method: method,
+      await fetch(`${API_URL}/actions/${action.action_id}`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ status: newStatus })
       });
-      setModalOpen(false); setEditId(null);
-      setActiveTab(storage_system);
       fetchData();
     } catch (e) {
       console.error(e);
@@ -170,13 +168,7 @@ export default function Runway() {
   const handleDelete = async (id) => {
     if (!window.confirm("Xóa hành động này?")) return;
     try {
-      await fetch(`${API_URL}${endpoint}`, {
-        method: method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      setModalOpen(false); setEditId(null);
-      setActiveTab(storage_system);
+      await fetch(`${API_URL}/actions/${id}`, { method: 'DELETE' });
       fetchData();
     } catch (e) { console.error(e); }
   };
@@ -508,8 +500,8 @@ export default function Runway() {
                       <div className="animate-fade-in-up p-4 bg-rose-50 rounded-xl border border-rose-200 flex flex-col gap-3">
                         <label className="block text-xs font-bold text-rose-800 uppercase tracking-widest"><i className="fa-solid fa-link"></i> Chọn việc đi trước (Phải xong việc đó mới làm việc này)</label>
                         {formData.project_id ? (
-                          <select required value={formData.depends_on_action_id} onChange={e => setFormData({...formData, depends_on_action_id: e.target.value})} className="w-full p-2 rounded-lg border border-rose-200 outline-none focus:border-rose-500 text-sm font-medium">
-                            <option value="">-- Chọn công việc --</option>
+                          <select value={formData.depends_on_action_id} onChange={e => setFormData({...formData, depends_on_action_id: e.target.value})} className="w-full p-2 rounded-lg border border-rose-200 outline-none focus:border-rose-500 text-sm font-medium">
+                            <option value="">-- Không phụ thuộc (Độc lập) --</option>
                             {data.actions.filter(a => a.project_id === formData.project_id && a.action_id !== formData.action_id && a.status !== 'Done').map(a => (
                               <option key={a.action_id} value={a.action_id}>{a.name}</option>
                             ))}
@@ -588,7 +580,7 @@ export default function Runway() {
               ) : formData.step3_when === 'asap' ? (
                  <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-blue-600 hover:bg-blue-700 shadow-[0_4px_15px_rgba(37,99,235,0.3)] transition-all flex items-center"><i className="fa-solid fa-bolt mr-2"></i> Cài vào Kế Hoạch Tuần (Core)</button>
                             ) : formData.step3_when === 'dependent' ? (
-                 <button type="submit" disabled={!formData.project_id || !formData.depends_on_action_id} className="px-6 py-2.5 rounded-xl font-black text-white bg-rose-600 hover:bg-rose-700 shadow-[0_4px_15px_rgba(225,29,72,0.3)] transition-all flex items-center disabled:opacity-50"><i className="fa-solid fa-link mr-2"></i> Lưu vào Project Backlog</button>
+                 <button type="submit" disabled={!formData.project_id} className="px-6 py-2.5 rounded-xl font-black text-white bg-rose-600 hover:bg-rose-700 shadow-[0_4px_15px_rgba(225,29,72,0.3)] transition-all flex items-center disabled:opacity-50"><i className="fa-solid fa-link mr-2"></i> Lưu vào Project Backlog</button>
               ) : formData.step3_when === 'floating' ? (
                  <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-cyan-600 hover:bg-cyan-700 shadow-[0_4px_15px_rgba(8,145,178,0.3)] transition-all flex items-center"><i className="fa-solid fa-parachute-box mr-2"></i> Lưu vào Khay Thả Nổi</button>
               ) : formData.step3_when === 'someday' ? (
