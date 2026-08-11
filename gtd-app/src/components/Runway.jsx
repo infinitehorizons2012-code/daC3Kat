@@ -19,7 +19,7 @@ export default function Runway() {
     step3_when: null, // 'fixed' / 'asap' / 'someday'
     // Specific fields
     assigned_to: '',
-    scheduled_datetime: '', scheduled_end_datetime: '',
+    scheduled_datetime: '', scheduled_end_datetime: '', defer_until_date: '',
     context: '@Máy_tính', time_needed_mins: 30, energy_level: 'Medium', work_type: 'Defined Work'
   };
   const [formData, setFormData] = useState(initialFormData);
@@ -63,6 +63,8 @@ export default function Runway() {
         storage_system = 'Waiting_For';
       } else {
         if (formData.step3_when === 'fixed') storage_system = 'Calendar';
+        else if (formData.step3_when === 'deferred') storage_system = 'Deferred';
+        else if (formData.step3_when === 'floating') storage_system = 'Floating_Backlog';
         else if (formData.step3_when === 'someday') storage_system = 'Someday_Maybe';
         else storage_system = 'Next_Actions';
       }
@@ -103,10 +105,11 @@ export default function Runway() {
       assigned_to: storage_system === 'Waiting_For' ? formData.assigned_to : null,
       scheduled_datetime: storage_system === 'Calendar' ? formData.scheduled_datetime : null,
       scheduled_end_datetime: storage_system === 'Calendar' ? formData.scheduled_end_datetime : null,
-      context: storage_system === 'Next_Actions' ? formData.context : null,
-      time_needed_mins: storage_system === 'Next_Actions' ? formData.time_needed_mins : null,
-      energy_level: storage_system === 'Next_Actions' ? formData.energy_level : null,
-      work_type: storage_system === 'Next_Actions' ? formData.work_type : 'Defined Work',
+      defer_until_date: storage_system === 'Deferred' ? formData.defer_until_date : null,
+      context: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog') ? formData.context : null,
+      time_needed_mins: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog') ? formData.time_needed_mins : null,
+      energy_level: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog') ? formData.energy_level : null,
+      work_type: (storage_system === 'Next_Actions' || storage_system === 'Floating_Backlog') ? formData.work_type : 'Defined Work',
     };
 
     let endpoint = '/actions';
@@ -151,6 +154,17 @@ export default function Runway() {
     }
   };
 
+  const handlePullToActive = async (a) => {
+    try {
+      await fetch(`${API_URL}/actions/${a.action_id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ storage_system: 'Next_Actions' })
+      });
+      fetchData();
+    } catch (e) { console.error(e); }
+  };
+
   const handleDelete = async (id) => {
     if (!window.confirm("Xóa hành động này?")) return;
     try {
@@ -180,9 +194,9 @@ export default function Runway() {
       category: a.category, reference_link: a.reference_link || '',
       step1_twomins: a.storage_system === 'Do_It_Now',
       step2_who: a.storage_system === 'Waiting_For' ? 'other' : 'me',
-      step3_when: a.storage_system === 'Calendar' ? 'fixed' : (a.storage_system === 'Someday_Maybe' ? 'someday' : 'asap'),
+      step3_when: a.storage_system === 'Calendar' ? 'fixed' : (a.storage_system === 'Deferred' ? 'deferred' : (a.storage_system === 'Floating_Backlog' ? 'floating' : (a.storage_system === 'Someday_Maybe' ? 'someday' : 'asap'))),
       assigned_to: a.assigned_to || '',
-      scheduled_datetime: a.scheduled_datetime || '', scheduled_end_datetime: a.scheduled_end_datetime || '',
+      scheduled_datetime: a.scheduled_datetime || '', scheduled_end_datetime: a.scheduled_end_datetime || '', defer_until_date: a.defer_until_date || '',
       context: a.context || '@Máy_tính', time_needed_mins: a.time_needed_mins || 30, energy_level: a.energy_level || 'Medium', work_type: a.work_type || 'Defined Work'
     });
     setModalOpen(true);
@@ -225,9 +239,17 @@ export default function Runway() {
           <i className="fa-solid fa-list-check mr-2"></i> ⚡ Next Actions
           <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Next_Actions' && a.status!=='Done').length}</span>
         </button>
+        <button onClick={() => setActiveTab('Floating_Backlog')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Floating_Backlog' ? 'bg-cyan-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-cyan-50 border border-slate-200'}`}>
+          <i className="fa-solid fa-parachute-box mr-2"></i> 🎈 Thả nổi
+          <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Floating_Backlog' && a.status!=='Done').length}</span>
+        </button>
         <button onClick={() => setActiveTab('Calendar')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Calendar' ? 'bg-emerald-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-emerald-50 border border-slate-200'}`}>
           <i className="fa-regular fa-calendar mr-2"></i> 📅 Lịch Hẹn
           <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Calendar' && a.status!=='Done').length}</span>
+        </button>
+        <button onClick={() => setActiveTab('Deferred')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Deferred' ? 'bg-slate-700 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}>
+          <i className="fa-solid fa-lock mr-2"></i> 🔒 Đóng băng
+          <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{data.actions.filter(a => a.storage_system==='Deferred' && a.status!=='Done').length}</span>
         </button>
         <button onClick={() => setActiveTab('Waiting_For')} className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'Waiting_For' ? 'bg-amber-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-amber-50 border border-slate-200'}`}>
           <i className="fa-solid fa-hourglass-half mr-2"></i> ⏳ Chờ Phản Hồi
@@ -313,11 +335,11 @@ export default function Runway() {
             {activeTab === 'Next_Actions' ? (
               filteredNextActions.length === 0 ? (
                 <EmptyState icon="fa-mug-hot" text="Không có công việc nào khớp với bộ lọc hiện tại." />
-              ) : filteredNextActions.map(a => <ActionCard key={a.action_id} action={a} data={data} onToggle={() => handleToggleStatus(a)} onEdit={() => openEditModal(a)} onDelete={() => handleDelete(a.action_id)} />)
+              ) : filteredNextActions.map(a => <ActionCard key={a.action_id} action={a} data={data} onToggle={() => handleToggleStatus(a)} onEdit={() => openEditModal(a)} onDelete={() => handleDelete(a.action_id)} onPull={() => handlePullToActive(a)} />)
             ) : (
               tabActions.length === 0 ? (
                 <EmptyState icon="fa-folder-open" text={`Chưa có dữ liệu trong kho ${activeTab.replace('_', ' ')}.`} />
-              ) : tabActions.map(a => <ActionCard key={a.action_id} action={a} data={data} onToggle={() => handleToggleStatus(a)} onEdit={() => openEditModal(a)} onDelete={() => handleDelete(a.action_id)} />)
+              ) : tabActions.map(a => <ActionCard key={a.action_id} action={a} data={data} onToggle={() => handleToggleStatus(a)} onEdit={() => openEditModal(a)} onDelete={() => handleDelete(a.action_id)} onPull={() => handlePullToActive(a)} />)
             )}
           </div>
         </div>
@@ -441,15 +463,21 @@ export default function Runway() {
                 {formData.step1_twomins === false && formData.step2_who === 'me' && (
                   <div className="bg-slate-100 p-5 rounded-2xl border-2 border-slate-200 transition-all animate-fade-in-up">
                     <h4 className="font-black text-slate-700 mb-3 text-sm"><span className="bg-slate-800 text-white w-6 h-6 inline-flex justify-center items-center rounded-full mr-2 text-xs">3</span> Quyết định: Khi nào làm?</h4>
-                    <div className="grid grid-cols-3 gap-3 mb-3">
-                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'fixed'})} className={`p-3 rounded-xl border-2 font-bold text-xs transition-all flex flex-col items-center justify-center ${formData.step3_when === 'fixed' ? 'bg-emerald-100 border-emerald-500 text-emerald-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-emerald-300 hover:text-emerald-600'}`}>
-                        <i className="fa-regular fa-calendar-check text-xl mb-1 block"></i> Giờ Cố Định
+                    <div className="grid grid-cols-5 gap-2 mb-3">
+                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'fixed'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'fixed' ? 'bg-emerald-100 border-emerald-500 text-emerald-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-emerald-300 hover:text-emerald-600'}`}>
+                        <i className="fa-regular fa-calendar-check text-lg mb-1 block"></i> Lịch Hẹn
                       </button>
-                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'asap'})} className={`p-3 rounded-xl border-2 font-bold text-xs transition-all flex flex-col items-center justify-center ${formData.step3_when === 'asap' ? 'bg-blue-100 border-blue-500 text-blue-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300 hover:text-blue-600'}`}>
-                        <i className="fa-solid fa-rocket text-xl mb-1 block"></i> Làm Sớm Nhất
+                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'deferred'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'deferred' ? 'bg-slate-200 border-slate-500 text-slate-800 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-600'}`}>
+                        <i className="fa-solid fa-lock text-lg mb-1 block"></i> Đợi Ngày X
                       </button>
-                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'someday'})} className={`p-3 rounded-xl border-2 font-bold text-xs transition-all flex flex-col items-center justify-center ${formData.step3_when === 'someday' ? 'bg-purple-100 border-purple-500 text-purple-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-purple-300 hover:text-purple-600'}`}>
-                        <i className="fa-solid fa-cloud-moon text-xl mb-1 block"></i> Chưa Xác Định
+                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'asap'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'asap' ? 'bg-blue-100 border-blue-500 text-blue-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300 hover:text-blue-600'}`}>
+                        <i className="fa-solid fa-rocket text-lg mb-1 block"></i> Tuần này
+                      </button>
+                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'floating'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'floating' ? 'bg-cyan-100 border-cyan-500 text-cyan-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-cyan-300 hover:text-cyan-600'}`}>
+                        <i className="fa-solid fa-parachute-box text-lg mb-1 block"></i> Rảnh thì làm
+                      </button>
+                      <button type="button" onClick={() => setFormData({...formData, step3_when: 'someday'})} className={`p-2 rounded-xl border-2 font-bold text-[10px] text-center transition-all flex flex-col items-center justify-center ${formData.step3_when === 'someday' ? 'bg-purple-100 border-purple-500 text-purple-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-purple-300 hover:text-purple-600'}`}>
+                        <i className="fa-solid fa-cloud-moon text-lg mb-1 block"></i> Ấp ủ
                       </button>
                     </div>
 
@@ -470,10 +498,20 @@ export default function Runway() {
                       </div>
                     )}
 
-                    {/* Sub-form for Next Actions */}
-                    {formData.step3_when === 'asap' && (
+                    {/* Sub-form for Deferred */}
+                    {formData.step3_when === 'deferred' && (
+                      <div className="animate-fade-in-up p-4 bg-slate-100 rounded-xl border border-slate-300 flex flex-col gap-3">
+                        <label className="block text-xs font-bold text-slate-800 uppercase tracking-widest"><i className="fa-solid fa-lock"></i> Khóa đến ngày</label>
+                        <div>
+                          <input type="date" required value={formData.defer_until_date} onChange={e => setFormData({...formData, defer_until_date: e.target.value})} className="w-full p-2 rounded-lg border border-slate-300 outline-none focus:border-slate-500 text-sm font-medium" />
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Sub-form for Next Actions & Floating */}
+                    {(formData.step3_when === 'asap' || formData.step3_when === 'floating') && (
                       <div className="animate-fade-in-up p-4 bg-blue-50 rounded-xl border border-blue-200 flex flex-col gap-3">
-                        <label className="block text-xs font-bold text-blue-800 uppercase tracking-widest"><i className="fa-solid fa-filter"></i> Bối Cảnh Lọc (Next Actions)</label>
+                        <label className="block text-xs font-bold text-blue-800 uppercase tracking-widest"><i className="fa-solid fa-filter"></i> Bối Cảnh Lọc (Context & Resources)</label>
                         <div className="grid grid-cols-2 gap-3">
                           <div>
                             <label className="block text-[10px] font-bold text-slate-600 mb-1">@Context</label>
@@ -521,8 +559,12 @@ export default function Runway() {
                  <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-amber-500 hover:bg-amber-600 shadow-[0_4px_15px_rgba(245,158,11,0.3)] transition-all flex items-center"><i className="fa-solid fa-paper-plane mr-2"></i> Chuyển vào Waiting For</button>
               ) : formData.step3_when === 'fixed' ? (
                  <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-emerald-500 hover:bg-emerald-600 shadow-[0_4px_15px_rgba(16,185,129,0.3)] transition-all flex items-center"><i className="fa-regular fa-calendar-plus mr-2"></i> Đặt Lịch Hẹn (Calendar)</button>
+              ) : formData.step3_when === 'deferred' ? (
+                 <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-slate-700 hover:bg-slate-800 shadow-[0_4px_15px_rgba(51,65,85,0.3)] transition-all flex items-center"><i className="fa-solid fa-lock mr-2"></i> Đóng Băng (Deferred)</button>
               ) : formData.step3_when === 'asap' ? (
-                 <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-blue-600 hover:bg-blue-700 shadow-[0_4px_15px_rgba(37,99,235,0.3)] transition-all flex items-center"><i className="fa-solid fa-bolt mr-2"></i> Lưu vào Next Actions</button>
+                 <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-blue-600 hover:bg-blue-700 shadow-[0_4px_15px_rgba(37,99,235,0.3)] transition-all flex items-center"><i className="fa-solid fa-bolt mr-2"></i> Cài vào Kế Hoạch Tuần (Core)</button>
+              ) : formData.step3_when === 'floating' ? (
+                 <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-cyan-600 hover:bg-cyan-700 shadow-[0_4px_15px_rgba(8,145,178,0.3)] transition-all flex items-center"><i className="fa-solid fa-parachute-box mr-2"></i> Lưu vào Khay Thả Nổi</button>
               ) : formData.step3_when === 'someday' ? (
                  <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-purple-500 hover:bg-purple-600 shadow-[0_4px_15px_rgba(168,85,247,0.3)] transition-all flex items-center"><i className="fa-solid fa-bed mr-2"></i> Đưa vào Kho Ấp ủ</button>
               ) : (
@@ -545,7 +587,7 @@ function EmptyState({ icon, text }) {
   );
 }
 
-function ActionCard({ action, data, onToggle, onEdit, onDelete }) {
+function ActionCard({ action, data, onToggle, onEdit, onDelete, onPull }) {
   const isUrl = action.reference_link && (action.reference_link.startsWith('http://') || action.reference_link.startsWith('https://'));
   const isUnplanned = action.work_type === 'Unplanned Work';
   
@@ -581,6 +623,16 @@ function ActionCard({ action, data, onToggle, onEdit, onDelete }) {
                 <i className="fa-solid fa-user-clock mr-1"></i> Chờ: {action.assigned_to}
               </span>
             )}
+            {action.storage_system === 'Floating_Backlog' && (
+              <span className="text-[10px] font-black uppercase tracking-widest bg-cyan-100 text-cyan-800 px-2 py-1 rounded-md flex items-center border border-cyan-200">
+                <i className="fa-solid fa-parachute-box mr-1"></i> Dự Phòng
+              </span>
+            )}
+            {action.storage_system === 'Deferred' && (
+              <span className="text-[10px] font-black uppercase tracking-widest bg-slate-200 text-slate-800 px-2 py-1 rounded-md flex items-center border border-slate-300">
+                <i className="fa-solid fa-lock mr-1"></i> Mở khóa: {new Date(action.defer_until_date).toLocaleDateString('vi-VN')}
+              </span>
+            )}
             {action.storage_system === 'Calendar' && (
               <span className="text-[10px] font-black uppercase tracking-widest bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md flex items-center border border-emerald-200 shadow-sm">
                 <i className="fa-regular fa-calendar-check mr-1.5 text-emerald-600"></i> {new Date(action.scheduled_datetime).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})} - {new Date(action.scheduled_end_datetime).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})} ({new Date(action.scheduled_datetime).toLocaleDateString('vi-VN')})
@@ -592,6 +644,9 @@ function ActionCard({ action, data, onToggle, onEdit, onDelete }) {
           </div>
           
           <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            {action.storage_system === 'Floating_Backlog' && (
+              <button onClick={onPull} className="px-3 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors flex items-center justify-center font-bold text-[10px] uppercase tracking-widest shadow-sm border border-blue-200"><i className="fa-solid fa-arrow-turn-up mr-1 rotate-90"></i> Kéo vào Tuần Này</button>
+            )}
             <button onClick={onEdit} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-blue-100 hover:text-blue-600 transition-colors flex items-center justify-center"><i className="fa-solid fa-pen text-xs"></i></button>
             <button onClick={onDelete} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-red-100 hover:text-red-600 transition-colors flex items-center justify-center"><i className="fa-solid fa-trash text-xs"></i></button>
           </div>
