@@ -25,14 +25,14 @@ function App() {
       <div className="w-full max-w-[1200px] flex flex-col gap-6">
         
         {/* Header Area */}
-        <div className="flex flex-col md:flex-row justify-between items-center my-4 gap-4 z-[100] relative">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 z-[100] sticky top-4 glass-panel px-6 py-4 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/80 bg-white/40">
           
           {/* Left Controls (Dropdowns) */}
           <div className="flex flex-wrap gap-3 items-center justify-center w-full md:w-auto">
             
             {/* Dropdown 1: Triết lý */}
             <div className="relative group" onMouseEnter={() => setIsMenu1Open(true)} onMouseLeave={() => setIsMenu1Open(false)}>
-              <button className="glass-panel px-4 py-2 rounded-2xl font-black text-slate-600 flex items-center gap-2 hover:bg-white transition-all shadow-md">
+              <button className="glass-panel bg-white/70 px-4 py-2 rounded-2xl font-black text-slate-600 flex items-center gap-2 hover:bg-white transition-all shadow-sm">
                 <i className="fa-solid fa-book-open text-rose-500"></i> Triết lý <i className="fa-solid fa-chevron-down text-[10px] ml-1 opacity-50"></i>
               </button>
               
@@ -54,7 +54,7 @@ function App() {
 
             {/* Dropdown 2: Phân hệ GTD */}
             <div className="relative group" onMouseEnter={() => setIsMenu2Open(true)} onMouseLeave={() => setIsMenu2Open(false)}>
-              <button className={`glass-panel px-4 py-2 rounded-2xl font-black flex items-center gap-2 transition-all shadow-md border-2 border-white/60 hover:scale-105 ${tabs[activeTab].color} ${tabs[activeTab].bg}`}>
+              <button className={`glass-panel bg-white/70 px-4 py-2 rounded-2xl font-black flex items-center gap-2 transition-all shadow-sm border border-white/60 hover:scale-105 ${tabs[activeTab].color} ${tabs[activeTab].bg}`}>
                 <i className={tabs[activeTab].icon}></i> {tabs[activeTab].label} <i className="fa-solid fa-chevron-down text-[10px] ml-1 opacity-50"></i>
               </button>
               
