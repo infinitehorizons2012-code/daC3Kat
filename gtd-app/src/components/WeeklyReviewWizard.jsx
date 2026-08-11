@@ -161,7 +161,7 @@ export default function WeeklyReviewWizard({ onExit }) {
       </div>
     );
   }
-  else if (step === 6) {
+  else if (step === 5) {
     stepTitle = "Rà soát Dự án (10k ft)";
     stepDesc = "Dự án nào đang bị ĐÓNG BĂNG? Mọi dự án Active đều phải có ít nhất 1 Next Action!";
     icon = "fa-layer-group text-orange-500";
