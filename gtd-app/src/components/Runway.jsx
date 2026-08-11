@@ -3,12 +3,13 @@ import React, { useState, useEffect, useMemo } from 'react';
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
 export default function Runway() {
-  const [data, setData] = useState({ actions: [], areas: [], projects: [] });
+  const [data, setData] = useState({ actions: [], areas: [], projects: [], goals: [], visions: [], missions: [] });
   const [loading, setLoading] = useState(true);
   const [modalType, setModalType] = useState(null); // 'create', 'edit'
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({
     name: '', category: 'Strategic', area_id: '', project_id: '',
+    goal_id: '', vision_id: '', mission_id: '',
     context: '@Máy_tính', time_needed_mins: 30, energy_level: 'Medium',
     work_type: 'Defined Work', reference_link: '', status: 'Next'
   });
@@ -28,7 +29,14 @@ export default function Runway() {
       const acData = await actionsRes.json();
       const hData = await horizonsRes.json();
       const arData = await areasRes.json();
-      setData({ actions: acData, areas: arData, projects: hData.projects || [] });
+      setData({ 
+        actions: acData, 
+        areas: arData, 
+        projects: hData.projects || [],
+        goals: hData.goals || [],
+        visions: hData.visions || [],
+        missions: hData.missions || []
+      });
       setLoading(false);
     } catch (e) {
       console.error(e);
@@ -88,6 +96,7 @@ export default function Runway() {
     setModalType('create');
     setFormData({
       name: '', category: 'Strategic', area_id: '', project_id: '',
+      goal_id: '', vision_id: '', mission_id: '',
       context: '@Máy_tính', time_needed_mins: 30, energy_level: 'Medium',
       work_type: 'Defined Work', reference_link: '', status: 'Next'
     });
@@ -96,7 +105,8 @@ export default function Runway() {
   const openEditModal = (a) => {
     setModalType('edit'); setEditId(a.action_id);
     setFormData({
-      name: a.name, category: a.category, area_id: a.area_id || '', project_id: a.project_id || '',
+      name: a.name, category: a.category, area_id: a.area_id || '', 
+      project_id: a.project_id || '', goal_id: a.goal_id || '', vision_id: a.vision_id || '', mission_id: a.mission_id || '',
       context: a.context, time_needed_mins: a.time_needed_mins, energy_level: a.energy_level,
       work_type: a.work_type, reference_link: a.reference_link || '', status: a.status
     });
@@ -226,6 +236,9 @@ export default function Runway() {
                   action={a} 
                   area={data.areas.find(ar => ar.area_id === a.area_id)}
                   project={data.projects.find(p => p.project_id === a.project_id)}
+                  goal={data.goals.find(g => g.goal_id === a.goal_id)}
+                  vision={data.visions.find(v => v.vision_id === a.vision_id)}
+                  mission={data.missions.find(m => m.mission_id === a.mission_id)}
                   onToggle={() => handleToggleStatus(a)}
                   onEdit={() => openEditModal(a)}
                   onDelete={() => handleDelete(a.action_id)}
@@ -252,21 +265,47 @@ export default function Runway() {
                   className="w-full border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-500 text-lg font-medium"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Khu vực / Nan xe (Bắt buộc - 20k ft)</label>
+                <select required value={formData.area_id} onChange={e => setFormData({...formData, area_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none font-bold text-slate-700 bg-slate-50">
+                  <option value="" disabled>-- Chọn Khu vực Trách nhiệm --</option>
+                  {data.areas.map(a => <option key={a.area_id} value={a.area_id}>{a.icon || '🎯'} {a.name}</option>)}
+                </select>
+              </div>
+
+              {/* KHU VỰC LIÊN KẾT NÂNG CAO (OPTIONAL LINKS) */}
+              <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                <h4 className="text-[11px] font-black text-blue-800 uppercase tracking-wider mb-3"><i className="fa-solid fa-link"></i> Liên Kết Vượt Tầng (Tùy chọn)</h4>
+              <div className="grid grid-cols-2 gap-4 mt-2">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Khu vực (Bắt buộc)</label>
-                  <select required value={formData.area_id} onChange={e => setFormData({...formData, area_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none">
-                    <option value="" disabled>-- Chọn Khu vực --</option>
-                    {data.areas.map(a => <option key={a.area_id} value={a.area_id}>{a.icon || '🎯'} {a.name}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Dự án (Tùy chọn)</label>
-                  <select value={formData.project_id} onChange={e => setFormData({...formData, project_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none">
-                    <option value="">[Không thuộc dự án nào]</option>
+                  <label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase"><i className="fa-solid fa-layer-group text-purple-500 mr-1"></i> Dự án (10k ft)</label>
+                  <select value={formData.project_id} onChange={e => setFormData({...formData, project_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none text-sm">
+                    <option value="">[Trống - Không liên kết]</option>
                     {data.projects.filter(p => p.status === 'Active').map(p => <option key={p.project_id} value={p.project_id}>{p.name}</option>)}
                   </select>
                 </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase"><i className="fa-solid fa-bullseye text-blue-500 mr-1"></i> Mục tiêu (30k ft)</label>
+                  <select value={formData.goal_id} onChange={e => setFormData({...formData, goal_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none text-sm">
+                    <option value="">[Trống - Không liên kết]</option>
+                    {data.goals.filter(g => g.status === 'Active').map(g => <option key={g.goal_id} value={g.goal_id}>{g.statement}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase"><i className="fa-solid fa-telescope text-teal-500 mr-1"></i> Tầm nhìn (40k ft)</label>
+                  <select value={formData.vision_id} onChange={e => setFormData({...formData, vision_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none text-sm">
+                    <option value="">[Trống - Không liên kết]</option>
+                    {data.visions.filter(v => v.status === 'Active').map(v => <option key={v.vision_id} value={v.vision_id}>{v.statement}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase"><i className="fa-solid fa-rocket text-red-500 mr-1"></i> Sứ mệnh (50k ft)</label>
+                  <select value={formData.mission_id} onChange={e => setFormData({...formData, mission_id: e.target.value})} className="w-full border border-slate-300 rounded-lg p-2 outline-none text-sm">
+                    <option value="">[Trống - Không liên kết]</option>
+                    {data.missions.map(m => <option key={m.mission_id} value={m.mission_id}>{m.statement}</option>)}
+                  </select>
+                </div>
+              </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
@@ -341,7 +380,7 @@ export default function Runway() {
   );
 }
 
-function ActionCard({ action, area, project, onToggle, onEdit, onDelete }) {
+function ActionCard({ action, area, project, goal, vision, mission, onToggle, onEdit, onDelete }) {
   const isUrl = action.reference_link && (action.reference_link.startsWith('http://') || action.reference_link.startsWith('https://'));
   const isUnplanned = action.work_type === 'Unplanned Work';
   
@@ -376,15 +415,30 @@ function ActionCard({ action, area, project, onToggle, onEdit, onDelete }) {
         <h4 className={`text-lg font-bold ${action.status === 'Done' ? 'text-slate-400 line-through' : 'text-slate-800'} mb-2`}>{action.name}</h4>
         
         {/* Meta tags */}
-        <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
+        <div className="flex flex-wrap gap-x-3 gap-y-2 mt-2">
           {area && (
-            <div className="text-[11px] text-slate-500 flex items-center gap-1">
+            <div className="text-[11px] text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md flex items-center gap-1 border border-slate-200">
               <span>{area.icon || '🎯'}</span> <span className="font-semibold">{area.name}</span>
             </div>
           )}
           {project && (
-            <div className="text-[11px] text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full flex items-center gap-1">
-              <i className="fa-solid fa-layer-group"></i> <span>{project.name}</span>
+            <div className="text-[11px] text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md flex items-center gap-1 border border-purple-200 shadow-sm">
+              <i className="fa-solid fa-layer-group"></i> <span className="font-semibold truncate max-w-[150px]">{project.name}</span>
+            </div>
+          )}
+          {goal && (
+            <div className="text-[11px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md flex items-center gap-1 border border-blue-200 shadow-sm">
+              <i className="fa-solid fa-bullseye"></i> <span className="font-semibold truncate max-w-[150px]">{goal.statement}</span>
+            </div>
+          )}
+          {vision && (
+            <div className="text-[11px] text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md flex items-center gap-1 border border-teal-200 shadow-sm">
+              <i className="fa-solid fa-telescope"></i> <span className="font-semibold truncate max-w-[150px]">{vision.statement}</span>
+            </div>
+          )}
+          {mission && (
+            <div className="text-[11px] text-red-700 bg-red-50 px-2 py-0.5 rounded-md flex items-center gap-1 border border-red-200 shadow-sm">
+              <i className="fa-solid fa-rocket animate-pulse"></i> <span className="font-semibold truncate max-w-[150px]">{mission.statement}</span>
             </div>
           )}
         </div>
