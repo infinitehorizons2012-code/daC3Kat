@@ -8,6 +8,7 @@ export default function Kanban() {
   const [loading, setLoading] = useState(true);
   const [modalType, setModalType] = useState(null); // 'create', 'edit'
   const [editId, setEditId] = useState(null);
+  const [selectedDetailProject, setSelectedDetailProject] = useState(null);
   const [formData, setFormData] = useState({ 
     name: '', category: 'Strategic', area_id: '', goal_ids: [], vision_ids: [], mission_ids: [], status: 'Active' 
   });
@@ -139,6 +140,16 @@ export default function Kanban() {
           <i className="fa-solid fa-plus mr-2"></i> Thêm dự án
         </button>
       </div>
+
+      
+      {selectedDetailProject && (
+        <ProjectDetailModal 
+          project={selectedDetailProject} 
+          data={data} 
+          onClose={() => setSelectedDetailProject(null)} 
+          onRefresh={fetchData} 
+        />
+      )}
 
       {modalType && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm rounded-2xl p-4">
