@@ -248,7 +248,7 @@ export default function Runway() {
       <div className="glass-panel p-6 rounded-2xl flex flex-col md:flex-row justify-between md:items-center gap-4 shadow-sm relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
         <div>
-          <h2 className="text-2xl font-black text-slate-800"><i className="fa-solid fa-plane-departure text-blue-600 mr-2"></i> Runway (Trạm Điều Khiển) v1.0.6</h2>
+          <h2 className="text-2xl font-black text-slate-800"><i className="fa-solid fa-plane-departure text-blue-600 mr-2"></i> Runway (Trạm Điều Khiển) v1.0.7</h2>
           <p className="text-sm text-slate-500 mt-1 font-medium">Trung tâm phân luồng và thực thi 5 Hệ thống Lưu trữ Hành động GTD.</p>
         </div>
         <button onClick={() => setShowQuickInbox(true)} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl transition-all shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.4)] hover:-translate-y-0.5 font-bold flex items-center justify-center relative overflow-hidden group">
@@ -365,6 +365,47 @@ export default function Runway() {
                 <EmptyState icon="fa-folder-open" text={`Chưa có dữ liệu trong kho ${activeTab.replace('_', ' ')}.`} />
               ) : tabActions.map(a => <ActionCard key={a.action_id} action={a} data={data} onToggle={() => handleToggleStatus(a)} onEdit={() => openEditModal(a)} onDelete={() => handleDelete(a.action_id)} onPull={() => handlePullToActive(a)} />)
             )}
+          </div>
+        </div>
+      )}
+
+      {/* QUICK INBOX MODAL */}
+      {showQuickInbox && (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-2xl animate-fade-in">
+            <div className="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4 flex justify-between items-center">
+              <h3 className="text-xl font-black text-white flex items-center">
+                <i className="fa-solid fa-inbox mr-2"></i> Nhập Nhanh (Inbox)
+              </h3>
+              <button onClick={() => setShowQuickInbox(false)} className="text-white/60 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            
+            <form onSubmit={handleQuickInboxSubmit} className="p-6">
+              <div className="mb-4">
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Tên công việc / Ý tưởng</label>
+                <input 
+                  autoFocus
+                  type="text" 
+                  value={quickInboxName} 
+                  onChange={e => setQuickInboxName(e.target.value)} 
+                  className="w-full p-4 rounded-xl border-2 border-gray-200 text-lg outline-none focus:border-gray-500 transition-colors" 
+                  placeholder="Nhập bất cứ thứ gì đang lởn vởn trong đầu..."
+                  required
+                />
+              </div>
+              <p className="text-sm text-gray-500 mb-6 italic"><i className="fa-solid fa-circle-info mr-1"></i> Không cần phân loại ngay. Cứ ném vào Inbox rồi cuối tuần xử lý sau (Defining Work).</p>
+              
+              <div className="flex justify-end gap-3">
+                <button type="button" onClick={() => setShowQuickInbox(false)} className="px-5 py-2.5 rounded-xl text-gray-600 font-bold hover:bg-gray-100 transition-colors">
+                  Hủy
+                </button>
+                <button type="submit" className="px-6 py-2.5 rounded-xl font-black text-white bg-gray-700 hover:bg-gray-800 shadow-md transition-all flex items-center">
+                  <i className="fa-solid fa-download mr-2"></i> Lưu vào Inbox
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
@@ -575,9 +616,24 @@ export default function Runway() {
                         <div className="grid grid-cols-2 gap-3">
                           <div>
                             <label className="block text-[10px] font-bold text-slate-600 mb-1">Thời gian (Phút)</label>
-                            <select required value={formData.time_needed_mins} onChange={e => setFormData({...formData, time_needed_mins: parseInt(e.target.value)})} className="w-full p-2 border border-blue-200 rounded-lg outline-none text-sm">
-                              {[5,10,15,30,45,60,90,120].map(t => <option key={t} value={t}>{t}m</option>)}
-                            </select>
+                            <input 
+                              type="number" 
+                              required 
+                              min="1" 
+                              max="10000"
+                              value={formData.time_needed_mins || ''} 
+                              onChange={e => setFormData({...formData, time_needed_mins: parseInt(e.target.value) || 0})} 
+                              className="w-full p-2 border border-blue-200 rounded-lg outline-none text-sm"
+                              list="time_suggestions"
+                              placeholder="Nhập số phút (VD: 45)"
+                            />
+                            <datalist id="time_suggestions">
+                              <option value="5">5 phút (Cực nhanh)</option>
+                              <option value="15">15 phút (Nhanh)</option>
+                              <option value="30">30 phút (Trung bình)</option>
+                              <option value="60">60 phút (1 Tiếng)</option>
+                              <option value="120">120 phút (2 Tiếng)</option>
+                            </datalist>
                           </div>
                           <div>
                             <label className="block text-[10px] font-bold text-slate-600 mb-1">Năng lượng</label>
