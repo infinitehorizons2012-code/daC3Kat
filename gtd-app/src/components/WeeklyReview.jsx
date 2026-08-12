@@ -333,9 +333,17 @@ export default function WeeklyReview() {
                         )}
                       </div>
                     </div>
+                    
+                    {/* Visual Hours Badge */}
+                    <div className={`flex flex-col items-end justify-center px-3 py-1 rounded-lg ${isCal || isWait ? 'bg-amber-50' : 'bg-blue-50'}`}>
+                      <span className={`text-sm font-black ${isCal || isWait ? 'text-amber-500' : 'text-blue-500'}`}>
+                        {Math.round(calcMins(a) / 60 * 10) / 10}h
+                      </span>
+                    </div>
+
                     {/* Push Back Button only for Next Actions */}
                     {!isCal && !isWait && (
-                      <button onClick={() => handlePushBack(a)} className="opacity-0 group-hover:opacity-100 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Loại khỏi tuần này">
+                      <button onClick={() => handlePushBack(a)} className="opacity-0 group-hover:opacity-100 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all ml-1" title="Loại khỏi tuần này">
                         <i className="fa-solid fa-rotate-left"></i>
                       </button>
                     )}
