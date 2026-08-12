@@ -232,11 +232,7 @@ export default function Runway() {
   };
 
   // Lọc dữ liệu theo Hệ thống lưu trữ
-  const tabActions = activeTab === 'All_Actions' 
-    ? data.actions.filter(a => a.status !== 'Done') 
-    : (activeTab === 'Next_Actions' 
-        ? data.actions.filter(a => ['Next_Actions', 'Calendar', 'Waiting_For'].includes(a.storage_system))
-        : data.actions.filter(a => a.storage_system === activeTab));
+  const tabActions = activeTab === 'All_Actions' ? data.actions.filter(a => a.status !== 'Done') : data.actions.filter(a => a.storage_system === activeTab);
   
   // Áp dụng bộ lọc cho Next Actions
   const filteredNextActions = tabActions.filter(a => {
@@ -249,7 +245,7 @@ export default function Runway() {
   });
 
   const unplannedActions = data.actions.filter(a => a.storage_system === 'Next_Actions' && a.work_type === 'Unplanned Work' && a.status !== 'Done');
-  const uniqueContexts = [...new Set(data.actions.filter(a => ['Next_Actions', 'Calendar', 'Waiting_For'].includes(a.storage_system)).map(a => a.context))].filter(Boolean);
+  const uniqueContexts = [...new Set(data.actions.filter(a => a.storage_system === 'Next_Actions').map(a => a.context))].filter(Boolean);
   const timeOptions = [5, 10, 15, 30, 45, 60, 90, 120];
 
   
@@ -287,9 +283,7 @@ export default function Runway() {
                <span className="ml-1 bg-white/50 px-1.5 py-0.5 rounded-full text-[10px]">
                  {activeTab === 'All_Actions' 
                     ? data.actions.filter(a => a.status !== 'Done').length 
-                    : (activeTab === 'Next_Actions' 
-                        ? data.actions.filter(a => ['Next_Actions', 'Calendar', 'Waiting_For'].includes(a.storage_system) && a.status !== 'Done').length 
-                        : data.actions.filter(a => a.storage_system === activeTab && a.status !== 'Done').length)}
+                    : data.actions.filter(a => a.storage_system===activeTab && a.status!=='Done').length}
                </span>
             )}
             <i className="fa-solid fa-chevron-down text-[10px] ml-1 opacity-50"></i>
@@ -300,8 +294,6 @@ export default function Runway() {
               let count = null;
               if (key === 'All_Actions') {
                 count = data.actions.filter(a => a.status !== 'Done').length;
-              } else if (key === 'Next_Actions') {
-                count = data.actions.filter(a => ['Next_Actions', 'Calendar', 'Waiting_For'].includes(a.storage_system) && a.status !== 'Done').length;
               } else if (key !== 'Someday_Maybe') {
                 count = data.actions.filter(a => a.storage_system === key && a.status !== 'Done').length;
               }
