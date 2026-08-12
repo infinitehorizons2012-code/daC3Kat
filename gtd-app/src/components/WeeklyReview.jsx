@@ -327,7 +327,9 @@ export default function WeeklyReview() {
                             <i className="fa-solid fa-user mr-1"></i> Chờ: {a.assigned_to} ({calcMins(a)}m)
                           </span>
                         ) : (
-                          <span className="text-blue-600">{a.time_needed_mins}m • {a.energy_level}</span>
+                          <span className="text-blue-600">
+                            <i className="fa-solid fa-clock mr-1"></i> {calcMins(a)}m • {a.energy_level || 'Medium'}
+                          </span>
                         )}
                       </div>
                     </div>
