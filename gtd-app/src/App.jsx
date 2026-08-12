@@ -6,9 +6,11 @@ import WeeklyReview from './components/WeeklyReview';
 import ReviewHub from './components/ReviewHub';
 import Areas from './components/Areas';
 import DailyReviewWizard from './components/DailyReviewWizard';
+import TimeManagement from './components/TimeManagement';
 
 const tabs = {
   focus: { label: 'Runway', icon: 'fa-solid fa-plane-departure', color: 'text-blue-600', bg: 'bg-blue-100' },
+  time: { label: 'Time Matrix (Phân bổ 168h)', icon: 'fa-solid fa-clock-rotate-left', color: 'text-amber-600', bg: 'bg-amber-100' },
   daily: { label: 'Daily Review', icon: 'fa-solid fa-sun', color: 'text-orange-600', bg: 'bg-orange-100' },
   weekly: { label: 'Weekly Planning', icon: 'fa-solid fa-calendar-week', color: 'text-indigo-600', bg: 'bg-indigo-100' },
   reviews: { label: 'Trạm Kiểm Duyệt (Kết quả)', icon: 'fa-solid fa-satellite-dish', color: 'text-slate-600', bg: 'bg-slate-100' },
@@ -91,6 +93,7 @@ function App() {
         {/* Content Area */}
         <div className="min-h-[500px]">
           {activeTab === 'focus' && <Runway />}
+          {activeTab === 'time' && <TimeManagement />}
           {activeTab === 'areas' && <Areas />}
           {activeTab === 'kanban' && <Kanban />}
           {activeTab === 'horizons' && <Horizons />}
