@@ -385,6 +385,8 @@ export default function Runway() {
               filteredNextActions.length === 0 ? (
                 <EmptyState icon="fa-mug-hot" text="Không có công việc nào khớp với bộ lọc hiện tại." />
               ) : filteredNextActions.map(a => <ActionCard key={a.action_id} action={a} data={data} onToggle={() => handleToggleStatus(a)} onEdit={() => openEditModal(a)} onDelete={() => handleDelete(a.action_id)} onPull={() => handlePullToActive(a)} />)
+            ) : activeTab === 'Calendar' ? (
+              <CalendarView data={data} onEdit={openEditModal} onDelete={handleDelete} onToggle={handleToggleStatus} />
             ) : (
               tabActions.length === 0 ? (
                 <EmptyState icon="fa-folder-open" text={`Chưa có dữ liệu trong kho ${activeTab.replace('_', ' ')}.`} />
@@ -881,6 +883,238 @@ function ActionCard({ action, data, onToggle, onEdit, onDelete, onPull }) {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+
+function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDate }) {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'agenda'
+
+  const calendarActions = data.actions.filter(a => a.status !== 'Done' && (a.storage_system === 'Calendar' || a.scheduled_datetime));
+
+  // Month navigation helpers
+  const prevMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+  };
+  const nextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+  };
+  const goToday = () => {
+    setCurrentDate(new Date());
+  };
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+
+  // Days calculation for Month Grid
+  const firstDayOfMonth = new Date(year, month, 1);
+  const lastDayOfMonth = new Date(year, month + 1, 0);
+  
+  // Starting day of week (0 = Sun, 1 = Mon... convert so Mon = 0, Sun = 6)
+  const startDay = (firstDayOfMonth.getDay() + 6) % 7;
+  const daysInMonth = lastDayOfMonth.getDate();
+
+  const monthName = currentDate.toLocaleDateString('vi-VN', { month: 'long', year: 'numeric' });
+
+  // Map actions by date YYYY-MM-DD
+  const actionsByDate = {};
+  calendarActions.forEach(a => {
+    if (!a.scheduled_datetime) return;
+    const d = new Date(a.scheduled_datetime);
+    if (isNaN(d.getTime())) return;
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    if (!actionsByDate[key]) actionsByDate[key] = [];
+    actionsByDate[key].push(a);
+  });
+
+  // Sort events in each date by start time
+  Object.keys(actionsByDate).forEach(k => {
+    actionsByDate[k].sort((a, b) => new Date(a.scheduled_datetime) - new Date(b.scheduled_datetime));
+  });
+
+  const todayKey = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
+
+  // Sorted dates for Agenda View
+  const sortedDateKeys = Object.keys(actionsByDate).sort();
+
+  return (
+    <div className="flex flex-col gap-4 w-full">
+      {/* Header Bar */}
+      <div className="glass-panel p-4 rounded-2xl flex flex-wrap justify-between items-center gap-3 border border-slate-200 bg-white">
+        <div className="flex items-center gap-3">
+          <h3 className="text-lg font-black text-slate-800 capitalize flex items-center gap-2">
+            <i className="fa-regular fa-calendar-days text-emerald-600"></i> {monthName}
+          </h3>
+          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+            <button onClick={prevMonth} className="w-8 h-8 rounded-lg hover:bg-white text-slate-600 font-bold transition-colors flex items-center justify-center">
+              <i className="fa-solid fa-chevron-left text-xs"></i>
+            </button>
+            <button onClick={goToday} className="px-3 py-1 rounded-lg hover:bg-white text-slate-700 font-bold text-xs transition-colors">
+              Hôm nay
+            </button>
+            <button onClick={nextMonth} className="w-8 h-8 rounded-lg hover:bg-white text-slate-600 font-bold transition-colors flex items-center justify-center">
+              <i className="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl">
+          <button 
+            onClick={() => setViewMode('grid')} 
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${viewMode === 'grid' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+          >
+            <i className="fa-solid fa-table-cells"></i> Lưới Lịch
+          </button>
+          <button 
+            onClick={() => setViewMode('agenda')} 
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${viewMode === 'agenda' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+          >
+            <i className="fa-solid fa-list-ul"></i> Lịch Biểu (Timeline)
+          </button>
+        </div>
+      </div>
+
+      {/* MONTH GRID VIEW */}
+      {viewMode === 'grid' && (
+        <div className="glass-panel p-4 rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+          {/* Day Names Header */}
+          <div className="grid grid-cols-7 gap-1 text-center font-black text-xs text-slate-400 uppercase tracking-widest mb-2 pb-2 border-b border-slate-100">
+            <div className="py-1">Thứ 2</div>
+            <div className="py-1">Thứ 3</div>
+            <div className="py-1">Thứ 4</div>
+            <div className="py-1">Thứ 5</div>
+            <div className="py-1">Thứ 6</div>
+            <div className="py-1 text-emerald-600">Thứ 7</div>
+            <div className="py-1 text-rose-500">Chủ Nhật</div>
+          </div>
+
+          {/* Grid Cells */}
+          <div className="grid grid-cols-7 gap-1.5 auto-rows-fr">
+            {/* Empty padding cells for previous month */}
+            {Array.from({ length: startDay }).map((_, i) => (
+              <div key={`empty-${i}`} className="min-h-[90px] bg-slate-50/50 rounded-xl border border-slate-100/50 opacity-30"></div>
+            ))}
+
+            {/* Days of current month */}
+            {Array.from({ length: daysInMonth }).map((_, i) => {
+              const dayNum = i + 1;
+              const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+              const isToday = dateKey === todayKey;
+              const dayEvents = actionsByDate[dateKey] || [];
+
+              return (
+                <div 
+                  key={dateKey}
+                  className={`min-h-[100px] p-2 rounded-xl border transition-all flex flex-col justify-start group relative ${isToday ? 'bg-emerald-50/60 border-emerald-300 shadow-sm' : 'bg-white border-slate-100 hover:border-emerald-200 hover:shadow-sm'}`}
+                >
+                  <div className="flex justify-between items-center mb-1">
+                    <span className={`text-xs font-black rounded-full w-6 h-6 flex items-center justify-center ${isToday ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700'}`}>
+                      {dayNum}
+                    </span>
+                    {dayEvents.length > 0 && (
+                      <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-1.5 py-0.2 rounded-full">
+                        {dayEvents.length} việc
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Events inside day cell */}
+                  <div className="space-y-1 overflow-y-auto custom-scrollbar max-h-[80px]">
+                    {dayEvents.map(ev => {
+                      const startTime = new Date(ev.scheduled_datetime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+                      return (
+                        <div 
+                          key={ev.action_id}
+                          onClick={(e) => { e.stopPropagation(); onEdit(ev); }}
+                          className="p-1.5 rounded-lg bg-emerald-100/80 hover:bg-emerald-200 text-emerald-900 border border-emerald-200/80 text-[11px] font-bold cursor-pointer truncate transition-colors flex items-center gap-1 shadow-2xs"
+                          title={`${startTime} - ${ev.name}`}
+                        >
+                          <span className="text-[9px] bg-emerald-700 text-white px-1 rounded font-black shrink-0">{startTime}</span>
+                          <span className="truncate">{ev.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* AGENDA TIMELINE VIEW */}
+      {viewMode === 'agenda' && (
+        <div className="glass-panel p-6 rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <h4 className="font-black text-slate-700 uppercase tracking-widest text-xs mb-4 border-b border-slate-100 pb-2">
+            <i className="fa-solid fa-list-check text-emerald-600 mr-2"></i> Lịch Trình Chi Tiết ({calendarActions.length} Lịch hẹn)
+          </h4>
+
+          <div className="space-y-6">
+            {sortedDateKeys.map(dateKey => {
+              const events = actionsByDate[dateKey];
+              const dateObj = new Date(events[0].scheduled_datetime);
+              const dateLabel = dateObj.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' });
+              const isToday = dateKey === todayKey;
+
+              return (
+                <div key={dateKey} className="space-y-3">
+                  <div className="flex items-center gap-2 border-b border-slate-100 pb-1">
+                    <span className={`text-xs font-black uppercase tracking-wider px-3 py-1 rounded-lg ${isToday ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700'}`}>
+                      {dateLabel} {isToday && '(HÔM NAY)'}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-2.5 pl-2">
+                    {events.map(ev => {
+                      const startTime = new Date(ev.scheduled_datetime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+                      const endTime = ev.scheduled_end_datetime ? new Date(ev.scheduled_end_datetime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : null;
+                      const project = data.projects.find(p => p.project_id === ev.project_id);
+
+                      return (
+                        <div key={ev.action_id} className="p-4 rounded-xl border border-emerald-100 bg-emerald-50/40 hover:bg-emerald-50 flex justify-between items-center group transition-colors">
+                          <div className="flex items-start gap-4">
+                            <div className="bg-emerald-600 text-white font-black text-xs px-3 py-2 rounded-xl flex flex-col items-center justify-center min-w-[70px] shadow-sm">
+                              <span>{startTime}</span>
+                              {endTime && <span className="text-[9px] opacity-80 mt-0.5">đến {endTime}</span>}
+                            </div>
+
+                            <div>
+                              <h5 className="font-bold text-slate-800 text-sm mb-1">{ev.name}</h5>
+                              <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 flex-wrap">
+                                {project && <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">{project.name}</span>}
+                                {ev.context && <span className="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">{ev.context}</span>}
+                                {ev.time_needed_mins && <span className="text-emerald-700"><i className="fa-regular fa-clock"></i> {ev.time_needed_mins} phút</span>}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={() => onEdit(ev)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="Chỉnh sửa">
+                              <i className="fa-solid fa-pen"></i>
+                            </button>
+                            <button onClick={() => onDelete(ev.action_id)} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Xóa">
+                              <i className="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+
+            {sortedDateKeys.length === 0 && (
+              <div className="text-center py-12 text-slate-400 font-medium">
+                <i className="fa-regular fa-calendar-xmark text-4xl mb-3 opacity-30 block"></i>
+                Chưa có lịch hẹn nào được lên thời gian.
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
