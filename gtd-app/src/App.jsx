@@ -8,7 +8,7 @@ import Areas from './components/Areas';
 import DailyReviewWizard from './components/DailyReviewWizard';
 
 const tabs = {
-  focus: { label: 'Runway / Next Actions', icon: 'fa-solid fa-plane-departure', color: 'text-blue-600', bg: 'bg-blue-100' },
+  focus: { label: 'Runway', icon: 'fa-solid fa-plane-departure', color: 'text-blue-600', bg: 'bg-blue-100' },
   daily: { label: 'Daily Review', icon: 'fa-solid fa-sun', color: 'text-orange-600', bg: 'bg-orange-100' },
   weekly: { label: 'Weekly Planning', icon: 'fa-solid fa-calendar-week', color: 'text-indigo-600', bg: 'bg-indigo-100' },
   reviews: { label: 'Trạm Kiểm Duyệt (Kết quả)', icon: 'fa-solid fa-satellite-dish', color: 'text-slate-600', bg: 'bg-slate-100' },

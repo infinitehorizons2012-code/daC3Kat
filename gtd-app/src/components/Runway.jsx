@@ -255,6 +255,7 @@ export default function Runway() {
     'Next_Actions': { label: '⚡ Next Actions', icon: 'fa-solid fa-list-check', color: 'text-blue-600', bg: 'bg-blue-100' },
     'Floating_Backlog': { label: '🎈 Thả nổi', icon: 'fa-solid fa-parachute-box', color: 'text-cyan-600', bg: 'bg-cyan-100' },
     'Calendar': { label: '📅 Lịch Hẹn', icon: 'fa-regular fa-calendar', color: 'text-emerald-600', bg: 'bg-emerald-100' },
+    'Project_Backlog': { label: '📁 Project Backlog', icon: 'fa-solid fa-folder-open', color: 'text-indigo-600', bg: 'bg-indigo-100' },
     'Deferred': { label: '🔒 Đóng băng', icon: 'fa-solid fa-lock', color: 'text-slate-700', bg: 'bg-slate-200' },
     'Waiting_For': { label: '⏳ Chờ Phản Hồi', icon: 'fa-solid fa-hourglass-half', color: 'text-amber-600', bg: 'bg-amber-100' },
     'Someday_Maybe': { label: '💤 Someday / Maybe', icon: 'fa-solid fa-cloud-moon', color: 'text-purple-600', bg: 'bg-purple-100' }
@@ -279,24 +280,19 @@ export default function Runway() {
         <div className="relative group" onMouseEnter={() => setIsDropdownOpen(true)} onMouseLeave={() => setIsDropdownOpen(false)}>
           <button className={`glass-panel px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm ${runwayTabsDef[activeTab].color} ${runwayTabsDef[activeTab].bg}`}>
             <i className={runwayTabsDef[activeTab].icon}></i> {runwayTabsDef[activeTab].label} 
-            {activeTab !== 'Someday_Maybe' && (
-               <span className="ml-1 bg-white/50 px-1.5 py-0.5 rounded-full text-[10px]">
-                 {activeTab === 'All_Actions' 
-                    ? data.actions.filter(a => a.status !== 'Done').length 
-                    : data.actions.filter(a => a.storage_system===activeTab && a.status!=='Done').length}
-               </span>
-            )}
+            <span className="ml-1 bg-white/50 px-1.5 py-0.5 rounded-full text-[10px]">
+              {activeTab === 'All_Actions' 
+                ? data.actions.filter(a => a.status !== 'Done').length 
+                : data.actions.filter(a => a.storage_system === activeTab && a.status !== 'Done').length}
+            </span>
             <i className="fa-solid fa-chevron-down text-[10px] ml-1 opacity-50"></i>
           </button>
           
           <div className={`absolute top-full left-0 mt-2 w-56 glass-panel rounded-xl p-2 transition-all flex flex-col gap-1 shadow-xl border border-slate-200/50 z-[110] ${isDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
             {Object.entries(runwayTabsDef).map(([key, tab]) => {
-              let count = null;
-              if (key === 'All_Actions') {
-                count = data.actions.filter(a => a.status !== 'Done').length;
-              } else if (key !== 'Someday_Maybe') {
-                count = data.actions.filter(a => a.storage_system === key && a.status !== 'Done').length;
-              }
+              let count = key === 'All_Actions' 
+                ? data.actions.filter(a => a.status !== 'Done').length 
+                : data.actions.filter(a => a.storage_system === key && a.status !== 'Done').length;
               return (
                 <button 
                   key={key}
@@ -304,9 +300,7 @@ export default function Runway() {
                   className={`text-left px-3 py-2 rounded-lg font-bold transition-colors text-sm flex items-center justify-between ${activeTab === key ? `${tab.bg} ${tab.color}` : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
                 >
                   <span><i className={`${tab.icon} w-6 text-center ${activeTab === key ? '' : 'opacity-70'}`}></i> {tab.label}</span>
-                  {count !== null && (
-                    <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${activeTab === key ? 'bg-white/50' : 'bg-slate-200 text-slate-500'}`}>{count}</span>
-                  )}
+                  <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${activeTab === key ? 'bg-white/50' : 'bg-slate-200 text-slate-500'}`}>{count}</span>
                 </button>
               )
             })}
