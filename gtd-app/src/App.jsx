@@ -2,17 +2,19 @@ import React, { useState } from 'react';
 import Runway from './components/Runway';
 import Kanban from './components/Kanban';
 import Horizons from './components/Horizons';
-import Review from './components/Review';
 import WeeklyReview from './components/WeeklyReview';
 import ReviewHub from './components/ReviewHub';
 import Areas from './components/Areas';
+import DailyReviewWizard from './components/DailyReviewWizard';
 
 const tabs = {
   focus: { label: 'Runway / Next Actions', icon: 'fa-solid fa-plane-departure', color: 'text-blue-600', bg: 'bg-blue-100' },
-  areas: { label: 'Khu vực (20,000 ft)', icon: 'fa-solid fa-map-location-dot', color: 'text-teal-600', bg: 'bg-teal-100' },
+  daily: { label: 'Daily Review', icon: 'fa-solid fa-sun', color: 'text-orange-600', bg: 'bg-orange-100' },
+  weekly: { label: 'Weekly Planning', icon: 'fa-solid fa-calendar-week', color: 'text-indigo-600', bg: 'bg-indigo-100' },
+  reviews: { label: 'Trạm Kiểm Duyệt (Kết quả)', icon: 'fa-solid fa-satellite-dish', color: 'text-slate-600', bg: 'bg-slate-100' },
   kanban: { label: 'Kanban Dự án', icon: 'fa-solid fa-layer-group', color: 'text-purple-600', bg: 'bg-purple-100' },
+  areas: { label: 'Khu vực (20,000 ft)', icon: 'fa-solid fa-map-location-dot', color: 'text-teal-600', bg: 'bg-teal-100' },
   horizons: { label: 'Cây Horizons', icon: 'fa-solid fa-tree', color: 'text-emerald-600', bg: 'bg-emerald-100' },
-  reviews: { label: 'Trạm Kiểm Duyệt', icon: 'fa-solid fa-satellite-dish', color: 'text-indigo-600', bg: 'bg-indigo-100' },
 };
 
 function App() {
@@ -93,6 +95,8 @@ function App() {
           {activeTab === 'kanban' && <Kanban />}
           {activeTab === 'horizons' && <Horizons />}
           {activeTab === 'reviews' && <ReviewHub />}
+          {activeTab === 'daily' && <DailyReviewWizard onExit={() => setActiveTab('focus')} />}
+          {activeTab === 'weekly' && <WeeklyReview />}
         </div>
 
       </div>
