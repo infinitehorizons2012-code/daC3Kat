@@ -8,9 +8,11 @@ import Areas from './components/Areas';
 import DailyReviewWizard from './components/DailyReviewWizard';
 import TimeManagement from './components/TimeManagement';
 import Routine from './components/Routine';
+import FocusEngine from './components/FocusEngine';
 
 const tabs = {
   focus: { label: 'Runway', icon: 'fa-solid fa-plane-departure', color: 'text-blue-600', bg: 'bg-blue-100' },
+  pomodoro: { label: '🔥 Focus Mode (Pomodoro GTD)', icon: 'fa-solid fa-stopwatch', color: 'text-orange-600', bg: 'bg-orange-100' },
   routine: { label: 'Routine (Thói quen & 168h)', icon: 'fa-solid fa-arrows-spin', color: 'text-pink-600', bg: 'bg-pink-100' },
   time: { label: 'Time Matrix (Phân bổ 168h)', icon: 'fa-solid fa-clock-rotate-left', color: 'text-amber-600', bg: 'bg-amber-100' },
   daily: { label: 'Daily Review', icon: 'fa-solid fa-sun', color: 'text-orange-600', bg: 'bg-orange-100' },
@@ -95,6 +97,7 @@ function App() {
         {/* Content Area */}
         <div className="min-h-[500px]">
           {activeTab === 'focus' && <Runway />}
+          {activeTab === 'pomodoro' && <FocusEngine />}
           {activeTab === 'routine' && <Routine />}
           {activeTab === 'time' && <TimeManagement />}
           {activeTab === 'areas' && <Areas />}
