@@ -16,38 +16,52 @@ const calcActionMins = (a) => {
   return Number(a.time_needed_mins) || 30;
 };
 
+const getPillarActionsHelper = (data, pillarKey) => {
+  if (!pillarKey || !data || !data.actions) return [];
+  const activeActions = data.actions.filter(a => a && a.status !== 'Cancelled');
+
+  return activeActions.filter(a => {
+    const nameLower = (a.name || '').toLowerCase();
+    const projName = (data.projects.find(p => p && p.project_id === a.project_id)?.name || '').toLowerCase();
+    const cat = (a.category || '').toLowerCase();
+    const ctx = (a.context || '').toLowerCase();
+    const wt = (a.work_type || '').toLowerCase();
+
+    // 1. Explicit Category / Work Type overrides
+    if (wt.includes('academic') || cat.includes('academic')) return pillarKey === 'academic';
+    if (wt.includes('deep') || cat.includes('deep')) return pillarKey === 'deepwork';
+    if (wt.includes('build') || cat.includes('build')) return pillarKey === 'building';
+    if (wt.includes('maint') || cat.includes('maint')) return pillarKey === 'maintenance';
+
+    // 2. Physical / Sport / Health & Maintenance keywords (HIGHEST PRIORITY FOR SPORTS)
+    const isMaintenance = ['karate', 'bơi', 'võ', 'thể thao', 'chạy', 'tập', 'gym', 'thiền', 'dọn', 'bảo trì', 'maintenance', 'review', 'sức khỏe', 'thể chất', 'fitness', 'workout', 'yoga', 'bóng đá', 'bóng rổ', 'cầu lông', 'đi bộ', 'ăn', 'ngủ', 'lịch'].some(k => nameLower.includes(k) || projName.includes(k));
+
+    if (isMaintenance) {
+      return pillarKey === 'maintenance';
+    }
+
+    // 3. Academic keywords (Core Academic & SAT & High School)
+    const isAcademic = ['sat', 'high school', 'tín chỉ', 'toán', 'văn', 'anh', 'lý', 'hóa', 'sinh', 'tự học', 'học tập', 'study', 'course', 'khóa học', 'bài tập', 'luyện đề', 'giảng', 'gpa', 'essay', 'toefl', 'ielts'].some(k => nameLower.includes(k) || projName.includes(k));
+
+    // 4. Deep Work keywords (Programming, Robotics, Data Science)
+    const isDeepWork = ['python', 'mechatronics', 'data', 'code', 'nghiên cứu', 'lập trình', 'dự án', 'robot', 'ai', 'lab', 'tech', 'system', 'thuật toán', 'drum', 'trống'].some(k => nameLower.includes(k) || projName.includes(k));
+
+    // 5. Building & Portfolio keywords (Web, Cold Email, Portfolio)
+    const isBuilding = ['portfolio', 'building', 'sản phẩm', 'web', 'email', 'mentor', 'business', 'btc', 'kết nối', 'outreach', 'startup', 'pitch'].some(k => nameLower.includes(k) || projName.includes(k));
+
+    if (pillarKey === 'academic') return isAcademic;
+    if (pillarKey === 'deepwork') return isDeepWork || (!isAcademic && !isBuilding && (ctx.includes('máy_tính') || a.project_id));
+    if (pillarKey === 'building') return isBuilding;
+    if (pillarKey === 'maintenance') return a.storage_system === 'Calendar' || (!isAcademic && !isDeepWork && !isBuilding);
+
+    return false;
+  });
+};
+
 export default function TimeManagement() {
   const [selectedPillarModal, setSelectedPillarModal] = useState(null);
 
-  const getPillarActions = (pillarKey) => {
-    if (!pillarKey || !data.actions) return [];
-    const activeActions = data.actions.filter(a => a.status !== 'Cancelled');
-
-    return activeActions.filter(a => {
-      const nameLower = (a.name || '').toLowerCase();
-      const projName = (data.projects.find(p => p.project_id === a.project_id)?.name || '').toLowerCase();
-      const cat = (a.category || '').toLowerCase();
-      const ctx = (a.context || '').toLowerCase();
-      const wt = (a.work_type || '').toLowerCase();
-
-      if (wt.includes('academic') || cat.includes('academic')) return pillarKey === 'academic';
-      if (wt.includes('deep') || cat.includes('deep')) return pillarKey === 'deepwork';
-      if (wt.includes('build') || cat.includes('build')) return pillarKey === 'building';
-      if (wt.includes('maint') || cat.includes('maint')) return pillarKey === 'maintenance';
-
-      const isAcademic = ['sat', 'high school', 'tín chỉ', 'toán', 'văn', 'anh', 'lý', 'hóa', 'sinh', 'tự học', 'học', 'study', 'course', 'khóa học', 'bài tập', 'luyện đề', 'giảng'].some(k => nameLower.includes(k) || projName.includes(k));
-      const isDeepWork = ['python', 'mechatronics', 'data', 'code', 'nghiên cứu', 'lập trình', 'dự án', 'robot', 'ai', 'lab', 'tech', 'system', 'thuật toán'].some(k => nameLower.includes(k) || projName.includes(k));
-      const isBuilding = ['portfolio', 'building', 'sản phẩm', 'web', 'email', 'mentor', 'business', 'btc', 'kết nối', 'outreach', 'startup', 'pitch'].some(k => nameLower.includes(k) || projName.includes(k));
-      const isMaintenance = ['bảo trì', 'maintenance', 'review', 'thể thao', 'chạy', 'tập', 'gym', 'thiền', 'dọn', 'gtd', 'ăn', 'ngủ', 'lịch'].some(k => nameLower.includes(k) || projName.includes(k)) || a.storage_system === 'Calendar';
-
-      if (pillarKey === 'academic') return isAcademic;
-      if (pillarKey === 'deepwork') return isDeepWork || (!isAcademic && !isBuilding && !isMaintenance && (ctx.includes('máy_tính') || a.project_id));
-      if (pillarKey === 'building') return isBuilding;
-      if (pillarKey === 'maintenance') return isMaintenance || (!isAcademic && !isDeepWork && !isBuilding);
-
-      return false;
-    });
-  };
+  const getPillarActions = (pillarKey) => getPillarActionsHelper(data, pillarKey);
 
   const [data, setData] = useState({ actions: [], projects: [], goals: [], visions: [], missions: [] });
   const [loading, setLoading] = useState(true);
