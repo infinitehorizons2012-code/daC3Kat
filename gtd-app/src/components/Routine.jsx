@@ -114,6 +114,36 @@ export default function Routine() {
   };
 
   // Helper to convert HH:MM to decimal hours (0 to 24)
+  // Calculate exact hours for this specific session window (Morning 0-12 vs Evening 12-24)
+  const calcSessionPortionHrs = (r, isMorning) => {
+    const rawStart = timeToHours(r.start_time);
+    let rawEnd = timeToHours(r.end_time);
+    const isOvernight = rawEnd < rawStart;
+
+    if (isMorning) {
+      if (isOvernight) {
+        let hrs = Math.max(0, Math.min(12, rawEnd) - 0);
+        if (rawStart < 12) hrs += Math.max(0, 12 - rawStart);
+        return Math.round(hrs * 10) / 10;
+      } else {
+        const start = Math.max(0, Math.min(12, rawStart));
+        const end = Math.max(0, Math.min(12, rawEnd));
+        return Math.round(Math.max(0, end - start) * 10) / 10;
+      }
+    } else {
+      // Evening 12-24
+      if (isOvernight) {
+        let hrs = Math.max(0, 24 - Math.max(12, Math.min(24, rawStart)));
+        if (rawEnd > 12) hrs += Math.max(0, Math.min(24, rawEnd) - 12);
+        return Math.round(hrs * 10) / 10;
+      } else {
+        const start = Math.max(12, Math.min(24, rawStart));
+        const end = Math.max(12, Math.min(24, rawEnd));
+        return Math.round(Math.max(0, end - start) * 10) / 10;
+      }
+    }
+  };
+
   const timeToHours = (t) => {
     if (!t) return 0;
     const [h, m] = t.split(':').map(Number);
@@ -338,18 +368,38 @@ export default function Routine() {
 
           {/* List legend */}
           <div className="w-full space-y-2 mt-4">
-            {morningRoutines.map(r => (
-              <div key={r.routine_id} className="p-2.5 bg-white border border-amber-100 rounded-xl flex justify-between items-center text-xs shadow-2xs hover:border-amber-300">
-                <div className="flex items-center gap-2">
-                  <span className="font-black text-amber-600 bg-amber-50 px-2 py-0.5 rounded">{r.start_time} - {r.end_time}</span>
-                  <span className="font-bold text-slate-800">{r.name}</span>
+            {morningRoutines.map((r, idx) => {
+              const itemColor = ['#f59e0b', '#3b82f6', '#10b981', '#ec4899', '#8b5cf6', '#06b6d4', '#f97316', '#6366f1', '#14b8a6', '#eab308'][idx % 10];
+              const portionHrs = calcSessionPortionHrs(r, true);
+              const fullHrs = Math.round(calcDurationHrs(r.start_time, r.end_time) * 10) / 10;
+
+              return (
+                <div key={r.routine_id} className="p-2.5 bg-white border border-amber-100 rounded-xl flex justify-between items-center text-xs shadow-2xs hover:border-amber-300">
+                  <div className="flex items-center gap-2.5">
+                    {/* Khoanh 1: Color Badge matching clock arc */}
+                    <span 
+                      className="w-3.5 h-3.5 rounded-full flex-shrink-0 shadow-sm border border-black/10" 
+                      style={{ backgroundColor: itemColor }}
+                      title="Màu đại diện trên Vòng tròn Buổi Sáng"
+                    ></span>
+
+                    <span className="font-black text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">{r.start_time} - {r.end_time}</span>
+                    <span className="font-bold text-slate-800">{r.name}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {r.habit_note && <span className="text-[10px] text-slate-400 italic hidden sm:inline">💡 {r.habit_note}</span>}
+
+                    {/* Khoanh 2: Calculated Duration Badge for this session */}
+                    <span className="font-black text-amber-800 bg-amber-100/80 px-2 py-0.5 rounded-lg border border-amber-200 shadow-2xs" title={`Thời lượng ca sáng: ${portionHrs}h (Tổng full: ${fullHrs}h)`}>
+                      ⏱️ {portionHrs}h
+                    </span>
+
+                    <button onClick={() => handleEdit(r)} className="text-slate-400 hover:text-blue-600 p-1" title="Chỉnh sửa"><i className="fa-solid fa-pen text-xs"></i></button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  {r.habit_note && <span className="text-[10px] text-slate-400 italic">💡 {r.habit_note}</span>}
-                  <button onClick={() => handleEdit(r)} className="text-slate-400 hover:text-blue-600 p-1" title="Chỉnh sửa"><i className="fa-solid fa-pen text-xs"></i></button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
             {morningRoutines.length === 0 && <p className="text-center text-slate-400 py-4 text-xs italic">Chưa có routine buổi sáng nào.</p>}
           </div>
         </div>
@@ -363,18 +413,38 @@ export default function Routine() {
 
           {/* List legend */}
           <div className="w-full space-y-2 mt-4">
-            {eveningRoutines.map(r => (
-              <div key={r.routine_id} className="p-2.5 bg-white border border-indigo-100 rounded-xl flex justify-between items-center text-xs shadow-2xs hover:border-indigo-300">
-                <div className="flex items-center gap-2">
-                  <span className="font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">{r.start_time} - {r.end_time}</span>
-                  <span className="font-bold text-slate-800">{r.name}</span>
+            {eveningRoutines.map((r, idx) => {
+              const itemColor = ['#f59e0b', '#3b82f6', '#10b981', '#ec4899', '#8b5cf6', '#06b6d4', '#f97316', '#6366f1', '#14b8a6', '#eab308'][idx % 10];
+              const portionHrs = calcSessionPortionHrs(r, false);
+              const fullHrs = Math.round(calcDurationHrs(r.start_time, r.end_time) * 10) / 10;
+
+              return (
+                <div key={r.routine_id} className="p-2.5 bg-white border border-indigo-100 rounded-xl flex justify-between items-center text-xs shadow-2xs hover:border-indigo-300">
+                  <div className="flex items-center gap-2.5">
+                    {/* Khoanh 1: Color Badge matching clock arc */}
+                    <span 
+                      className="w-3.5 h-3.5 rounded-full flex-shrink-0 shadow-sm border border-black/10" 
+                      style={{ backgroundColor: itemColor }}
+                      title="Màu đại diện trên Vòng tròn Buổi Tối"
+                    ></span>
+
+                    <span className="font-black text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">{r.start_time} - {r.end_time}</span>
+                    <span className="font-bold text-slate-800">{r.name}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {r.habit_note && <span className="text-[10px] text-slate-400 italic hidden sm:inline">💡 {r.habit_note}</span>}
+
+                    {/* Khoanh 2: Calculated Duration Badge for this session */}
+                    <span className="font-black text-indigo-800 bg-indigo-100/80 px-2 py-0.5 rounded-lg border border-indigo-200 shadow-2xs" title={`Thời lượng ca tối: ${portionHrs}h (Tổng full: ${fullHrs}h)`}>
+                      ⏱️ {portionHrs}h
+                    </span>
+
+                    <button onClick={() => handleEdit(r)} className="text-slate-400 hover:text-blue-600 p-1" title="Chỉnh sửa"><i className="fa-solid fa-pen text-xs"></i></button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  {r.habit_note && <span className="text-[10px] text-slate-400 italic">💡 {r.habit_note}</span>}
-                  <button onClick={() => handleEdit(r)} className="text-slate-400 hover:text-blue-600 p-1" title="Chỉnh sửa"><i className="fa-solid fa-pen text-xs"></i></button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
             {eveningRoutines.length === 0 && <p className="text-center text-slate-400 py-4 text-xs italic">Chưa có routine buổi tối nào.</p>}
           </div>
         </div>
@@ -479,7 +549,7 @@ export default function Routine() {
           <table className="w-full border-collapse text-left text-xs min-w-[650px]">
             <thead>
               <tr className="bg-slate-100 border-b border-slate-200 text-slate-600 font-black uppercase tracking-wider">
-                <th className="p-3 w-32">Khung Giờ</th>
+                <th className="p-3 w-40">Khung Giờ & Thời Lượng</th>
                 <th className="p-3">Hoạt Động Routine</th>
                 <th className="p-3 w-24">Buổi</th>
                 <th className="p-3 w-32">Áp Dụng</th>
@@ -491,7 +561,10 @@ export default function Routine() {
               {filteredRoutines.map(r => (
                 <tr key={r.routine_id} className="hover:bg-slate-50 transition-colors">
                   <td className="p-3 font-black text-rose-600">
-                    <span className="bg-rose-50 px-2 py-1 rounded border border-rose-100">{r.start_time} - {r.end_time}</span>
+                    <div className="flex flex-col gap-1 items-start">
+                      <span className="bg-rose-50 px-2 py-0.5 rounded border border-rose-100 text-xs">{r.start_time} - {r.end_time}</span>
+                      <span className="text-[10px] font-extrabold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded">⏱️ {Math.round(calcDurationHrs(r.start_time, r.end_time) * 10) / 10}h</span>
+                    </div>
                   </td>
                   <td className="p-3 font-bold text-slate-800">{r.name}</td>
                   <td className="p-3">
