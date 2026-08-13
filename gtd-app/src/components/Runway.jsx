@@ -1095,19 +1095,27 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
                     )}
                   </div>
 
-                  {/* Events inside day cell */}
+                  {/* Events inside day cell with Duration Badge */}
                   <div className="space-y-1 overflow-y-auto custom-scrollbar max-h-[80px]">
                     {dayEvents.map(ev => {
                       const startTime = formatTimeSafe(ev.scheduled_datetime) || '00:00';
+                      const durText = calcActionDurationText(ev);
                       return (
                         <div 
                           key={ev.action_id}
                           onClick={(e) => { e.stopPropagation(); onEdit(ev); }}
-                          className="p-1.5 rounded-lg bg-emerald-100/80 hover:bg-emerald-200 text-emerald-900 border border-emerald-200/80 text-[11px] font-bold cursor-pointer truncate transition-colors flex items-center gap-1 shadow-2xs"
-                          title={`${startTime} - ${ev.name}`}
+                          className="p-1.5 rounded-lg bg-emerald-100/90 hover:bg-emerald-200 text-emerald-950 border border-emerald-300 text-[11px] font-bold cursor-pointer transition-colors flex items-center justify-between gap-1 shadow-2xs group"
+                          title={`${startTime} - ${ev.name} (Thời lượng: ${durText})`}
                         >
-                          <span className="text-[9px] bg-emerald-700 text-white px-1 rounded font-black shrink-0">{startTime}</span>
-                          <span className="truncate">{ev.name}</span>
+                          <div className="flex items-center gap-1 overflow-hidden min-w-0">
+                            <span className="text-[9px] bg-emerald-700 text-white px-1 rounded font-black shrink-0">{startTime}</span>
+                            <span className="truncate">{ev.name}</span>
+                          </div>
+                          
+                          {/* Duration Badge */}
+                          <span className="text-[9px] font-black bg-amber-300 text-slate-950 px-1.5 py-0.2 rounded shrink-0 shadow-2xs border border-amber-400">
+                            ⏱️ {durText}
+                          </span>
                         </div>
                       );
                     })}
