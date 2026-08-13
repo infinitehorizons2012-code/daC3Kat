@@ -11,7 +11,7 @@ export default function FocusReportView() {
   const [timeRange, setTimeRange] = useState('all'); // 'today', 'week', 'month', 'all'
   const [searchQuery, setSearchQuery] = useState('');
 
-  # Editing Modal State
+  // Editing Modal State
   const [editingSession, setEditingSession] = useState(null);
   const [editForm, setEditForm] = useState({
     action_name: '',
@@ -21,7 +21,7 @@ export default function FocusReportView() {
     notes: ''
   });
 
-  # Manual Create Modal State
+  // Manual Create Modal State
   const [showAddModal, setShowAddModal] = useState(false);
   const [addForm, setAddForm] = useState({
     action_name: '',
