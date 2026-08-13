@@ -898,6 +898,22 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
   const calendarActions = data.actions.filter(a => a.status !== 'Done' && (a.storage_system === 'Calendar' || a.scheduled_datetime));
 
   // Month navigation helpers
+  
+  const calcActionDurationText = (ev) => {
+    if (ev.scheduled_datetime && ev.scheduled_end_datetime) {
+      const diffMs = new Date(ev.scheduled_end_datetime) - new Date(ev.scheduled_datetime);
+      if (diffMs > 0) {
+        const mins = Math.round(diffMs / 60000);
+        if (mins >= 60) {
+          const hrs = Math.round(mins / 60 * 10) / 10;
+          return `${hrs}h`;
+        }
+        return `${mins}m`;
+      }
+    }
+    return ev.time_needed_mins ? `${ev.time_needed_mins}m` : '30m';
+  };
+
   const prevMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
   };
@@ -1078,10 +1094,16 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
                       return (
                         <div key={ev.action_id} className="p-4 rounded-xl border border-emerald-100 bg-emerald-50/40 hover:bg-emerald-50 flex justify-between items-center group transition-colors">
                           <div className="flex items-start gap-4">
-                            <div className="bg-emerald-600 text-white font-black text-xs px-3 py-2 rounded-xl flex flex-col items-center justify-center min-w-[70px] shadow-sm">
-                              <span>{startTime}</span>
-                              {endTime && <span className="text-[9px] opacity-80 mt-0.5">đến {endTime}</span>}
-                            </div>
+                            {(() => {
+                              const durText = calcActionDurationText(ev);
+                              return (
+                                <div className="bg-emerald-600 text-white font-black text-xs px-3 py-2 rounded-xl flex flex-col items-center justify-center min-w-[80px] shadow-sm text-center">
+                                  <span>{startTime}</span>
+                                  {endTime && <span className="text-[9px] opacity-80 mt-0.5">đến {endTime}</span>}
+                                  <span className="text-[9px] font-black bg-yellow-300 text-slate-950 px-1.5 py-0.2 rounded mt-1 shadow-2xs">⏱️ {durText}</span>
+                                </div>
+                              );
+                            })()}
 
                             <div>
                               <h5 className="font-bold text-slate-800 text-sm mb-1">{ev.name}</h5>
