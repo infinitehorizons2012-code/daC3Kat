@@ -1,38 +1,52 @@
 [
   {
-    "log_id": "pc-1786630959929",
+    "log_id": "pc-1786631052476",
     "app_name": "Facebook - Google Chrome",
+    "url_link": "https://www.facebook.com",
     "category": "Giải trí / Game",
-    "start_time": "2026-08-13 21:22",
-    "end_time": "21:22",
+    "start_time": "2026-08-13 21:24",
+    "end_time": "21:24",
     "duration_mins": 15,
-    "details": "Trình duyệt Google Chrome đang mở trang Facebook"
+    "details": "Trang Mạng Xã Hội Facebook (Link: https://www.facebook.com)"
   },
   {
-    "log_id": "pc-1786630959928",
+    "log_id": "pc-1786631052475",
     "app_name": "Trạm điều khiển 168 (React) - Microsoft Edge",
+    "url_link": "http://localhost:5173",
     "category": "Học tập & Deep Work",
-    "start_time": "2026-08-13 21:22",
-    "end_time": "21:22",
+    "start_time": "2026-08-13 21:24",
+    "end_time": "21:24",
     "duration_mins": 25,
-    "details": "Trình duyệt Edge mở web app GTD Quản lý thời gian"
+    "details": "Trạm Điều Khiển GTD 168 (Local Web App) (Link: http://localhost:5173)"
   },
   {
-    "log_id": "pc-1786630959927",
-    "app_name": "VS Code - Python Data Science",
+    "log_id": "pc-1786631052474",
+    "app_name": "Coursera: Machine Learning Specialization by Stanford",
+    "url_link": "https://www.coursera.org/learn/machine-learning",
     "category": "Học tập & Deep Work",
     "start_time": "2026-08-13 14:00",
     "end_time": "15:30",
     "duration_mins": 90,
-    "details": "Lập trình xử lý dữ liệu với Pandas & Matplotlib"
+    "details": "Nền tảng Khóa học trực tuyến Coursera - Môn Học Máy & AI (Link: https://www.coursera.org/learn/machine-learning)"
   },
   {
-    "log_id": "pc-1786630959926",
-    "app_name": "Youtube - Học Drum & Nhạc cụ",
+    "log_id": "pc-1786631052473",
+    "app_name": "Prinberk High School - Algebra 1 Course Module",
+    "url_link": "https://prinberkhighschool.org/courses/algebra1",
+    "category": "Học tập & Deep Work",
+    "start_time": "2026-08-13 15:45",
+    "end_time": "17:15",
+    "duration_mins": 90,
+    "details": "Cổng Học Tập Prinberk High School - Bài tập Algebra 1 W33 (Link: https://prinberkhighschool.org/courses/algebra1)"
+  },
+  {
+    "log_id": "pc-1786631052472",
+    "app_name": "Youtube: Học Trống Drum T5 Bài 5 Hướng Dẫn Chi Tiết",
+    "url_link": "https://www.youtube.com/watch?v=drum_t5_lesson",
     "category": "Ngoại ngữ & Kỹ năng",
     "start_time": "2026-08-13 17:30",
     "end_time": "18:30",
     "duration_mins": 60,
-    "details": "Xem video hướng dẫn đánh trống Drum T5"
+    "details": "Video Youtube Học Đánh Trống Năng Khiếu (Link: https://www.youtube.com/watch?v=drum_t5_lesson)"
   }
 ]

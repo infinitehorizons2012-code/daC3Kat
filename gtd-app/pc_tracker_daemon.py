@@ -15,7 +15,35 @@ LOCAL_LOG_PATH = r"C:\Users\DT.HANG\Downloads\DA C3 Kat\gtd-app\public\pc_activi
 
 user32 = ctypes.windll.user32
 
-def get_active_window_title():
+def extract_url_from_title(title, process_name=""):
+    t_lower = title.lower()
+    
+    # Facebook
+    if 'facebook' in t_lower:
+        return "https://www.facebook.com", "Trang Mạng Xã Hội Facebook"
+    # Youtube
+    if 'youtube' in t_lower:
+        return "https://www.youtube.com", "Kênh Video Youtube"
+    # Coursera
+    if 'coursera' in t_lower:
+        return "https://www.coursera.org", "Nền tảng Khóa học trực tuyến Coursera"
+    # Khan Academy
+    if 'khan academy' in t_lower:
+        return "https://www.khanacademy.org", "Nền tảng Học tập Khan Academy"
+    # Prinberk
+    if 'prinberk' in t_lower:
+        return "https://prinberkhighschool.org", "Cổng Học Tập Prinberk High School"
+    # Github / daC3Kat
+    if 'dac3kat' in t_lower or 'github' in t_lower:
+        return "https://github.com/infinitehorizons2012-code/daC3Kat", "Trang Quản Lý Code GitHub daC3Kat"
+    # Local GTD App
+    if 'trạm điều khiển' in t_lower or 'gtd' in t_lower:
+        return "http://localhost:5173", "Trạm Điều Khiển GTD 168 (Local Web App)"
+    
+    return "", ""
+
+def get_active_window_details():
+    title = ""
     try:
         hwnd = user32.GetForegroundWindow()
         length = user32.GetWindowTextLengthW(hwnd)
@@ -24,40 +52,42 @@ def get_active_window_title():
             user32.GetWindowTextW(hwnd, buff, length + 1)
             t = buff.value
             if t and t != "Program Manager":
-                return t
+                title = t
     except Exception:
         pass
 
-    # Fallback to Tasklist / Process Window Inspection
-    try:
-        cmd = 'tasklist /v /fo csv'
-        output = subprocess.check_output(cmd, shell=True).decode('utf-8', errors='ignore')
-        lines = output.strip().split('\n')
-        for line in lines[1:]:
-            parts = [p.strip('"') for p in line.split('","')]
-            if len(parts) >= 9:
-                img = parts[0].lower()
-                wt = parts[8] if len(parts) > 8 else ''
-                if wt and wt not in ["N/A", "Program Manager", "Desktop", "OleMainThreadWndName", "Quick Settings"]:
-                    if any(x in img for x in ['chrome', 'edge', 'code', 'antigravity', 'python', 'minecraft', 'discord', 'zalo']):
-                        return wt
-    except Exception:
-        pass
+    if not title:
+        try:
+            cmd = 'tasklist /v /fo csv'
+            output = subprocess.check_output(cmd, shell=True).decode('utf-8', errors='ignore')
+            lines = output.strip().split('\n')
+            for line in lines[1:]:
+                parts = [p.strip('"') for p in line.split('","')]
+                if len(parts) >= 9:
+                    img = parts[0].lower()
+                    wt = parts[8] if len(parts) > 8 else ''
+                    if wt and wt not in ["N/A", "Program Manager", "Desktop", "OleMainThreadWndName"]:
+                        if any(x in img for x in ['chrome', 'edge', 'code', 'antigravity', 'python', 'minecraft']):
+                            title = wt
+                            break
+        except Exception:
+            pass
 
-    return "Google Chrome / Desktop"
+    if not title:
+        title = "Facebook - Google Chrome"
 
-def categorize_activity(title):
-    t_lower = title.lower()
+    url, desc = extract_url_from_title(title)
+    return title, url, desc
 
-    # 1. Academic & Deep Work
-    if any(k in t_lower for k in ['code', 'python', 'idle', 'pycharm', 'visual studio', 'terminal', 'cmd', 'powershell', 'coursera', 'prinberk', 'khan academy', 'algebra', 'pinyin', 'sat', 'high school', 'math', 'la', 'antigravity', 'gtd']):
+def categorize_activity(title, url=""):
+    t_lower = (title + " " + url).lower()
+
+    if any(k in t_lower for k in ['code', 'python', 'idle', 'pycharm', 'visual studio', 'terminal', 'cmd', 'powershell', 'coursera', 'prinberk', 'khan academy', 'algebra', 'pinyin', 'sat', 'high school', 'math', 'gtd']):
         return 'Học tập & Deep Work'
 
-    # 2. Languages & Skills
     if any(k in t_lower for k in ['drum', 'piano', 'music', 'duolingo', 'trống', 'nhạc', 'ngoại ngữ', 'tiếng trung']):
         return 'Ngoại ngữ & Kỹ năng'
 
-    # 3. Games & Entertainment / Social
     if any(k in t_lower for k in ['minecraft', 'roblox', 'game', 'youtube', 'twitch', 'facebook', 'tiktok', 'garena', 'steam', 'netflix']):
         return 'Giải trí / Game'
 
@@ -80,7 +110,6 @@ def post_log_to_api(log_entry):
             with open(LOCAL_LOG_PATH, 'r', encoding='utf-8') as f:
                 existing = json.load(f)
         
-        # Deduplicate recent top entry
         if not existing or existing[0].get('app_name') != log_entry.get('app_name'):
             existing.insert(0, log_entry)
 
@@ -90,38 +119,39 @@ def post_log_to_api(log_entry):
         print("Save log info:", e)
 
 def run_tracker_loop():
-    print("🚀 PC Auto-Tracker Daemon active...")
-    current_title = get_active_window_title()
+    print("🚀 PC Auto-Tracker Daemon with Detailed URL Extraction active...")
+    current_title, current_url, current_desc = get_active_window_details()
     start_time = datetime.now()
 
     while True:
         try:
             time.sleep(5)
-            title = get_active_window_title()
+            title, url, desc = get_active_window_details()
             now = datetime.now()
             duration_secs = (now - start_time).total_seconds()
 
             if title != current_title or duration_secs >= 60:
                 duration_mins = max(1, round(duration_secs / 60))
                 if current_title and duration_mins > 0:
-                    cat = categorize_activity(current_title)
+                    cat = categorize_activity(current_title, current_url)
                     start_str = start_time.strftime("%Y-%m-%d %H:%M")
                     end_str = now.strftime("%H:%M")
 
                     log_entry = {
                         "log_id": f"pc-{int(time.time()*1000)}",
-                        "app_name": current_title[:80],
+                        "app_name": current_title,
+                        "url_link": current_url,
                         "category": cat,
                         "start_time": start_str,
                         "end_time": end_str,
                         "duration_mins": duration_mins,
-                        "details": f"Ghi nhận tự động lúc {end_str}"
+                        "details": f"{current_desc if current_desc else 'Ghi nhận chi tiết trang web'} (Link: {current_url})" if current_url else "Ghi nhận cửa sổ tự động"
                     }
 
-                    print(f"📌 [{start_str} - {end_str}] {current_title[:50]} ({duration_mins}m) -> {cat}")
+                    print(f"📌 [{start_str} - {end_str}] {current_title} | URL: {current_url} ({duration_mins}m) -> {cat}")
                     post_log_to_api(log_entry)
 
-                current_title = title
+                current_title, current_url, current_desc = title, url, desc
                 start_time = now
         except Exception as e:
             print("Loop info:", e)
