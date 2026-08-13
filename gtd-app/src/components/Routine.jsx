@@ -105,7 +105,35 @@ export default function Routine() {
     }, 50);
   };
 
-  const handleDelete = async (id) => {
+  
+  const handleCopyFromPreviousWeek = async () => {
+    const prevWeek = getWeekString(weekOffset - 1);
+    if (!window.confirm(`Bạn có chắc muốn sao chép tất cả Routine từ tuần trước (${prevWeek}) sang tuần này (${selectedWeek}) không?`)) return;
+
+    try {
+      const res = await fetch(`${API_URL}/routines/copy`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source_week_id: prevWeek,
+          target_week_id: selectedWeek
+        })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert(`🎉 Đã sao chép thành công ${data.count} routine từ tuần ${prevWeek} sang tuần ${selectedWeek}! Bạn có thể thoải mái chỉnh sửa phù hợp cho tuần này.`);
+        fetchRoutines();
+      } else {
+        alert("Không tìm thấy routine nào ở tuần trước để sao chép!");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Lỗi khi sao chép routine!");
+    }
+  };
+
+const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc chắn muốn xóa routine này?")) return;
     try {
       await fetch(`${API_URL}/routines/${id}`, { method: 'DELETE' });
@@ -313,8 +341,15 @@ export default function Routine() {
           </p>
         </div>
 
-        {/* Week Navigator */}
-        <div className="flex items-center gap-2 bg-white/20 p-2 rounded-2xl backdrop-blur-md self-start md:self-auto">
+        {/* Week Navigator & Copy Controls */}
+        <div className="flex flex-wrap items-center gap-2 bg-white/20 p-2 rounded-2xl backdrop-blur-md self-start md:self-auto">
+          <button 
+            onClick={handleCopyFromPreviousWeek}
+            className="px-3 py-1.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-black text-xs transition-all shadow-md flex items-center gap-1.5"
+            title="Sao chép toàn bộ routine từ tuần trước sang tuần này"
+          >
+            <i className="fa-solid fa-copy"></i> Sao chép từ tuần trước
+          </button>
           <button onClick={() => setWeekOffset(prev => prev - 1)} className="w-8 h-8 rounded-xl bg-white/20 hover:bg-white/40 text-white flex items-center justify-center font-bold transition-colors">
             <i className="fa-solid fa-chevron-left"></i>
           </button>
