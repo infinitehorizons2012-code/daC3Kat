@@ -72,6 +72,22 @@ const calcActionDurationText = (ev) => {
   return ev.time_needed_mins ? `${ev.time_needed_mins}m` : '30m';
 };
 
+// Helper to extract start hour integer from item (0 - 23)
+const getItemStartHour = (item) => {
+  if (item.scheduled_datetime) {
+    const h = parseInt(item.scheduled_datetime.slice(11, 13), 10);
+    if (!isNaN(h)) return h;
+  }
+  if (item.start_time) {
+    const h = parseInt(item.start_time.slice(0, 2), 10);
+    if (!isNaN(h)) return h;
+  }
+  return 9; // default fallback 9am
+};
+
+// 18 Hour Slots from 06:00 to 23:00
+const HOURS = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+
 export default function WeeklyCalendarView() {
   const [selectedWeek, setSelectedWeek] = useState(getISOWeekStr());
   const [data, setData] = useState({ actions: [], routines: [], projects: [], goals: [], visions: [], missions: [] });
@@ -132,7 +148,6 @@ export default function WeeklyCalendarView() {
     } catch (e) { console.error(e); }
   };
 
-  // Quick Assign Action to specific date
   const handleAssignToDate = async (action, dateKey) => {
     try {
       const scheduledTime = action.scheduled_datetime 
@@ -164,13 +179,13 @@ export default function WeeklyCalendarView() {
       <div className="glass-panel p-6 rounded-3xl flex flex-col md:flex-row justify-between items-center gap-4 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white shadow-xl border border-indigo-500/20">
         <div>
           <div className="flex items-center gap-2 text-indigo-400 text-xs font-black uppercase tracking-widest mb-1">
-            <i className="fa-solid fa-calendar-week"></i> Weekly Calendar System
+            <i className="fa-solid fa-calendar-week"></i> Weekly Timeline Grid
           </div>
           <h2 className="text-2xl font-black text-white flex items-center gap-2">
             <i className="fa-solid fa-calendar-check text-amber-400"></i> Lịch Tuần ({selectedWeek})
           </h2>
           <p className="text-xs text-slate-300 mt-1 font-medium">
-            Tầng Trên: Lịch hẹn cố định, Routine, Chờ phản hồi • Tầng Dưới: Next Actions, Thả nổi, Đóng băng, Someday.
+            Phân bổ chính xác theo từng khung giờ (06:00 đến 23:00) chuẩn khớp giữa Trục Giờ & Cột Ngày.
           </p>
         </div>
 
@@ -209,226 +224,211 @@ export default function WeeklyCalendarView() {
         <div className="text-center py-20 text-slate-400"><i className="fa-solid fa-spinner fa-spin text-3xl"></i></div>
       ) : (
         <>
-          {/* MAIN GRID: HOUR AXIS ON THE LEFT (KHOANH 1) & 7 DAY COLUMNS */}
-          <div className="flex gap-2.5 items-stretch">
+          {/* MAIN TIMELINE MATRIX (TẦNG TRÊN: LỊCH CỐ ĐỊNH & ROUTINE KHUNG GIỜ) */}
+          <div className="glass-panel p-4 rounded-3xl bg-white border border-slate-200 shadow-sm overflow-x-auto">
             
-            {/* KHOANH 1: LEFT HOUR TIME AXIS BAR */}
-            <div className="w-16 shrink-0 glass-panel p-2 rounded-2xl bg-slate-900 text-slate-300 flex flex-col justify-between items-center shadow-md border border-slate-800">
-              <div className="text-[10px] font-black uppercase text-amber-400 tracking-wider text-center border-b border-slate-800 pb-2 w-full">
-                ⏱️ Giờ
+            {/* 7-DAY HEADERS ROW */}
+            <div className="grid grid-cols-8 gap-2 border-b border-slate-200 pb-3 mb-2 min-w-[900px]">
+              {/* Top Left Header Cell */}
+              <div className="font-black text-xs text-slate-400 uppercase tracking-widest flex items-center justify-center bg-slate-100 rounded-xl py-2">
+                ⏱️ Khung Giờ
               </div>
 
-              <div className="flex-1 py-4 flex flex-col justify-between items-center text-[10px] font-black text-slate-400 space-y-3">
-                <span className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-300">06:00</span>
-                <span>08:00</span>
-                <span>10:00</span>
-                <span className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-300">12:00</span>
-                <span>14:00</span>
-                <span>16:00</span>
-                <span className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-300">18:00</span>
-                <span>20:00</span>
-                <span>22:00</span>
-              </div>
-
-              <div className="text-[8px] font-black text-slate-500 uppercase border-t border-slate-800 pt-1 w-full text-center">
-                Hour Axis
-              </div>
-            </div>
-
-            {/* 7-DAY COLUMN GRID */}
-            <div className="grid grid-cols-1 md:grid-cols-7 gap-2.5 flex-1">
-              {days.map((day) => {
+              {days.map(day => {
                 const isToday = day.dateKey === todayKey;
-
-                // TẦNG TRÊN: Lịch Hẹn, Routine, Chờ Phản Hồi
-                const dayCalendar = activeActions.filter(a => {
-                  if (a.storage_system === 'Calendar' || (a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey))) {
-                    if (a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey)) {
-                      assignedActionIds.add(a.action_id);
-                      return true;
-                    }
-                    if (a.storage_system === 'Calendar' && !a.scheduled_datetime) {
-                      assignedActionIds.add(a.action_id);
-                      return true;
-                    }
-                  }
-                  return false;
-                });
-
-                const dayWaiting = activeActions.filter(a => {
-                  if (a.storage_system === 'Waiting_For') {
-                    if ((a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey)) || (a.defer_until_date && a.defer_until_date.startsWith(day.dateKey))) {
-                      assignedActionIds.add(a.action_id);
-                      return true;
-                    }
-                  }
-                  return false;
-                });
-
-                const dayRoutines = data.routines.filter(r => r.is_daily || (r.days && r.days.includes(day.dayIndex)));
-
-                // TẦNG DƯỚI (KHOANH 2): Next Actions, Thả Nổi, Đóng Băng, Someday
-                const dayNext = activeActions.filter(a => {
-                  if (a.storage_system === 'Next_Actions' && a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey)) {
-                    assignedActionIds.add(a.action_id);
-                    return true;
-                  }
-                  return false;
-                });
-
-                const dayFloating = activeActions.filter(a => {
-                  if (a.storage_system === 'Floating_Backlog' && a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey)) {
-                    assignedActionIds.add(a.action_id);
-                    return true;
-                  }
-                  return false;
-                });
-
-                const dayDeferred = activeActions.filter(a => {
-                  if (a.storage_system === 'Deferred' && a.defer_until_date && a.defer_until_date.startsWith(day.dateKey)) {
-                    assignedActionIds.add(a.action_id);
-                    return true;
-                  }
-                  return false;
-                });
-
-                const daySomeday = activeActions.filter(a => {
-                  if (a.storage_system === 'Someday_Maybe' && a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey)) {
-                    assignedActionIds.add(a.action_id);
-                    return true;
-                  }
-                  return false;
-                });
-
                 return (
                   <div 
-                    key={day.dateKey}
-                    className={`glass-panel p-3 rounded-2xl border flex flex-col justify-between transition-all min-h-[520px] shadow-sm ${
-                      isToday 
-                        ? 'bg-gradient-to-b from-indigo-50/90 via-white to-indigo-50/30 border-indigo-300 ring-2 ring-indigo-400/80 shadow-md' 
-                        : 'bg-white border-slate-200 hover:border-indigo-200'
+                    key={day.dateKey} 
+                    className={`p-2 rounded-xl text-center flex flex-col items-center justify-center ${
+                      isToday ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-50 text-slate-800 border border-slate-200'
                     }`}
                   >
-                    {/* Column Header */}
-                    <div className="border-b pb-2 mb-2.5 flex justify-between items-center">
-                      <div>
-                        <h4 className={`font-black text-sm uppercase tracking-wide ${isToday ? 'text-indigo-700' : 'text-slate-800'}`}>
-                          {day.name}
-                        </h4>
-                        <span className="text-[10px] font-bold text-slate-400">{day.dateFormatted}</span>
-                      </div>
-                      {isToday && (
-                        <span className="text-[9px] font-black uppercase bg-indigo-600 text-white px-2 py-0.5 rounded-full shadow-2xs">
-                          Hôm nay
-                        </span>
-                      )}
+                    <span className="font-black text-xs uppercase tracking-wider">{day.name}</span>
+                    <span className={`text-[10px] font-bold ${isToday ? 'text-indigo-200' : 'text-slate-400'}`}>{day.dateFormatted}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* HOURLY ROWS (06:00 ➔ 23:00) */}
+            <div className="space-y-1.5 min-w-[900px]">
+              {HOURS.map(hour => {
+                const hourStr = `${String(hour).padStart(2, '0')}:00`;
+
+                return (
+                  <div key={hour} className="grid grid-cols-8 gap-2 items-stretch min-h-[48px] hover:bg-slate-50/80 rounded-xl transition-all p-0.5 border-b border-slate-100">
+                    
+                    {/* Left Hour Label Slot */}
+                    <div className="flex items-center justify-center bg-slate-900 text-slate-200 font-black text-xs rounded-xl shadow-2xs">
+                      <span className="text-amber-300">{hourStr}</span>
                     </div>
 
-                    {/* Scrollable Main Content Area */}
-                    <div className="flex-1 flex flex-col justify-between space-y-3 overflow-y-auto custom-scrollbar pr-0.5">
-                      
-                      {/* TẦNG TRÊN: LỊCH HẸN & ROUTINE & CHỜ PHẢN HỒI (CỐ ĐỊNH) */}
-                      <div className="space-y-1.5">
-                        <div className="text-[9px] font-black uppercase tracking-wider text-emerald-700 flex items-center justify-between border-b border-emerald-100 pb-1 mb-1">
-                          <span>🟢 Lịch Cố Định & Routine</span>
-                        </div>
+                    {/* 7 Days cells for this hour */}
+                    {days.map(day => {
+                      // Filter Calendar Events starting at this hour
+                      const hourCalendar = activeActions.filter(a => {
+                        if (a.storage_system === 'Calendar' || (a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey))) {
+                          if (a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey)) {
+                            const h = getItemStartHour(a);
+                            if (h === hour) {
+                              assignedActionIds.add(a.action_id);
+                              return true;
+                            }
+                          }
+                          if (a.storage_system === 'Calendar' && !a.scheduled_datetime && hour === 9) {
+                            assignedActionIds.add(a.action_id);
+                            return true;
+                          }
+                        }
+                        return false;
+                      });
 
-                        {/* Lịch Hẹn 🟢 */}
-                        {dayCalendar.map(ev => {
-                          const startTime = ev.scheduled_datetime ? ev.scheduled_datetime.slice(11, 16) : '00:00';
-                          const durText = calcActionDurationText(ev);
-                          return (
-                            <div key={ev.action_id} className="p-2 rounded-xl bg-emerald-50 text-emerald-950 border border-emerald-300 text-xs font-bold shadow-2xs flex flex-col gap-1">
-                              <div className="flex items-center justify-between gap-1">
-                                <span className="text-[9px] bg-emerald-700 text-white px-1.5 py-0.2 rounded font-black shrink-0">{startTime}</span>
-                                <span className="text-[9px] bg-amber-300 text-slate-950 px-1 rounded font-black shrink-0 border border-amber-400">⏱️ {durText}</span>
+                      // Filter Routines for this hour
+                      const hourRoutines = data.routines.filter(r => {
+                        const activeDay = r.is_daily || (r.days && r.days.includes(day.dayIndex));
+                        if (!activeDay) return false;
+                        const rHour = getItemStartHour(r);
+                        return rHour === hour;
+                      });
+
+                      // Filter Waiting Items for this hour
+                      const hourWaiting = activeActions.filter(a => {
+                        if (a.storage_system === 'Waiting_For') {
+                          if ((a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey)) || (a.defer_until_date && a.defer_until_date.startsWith(day.dateKey))) {
+                            const h = getItemStartHour(a);
+                            if (h === hour) {
+                              assignedActionIds.add(a.action_id);
+                              return true;
+                            }
+                          }
+                        }
+                        return false;
+                      });
+
+                      const hasItems = hourCalendar.length > 0 || hourRoutines.length > 0 || hourWaiting.length > 0;
+
+                      return (
+                        <div key={day.dateKey} className={`p-1 rounded-xl border flex flex-col gap-1 transition-all ${hasItems ? 'bg-emerald-50/40 border-emerald-200' : 'bg-slate-50/30 border-slate-100/60'}`}>
+                          
+                          {/* Calendar Events 🟢 */}
+                          {hourCalendar.map(ev => {
+                            const startTime = ev.scheduled_datetime ? ev.scheduled_datetime.slice(11, 16) : hourStr;
+                            const durText = calcActionDurationText(ev);
+                            return (
+                              <div key={ev.action_id} className="p-1.5 rounded-lg bg-emerald-500 text-white text-[11px] font-bold shadow-xs flex flex-col gap-0.5 animate-fade-in">
+                                <div className="flex items-center justify-between text-[9px] font-black">
+                                  <span className="bg-emerald-700 px-1 rounded">{startTime}</span>
+                                  <span className="bg-amber-300 text-slate-950 px-1 rounded">⏱️ {durText}</span>
+                                </div>
+                                <span className="truncate">{ev.name}</span>
                               </div>
-                              <span className="truncate text-slate-900">{ev.name}</span>
+                            );
+                          })}
+
+                          {/* Routines 🔄 */}
+                          {hourRoutines.map(r => (
+                            <div key={r.routine_id} className="p-1.5 rounded-lg bg-pink-500 text-white text-[11px] font-bold shadow-xs flex items-center justify-between gap-1">
+                              <span className="truncate flex items-center gap-1">
+                                <i className="fa-solid fa-arrows-spin text-[10px]"></i> {r.title || r.name}
+                              </span>
+                              <span className="text-[9px] bg-pink-700 px-1 rounded shrink-0">{r.start_time || `${hourStr}`}</span>
                             </div>
-                          );
-                        })}
+                          ))}
 
-                        {/* Routines 🔄 */}
-                        {dayRoutines.map(r => (
-                          <div key={r.routine_id} className="p-1.5 rounded-xl bg-pink-50 text-pink-900 border border-pink-200 text-[11px] font-bold shadow-2xs flex items-center justify-between gap-1">
-                            <span className="truncate flex items-center gap-1">
-                              <i className="fa-solid fa-arrows-spin text-pink-500 text-[10px]"></i> {r.title || r.name}
-                            </span>
-                            <span className="text-[9px] bg-pink-100 text-pink-700 px-1 rounded shrink-0">{r.start_time || 'Routine'}</span>
-                          </div>
-                        ))}
+                          {/* Chờ Phản Hồi ⏳ */}
+                          {hourWaiting.map(w => (
+                            <div key={w.action_id} className="p-1.5 rounded-lg bg-amber-500 text-slate-950 text-[11px] font-bold shadow-xs flex flex-col gap-0.5">
+                              <span className="text-[9px] font-black"><i className="fa-solid fa-hourglass-half mr-1"></i>Chờ: {w.assigned_to || 'N/A'}</span>
+                              <span className="truncate">{w.name}</span>
+                            </div>
+                          ))}
 
-                        {/* Chờ phản hồi ⏳ */}
-                        {dayWaiting.map(w => (
-                          <div key={w.action_id} className="p-1.5 rounded-xl bg-amber-50 text-amber-950 border border-amber-300 text-[11px] font-bold shadow-2xs flex flex-col gap-0.5">
-                            <span className="text-[9px] text-amber-700 font-black uppercase"><i className="fa-solid fa-hourglass-half mr-1"></i>Chờ: {w.assigned_to || 'N/A'}</span>
-                            <span className="truncate">{w.name}</span>
-                          </div>
-                        ))}
-
-                        {dayCalendar.length === 0 && dayRoutines.length === 0 && dayWaiting.length === 0 && (
-                          <div className="text-center py-2 text-slate-300 text-[9px] italic">
-                            Không có lịch cố định
-                          </div>
-                        )}
-                      </div>
-
-                      {/* KHOANH ĐỎ 2: TẦNG DƯỚI (CÔNG VIỆC TRONG NGÀY) */}
-                      <div className="mt-3 pt-2 border-t-2 border-dashed border-indigo-200 space-y-1.5 bg-indigo-50/30 p-2 rounded-xl">
-                        <div className="text-[9px] font-black uppercase tracking-wider text-indigo-800 flex items-center justify-between border-b border-indigo-100 pb-1 mb-1">
-                          <span>👇 Tầng Dưới (Việc Trong Ngày)</span>
                         </div>
-
-                        {/* Next Actions ⚡ */}
-                        {dayNext.map(a => (
-                          <div key={a.action_id} className="p-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-950 border border-blue-200 text-[11px] font-bold shadow-2xs flex items-center justify-between gap-1.5">
-                            <button onClick={() => handleToggleAction(a)} className="w-3.5 h-3.5 rounded border border-blue-400 flex items-center justify-center shrink-0 hover:bg-blue-500 hover:text-white">
-                              {a.status === 'Done' && <i className="fa-solid fa-check text-[8px]"></i>}
-                            </button>
-                            <span className="truncate flex-1 text-slate-800">{a.name}</span>
-                            <span className="text-[8px] font-black bg-blue-200 text-blue-800 px-1 py-0.2 rounded shrink-0">⚡ NA</span>
-                          </div>
-                        ))}
-
-                        {/* Thả Nổi 🎈 */}
-                        {dayFloating.map(a => (
-                          <div key={a.action_id} className="p-1.5 rounded-lg bg-cyan-50 text-cyan-950 border border-cyan-200 text-[11px] font-bold shadow-2xs flex items-center justify-between gap-1">
-                            <span className="truncate flex-1"><i className="fa-solid fa-parachute-box text-cyan-600 mr-1"></i>{a.name}</span>
-                            <span className="text-[8px] font-black bg-cyan-200 text-cyan-800 px-1 py-0.2 rounded shrink-0">🎈 Nổi</span>
-                          </div>
-                        ))}
-
-                        {/* Đóng Băng 🔒 */}
-                        {dayDeferred.map(a => (
-                          <div key={a.action_id} className="p-1.5 rounded-lg bg-slate-100 text-slate-800 border border-slate-300 text-[11px] font-bold shadow-2xs flex items-center justify-between gap-1">
-                            <span className="truncate flex-1"><i className="fa-solid fa-lock text-slate-500 mr-1"></i>{a.name}</span>
-                            <span className="text-[8px] font-black bg-slate-300 text-slate-700 px-1 py-0.2 rounded shrink-0">🔒 Khóa</span>
-                          </div>
-                        ))}
-
-                        {/* Someday 💤 */}
-                        {daySomeday.map(a => (
-                          <div key={a.action_id} className="p-1.5 rounded-lg bg-purple-50 text-purple-950 border border-purple-200 text-[11px] font-bold shadow-2xs flex items-center justify-between gap-1">
-                            <span className="truncate flex-1"><i className="fa-solid fa-cloud-moon text-purple-500 mr-1"></i>{a.name}</span>
-                            <span className="text-[8px] font-black bg-purple-200 text-purple-800 px-1 py-0.2 rounded shrink-0">💤 Ý tưởng</span>
-                          </div>
-                        ))}
-
-                        {dayNext.length === 0 && dayFloating.length === 0 && dayDeferred.length === 0 && daySomeday.length === 0 && (
-                          <div className="text-center py-2 text-slate-400 text-[9px] italic">
-                            Không có việc linh hoạt
-                          </div>
-                        )}
-                      </div>
-
-                    </div>
+                      );
+                    })}
                   </div>
                 );
               })}
             </div>
           </div>
 
-          {/* SECTION 3: WEEKLY BACKLOG POOL (CÁC CÔNG VIỆC THUỘC TUẦN NÀY NHƯNG CHƯA GÁN NGÀY CỤ THỂ) */}
+          {/* TẦNG DƯỚI: CÔNG VIỆC TRONG NGÀY (NEXT ACTIONS, THẢ NỔI, ĐÓNG BĂNG, SOMEDAY) */}
+          <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm mt-2">
+            <div className="border-b pb-3 mb-4 flex justify-between items-center">
+              <h3 className="text-base font-black text-slate-800 flex items-center gap-2">
+                <i className="fa-solid fa-layer-group text-blue-600"></i> 👇 Tầng Dưới (Công Việc Trong Ngày: Next Actions, Thả Nổi, Đóng Băng, Someday)
+              </h3>
+              <span className="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border">
+                Các việc linh hoạt phân bố theo ngày từ Thứ 2 đến Chủ Nhật
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-7 gap-3">
+              {days.map(day => {
+                const dayNext = activeActions.filter(a => a.storage_system === 'Next_Actions' && a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey));
+                const dayFloating = activeActions.filter(a => a.storage_system === 'Floating_Backlog' && a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey));
+                const dayDeferred = activeActions.filter(a => a.storage_system === 'Deferred' && a.defer_until_date && a.defer_until_date.startsWith(day.dateKey));
+                const daySomeday = activeActions.filter(a => a.storage_system === 'Someday_Maybe' && a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey));
+
+                dayNext.forEach(a => assignedActionIds.add(a.action_id));
+                dayFloating.forEach(a => assignedActionIds.add(a.action_id));
+                dayDeferred.forEach(a => assignedActionIds.add(a.action_id));
+                daySomeday.forEach(a => assignedActionIds.add(a.action_id));
+
+                return (
+                  <div key={day.dateKey} className="p-3 bg-indigo-50/40 rounded-2xl border border-indigo-100 flex flex-col gap-2 min-h-[140px]">
+                    <div className="font-black text-xs text-indigo-900 border-b border-indigo-100 pb-1 flex justify-between">
+                      <span>{day.name}</span>
+                      <span className="text-[10px] text-indigo-400">{day.dateFormatted}</span>
+                    </div>
+
+                    {/* Next Actions ⚡ */}
+                    {dayNext.map(a => (
+                      <div key={a.action_id} className="p-1.5 rounded-lg bg-blue-50 text-blue-950 border border-blue-200 text-[11px] font-bold shadow-2xs flex items-center justify-between gap-1">
+                        <button onClick={() => handleToggleAction(a)} className="w-3.5 h-3.5 rounded border border-blue-400 flex items-center justify-center shrink-0 hover:bg-blue-500 hover:text-white">
+                          {a.status === 'Done' && <i className="fa-solid fa-check text-[8px]"></i>}
+                        </button>
+                        <span className="truncate flex-1">{a.name}</span>
+                        <span className="text-[8px] font-black bg-blue-200 text-blue-800 px-1 py-0.2 rounded shrink-0">⚡ NA</span>
+                      </div>
+                    ))}
+
+                    {/* Thả Nổi 🎈 */}
+                    {dayFloating.map(a => (
+                      <div key={a.action_id} className="p-1.5 rounded-lg bg-cyan-50 text-cyan-950 border border-cyan-200 text-[11px] font-bold shadow-2xs flex items-center justify-between gap-1">
+                        <span className="truncate flex-1"><i className="fa-solid fa-parachute-box text-cyan-600 mr-1"></i>{a.name}</span>
+                        <span className="text-[8px] font-black bg-cyan-200 text-cyan-800 px-1 py-0.2 rounded shrink-0">🎈 Nổi</span>
+                      </div>
+                    ))}
+
+                    {/* Đóng Băng 🔒 */}
+                    {dayDeferred.map(a => (
+                      <div key={a.action_id} className="p-1.5 rounded-lg bg-slate-100 text-slate-800 border border-slate-300 text-[11px] font-bold shadow-2xs flex items-center justify-between gap-1">
+                        <span className="truncate flex-1"><i className="fa-solid fa-lock text-slate-500 mr-1"></i>{a.name}</span>
+                        <span className="text-[8px] font-black bg-slate-300 text-slate-700 px-1 py-0.2 rounded shrink-0">🔒 Khóa</span>
+                      </div>
+                    ))}
+
+                    {/* Someday 💤 */}
+                    {daySomeday.map(a => (
+                      <div key={a.action_id} className="p-1.5 rounded-lg bg-purple-50 text-purple-950 border border-purple-200 text-[11px] font-bold shadow-2xs flex items-center justify-between gap-1">
+                        <span className="truncate flex-1"><i className="fa-solid fa-cloud-moon text-purple-500 mr-1"></i>{a.name}</span>
+                        <span className="text-[8px] font-black bg-purple-200 text-purple-800 px-1 py-0.2 rounded shrink-0">💤 Ý tưởng</span>
+                      </div>
+                    ))}
+
+                    {dayNext.length === 0 && dayFloating.length === 0 && dayDeferred.length === 0 && daySomeday.length === 0 && (
+                      <div className="text-center py-4 text-slate-400 text-[9px] italic">
+                        Trống việc linh hoạt
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* SECTION 3: WEEKLY BACKLOG POOL */}
           <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm mt-4">
             <div className="flex justify-between items-center mb-4 border-b pb-3">
               <h3 className="text-base font-black text-slate-800 flex items-center gap-2">
@@ -439,7 +439,6 @@ export default function WeeklyCalendarView() {
               </span>
             </div>
 
-            {/* List of Unassigned Actions for this Week */}
             {(() => {
               const unassignedWeeklyActions = activeActions.filter(a => {
                 if (assignedActionIds.has(a.action_id)) return false;
