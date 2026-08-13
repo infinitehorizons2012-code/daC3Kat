@@ -2,6 +2,20 @@ import React, { useState, useEffect } from 'react';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
+
+const calcActionMins = (a) => {
+  if (!a) return 30;
+  if (a.scheduled_datetime && a.scheduled_end_datetime) {
+    const s = new Date(a.scheduled_datetime);
+    const e = new Date(a.scheduled_end_datetime);
+    if (!isNaN(s.getTime()) && !isNaN(e.getTime())) {
+      const diffMs = e - s;
+      if (diffMs > 0) return Math.round(diffMs / 60000);
+    }
+  }
+  return Number(a.time_needed_mins) || 30;
+};
+
 export default function TimeManagement() {
   const [selectedPillarModal, setSelectedPillarModal] = useState(null);
 
@@ -121,7 +135,7 @@ export default function TimeManagement() {
       if (pillarKey === 'maintenance') return isMaintenance || (!isAcademic && !isDeepWork && !isBuilding);
 
       return false;
-    }).reduce((sum, a) => sum + (a.time_needed_mins || 30), 0);
+    }).reduce((sum, a) => sum + calcActionMins(a), 0);
 
     return Math.round(mins / 60 * 10) / 10;
   };
@@ -659,7 +673,7 @@ export default function TimeManagement() {
 
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-black bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg border border-blue-100">
-                        {Math.round((a.time_needed_mins || 30) / 60 * 10) / 10}h
+                        {Math.round(calcActionMins(a) / 60 * 10) / 10}h
                       </span>
                     </div>
                   </div>
