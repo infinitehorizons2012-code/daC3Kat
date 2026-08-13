@@ -400,6 +400,23 @@ export default function WeeklyReview() {
               </div>
             </div>
 
+            {/* Live Routine 168h Deduction Sync Banner */}
+            <div className="flex flex-wrap justify-between items-center bg-slate-800/90 px-3 py-2 rounded-xl border border-pink-500/30 text-xs text-slate-200 gap-2">
+              <span className="flex items-center gap-1.5">
+                <i className="fa-solid fa-arrows-spin text-pink-400 text-sm animate-spin-slow"></i>
+                <span>Tự động tính từ Routine: <strong>168h - {weeklyRoutineHrs}h</strong> Routine = <strong className="text-pink-300 font-black">{defaultRoutineDeducted168Hrs}h rảnh</strong></span>
+              </span>
+              
+              <button 
+                type="button"
+                onClick={() => handleUpdateCapacityHrs(defaultRoutineDeducted168Hrs)} 
+                className="text-[11px] font-black text-white bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 px-3 py-1 rounded-lg shadow-md transition-all flex items-center gap-1.5"
+                title="Đồng bộ sức chứa Dạ Dày Tuần theo con số trừ từ Routine"
+              >
+                <i className="fa-solid fa-rotate"></i> Nạp {defaultRoutineDeducted168Hrs}h từ Routine
+              </button>
+            </div>
+
             {/* Capacity Stats Display */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 bg-slate-700/50 p-2 rounded-xl border border-slate-600">
               <div className="text-center p-1">
