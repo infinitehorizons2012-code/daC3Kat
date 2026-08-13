@@ -501,6 +501,79 @@ app.get('/api/actions', async (c) => {
   return c.json(results)
 })
 
+
+app.post('/api/actions/copy', async (c) => {
+  const db = c.env.DB
+  try {
+    const { action_id, target_week, offset_days } = await c.req.json()
+    if (!action_id) return c.json({ error: 'action_id is required' }, 400);
+
+    const { results } = await db.prepare(`SELECT * FROM Actions WHERE action_id = ?`).bind(action_id).all();
+    if (!results || results.length === 0) return c.json({ error: 'Action not found' }, 404);
+
+    const src = results[0];
+    const newId = `act-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`;
+
+    let newScheduled = src.scheduled_datetime;
+    let newScheduledEnd = src.scheduled_end_datetime;
+
+    if (offset_days && src.scheduled_datetime) {
+      try {
+        const d = new Date(src.scheduled_datetime);
+        d.setDate(d.getDate() + Number(offset_days));
+        newScheduled = d.toISOString().slice(0, 16);
+
+        if (src.scheduled_end_datetime) {
+          const dEnd = new Date(src.scheduled_end_datetime);
+          dEnd.setDate(dEnd.getDate() + Number(offset_days));
+          newScheduledEnd = dEnd.toISOString().slice(0, 16);
+        }
+      } catch (err) { console.error("Date shift error", err); }
+    }
+
+    await db.prepare(`
+      INSERT INTO Actions (
+        action_id, area_id, project_id, goal_id, vision_id, mission_id, 
+        name, storage_system, assigned_to, scheduled_datetime, scheduled_end_datetime, defer_until_date, depends_on_action_id, recurrence_rule, deadline_date, 
+        category, context, time_needed_mins, energy_level, work_type, reference_link, status, is_big_rock, notes, target_week, estimated_poms, completed_poms
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(
+      newId,
+      src.area_id || 'AREA-DEFAULT',
+      src.project_id || null,
+      src.goal_id || null,
+      src.vision_id || null,
+      src.mission_id || null,
+      src.name,
+      src.storage_system || 'Next_Actions',
+      src.assigned_to || null,
+      newScheduled || null,
+      newScheduledEnd || null,
+      src.defer_until_date || null,
+      src.depends_on_action_id || null,
+      src.recurrence_rule || null,
+      src.deadline_date || null,
+      src.category || 'Strategic',
+      src.context || null,
+      src.time_needed_mins || null,
+      src.energy_level || null,
+      src.work_type || 'Defined Work',
+      src.reference_link || '',
+      'Pending',
+      src.is_big_rock || 0,
+      src.notes || null,
+      target_week || src.target_week || null,
+      src.estimated_poms || 1,
+      0
+    ).run()
+
+    return c.json({ success: true, action_id: newId }, 201);
+  } catch (e) {
+    return c.json({ error: e.message }, 500);
+  }
+});
+
 app.post('/api/actions', async (c) => {
   const db = c.env.DB
   const body = await c.req.json()
