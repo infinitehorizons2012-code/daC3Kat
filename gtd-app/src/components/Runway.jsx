@@ -384,13 +384,13 @@ export default function Runway() {
             {activeTab === 'Next_Actions' ? (
               filteredNextActions.length === 0 ? (
                 <EmptyState icon="fa-mug-hot" text="Không có công việc nào khớp với bộ lọc hiện tại." />
-              ) : filteredNextActions.map(a => <ActionCard key={a.action_id} action={a} data={data} onToggle={() => handleToggleStatus(a)} onEdit={() => openEditModal(a)} onDelete={() => handleDelete(a.action_id)} onPull={() => handlePullToActive(a)} />)
+              ) : filteredNextActions.map(a => <ActionCard key={a.action_id} action={a} data={data} onToggle={() => handleToggleStatus(a)} onEdit={() => openEditModal(a)} onDelete={() => handleDelete(a.action_id)} onCopy={() => handleCopyAction(a)} onPull={() => handlePullToActive(a)} />)
             ) : activeTab === 'Calendar' ? (
               <CalendarView data={data} onEdit={openEditModal} onDelete={handleDelete} onToggle={handleToggleStatus} />
             ) : (
               tabActions.length === 0 ? (
                 <EmptyState icon="fa-folder-open" text={`Chưa có dữ liệu trong kho ${activeTab.replace('_', ' ')}.`} />
-              ) : tabActions.map(a => <ActionCard key={a.action_id} action={a} data={data} onToggle={() => handleToggleStatus(a)} onEdit={() => openEditModal(a)} onDelete={() => handleDelete(a.action_id)} onPull={() => handlePullToActive(a)} />)
+              ) : tabActions.map(a => <ActionCard key={a.action_id} action={a} data={data} onToggle={() => handleToggleStatus(a)} onEdit={() => openEditModal(a)} onDelete={() => handleDelete(a.action_id)} onCopy={() => handleCopyAction(a)} onPull={() => handlePullToActive(a)} />)
             )}
           </div>
         </div>
@@ -740,7 +740,7 @@ function EmptyState({ icon, text }) {
   );
 }
 
-function ActionCard({ action, data, onToggle, onEdit, onDelete, onPull }) {
+function ActionCard({ action, data, onToggle, onEdit, onDelete, onCopy, onPull }) {
   const isUrl = action.reference_link && (action.reference_link.startsWith('http://') || action.reference_link.startsWith('https://'));
   const isUnplanned = action.work_type === 'Unplanned Work';
   
