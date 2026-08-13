@@ -18,35 +18,77 @@ const calcActionMins = (a) => {
 
 
 
+
 const getPillarForAction = (a, data) => {
-  if (!a) return 'academic';
+  if (!a || !data) return 'academic';
 
-  const nameLower = (a.name || '').toLowerCase();
-  const projName = (data && data.projects ? (data.projects.find(p => p && p.project_id === a.project_id)?.name || '') : '').toLowerCase();
-  const cat = (a.category || '').toLowerCase();
+  const visions = data.visions || [];
+  const goals = data.goals || [];
+  const projects = data.projects || [];
+
+  // Helper to map Vision object or Vision Statement to pillar key
+  const matchVisionToPillar = (vis) => {
+    if (!vis) return null;
+    const stmt = (vis.statement || '').toLowerCase();
+    const vid = vis.vision_id || '';
+
+    if (vid === 'vis-1786590462256' || stmt.includes('academic') || stmt.includes('1.')) return 'academic';
+    if (vid === 'vis-1786607493926' || stmt.includes('deep work') || stmt.includes('dream map') || stmt.includes('2.')) return 'deepwork';
+    if (vid === 'vis-1786607530122' || stmt.includes('building') || stmt.includes('portfolio') || stmt.includes('3.')) return 'building';
+    if (vid === 'vis-1786607544898' || stmt.includes('maintenance') || stmt.includes('4.')) return 'maintenance';
+
+    return null;
+  };
+
+  // 1. Direct Vision ID on Action
+  if (a.vision_id) {
+    const vis = visions.find(v => v.vision_id === a.vision_id);
+    const pillar = matchVisionToPillar(vis);
+    if (pillar) return pillar;
+  }
+
+  // 2. Direct Goal ID on Action -> Goal's Vision
+  if (a.goal_id) {
+    const g = goals.find(x => x.goal_id === a.goal_id);
+    if (g && g.vision_id) {
+      const vis = visions.find(v => v.vision_id === g.vision_id);
+      const pillar = matchVisionToPillar(vis);
+      if (pillar) return pillar;
+    }
+  }
+
+  // 3. Direct Project ID on Action -> Project's linked Visions or Goals
+  if (a.project_id) {
+    const p = projects.find(x => x.project_id === a.project_id);
+    if (p) {
+      // Check vision_ids on project
+      const pVids = p.vision_ids || [];
+      for (const vid of pVids) {
+        const vis = visions.find(v => v.vision_id === vid);
+        const pillar = matchVisionToPillar(vis);
+        if (pillar) return pillar;
+      }
+
+      // Check goal_ids on project
+      const pGids = p.goal_ids || [];
+      for (const gid of pGids) {
+        const g = goals.find(x => x.goal_id === gid);
+        if (g && g.vision_id) {
+          const vis = visions.find(v => v.vision_id === g.vision_id);
+          const pillar = matchVisionToPillar(vis);
+          if (pillar) return pillar;
+        }
+      }
+    }
+  }
+
+  // 4. Work Type or Category override fallback
   const wt = (a.work_type || '').toLowerCase();
-
-  // 1. Explicit Category / Work Type overrides
+  const cat = (a.category || '').toLowerCase();
   if (wt.includes('academic') || cat.includes('academic')) return 'academic';
   if (wt.includes('deep') || cat.includes('deep')) return 'deepwork';
   if (wt.includes('build') || cat.includes('build')) return 'building';
   if (wt.includes('maint') || cat.includes('maint')) return 'maintenance';
-
-  // 2. Physical Sports, Health & System Maintenance (Pillar 4)
-  const isMaintenance = ['karate', 'bơi', 'võ', 'thể thao', 'chạy', 'tập', 'gym', 'thiền', 'dọn', 'bảo trì', 'maintenance', 'review', 'sức khỏe', 'thể chất', 'fitness', 'workout', 'yoga', 'bóng đá', 'bóng rổ', 'cầu lông', 'đi bộ', 'ăn', 'ngủ'].some(k => nameLower.includes(k) || projName.includes(k));
-  if (isMaintenance) return 'maintenance';
-
-  // 3. Core Academic (Subjects, Languages, Music, SAT, High School) (Pillar 1)
-  const isAcademic = ['algebra', 'pinyin', 'toán', 'math', 'văn', 'anh', 'english', 'lý', 'hóa', 'sinh', 'tiếng trung', 'hán ngữ', 'sat', 'high school', 'tín chỉ', 'tự học', 'học tập', 'study', 'course', 'khóa học', 'bài tập', 'luyện đề', 'giảng', 'gpa', 'essay', 'toefl', 'ielts', 'drum', 'trống', 'nhạc', 'đàn'].some(k => nameLower.includes(k) || projName.includes(k));
-  if (isAcademic) return 'academic';
-
-  // 4. Deep Work & Dream Map (Mechatronics, Python, Data Science, AI, Robotics, Coding) (Pillar 2)
-  const isDeepWork = ['python', 'mechatronics', 'data', 'code', 'nghiên cứu', 'lập trình', 'robot', 'ai', 'lab', 'tech', 'system', 'thuật toán', 'machine learning', 'deep learning'].some(k => nameLower.includes(k) || projName.includes(k));
-  if (isDeepWork) return 'deepwork';
-
-  // 5. Building & Portfolio (Products, Web, Outreach, Cold Email) (Pillar 3)
-  const isBuilding = ['portfolio', 'building', 'sản phẩm', 'web', 'email', 'mentor', 'business', 'btc', 'kết nối', 'outreach', 'startup', 'pitch'].some(k => nameLower.includes(k) || projName.includes(k));
-  if (isBuilding) return 'building';
 
   return 'academic';
 };
