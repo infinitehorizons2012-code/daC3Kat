@@ -9,10 +9,12 @@ import DailyReviewWizard from './components/DailyReviewWizard';
 import TimeManagement from './components/TimeManagement';
 import Routine from './components/Routine';
 import FocusEngine from './components/FocusEngine';
+import WeeklyCalendarView from './components/WeeklyCalendarView';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
 const tabs = {
+  weekly_calendar: { label: 'Lịch Tuần Master', icon: 'fa-solid fa-calendar-week', color: 'text-indigo-600', bg: 'bg-indigo-100' },
   focus: { label: 'Runway', icon: 'fa-solid fa-plane-departure', color: 'text-blue-600', bg: 'bg-blue-100' },
   pomodoro: { label: 'Focus Mode', icon: 'fa-solid fa-stopwatch', color: 'text-orange-600', bg: 'bg-orange-100' },
   routine: { label: 'Routine', icon: 'fa-solid fa-arrows-spin', color: 'text-pink-600', bg: 'bg-pink-100' },
@@ -128,6 +130,15 @@ function App() {
               </div>
             </div>
 
+            {/* KHOANH ĐỎ 1: NÚT LỊCH TUẦN MASTER WEEKLY */}
+            <button 
+              onClick={() => setActiveTab('weekly_calendar')}
+              className={`glass-panel px-4 py-2 rounded-2xl font-black flex items-center gap-2 transition-all shadow-sm border hover:scale-105 ${activeTab === 'weekly_calendar' ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-indigo-400 ring-2 ring-indigo-300 shadow-md' : 'bg-white/80 text-indigo-700 hover:bg-indigo-50 border-indigo-200'}`}
+              title="Mở Lịch Tuần Master (7 Ngày từ Thứ 2 đến Chủ Nhật)"
+            >
+              <i className="fa-solid fa-calendar-week text-indigo-500"></i> Lịch Tuần
+            </button>
+
             {/* Dropdown 2: Phân hệ GTD */}
             <div className="relative group" onMouseEnter={() => setIsMenu2Open(true)} onMouseLeave={() => setIsMenu2Open(false)}>
               <button className={`glass-panel bg-white/70 px-4 py-2 rounded-2xl font-black flex items-center gap-2 transition-all shadow-sm border border-white/60 hover:scale-105 ${tabs[activeTab].color} ${tabs[activeTab].bg}`}>
@@ -178,6 +189,7 @@ function App() {
         {/* Content Area with Anti-Blank ErrorBoundary */}
         <div className="min-h-[500px]">
           <ErrorBoundary key={activeTab}>
+            {activeTab === 'weekly_calendar' && <WeeklyCalendarView />}
             {activeTab === 'focus' && <Runway />}
             {activeTab === 'pomodoro' && <FocusEngine />}
             {activeTab === 'routine' && <Routine />}
