@@ -38,35 +38,40 @@ export default function WeeklyReview() {
   const [savingNotes, setSavingNotes] = useState(false);
   const notesTimeoutRef = useRef(null);
 
+  const [routines, setRoutines] = useState([]);
+
   const fetchData = async () => {
     try {
-      const [actionsRes, horizonsRes, areasRes, capRes] = await Promise.all([
+      const [actionsRes, horizonsRes, areasRes, capRes, routinesRes] = await Promise.all([
         fetch(`${API_URL}/actions`), 
         fetch(`${API_URL}/horizons`), 
         fetch(`${API_URL}/areas`), 
-        fetch(`${API_URL}/weekly-capacities`)
+        fetch(`${API_URL}/weekly-capacities`),
+        fetch(`${API_URL}/routines`).catch(() => ({ json: () => [] }))
       ]);
       const acData = await actionsRes.json();
       const hData = await horizonsRes.json();
       const arData = await areasRes.json();
       const capData = await capRes.json();
+      const rData = await routinesRes.json();
       
       const capMap = {};
       if (Array.isArray(capData)) {
         capData.forEach(c => {
-          capMap[c.week_id] = { capacity_hrs: c.capacity_hrs || 40, notes: c.notes || '' };
+          capMap[c.week_id] = { capacity_hrs: c.capacity_hrs, notes: c.notes || '' };
         });
       }
 
       setData({ 
-        actions: acData, 
-        projects: hData.projects || [], 
-        areas: arData,
-        goals: hData.goals || [],
-        visions: hData.visions || [],
-        missions: hData.missions || []
+        actions: Array.isArray(acData) ? acData : [], 
+        projects: (hData && hData.projects) || [], 
+        areas: Array.isArray(arData) ? arData : [],
+        goals: (hData && hData.goals) || [],
+        visions: (hData && hData.visions) || [],
+        missions: (hData && hData.missions) || []
       });
       setCapacitiesMap(capMap);
+      setRoutines(Array.isArray(rData) ? rData : []);
       setLoading(false);
     } catch (e) {
       console.error(e);
@@ -76,9 +81,32 @@ export default function WeeklyReview() {
 
   useEffect(() => { fetchData(); }, []);
 
-  const currentCapacityObj = capacitiesMap[selectedWeek] || { capacity_hrs: 40, notes: '' };
-  const weeklyCapacityHrs = currentCapacityObj.capacity_hrs;
-  const weekNotes = currentCapacityObj.notes;
+  // Helper to convert HH:MM to decimal hours safely
+  const timeToHours = (t) => {
+    if (!t || typeof t !== 'string') return 0;
+    const parts = t.split(':');
+    if (!parts || parts.length < 2) return 0;
+    const h = parseInt(parts[0], 10) || 0;
+    const m = parseInt(parts[1], 10) || 0;
+    return h + m / 60;
+  };
+
+  const calcRoutineDurationHrs = (start, end) => {
+    let s = timeToHours(start);
+    let e = timeToHours(end);
+    if (e < s) e += 24;
+    return Math.max(0, e - s);
+  };
+
+  // Filter routines for selectedWeek
+  const weekRoutines = (routines || []).filter(r => r && (!r.week_id || r.week_id === selectedWeek));
+  const dailyRoutineHrs = weekRoutines.reduce((sum, r) => sum + calcRoutineDurationHrs(r.start_time, r.end_time), 0);
+  const weeklyRoutineHrs = Math.round(dailyRoutineHrs * 7 * 10) / 10;
+  const defaultRoutineDeducted168Hrs = Math.max(0, Math.round((168 - weeklyRoutineHrs) * 10) / 10);
+
+  const currentCapacityObj = (capacitiesMap && capacitiesMap[selectedWeek]) || {};
+  const weeklyCapacityHrs = currentCapacityObj.capacity_hrs !== undefined ? currentCapacityObj.capacity_hrs : defaultRoutineDeducted168Hrs;
+  const weekNotes = currentCapacityObj.notes || '';
 
   const handleUpdateCapacityHrs = async (newHrs) => {
     const val = Math.max(1, Math.min(168, Number(newHrs) || 40));
