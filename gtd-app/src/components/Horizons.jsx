@@ -311,7 +311,7 @@ export default function Horizons() {
                       + Thêm Tầm nhìn
                     </button>
                     <div className="flex gap-2 mt-2">
-                      <button onClick={() => setProfileHorizon({ type: 'mission', data: mission })} className="text-xs text-slate-500 hover:text-emerald-600 bg-white px-2 py-1 rounded shadow-sm border border-slate-200"><i className="fa-solid fa-folder-open mr-1"></i> Hồ sơ</button>
+                      <button onClick={() => setProfileHorizon({ type: 'mission', data: mission })} className="text-xs text-slate-500 hover:text-emerald-600 bg-white px-2 py-1 rounded shadow-sm border border-slate-200" title="Hồ sơ"><i className="fa-solid fa-folder-open"></i></button>
                       <button onClick={() => { setModalType('edit-mission'); setEditId(mission.mission_id); setFormData({...formData, statement: mission.statement, status: mission.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                       <button onClick={() => handleDelete('missions', mission.mission_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                     </div>
@@ -347,7 +347,7 @@ export default function Horizons() {
                               + Thêm Mục tiêu
                             </button>
                             <div className="flex gap-2 mt-2">
-                              <button onClick={() => setProfileHorizon({ type: 'vision', data: vision })} className="text-xs text-slate-500 hover:text-blue-600 bg-white px-2 py-1 rounded shadow-sm border border-slate-200"><i className="fa-solid fa-folder-open mr-1"></i> Hồ sơ</button>
+                              <button onClick={() => setProfileHorizon({ type: 'vision', data: vision })} className="text-xs text-slate-500 hover:text-blue-600 bg-white px-2 py-1 rounded shadow-sm border border-slate-200" title="Hồ sơ"><i className="fa-solid fa-folder-open"></i></button>
                               <button onClick={() => { setModalType('edit-vision'); setEditId(vision.vision_id); setFormData({...formData, statement: vision.statement, status: vision.status || 'Active'}); }} className="text-xs text-slate-500 hover:text-blue-600"><i className="fa-solid fa-pen"></i></button>
                               <button onClick={() => handleDelete('visions', vision.vision_id)} className="text-xs text-slate-500 hover:text-red-600"><i className="fa-solid fa-trash"></i></button>
                             </div>
