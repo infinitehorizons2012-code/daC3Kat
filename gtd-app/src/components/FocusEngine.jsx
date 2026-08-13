@@ -154,6 +154,11 @@ export default function FocusEngine({ onOpenReport }) {
   const [isRunning, setIsRunning] = useState(false);
   const [isWidgetMode, setIsWidgetMode] = useState(false);
 
+  // Search & Filter state for Action Finder
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterContext, setFilterContext] = useState('');
+  const [filterEnergy, setFilterEnergy] = useState('');
+
   const timerRef = useRef(null);
 
   const fetchData = async () => {
