@@ -1,36 +1,26 @@
 [
   {
-    "log_id": "pc-1786631168858",
-    "app_name": "Facebook Watch / Reels Video",
-    "url_link": "https://www.facebook.com/watch",
+    "log_id": "pc-1786631226893",
+    "app_name": "Facebook Reel Video (ID: 1350191780413194)",
+    "url_link": "https://www.facebook.com/reel/1350191780413194",
     "category": "Giải trí / Game",
-    "start_time": "2026-08-13 21:26",
-    "end_time": "21:26",
-    "duration_mins": 15,
-    "details": "Xem Video / Reels Facebook (Link: https://www.facebook.com/watch)"
+    "start_time": "2026-08-13 21:27",
+    "end_time": "21:27",
+    "duration_mins": 12,
+    "details": "Xem Video Facebook Reel Cụ Thể (Link chuẩn: https://www.facebook.com/reel/1350191780413194)"
   },
   {
-    "log_id": "pc-1786631168857",
+    "log_id": "pc-1786631226892",
     "app_name": "Nhóm Học Lập Trình Python & AI | Facebook",
     "url_link": "https://www.facebook.com/groups",
     "category": "Học tập & Deep Work",
-    "start_time": "2026-08-13 21:26",
-    "end_time": "21:26",
+    "start_time": "2026-08-13 21:27",
+    "end_time": "21:27",
     "duration_mins": 25,
     "details": "Xem Nhóm Facebook Cụ Thể: Nhóm Học Lập Trình Python & AI (Link: https://www.facebook.com/groups)"
   },
   {
-    "log_id": "pc-1786631168856",
-    "app_name": "Messenger / Chat Trò Chuyện Trực Tuyến | Facebook",
-    "url_link": "https://www.facebook.com/messages",
-    "category": "Giải trí / Game",
-    "start_time": "2026-08-13 20:30",
-    "end_time": "20:50",
-    "duration_mins": 20,
-    "details": "Nhắn tin trò chuyện Messenger (Link: https://www.facebook.com/messages)"
-  },
-  {
-    "log_id": "pc-1786631168855",
+    "log_id": "pc-1786631226891",
     "app_name": "Coursera: Machine Learning Specialization by Stanford",
     "url_link": "https://www.coursera.org/learn/machine-learning",
     "category": "Học tập & Deep Work",

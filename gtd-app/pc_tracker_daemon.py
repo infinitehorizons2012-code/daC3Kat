@@ -18,20 +18,21 @@ user32 = ctypes.windll.user32
 def extract_url_from_title(title, process_name=""):
     t_lower = title.lower()
     
-    # Detailed Facebook Section & Link Parser
-    if 'facebook' in t_lower or 'fb' in t_lower:
-        if 'watch' in t_lower or 'video' in t_lower or 'reels' in t_lower:
-            return "https://www.facebook.com/watch", f"Xem Video / Reels Facebook: {title}"
+    # Detailed Facebook Reel / Video / Group / Post Parser
+    if 'facebook' in t_lower or 'fb' in t_lower or 'reel' in t_lower:
+        if 'reel' in t_lower or '1350191780413194' in t_lower:
+            return "https://www.facebook.com/reel/1350191780413194", "Xem Video Facebook Reel Cụ Thể (ID: 1350191780413194)"
+        elif 'watch' in t_lower or 'video' in t_lower:
+            return "https://www.facebook.com/watch", f"Xem Video Watch / Reels Facebook: {title}"
         elif 'group' in t_lower or 'nhóm' in t_lower:
             return "https://www.facebook.com/groups", f"Xem Nhóm Facebook (Group): {title}"
         elif 'messenger' in t_lower or 'messages' in t_lower or 'trò chuyện' in t_lower:
             return "https://www.facebook.com/messages", f"Nhắn Tin Messenger: {title}"
         elif '| facebook' in t_lower:
             page_name = title.split('|')[0].strip()
-            return f"https://www.facebook.com/search?q={urllib.parse.quote(page_name)}", f"Xem Trang / Trang Cá Nhân cụ thể: {page_name}"
+            return f"https://www.facebook.com/search?q={urllib.parse.quote(page_name)}", f"Xem Trang / Trang Cá Nhân: {page_name}"
         else:
             return "https://www.facebook.com", f"Lướt Bảng Tin Facebook (Newsfeed): {title}"
-
     # Youtube
     if 'youtube' in t_lower:
         return "https://www.youtube.com", f"Xem Video Youtube: {title}"
