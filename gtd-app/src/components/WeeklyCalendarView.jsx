@@ -88,6 +88,34 @@ const getItemStartHour = (item) => {
 // 18 Hour Slots from 06:00 to 23:00
 const HOURS = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 
+
+const isRoutineActiveOnDay = (r, dayIndex) => {
+  if (!r) return false;
+  if (r.is_daily === 1 || r.is_daily === true || r.is_daily === '1') return true;
+  if (!r.days || r.days === 'None' || r.days === 'null') return true; // Default active all days if not specified
+  try {
+    const daysArr = typeof r.days === 'string' ? JSON.parse(r.days) : r.days;
+    if (Array.isArray(daysArr)) return daysArr.includes(dayIndex);
+  } catch (e) {}
+  return true;
+};
+
+const isRoutineInHourSlot = (r, hour) => {
+  if (!r || !r.start_time) return false;
+
+  const startH = parseInt(r.start_time.slice(0, 2), 10);
+  let endH = r.end_time ? parseInt(r.end_time.slice(0, 2), 10) : startH + 1;
+  if (isNaN(startH)) return false;
+  if (isNaN(endH)) endH = startH + 1;
+
+  if (startH <= endH) {
+    return hour >= startH && hour <= endH;
+  } else {
+    // Overnight range e.g. 21:30 to 07:00 -> hours >= 21 or hours <= 7
+    return hour >= startH || hour <= endH;
+  }
+};
+
 export default function WeeklyCalendarView() {
   const [selectedWeek, setSelectedWeek] = useState(getISOWeekStr());
   const [data, setData] = useState({ actions: [], routines: [], projects: [], goals: [], visions: [], missions: [] });
@@ -283,12 +311,11 @@ export default function WeeklyCalendarView() {
                         return false;
                       });
 
-                      // Filter Routines for this hour
+                      // Filter Routines for this hour slot
                       const hourRoutines = data.routines.filter(r => {
-                        const activeDay = r.is_daily || (r.days && r.days.includes(day.dayIndex));
+                        const activeDay = isRoutineActiveOnDay(r, day.dayIndex);
                         if (!activeDay) return false;
-                        const rHour = getItemStartHour(r);
-                        return rHour === hour;
+                        return isRoutineInHourSlot(r, hour);
                       });
 
                       // Filter Waiting Items for this hour
@@ -326,14 +353,25 @@ export default function WeeklyCalendarView() {
                           })}
 
                           {/* Routines 🔄 */}
-                          {hourRoutines.map(r => (
-                            <div key={r.routine_id} className="p-1.5 rounded-lg bg-pink-500 text-white text-[11px] font-bold shadow-xs flex items-center justify-between gap-1">
-                              <span className="truncate flex items-center gap-1">
-                                <i className="fa-solid fa-arrows-spin text-[10px]"></i> {r.title || r.name}
-                              </span>
-                              <span className="text-[9px] bg-pink-700 px-1 rounded shrink-0">{r.start_time || `${hourStr}`}</span>
-                            </div>
-                          ))}
+                          {hourRoutines.map(r => {
+                            const isSleep = (r.title || r.name || '').toLowerCase().includes('ngủ') || (r.title || r.name || '').toLowerCase().includes('nghỉ');
+                            const badgeBg = isSleep ? 'bg-indigo-600 text-white border border-indigo-400' : 'bg-pink-500 text-white';
+                            const icon = isSleep ? 'fa-moon' : 'fa-arrows-spin';
+                            const timeSpan = r.start_time && r.end_time ? `${r.start_time}-${r.end_time}` : (r.start_time || `${hourStr}`);
+
+                            return (
+                              <div key={r.routine_id} className={`p-1.5 rounded-lg text-[11px] font-bold shadow-xs flex flex-col gap-0.5 animate-fade-in ${badgeBg}`}>
+                                <div className="flex items-center justify-between text-[9px] font-black opacity-90">
+                                  <span className="truncate flex items-center gap-1">
+                                    <i className={`fa-solid ${icon} text-[10px]`}></i> {r.title || r.name}
+                                  </span>
+                                </div>
+                                <div className="text-[8px] opacity-80 flex justify-between">
+                                  <span>{timeSpan}</span>
+                                </div>
+                              </div>
+                            );
+                          })}
 
                           {/* Chờ Phản Hồi ⏳ */}
                           {hourWaiting.map(w => (
