@@ -203,7 +203,7 @@ function ActionItem({ action, data, onToggle, onDelete }) {
           )}
           {action.deadline_date && (
             <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded border flex items-center ${new Date(action.deadline_date) < new Date() && !isDone ? 'bg-red-100 text-red-700 border-red-200' : 'bg-orange-50 text-orange-600 border-orange-200'}`}>
-              <i className="fa-solid fa-clock mr-1"></i> Hạn: {new Date(action.deadline_date).toLocaleDateString('vi-VN')}
+              <i className="fa-solid fa-clock mr-1"></i> Hạn: {action.deadline_date && !isNaN(new Date(action.deadline_date).getTime()) ? new Date(action.deadline_date).toLocaleDateString('vi-VN') : ''}
             </span>
           )}
           {action.recurrence_rule && (

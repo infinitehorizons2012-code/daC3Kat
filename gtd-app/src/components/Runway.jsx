@@ -1042,7 +1042,7 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
                   {/* Events inside day cell */}
                   <div className="space-y-1 overflow-y-auto custom-scrollbar max-h-[80px]">
                     {dayEvents.map(ev => {
-                      const startTime = new Date(ev.scheduled_datetime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+                      const startTime = formatTimeSafe(ev.scheduled_datetime) || '00:00';
                       return (
                         <div 
                           key={ev.action_id}
@@ -1074,7 +1074,7 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
             {sortedDateKeys.map(dateKey => {
               const events = actionsByDate[dateKey];
               const dateObj = new Date(events[0].scheduled_datetime);
-              const dateLabel = dateObj.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' });
+              const dateLabel = dateObj && !isNaN(dateObj.getTime()) ? dateObj.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' }) : dateKey;
               const isToday = dateKey === todayKey;
 
               return (
@@ -1087,8 +1087,8 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
 
                   <div className="grid grid-cols-1 gap-2.5 pl-2">
                     {events.map(ev => {
-                      const startTime = new Date(ev.scheduled_datetime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-                      const endTime = ev.scheduled_end_datetime ? new Date(ev.scheduled_end_datetime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : null;
+                      const startTime = formatTimeSafe(ev.scheduled_datetime) || '00:00';
+                      const endTime = formatTimeSafe(ev.scheduled_end_datetime);
                       const project = data.projects.find(p => p.project_id === ev.project_id);
 
                       return (

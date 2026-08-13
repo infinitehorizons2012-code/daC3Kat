@@ -518,7 +518,7 @@ export default function TimeManagement() {
                 const project = data.projects.find(p => p.project_id === a.project_id);
                 const isDone = a.status === 'Done';
                 const timeStr = a.scheduled_datetime 
-                  ? new Date(a.scheduled_datetime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) 
+                  ? (a.scheduled_datetime && !isNaN(new Date(a.scheduled_datetime).getTime()) ? new Date(a.scheduled_datetime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : '00:00') 
                   : (a.time_needed_mins ? `${a.time_needed_mins}m` : '30m');
 
                 return (

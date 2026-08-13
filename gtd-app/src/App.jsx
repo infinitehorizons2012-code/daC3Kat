@@ -25,6 +25,43 @@ const tabs = {
   horizons: { label: 'Cây Horizons', icon: 'fa-solid fa-tree', color: 'text-emerald-600', bg: 'bg-emerald-100' },
 };
 
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("React ErrorBoundary caught error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-[400px] flex flex-col items-center justify-center p-8 bg-rose-50 border border-rose-200 rounded-3xl text-center my-6">
+          <i className="fa-solid fa-triangle-exclamation text-4xl text-rose-500 mb-3 animate-bounce"></i>
+          <h3 className="text-lg font-black text-rose-800 mb-2">Đã xảy ra lỗi nạp dữ liệu trên phân hệ này</h3>
+          <p className="text-xs text-rose-600 mb-4 max-w-md bg-white p-3 rounded-xl border border-rose-200 font-mono">
+            {this.state.error?.toString()}
+          </p>
+          <button 
+            onClick={() => { this.setState({ hasError: false }); window.location.reload(); }}
+            className="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-black rounded-xl text-xs shadow-md transition-all flex items-center gap-2"
+          >
+            <i className="fa-solid fa-rotate"></i> Tải lại trang
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function App() {
   const [activeTab, setActiveTab] = useState('focus');
   const [isMenu1Open, setIsMenu1Open] = useState(false);
@@ -138,18 +175,20 @@ function App() {
 
         </div>
 
-        {/* Content Area */}
+        {/* Content Area with Anti-Blank ErrorBoundary */}
         <div className="min-h-[500px]">
-          {activeTab === 'focus' && <Runway />}
-          {activeTab === 'pomodoro' && <FocusEngine />}
-          {activeTab === 'routine' && <Routine />}
-          {activeTab === 'time' && <TimeManagement />}
-          {activeTab === 'areas' && <Areas />}
-          {activeTab === 'kanban' && <Kanban />}
-          {activeTab === 'horizons' && <Horizons />}
-          {activeTab === 'reviews' && <ReviewHub />}
-          {activeTab === 'daily' && <DailyReviewWizard onExit={() => setActiveTab('focus')} />}
-          {activeTab === 'weekly' && <WeeklyReview />}
+          <ErrorBoundary key={activeTab}>
+            {activeTab === 'focus' && <Runway />}
+            {activeTab === 'pomodoro' && <FocusEngine />}
+            {activeTab === 'routine' && <Routine />}
+            {activeTab === 'time' && <TimeManagement />}
+            {activeTab === 'areas' && <Areas />}
+            {activeTab === 'kanban' && <Kanban />}
+            {activeTab === 'horizons' && <Horizons />}
+            {activeTab === 'reviews' && <ReviewHub />}
+            {activeTab === 'daily' && <DailyReviewWizard onExit={() => setActiveTab('focus')} />}
+            {activeTab === 'weekly' && <WeeklyReview />}
+          </ErrorBoundary>
         </div>
 
       </div>
