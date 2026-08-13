@@ -62,23 +62,32 @@ export default function TimeManagement() {
   const weekActions = data.actions.filter(a => a.status !== 'Cancelled' && (a.storage_system === 'Next_Actions' || a.storage_system === 'Calendar'));
 
   const getPillarHours = (pillarKey) => {
-    const mins = weekActions.filter(a => {
+    // Include all active actions in Next_Actions, Calendar, Waiting_For, or Done
+    const activeActions = data.actions.filter(a => a.status !== 'Cancelled');
+
+    const mins = activeActions.filter(a => {
       const nameLower = (a.name || '').toLowerCase();
       const projName = (data.projects.find(p => p.project_id === a.project_id)?.name || '').toLowerCase();
       const cat = (a.category || '').toLowerCase();
+      const ctx = (a.context || '').toLowerCase();
+      const wt = (a.work_type || '').toLowerCase();
 
-      if (pillarKey === 'academic') {
-        return nameLower.includes('sat') || nameLower.includes('high school') || projName.includes('sat') || projName.includes('credit');
-      }
-      if (pillarKey === 'deepwork') {
-        return nameLower.includes('mechatronics') || nameLower.includes('python') || nameLower.includes('data') || nameLower.includes('code') || projName.includes('mechatronics') || projName.includes('python');
-      }
-      if (pillarKey === 'building') {
-        return nameLower.includes('portfolio') || nameLower.includes('email') || nameLower.includes('mentor') || nameLower.includes('business') || nameLower.includes('btc');
-      }
-      if (pillarKey === 'maintenance') {
-        return a.storage_system === 'Calendar' || nameLower.includes('thể thao') || nameLower.includes('chạy') || nameLower.includes('dọn') || nameLower.includes('review');
-      }
+      // Check explicit work_type / category first
+      if (wt.includes('academic') || cat.includes('academic')) return pillarKey === 'academic';
+      if (wt.includes('deep') || cat.includes('deep')) return pillarKey === 'deepwork';
+      if (wt.includes('build') || cat.includes('build')) return pillarKey === 'building';
+      if (wt.includes('maint') || cat.includes('maint')) return pillarKey === 'maintenance';
+
+      const isAcademic = ['sat', 'high school', 'tín chỉ', 'toán', 'văn', 'anh', 'lý', 'hóa', 'sinh', 'tự học', 'học', 'study', 'course', 'khóa học', 'bài tập', 'luyện đề', 'giảng'].some(k => nameLower.includes(k) || projName.includes(k));
+      const isDeepWork = ['python', 'mechatronics', 'data', 'code', 'nghiên cứu', 'lập trình', 'dự án', 'robot', 'ai', 'lab', 'tech', 'system', 'thuật toán'].some(k => nameLower.includes(k) || projName.includes(k));
+      const isBuilding = ['portfolio', 'building', 'sản phẩm', 'web', 'email', 'mentor', 'business', 'btc', 'kết nối', 'outreach', 'startup', 'pitch'].some(k => nameLower.includes(k) || projName.includes(k));
+      const isMaintenance = ['bảo trì', 'maintenance', 'review', 'thể thao', 'chạy', 'tập', 'gym', 'thiền', 'dọn', 'gtd', 'ăn', 'ngủ', 'lịch'].some(k => nameLower.includes(k) || projName.includes(k)) || a.storage_system === 'Calendar';
+
+      if (pillarKey === 'academic') return isAcademic;
+      if (pillarKey === 'deepwork') return isDeepWork || (!isAcademic && !isBuilding && !isMaintenance && (ctx.includes('máy_tính') || a.project_id));
+      if (pillarKey === 'building') return isBuilding;
+      if (pillarKey === 'maintenance') return isMaintenance || (!isAcademic && !isDeepWork && !isBuilding);
+
       return false;
     }).reduce((sum, a) => sum + (a.time_needed_mins || 30), 0);
 
@@ -137,6 +146,16 @@ export default function TimeManagement() {
       </div>
 
       {/* 1. TIMEBOXING MATRIX TAB */}
+            {/* Guide Banner for Linking Tasks */}
+      <div className="glass-panel p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-xs font-bold text-amber-900 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2">
+          <i className="fa-solid fa-lightbulb text-amber-500 text-lg"></i>
+          <span>
+            <strong>Cách tự động nạp số giờ vào Ma Trận:</strong> Chỉ cần đặt tên việc có từ khóa (vd: <em>'SAT', 'Python', 'Portfolio', 'Review'</em>) hoặc chọn Ngữ cảnh/Dự án tương ứng, số giờ sẽ <strong>tự động liên kết 100%</strong> vào 4 Khối Trụ Cột bên dưới!
+          </span>
+        </div>
+      </div>
+
       {activeSubTab === 'matrix' && (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           {/* Pillar 1 */}
