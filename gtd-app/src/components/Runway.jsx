@@ -232,7 +232,8 @@ export default function Runway() {
   };
 
   // Lọc dữ liệu theo Hệ thống lưu trữ
-  const tabActions = activeTab === 'All_Actions' ? data.actions.filter(a => a.status !== 'Done') : data.actions.filter(a => a.storage_system === activeTab);
+  const actionsList = data?.actions || [];
+  const tabActions = activeTab === 'All_Actions' ? actionsList.filter(a => a && a.status !== 'Done') : actionsList.filter(a => a && a.storage_system === activeTab);
   
   // Áp dụng bộ lọc cho Next Actions
   const filteredNextActions = tabActions.filter(a => {
@@ -244,8 +245,8 @@ export default function Runway() {
     return true;
   });
 
-  const unplannedActions = data.actions.filter(a => a.storage_system === 'Next_Actions' && a.work_type === 'Unplanned Work' && a.status !== 'Done');
-  const uniqueContexts = [...new Set(data.actions.filter(a => a.storage_system === 'Next_Actions').map(a => a.context))].filter(Boolean);
+  const unplannedActions = actionsList.filter(a => a && a.storage_system === 'Next_Actions' && a.work_type === 'Unplanned Work' && a.status !== 'Done');
+  const uniqueContexts = [...new Set(actionsList.filter(a => a && a.storage_system === 'Next_Actions').map(a => a.context))].filter(Boolean);
   const timeOptions = [5, 10, 15, 30, 45, 60, 90, 120];
 
   
@@ -282,8 +283,8 @@ export default function Runway() {
             <i className={runwayTabsDef[activeTab].icon}></i> {runwayTabsDef[activeTab].label} 
             <span className="ml-1 bg-white/50 px-1.5 py-0.5 rounded-full text-[10px]">
               {activeTab === 'All_Actions' 
-                ? data.actions.filter(a => a.status !== 'Done').length 
-                : data.actions.filter(a => a.storage_system === activeTab && a.status !== 'Done').length}
+                ? (data?.actions || []).filter(a => a && a.status !== 'Done').length 
+                : (data?.actions || []).filter(a => a && a.storage_system === activeTab && a.status !== 'Done').length}
             </span>
             <i className="fa-solid fa-chevron-down text-[10px] ml-1 opacity-50"></i>
           </button>
@@ -291,8 +292,8 @@ export default function Runway() {
           <div className={`absolute top-full left-0 mt-2 w-56 glass-panel rounded-xl p-2 transition-all flex flex-col gap-1 shadow-xl border border-slate-200/50 z-[110] ${isDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
             {Object.entries(runwayTabsDef).map(([key, tab]) => {
               let count = key === 'All_Actions' 
-                ? data.actions.filter(a => a.status !== 'Done').length 
-                : data.actions.filter(a => a.storage_system === key && a.status !== 'Done').length;
+                ? (data?.actions || []).filter(a => a && a.status !== 'Done').length 
+                : (data?.actions || []).filter(a => a && a.storage_system === key && a.status !== 'Done').length;
               return (
                 <button 
                   key={key}
@@ -744,11 +745,17 @@ function ActionCard({ action, data, onToggle, onEdit, onDelete, onCopy, onPull }
   const isUrl = action.reference_link && (action.reference_link.startsWith('http://') || action.reference_link.startsWith('https://'));
   const isUnplanned = action.work_type === 'Unplanned Work';
   
-  const area = data.areas.find(ar => ar.area_id === action.area_id);
-  const project = data.projects.find(p => p.project_id === action.project_id);
-  const goal = data.goals.find(g => g.goal_id === action.goal_id);
-  const vision = data.visions.find(v => v.vision_id === action.vision_id);
-  const mission = data.missions.find(m => m.mission_id === action.mission_id);
+  const areasList = data?.areas || [];
+  const projectsList = data?.projects || [];
+  const goalsList = data?.goals || [];
+  const visionsList = data?.visions || [];
+  const missionsList = data?.missions || [];
+
+  const area = areasList.find(ar => ar && ar.area_id === action.area_id);
+  const project = projectsList.find(p => p && p.project_id === action.project_id);
+  const goal = goalsList.find(g => g && g.goal_id === action.goal_id);
+  const vision = visionsList.find(v => v && v.vision_id === action.vision_id);
+  const mission = missionsList.find(m => m && m.mission_id === action.mission_id);
   
   
   const runwayTabsDef = {
@@ -895,7 +902,8 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'agenda'
 
-  const calendarActions = data.actions.filter(a => a.status !== 'Done' && (a.storage_system === 'Calendar' || a.scheduled_datetime));
+  const allActions = data?.actions || [];
+  const calendarActions = allActions.filter(a => a && a.status !== 'Done' && (a.storage_system === 'Calendar' || a.scheduled_datetime));
 
   // Month navigation helpers
   
@@ -1089,7 +1097,8 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
                     {events.map(ev => {
                       const startTime = formatTimeSafe(ev.scheduled_datetime) || '00:00';
                       const endTime = formatTimeSafe(ev.scheduled_end_datetime);
-                      const project = data.projects.find(p => p.project_id === ev.project_id);
+                      const projectsList = data?.projects || [];
+                      const project = projectsList.find(p => p && p.project_id === ev.project_id);
 
                       return (
                         <div key={ev.action_id} className="p-4 rounded-xl border border-emerald-100 bg-emerald-50/40 hover:bg-emerald-50 flex justify-between items-center group transition-colors">
