@@ -172,6 +172,32 @@ export default function Runway() {
     } catch (e) { console.error(e); }
   };
 
+  
+  const handleCopyAction = async (action) => {
+    if (!action) return;
+    const choice = window.confirm(`Bạn muốn sao chép hành động "${action.name}"?\n\n- Bấm OK: Sao chép sang TUẦN SAU (+7 ngày cho lịch hẹn thứ 5,...)\n- Bấm HỦY (Cancel): Nhân bản ngay vào danh sách hiện tại`);
+    const offsetDays = choice ? 7 : 0;
+
+    try {
+      const res = await fetch(`${API_URL}/actions/copy`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action_id: action.action_id,
+          offset_days: offsetDays
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(`🎉 Đã sao chép hành động "${action.name}" ${choice ? 'sang tuần sau (+7 ngày)' : 'thành công'}!`);
+        fetchData();
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Lỗi khi sao chép hành động!");
+    }
+  };
+
   const handleDelete = async (id) => {
     if (!window.confirm("Xóa hành động này?")) return;
     try {
