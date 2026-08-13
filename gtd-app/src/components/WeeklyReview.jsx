@@ -445,23 +445,23 @@ export default function WeeklyReview() {
               </button>
             </div>
 
-            {/* Capacity Stats Display */}
+            {/* Capacity Stats Display with Clear Explanations */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 bg-slate-700/50 p-2 rounded-xl border border-slate-600">
-              <div className="text-center p-1">
+              <div className="text-center p-1" title="Số giờ bị khóa cứng do Lịch hẹn cố định + Việc đang chờ phản hồi">
                 <div className="text-[10px] text-slate-400 font-black uppercase mb-1">Đã chiếm dụng</div>
-                <div className="text-sm font-bold text-amber-400">{Math.round(occupiedMins/60*10)/10}h <span className="text-[10px] text-slate-500 font-normal">(Lịch + Chờ)</span></div>
+                <div className="text-sm font-bold text-amber-400">{Math.round(occupiedMins/60*10)/10}h <span className="text-[10px] text-amber-200/60 font-normal">(Lịch + Chờ)</span></div>
               </div>
-              <div className="text-center p-1 border-l border-slate-600">
+              <div className="text-center p-1 border-l border-slate-600" title="Quỹ thời gian rảnh thực tế còn lại trong tuần để làm công việc linh hoạt">
                 <div className="text-[10px] text-slate-400 font-black uppercase mb-1">Dung lượng rảnh</div>
                 <div className="text-sm font-bold text-green-400">{Math.round(availableMins/60*10)/10}h</div>
               </div>
-              <div className="text-center p-1 border-l border-slate-600">
-                <div className="text-[10px] text-slate-400 font-black uppercase mb-1">Đã lên lịch (NA)</div>
-                <div className={`text-sm font-bold ${isOverCapacity ? 'text-red-400' : 'text-blue-400'}`}>{Math.round(nextMins/60*10)/10}h</div>
+              <div className="text-center p-1 border-l border-slate-600" title="Tổng số giờ của các việc Next Actions (Việc linh hoạt) đã nạp vào tuần này">
+                <div className="text-[10px] text-slate-400 font-black uppercase mb-1">Việc linh hoạt (NA)</div>
+                <div className={`text-sm font-bold ${isOverCapacity ? 'text-red-400' : 'text-blue-400'}`}>{Math.round(nextMins/60*10)/10}h <span className="text-[10px] text-slate-400 font-normal">(Next Actions)</span></div>
               </div>
               <div className="text-center p-1 border-l border-slate-600">
                 <div className="text-[10px] text-slate-400 font-black uppercase mb-1">Số việc NA</div>
-                <div className="text-sm font-bold text-white">{nextActions.length}</div>
+                <div className="text-sm font-bold text-white">{nextActions.length} việc</div>
               </div>
             </div>
 
