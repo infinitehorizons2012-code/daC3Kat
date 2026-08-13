@@ -244,8 +244,9 @@ export default function WeeklyReview() {
   const waitMins = waitActions.reduce((s, a) => s + calcMins(a), 0);
 
   const occupiedMins = calMins + waitMins;
-  const availableMins = Math.max((weeklyCapacityHrs * 60) - occupiedMins, 0);
-  const isOverCapacity = nextMins > availableMins;
+  const totalCommittedMins = occupiedMins + nextMins;
+  const remainingFreeMins = Math.max((weeklyCapacityHrs * 60) - totalCommittedMins, 0);
+  const isOverCapacity = totalCommittedMins > (weeklyCapacityHrs * 60);
 
   // Left Column Filters (Only show actions that are NOT yet assigned to the selectedWeek)
   const floatingActions = data.actions.filter(a => a.storage_system === 'Floating_Backlog' && a.status !== 'Done');
@@ -456,25 +457,25 @@ export default function WeeklyReview() {
                 <div className="text-[10px] text-slate-400 font-black uppercase mb-1">Đã chiếm dụng</div>
                 <div className="text-sm font-bold text-amber-400">{Math.round(occupiedMins/60*10)/10}h <span className="text-[10px] text-amber-200/60 font-normal">(Lịch + Chờ)</span></div>
               </div>
-              <div className="text-center p-1 border-l border-slate-600" title="Quỹ thời gian rảnh thực tế còn lại trong tuần để làm công việc linh hoạt">
-                <div className="text-[10px] text-slate-400 font-black uppercase mb-1">Dung lượng rảnh</div>
-                <div className="text-sm font-bold text-green-400">{Math.round(availableMins/60*10)/10}h</div>
-              </div>
-              <div className="text-center p-1 border-l border-slate-600" title="Tổng số giờ của các việc Next Actions (Việc linh hoạt) đã nạp vào tuần này">
+              <div className="text-center p-1 border-l border-slate-600" title="Tổng số giờ của các việc linh hoạt (Next Actions) đã nạp vào Dạ Dày Tuần này">
                 <div className="text-[10px] text-slate-400 font-black uppercase mb-1">Việc linh hoạt (NA)</div>
-                <div className={`text-sm font-bold ${isOverCapacity ? 'text-red-400' : 'text-blue-400'}`}>{Math.round(nextMins/60*10)/10}h <span className="text-[10px] text-slate-400 font-normal">(Next Actions)</span></div>
+                <div className="text-sm font-bold text-blue-400">{Math.round(nextMins/60*10)/10}h <span className="text-[10px] text-slate-400 font-normal">({nextActions.length} việc)</span></div>
               </div>
-              <div className="text-center p-1 border-l border-slate-600">
-                <div className="text-[10px] text-slate-400 font-black uppercase mb-1">Số việc NA</div>
-                <div className="text-sm font-bold text-white">{nextActions.length} việc</div>
+              <div className="text-center p-1 border-l border-slate-600" title="Quỹ thời gian rảnh thực tế còn lại trong tuần để nhận thêm công việc mới (Sức chứa - Đã chiếm dụng - Việc linh hoạt)">
+                <div className="text-[10px] text-slate-400 font-black uppercase mb-1">Rảnh còn lại</div>
+                <div className={`text-sm font-bold ${isOverCapacity ? 'text-red-400' : 'text-green-400'}`}>{Math.round(remainingFreeMins/60*10)/10}h</div>
+              </div>
+              <div className="text-center p-1 border-l border-slate-600" title="Tổng số giờ đã nạp vào tuần (Lịch + Chờ + Việc NA)">
+                <div className="text-[10px] text-slate-400 font-black uppercase mb-1">Tổng đã nạp</div>
+                <div className={`text-sm font-bold ${isOverCapacity ? 'text-red-400' : 'text-indigo-300'}`}>{Math.round(totalCommittedMins/60*10)/10}h / {weeklyCapacityHrs}h</div>
               </div>
             </div>
 
             {/* Progress Bar for available capacity vs used */}
             <div className="bg-slate-700 h-2 w-full overflow-hidden flex rounded-full mt-1">
               <div 
-                className={`h-full transition-all duration-500 ${isOverCapacity ? 'bg-red-500' : 'bg-blue-500'}`} 
-                style={{ width: `${Math.min((nextMins / (availableMins || 1)) * 100, 100)}%` }}
+                className={`h-full transition-all duration-500 ${isOverCapacity ? 'bg-red-500' : 'bg-gradient-to-r from-emerald-500 via-blue-500 to-indigo-500'}`} 
+                style={{ width: `${Math.min((totalCommittedMins / ((weeklyCapacityHrs * 60) || 1)) * 100, 100)}%` }}
               ></div>
             </div>
             {isOverCapacity && <div className="text-[10px] text-red-400 font-bold uppercase text-right"><i className="fa-solid fa-triangle-exclamation"></i> Vượt quá dung lượng rảnh!</div>}
