@@ -39,6 +39,11 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: gtd-app
+
+      - name: Copy sub-apps to dist
+        run: |
+          cp -r KhanAlgebra1 gtd-app/dist/KhanAlgebra1
+          cp -r 168 gtd-app/dist/168
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
