@@ -139,16 +139,19 @@ export default function Routine() {
   const totalWeeklyRoutineHrs = Math.round(totalDailyRoutineHrs * 7 * 10) / 10;
   const available168Hrs = Math.max(0, Math.round((168 - totalWeeklyRoutineHrs) * 10) / 10);
 
-  // Split into Morning (00:00 - 12:00) and Evening (12:00 - 24:00) with Cross-Noon support
+  // Split into Morning (00:00 - 12:00) and Evening (12:00 - 24:00) with Cross-Noon & Overnight support
   const morningRoutines = filteredRoutines.filter(r => {
     const sH = timeToHours(r.start_time);
-    return r.session === 'morning' || r.session === 'both' || sH < 12;
+    const eH = timeToHours(r.end_time);
+    const isOvernight = eH < sH;
+    return r.session === 'morning' || r.session === 'both' || r.session === 'overnight' || isOvernight || sH < 12;
   });
 
   const eveningRoutines = filteredRoutines.filter(r => {
     const sH = timeToHours(r.start_time);
     const eH = timeToHours(r.end_time);
-    return r.session === 'evening' || r.session === 'both' || eH > 12 || sH >= 12;
+    const isOvernight = eH < sH;
+    return r.session === 'evening' || r.session === 'both' || r.session === 'overnight' || isOvernight || eH > 12 || sH >= 12;
   });
 
   // SVG Clock Donut Generator
@@ -190,40 +193,63 @@ export default function Routine() {
             );
           })}
 
-          {/* Routine Sectors Arcs with Precise Clamping for Cross-Noon (e.g. 11:00 - 13:30) */}
+          {/* Routine Sectors Arcs with Full Overnight (e.g. 21:30 - 07:00) & Cross-Noon Support */}
           {sessionRoutines.map((r, idx) => {
             const rawStart = timeToHours(r.start_time);
-            let rawEnd = timeToHours(r.end_time);
-            if (rawEnd < rawStart) rawEnd += 24; // overnight
+            const rawEnd = timeToHours(r.end_time);
+            const isOvernight = rawEnd < rawStart;
 
-            const minHour = isMorning ? 0 : 12;
-            const maxHour = isMorning ? 12 : 24;
-
-            const clampedStart = Math.max(minHour, Math.min(maxHour, rawStart)) - minHour;
-            const clampedEnd = Math.max(minHour, Math.min(maxHour, rawEnd)) - minHour;
-            const duration = Math.max(0, clampedEnd - clampedStart);
-
-            if (duration <= 0) return null;
-
-            const dashLength = (duration / 12) * circumference;
-            const dashOffset = -((clampedStart / 12) * circumference);
             const color = colors[idx % colors.length];
+            const arcs = [];
 
-            return (
-              <circle
-                key={r.routine_id}
-                cx={center}
-                cy={center}
-                r={radius}
-                fill="transparent"
-                stroke={color}
-                strokeWidth={strokeWidth}
-                strokeDasharray={`${dashLength} ${circumference - dashLength}`}
-                strokeDashoffset={dashOffset}
-                strokeLinecap="round"
-                className="transition-all hover:opacity-80 cursor-pointer"
-              />
-            );
+            if (isMorning) {
+              if (isOvernight) {
+                // 00:00 to min(12, rawEnd)
+                const start = 0;
+                const end = Math.min(12, rawEnd);
+                if (end > start) arcs.push({ start, duration: end - start });
+                // If rawStart < 12 (unlikely for 21:30), add rawStart to 12
+                if (rawStart < 12) arcs.push({ start: rawStart, duration: 12 - rawStart });
+              } else {
+                const start = Math.max(0, Math.min(12, rawStart));
+                const end = Math.max(0, Math.min(12, rawEnd));
+                if (end > start) arcs.push({ start, duration: end - start });
+              }
+            } else {
+              // Evening (12:00 - 24:00)
+              if (isOvernight) {
+                // rawStart to 24:00
+                const start = Math.max(12, Math.min(24, rawStart)) - 12;
+                const end = 12; // 24 - 12
+                if (end > start) arcs.push({ start, duration: end - start });
+                // If rawEnd > 12, add 12 to min(24, rawEnd)
+                if (rawEnd > 12) arcs.push({ start: 0, duration: Math.min(12, rawEnd - 12) });
+              } else {
+                const start = Math.max(12, Math.min(24, rawStart)) - 12;
+                const end = Math.max(12, Math.min(24, rawEnd)) - 12;
+                if (end > start) arcs.push({ start, duration: end - start });
+              }
+            }
+
+            return arcs.map((arc, arcIdx) => {
+              const dashLength = (arc.duration / 12) * circumference;
+              const dashOffset = -((arc.start / 12) * circumference);
+              return (
+                <circle
+                  key={`${r.routine_id}-${arcIdx}`}
+                  cx={center}
+                  cy={center}
+                  r={radius}
+                  fill="transparent"
+                  stroke={color}
+                  strokeWidth={strokeWidth}
+                  strokeDasharray={`${dashLength} ${circumference - dashLength}`}
+                  strokeDashoffset={dashOffset}
+                  strokeLinecap="round"
+                  className="transition-all hover:opacity-80 cursor-pointer"
+                />
+              );
+            });
           })}
         </svg>
 
@@ -397,7 +423,7 @@ export default function Routine() {
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Buổi / Phân Khung</label>
+            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Buổi / Khung Giờ</label>
             <select 
               value={form.session} 
               onChange={e => setForm({ ...form, session: e.target.value })} 
@@ -405,7 +431,8 @@ export default function Routine() {
             >
               <option value="morning">Sáng (00:00 - 12:00)</option>
               <option value="evening">Tối (12:00 - 24:00)</option>
-              <option value="both">Bắc cầu Sáng & Tối (vd: 11:00 - 13:30)</option>
+              <option value="both">Bắc cầu qua Trưa (vd: 11:00 - 13:30)</option>
+              <option value="overnight">🌙 Xuyên Đêm (vd: 21:30 - 07:00)</option>
             </select>
           </div>
 
