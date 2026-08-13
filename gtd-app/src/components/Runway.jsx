@@ -817,8 +817,11 @@ function ActionCard({ action, data, onToggle, onEdit, onDelete, onPull }) {
             {action.storage_system === 'Floating_Backlog' && (
               <button onClick={onPull} className="px-3 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors flex items-center justify-center font-bold text-[10px] uppercase tracking-widest shadow-sm border border-blue-200"><i className="fa-solid fa-arrow-turn-up mr-1 rotate-90"></i> Kéo vào Tuần Này</button>
             )}
-            <button onClick={onEdit} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-blue-100 hover:text-blue-600 transition-colors flex items-center justify-center"><i className="fa-solid fa-pen text-xs"></i></button>
-            <button onClick={onDelete} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-red-100 hover:text-red-600 transition-colors flex items-center justify-center"><i className="fa-solid fa-trash text-xs"></i></button>
+            {onCopy && (
+              <button onClick={onCopy} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-amber-100 hover:text-amber-600 transition-colors flex items-center justify-center" title="Sao chép hành động (sang tuần sau / nhân bản)"><i className="fa-solid fa-copy text-xs"></i></button>
+            )}
+            <button onClick={onEdit} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-blue-100 hover:text-blue-600 transition-colors flex items-center justify-center" title="Sửa"><i className="fa-solid fa-pen text-xs"></i></button>
+            <button onClick={onDelete} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-red-100 hover:text-red-600 transition-colors flex items-center justify-center" title="Xóa"><i className="fa-solid fa-trash text-xs"></i></button>
           </div>
         </div>
         
