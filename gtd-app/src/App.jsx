@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Runway from './components/Runway';
 import Kanban from './components/Kanban';
 import Horizons from './components/Horizons';
@@ -9,6 +9,8 @@ import DailyReviewWizard from './components/DailyReviewWizard';
 import TimeManagement from './components/TimeManagement';
 import Routine from './components/Routine';
 import FocusEngine from './components/FocusEngine';
+
+const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
 const tabs = {
   focus: { label: 'Runway', icon: 'fa-solid fa-plane-departure', color: 'text-blue-600', bg: 'bg-blue-100' },
@@ -27,6 +29,35 @@ function App() {
   const [activeTab, setActiveTab] = useState('focus');
   const [isMenu1Open, setIsMenu1Open] = useState(false);
   const [isMenu2Open, setIsMenu2Open] = useState(false);
+
+  // Stats & Cloudflare DB Connection status
+  const [completedCount, setCompletedCount] = useState(0);
+  const [dbConnected, setDbConnected] = useState(false);
+
+  const checkConnectionAndStats = async () => {
+    try {
+      const res = await fetch(`${API_URL}/actions`);
+      if (res.ok) {
+        const actions = await res.json();
+        setDbConnected(true);
+        if (Array.isArray(actions)) {
+          const doneCount = actions.filter(a => a.status === 'Done').length;
+          setCompletedCount(doneCount);
+        }
+      } else {
+        setDbConnected(false);
+      }
+    } catch (e) {
+      console.error(e);
+      setDbConnected(false);
+    }
+  };
+
+  useEffect(() => {
+    checkConnectionAndStats();
+    const interval = setInterval(checkConnectionAndStats, 5000); // Check DB every 5s
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen p-4 flex justify-center">
@@ -84,11 +115,24 @@ function App() {
 
           </div>
 
-          {/* Right Logo */}
-          <div className="relative cursor-pointer transition-transform hover:scale-110 hover:-rotate-3 active:scale-95 duration-200 flex-shrink-0 mt-2 md:mt-0">
-            <div className="absolute -inset-2 bg-pink-400/40 rounded-full blur-md animate-pulse"></div>
-            <div className="relative text-white font-black text-3xl tracking-wider px-6 py-2 glass-panel rounded-full border-4 border-white/80 shadow-[0_4px_15px_rgba(244,63,94,0.4)] bg-gradient-to-r from-rose-400 to-orange-400 flex items-center gap-2">
-              <i className="fa-solid fa-star text-yellow-200 text-2xl animate-bounce"></i> 168
+          {/* Right Header Badges: Star Badge & 168 DB Connection Circle */}
+          <div className="flex items-center gap-3 flex-shrink-0 mt-2 md:mt-0">
+            {/* Star Badge (Số sao tích lũy từ công việc đã hoàn thành) */}
+            <div className="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 px-3.5 py-1.5 rounded-full font-black text-sm shadow-md border border-amber-200 transition-all hover:scale-105" title="Số sao tích lũy từ công việc đã hoàn thành">
+              <i className="fa-solid fa-star text-amber-100 text-base animate-pulse"></i>
+              <span>{completedCount}</span>
+            </div>
+
+            {/* 168 Badge with Cloudflare D1 Connection Ring */}
+            <div 
+              className={`relative font-black text-2xl tracking-wider px-5 py-1 rounded-full flex items-center justify-center transition-all ${
+                dbConnected 
+                  ? 'bg-gradient-to-r from-rose-500 to-orange-500 text-white ring-4 ring-emerald-400/90 shadow-[0_0_20px_rgba(52,211,153,0.6)]' 
+                  : 'bg-slate-700 text-slate-300 border-2 border-slate-600'
+              }`}
+              title={dbConnected ? "🟢 Đã kết nối Cloudflare D1 Database (Có vòng tròn sáng)" : "⚪ Chưa kết nối Database (Không có vòng tròn)"}
+            >
+              168
             </div>
           </div>
 
