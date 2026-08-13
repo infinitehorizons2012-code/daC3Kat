@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
-export default function DailyReviewWizard({ onExit }) {
-  const [step, setStep] = useState(1); // Step 1 to 4
+export default function DailyReviewWizard({ onExit, isStandalone = false }) {
+  const [step, setStep] = useState(isStandalone ? 3 : 1); // Step 1 to 4
   const [actions, setActions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newInboxItem, setNewInboxItem] = useState('');
@@ -68,6 +68,93 @@ export default function DailyReviewWizard({ onExit }) {
 
   const todayKey = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
   const todayActions = actions.filter(a => (a.scheduled_datetime && a.scheduled_datetime.startsWith(todayKey)) || a.storage_system === 'Next_Actions');
+
+
+  if (isStandalone) {
+    return (
+      <div className="flex flex-col gap-6 min-h-[600px] animate-fade-in relative max-w-4xl mx-auto w-full">
+        {/* Header Banner */}
+        <div className="glass-panel p-6 rounded-3xl bg-gradient-to-r from-amber-600 via-rose-600 to-amber-700 text-white shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-amber-200 text-xs font-black uppercase tracking-widest mb-1">
+              <i className="fa-solid fa-star"></i> Focus Daily Big Rocks
+            </div>
+            <h2 className="text-2xl font-black text-white flex items-center gap-2">
+              <i className="fa-solid fa-gem text-amber-300"></i> Chốt 3 Big Rocks Cho Ngày Mai
+            </h2>
+            <p className="text-xs text-slate-100 mt-1 font-medium">
+              Đánh dấu 3 việc trọng tâm quan trọng nhất từ Runway để thực hiện ngay sáng mai.
+            </p>
+          </div>
+
+          <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/30 text-center">
+            <span className="text-[10px] font-black uppercase text-amber-100 block">Tiến độ Big Rocks</span>
+            <span className="text-xl font-black text-white">{bigRocksCount} / 3</span>
+          </div>
+        </div>
+
+        {/* Big Rocks Selection Container */}
+        <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between flex-1 min-h-[420px]">
+          <div className="space-y-4">
+            <div className="flex justify-between items-center border-b pb-3">
+              <h3 className="text-base font-black text-slate-800 flex items-center gap-2">
+                <i className="fa-solid fa-list-check text-amber-500"></i> Danh sách công việc Runway (Next Actions)
+              </h3>
+              <span className="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border">
+                Bấm vào ⭐ để gắn cờ Big Rock
+              </span>
+            </div>
+
+            <div className="space-y-2.5 max-h-[340px] overflow-y-auto custom-scrollbar pr-1">
+              {runwayActions.map(a => (
+                <div 
+                  key={a.action_id} 
+                  onClick={() => updateAction(a.action_id, { is_big_rock: !a.is_big_rock })}
+                  className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition-all ${
+                    a.is_big_rock 
+                      ? 'bg-amber-50 border-amber-400 shadow-md ring-2 ring-amber-300/60' 
+                      : 'bg-white border-slate-200 hover:border-amber-300'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <i className={`fa-solid fa-star text-xl ${a.is_big_rock ? 'text-amber-500 scale-110' : 'text-slate-300'}`}></i>
+                    <div>
+                      <span className={`font-black text-sm ${a.is_big_rock ? 'text-amber-900' : 'text-slate-800'}`}>{a.name}</span>
+                      <div className="text-[10px] font-bold text-slate-400 mt-0.5">
+                        {a.category} • {a.context} • {a.time_needed_mins || 30}m
+                      </div>
+                    </div>
+                  </div>
+
+                  <span className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full ${a.is_big_rock ? 'bg-amber-400 text-slate-950' : 'bg-slate-100 text-slate-500'}`}>
+                    {a.is_big_rock ? '⭐ Big Rock' : 'Việc thường'}
+                  </span>
+                </div>
+              ))}
+
+              {runwayActions.length === 0 && (
+                <div className="text-center py-12 text-slate-400 font-medium text-xs bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                  <i className="fa-solid fa-circle-check text-2xl text-emerald-500 mb-2 block"></i>
+                  Không có công việc nào trong Runway (Next Actions) để chọn làm Big Rock.
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Quick Notice Footer */}
+          <div className="pt-4 border-t border-slate-100 mt-4 flex justify-between items-center text-xs font-bold text-slate-500">
+            <span>💡 Mẹo: Chọn đủ 3 Big Rocks để sẵn sàng tập trung ở Focus Mode sáng mai.</span>
+            {onExit && (
+              <button onClick={onExit} className="px-4 py-2 bg-slate-900 text-white rounded-xl font-black">
+                Hoàn thành
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="flex flex-col gap-6 min-h-[600px] animate-fade-in relative max-w-4xl mx-auto w-full">
