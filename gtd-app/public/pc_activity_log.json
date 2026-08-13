@@ -1,26 +1,36 @@
 [
   {
-    "log_id": "pc-1786631052476",
-    "app_name": "Facebook - Google Chrome",
-    "url_link": "https://www.facebook.com",
+    "log_id": "pc-1786631168858",
+    "app_name": "Facebook Watch / Reels Video",
+    "url_link": "https://www.facebook.com/watch",
     "category": "Giải trí / Game",
-    "start_time": "2026-08-13 21:24",
-    "end_time": "21:24",
+    "start_time": "2026-08-13 21:26",
+    "end_time": "21:26",
     "duration_mins": 15,
-    "details": "Trang Mạng Xã Hội Facebook (Link: https://www.facebook.com)"
+    "details": "Xem Video / Reels Facebook (Link: https://www.facebook.com/watch)"
   },
   {
-    "log_id": "pc-1786631052475",
-    "app_name": "Trạm điều khiển 168 (React) - Microsoft Edge",
-    "url_link": "http://localhost:5173",
+    "log_id": "pc-1786631168857",
+    "app_name": "Nhóm Học Lập Trình Python & AI | Facebook",
+    "url_link": "https://www.facebook.com/groups",
     "category": "Học tập & Deep Work",
-    "start_time": "2026-08-13 21:24",
-    "end_time": "21:24",
+    "start_time": "2026-08-13 21:26",
+    "end_time": "21:26",
     "duration_mins": 25,
-    "details": "Trạm Điều Khiển GTD 168 (Local Web App) (Link: http://localhost:5173)"
+    "details": "Xem Nhóm Facebook Cụ Thể: Nhóm Học Lập Trình Python & AI (Link: https://www.facebook.com/groups)"
   },
   {
-    "log_id": "pc-1786631052474",
+    "log_id": "pc-1786631168856",
+    "app_name": "Messenger / Chat Trò Chuyện Trực Tuyến | Facebook",
+    "url_link": "https://www.facebook.com/messages",
+    "category": "Giải trí / Game",
+    "start_time": "2026-08-13 20:30",
+    "end_time": "20:50",
+    "duration_mins": 20,
+    "details": "Nhắn tin trò chuyện Messenger (Link: https://www.facebook.com/messages)"
+  },
+  {
+    "log_id": "pc-1786631168855",
     "app_name": "Coursera: Machine Learning Specialization by Stanford",
     "url_link": "https://www.coursera.org/learn/machine-learning",
     "category": "Học tập & Deep Work",
@@ -28,25 +38,5 @@
     "end_time": "15:30",
     "duration_mins": 90,
     "details": "Nền tảng Khóa học trực tuyến Coursera - Môn Học Máy & AI (Link: https://www.coursera.org/learn/machine-learning)"
-  },
-  {
-    "log_id": "pc-1786631052473",
-    "app_name": "Prinberk High School - Algebra 1 Course Module",
-    "url_link": "https://prinberkhighschool.org/courses/algebra1",
-    "category": "Học tập & Deep Work",
-    "start_time": "2026-08-13 15:45",
-    "end_time": "17:15",
-    "duration_mins": 90,
-    "details": "Cổng Học Tập Prinberk High School - Bài tập Algebra 1 W33 (Link: https://prinberkhighschool.org/courses/algebra1)"
-  },
-  {
-    "log_id": "pc-1786631052472",
-    "app_name": "Youtube: Học Trống Drum T5 Bài 5 Hướng Dẫn Chi Tiết",
-    "url_link": "https://www.youtube.com/watch?v=drum_t5_lesson",
-    "category": "Ngoại ngữ & Kỹ năng",
-    "start_time": "2026-08-13 17:30",
-    "end_time": "18:30",
-    "duration_mins": 60,
-    "details": "Video Youtube Học Đánh Trống Năng Khiếu (Link: https://www.youtube.com/watch?v=drum_t5_lesson)"
   }
 ]

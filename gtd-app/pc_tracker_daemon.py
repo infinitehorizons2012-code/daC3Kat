@@ -18,28 +18,40 @@ user32 = ctypes.windll.user32
 def extract_url_from_title(title, process_name=""):
     t_lower = title.lower()
     
-    # Facebook
-    if 'facebook' in t_lower:
-        return "https://www.facebook.com", "Trang Mạng Xã Hội Facebook"
+    # Detailed Facebook Section & Link Parser
+    if 'facebook' in t_lower or 'fb' in t_lower:
+        if 'watch' in t_lower or 'video' in t_lower or 'reels' in t_lower:
+            return "https://www.facebook.com/watch", f"Xem Video / Reels Facebook: {title}"
+        elif 'group' in t_lower or 'nhóm' in t_lower:
+            return "https://www.facebook.com/groups", f"Xem Nhóm Facebook (Group): {title}"
+        elif 'messenger' in t_lower or 'messages' in t_lower or 'trò chuyện' in t_lower:
+            return "https://www.facebook.com/messages", f"Nhắn Tin Messenger: {title}"
+        elif '| facebook' in t_lower:
+            page_name = title.split('|')[0].strip()
+            return f"https://www.facebook.com/search?q={urllib.parse.quote(page_name)}", f"Xem Trang / Trang Cá Nhân cụ thể: {page_name}"
+        else:
+            return "https://www.facebook.com", f"Lướt Bảng Tin Facebook (Newsfeed): {title}"
+
     # Youtube
     if 'youtube' in t_lower:
-        return "https://www.youtube.com", "Kênh Video Youtube"
+        return "https://www.youtube.com", f"Xem Video Youtube: {title}"
     # Coursera
     if 'coursera' in t_lower:
-        return "https://www.coursera.org", "Nền tảng Khóa học trực tuyến Coursera"
+        return "https://www.coursera.org", f"Khóa Học Coursera: {title}"
     # Khan Academy
-    if 'khan academy' in t_lower:
-        return "https://www.khanacademy.org", "Nền tảng Học tập Khan Academy"
+    if 'khan' in t_lower:
+        return "https://www.khanacademy.org", f"Bài Học Khan Academy: {title}"
     # Prinberk
     if 'prinberk' in t_lower:
-        return "https://prinberkhighschool.org", "Cổng Học Tập Prinberk High School"
+        return "https://prinberkhighschool.org", f"Cổng Trường Prinberk High School: {title}"
     # Github / daC3Kat
     if 'dac3kat' in t_lower or 'github' in t_lower:
-        return "https://github.com/infinitehorizons2012-code/daC3Kat", "Trang Quản Lý Code GitHub daC3Kat"
+        return "https://github.com/infinitehorizons2012-code/daC3Kat", f"Code GitHub daC3Kat: {title}"
     # Local GTD App
     if 'trạm điều khiển' in t_lower or 'gtd' in t_lower:
-        return "http://localhost:5173", "Trạm Điều Khiển GTD 168 (Local Web App)"
+        return "http://localhost:5173", f"Trạm GTD 168: {title}"
     
+    return "", 
     return "", ""
 
 def get_active_window_details():
