@@ -85,6 +85,28 @@ class AmbientNoiseSynth {
 
 const ambientSynth = new AmbientNoiseSynth();
 
+
+const getDynamicEstPoms = (action, workMins) => {
+  if (!action) return 1;
+
+  let mins = 30;
+  if (action.scheduled_datetime && action.scheduled_end_datetime) {
+    const s = new Date(action.scheduled_datetime);
+    const e = new Date(action.scheduled_end_datetime);
+    if (!isNaN(s.getTime()) && !isNaN(e.getTime())) {
+      const diffMs = e - s;
+      if (diffMs > 0) mins = Math.round(diffMs / 60000);
+    }
+  } else if (action.time_needed_mins) {
+    mins = Number(action.time_needed_mins);
+  }
+
+  const pomMins = workMins || 25;
+  const calculatedPoms = Math.max(1, Math.ceil(mins / pomMins));
+
+  return (action.estimated_poms && action.estimated_poms > 1) ? Math.max(action.estimated_poms, calculatedPoms) : calculatedPoms;
+};
+
 export default function FocusEngine() {
   const [data, setData] = useState({ actions: [], projects: [], areas: [] });
   const [sessions, setSessions] = useState([]);
@@ -198,7 +220,7 @@ export default function FocusEngine() {
         // 2. Increment completed_poms for current action
         if (currentAction) {
           const newCompleted = (currentAction.completed_poms || 0) + 1;
-          const est = currentAction.estimated_poms || 1;
+          const est = getDynamicEstPoms(currentAction, workMins);
           const isDoneNow = newCompleted >= est;
 
           await fetch(`${API_URL}/actions/${currentAction.action_id}`, {
@@ -280,7 +302,7 @@ export default function FocusEngine() {
   const currentArea = currentAction ? data.areas.find(ar => ar.area_id === currentAction.area_id) : null;
   const currentProject = currentAction ? data.projects.find(p => p.project_id === currentAction.project_id) : null;
 
-  const estPoms = currentAction ? (currentAction.estimated_poms || 1) : 4;
+  const estPoms = currentAction ? getDynamicEstPoms(currentAction, workMins) : 4;
   const compPoms = currentAction ? (currentAction.completed_poms || 0) : 0;
 
   // Today Stats
@@ -346,7 +368,15 @@ export default function FocusEngine() {
             className="w-full p-2.5 text-xs border border-slate-300 rounded-xl outline-none focus:border-orange-400 font-bold bg-white text-slate-800"
           >
             <option value="">[Chọn việc từ Runway...]</option>
-            {data.actions.map(a => <option key={a.action_id} value={a.action_id}>{a.name} ({a.completed_poms || 0}/{a.estimated_poms || 1} poms)</option>)}
+            {data.actions.map(a => {
+              const est = getDynamicEstPoms(a, workMins);
+              const mins = a.time_needed_mins || 30;
+              return (
+                <option key={a.action_id} value={a.action_id}>
+                  {a.name} ({a.completed_poms || 0}/{est} poms • {mins}m)
+                </option>
+              );
+            })}
           </select>
         </div>
 
