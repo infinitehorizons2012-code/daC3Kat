@@ -800,12 +800,12 @@ function ActionCard({ action, data, onToggle, onEdit, onDelete, onPull }) {
             )}
             {action.storage_system === 'Deferred' && (
               <span className="text-[10px] font-black uppercase tracking-widest bg-slate-200 text-slate-800 px-2 py-1 rounded-md flex items-center border border-slate-300">
-                <i className="fa-solid fa-lock mr-1"></i> Mở khóa: {new Date(action.defer_until_date).toLocaleDateString('vi-VN')}
+                <i className="fa-solid fa-lock mr-1"></i> Mở khóa: {formatDateSafe(action.defer_until_date)}
               </span>
             )}
             {action.storage_system === 'Calendar' && (
               <span className="text-[10px] font-black uppercase tracking-widest bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md flex items-center border border-emerald-200 shadow-sm">
-                <i className="fa-regular fa-calendar-check mr-1.5 text-emerald-600"></i> {new Date(action.scheduled_datetime).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})} - {new Date(action.scheduled_end_datetime).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})} ({new Date(action.scheduled_datetime).toLocaleDateString('vi-VN')})
+                <i className="fa-regular fa-calendar-check mr-1.5 text-emerald-600"></i> {formatTimeSafe(action.scheduled_datetime)} - {formatTimeSafe(action.scheduled_end_datetime)} ({formatDateSafe(action.scheduled_datetime)})
               </span>
             )}
             

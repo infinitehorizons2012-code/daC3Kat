@@ -227,11 +227,16 @@ export default function WeeklyReview() {
   const waitActions = weekActions.filter(a => a.storage_system === 'Waiting_For');
 
   const calcMins = (a) => {
+    if (!a) return 30;
     if (a.storage_system === 'Calendar' && a.scheduled_datetime && a.scheduled_end_datetime) {
-      const diffMs = new Date(a.scheduled_end_datetime) - new Date(a.scheduled_datetime);
-      if (diffMs > 0) return Math.round(diffMs / 60000);
+      const s = new Date(a.scheduled_datetime);
+      const e = new Date(a.scheduled_end_datetime);
+      if (!isNaN(s.getTime()) && !isNaN(e.getTime())) {
+        const diffMs = e - s;
+        if (diffMs > 0) return Math.round(diffMs / 60000);
+      }
     }
-    return a.time_needed_mins || 30;
+    return Number(a.time_needed_mins) || 30;
   };
 
   const nextMins = nextActions.reduce((s, a) => s + calcMins(a), 0);
@@ -516,7 +521,7 @@ export default function WeeklyReview() {
                             {isCal ? (
                               <span className="text-emerald-600">
                                 <i className="fa-regular fa-calendar mr-1"></i>
-                                {new Date(a.scheduled_datetime).toLocaleDateString('vi-VN')} ({calcMins(a)}m)
+                                {a.scheduled_datetime && !isNaN(new Date(a.scheduled_datetime).getTime()) ? new Date(a.scheduled_datetime).toLocaleDateString('vi-VN') : 'Lịch hẹn'} ({calcMins(a)}m)
                               </span>
                             ) : isWait ? (
                               <span className="text-amber-600">
