@@ -54,7 +54,7 @@ export default function Areas() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Bạn có chắc chắn muốn xóa Lĩnh vực này không? Lưu ý: Các Dự án và Hành động thuộc Khu vực này có thể bị ảnh hưởng.")) return;
+    if (!window.confirm("Bạn có chắc chắn muốn xóa Lĩnh vực này không? Lưu ý: Các Dự án và Hành động thuộc Bánh xe cuộc đời này có thể bị ảnh hưởng.")) return;
     try {
       await fetch(`${API_URL}/areas/${id}`, {
         method: 'DELETE'
@@ -68,19 +68,19 @@ export default function Areas() {
   return (
     <div className="glass-panel p-8 rounded-2xl min-h-[500px] relative">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-teal-700"><i className="fa-solid fa-map-location-dot mr-2"></i> Khu vực (20,000 ft)</h2>
+        <h2 className="text-2xl font-black text-teal-700 flex items-center gap-2"><i className="fa-solid fa-compass text-teal-600"></i> ☸️ Bánh Xe Cuộc Đời (20,000 ft)</h2>
         <button onClick={() => { setModalType('create'); setFormData({ name: '', icon: '🎯', description: '' }); }} className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-xl transition-colors font-bold shadow-md">
-          <i className="fa-solid fa-plus mr-2"></i> Thêm Lĩnh vực
+          <i className="fa-solid fa-plus mr-2"></i> Thêm Khía Cạnh Cuộc Đời
         </button>
       </div>
 
       {modalType && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm rounded-2xl">
           <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl shadow-xl w-[500px]">
-            <h3 className="text-lg font-bold text-slate-800 mb-4">{modalType === 'create' ? 'Thêm Lĩnh vực mới' : 'Sửa Lĩnh vực'}</h3>
+            <h3 className="text-lg font-bold text-slate-800 mb-4">{modalType === 'create' ? 'Thêm Khía Cạnh Cuộc Đời mới' : 'Sửa Lĩnh vực'}</h3>
             <div className="flex flex-col gap-4 mb-6">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Tên Lĩnh vực (bắt buộc)</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Tên Khía Cạnh (bắt buộc)</label>
                 <input 
                   type="text" 
                   placeholder="Ví dụ: Học thuật Core & SAT..." 
@@ -125,8 +125,8 @@ export default function Areas() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {areas.length === 0 ? (
             <div className="col-span-full bg-teal-50 border border-dashed border-teal-300 p-8 rounded-xl shadow-sm text-center">
-              <h3 className="font-bold text-teal-700 mb-2">Chưa có Lĩnh vực nào</h3>
-              <p className="text-sm text-slate-500">Khu vực quản lý 20,000 ft đại diện cho các trọng tâm bạn phải duy trì. Hãy định nghĩa lĩnh vực đầu tiên của bạn.</p>
+              <h3 className="font-bold text-teal-700 mb-2">Chưa có khía cạnh nào</h3>
+              <p className="text-sm text-slate-500">Bánh xe cuộc đời quản lý 20,000 ft đại diện cho các trọng tâm bạn phải duy trì. Hãy định nghĩa lĩnh vực đầu tiên của bạn.</p>
             </div>
           ) : (
             areas.map(area => (

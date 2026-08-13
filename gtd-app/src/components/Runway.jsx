@@ -55,7 +55,7 @@ export default function Runway() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.area_id) return alert("Vui lòng nhập tên hành động và Khu vực!");
+    if (!formData.name.trim() || !formData.area_id) return alert("Vui lòng nhập tên hành động và Bánh xe cuộc đời!");
     
     let storage_system = 'Next_Actions';
     let status = 'Pending';
@@ -458,7 +458,7 @@ export default function Runway() {
                 
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Khu vực (Nan xe - 20k ft) <span className="text-red-500">*</span></label>
+                    <label className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Bánh xe cuộc đời (Nan xe - 20k ft) <span className="text-red-500">*</span></label>
                     <select required value={formData.area_id} onChange={e => setFormData({...formData, area_id: e.target.value})} className="w-full border-2 border-slate-200 rounded-xl p-2.5 outline-none focus:border-blue-500 font-bold text-slate-700 bg-slate-50">
                       <option value="" disabled>-- Chọn --</option>
                       {data.areas.map(a => <option key={a.area_id} value={a.area_id}>{a.icon || '🎯'} {a.name}</option>)}

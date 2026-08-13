@@ -38,7 +38,7 @@ export default function Kanban() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.area_id) {
-      alert("Vui lòng nhập tên dự án và chọn Khu vực (Area)!");
+      alert("Vui lòng nhập tên dự án và chọn Bánh xe cuộc đời (Area)!");
       return;
     }
 
@@ -171,14 +171,14 @@ export default function Kanban() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">Khu vực / Area (bắt buộc)</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">Bánh xe cuộc đời / Area (bắt buộc)</label>
                   <select 
                     value={formData.area_id}
                     onChange={e => setFormData({...formData, area_id: e.target.value})}
                     className="w-full border border-slate-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-purple-400"
                     required
                   >
-                    <option value="" disabled>-- Chọn Khu vực --</option>
+                    <option value="" disabled>-- Chọn Bánh xe cuộc đời --</option>
                     {data.areas.map(a => (
                       <option key={a.area_id} value={a.area_id}>{a.icon || '🎯'} {a.name}</option>
                     ))}
