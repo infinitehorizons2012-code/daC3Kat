@@ -100,6 +100,9 @@ export default function Routine() {
       day_of_week: r.day_of_week || 'all',
       habit_note: r.habit_note || ''
     });
+    setTimeout(() => {
+      document.getElementById('routine-form')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 50);
   };
 
   const handleDelete = async (id) => {
@@ -296,12 +299,15 @@ export default function Routine() {
           {/* List legend */}
           <div className="w-full space-y-2 mt-4">
             {morningRoutines.map(r => (
-              <div key={r.routine_id} className="p-2.5 bg-white border border-amber-100 rounded-xl flex justify-between items-center text-xs shadow-2xs">
+              <div key={r.routine_id} className="p-2.5 bg-white border border-amber-100 rounded-xl flex justify-between items-center text-xs shadow-2xs hover:border-amber-300">
                 <div className="flex items-center gap-2">
                   <span className="font-black text-amber-600 bg-amber-50 px-2 py-0.5 rounded">{r.start_time} - {r.end_time}</span>
                   <span className="font-bold text-slate-800">{r.name}</span>
                 </div>
-                {r.habit_note && <span className="text-[10px] text-slate-400 italic">💡 {r.habit_note}</span>}
+                <div className="flex items-center gap-2">
+                  {r.habit_note && <span className="text-[10px] text-slate-400 italic">💡 {r.habit_note}</span>}
+                  <button onClick={() => handleEdit(r)} className="text-slate-400 hover:text-blue-600 p-1" title="Chỉnh sửa"><i className="fa-solid fa-pen text-xs"></i></button>
+                </div>
               </div>
             ))}
             {morningRoutines.length === 0 && <p className="text-center text-slate-400 py-4 text-xs italic">Chưa có routine buổi sáng nào.</p>}
@@ -318,12 +324,15 @@ export default function Routine() {
           {/* List legend */}
           <div className="w-full space-y-2 mt-4">
             {eveningRoutines.map(r => (
-              <div key={r.routine_id} className="p-2.5 bg-white border border-indigo-100 rounded-xl flex justify-between items-center text-xs shadow-2xs">
+              <div key={r.routine_id} className="p-2.5 bg-white border border-indigo-100 rounded-xl flex justify-between items-center text-xs shadow-2xs hover:border-indigo-300">
                 <div className="flex items-center gap-2">
                   <span className="font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">{r.start_time} - {r.end_time}</span>
                   <span className="font-bold text-slate-800">{r.name}</span>
                 </div>
-                {r.habit_note && <span className="text-[10px] text-slate-400 italic">💡 {r.habit_note}</span>}
+                <div className="flex items-center gap-2">
+                  {r.habit_note && <span className="text-[10px] text-slate-400 italic">💡 {r.habit_note}</span>}
+                  <button onClick={() => handleEdit(r)} className="text-slate-400 hover:text-blue-600 p-1" title="Chỉnh sửa"><i className="fa-solid fa-pen text-xs"></i></button>
+                </div>
               </div>
             ))}
             {eveningRoutines.length === 0 && <p className="text-center text-slate-400 py-4 text-xs italic">Chưa có routine buổi tối nào.</p>}
@@ -338,7 +347,7 @@ export default function Routine() {
         </h3>
 
         {/* Add/Edit Form */}
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-6 gap-3 mb-6 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+        <form onSubmit={handleSubmit} id="routine-form" className={`grid grid-cols-1 md:grid-cols-6 gap-3 mb-6 p-4 rounded-2xl border transition-all ${editId ? 'bg-rose-50 border-rose-400 ring-4 ring-rose-200' : 'bg-slate-50 border-slate-200'}`}>
           <div className="md:col-span-2">
             <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tên hoạt động / Habit</label>
             <input 
@@ -407,10 +416,19 @@ export default function Routine() {
             />
           </div>
 
-          <div className="flex items-end">
-            <button type="submit" className="w-full py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-black rounded-xl text-xs transition-all shadow-md">
+          <div className="flex items-end gap-2">
+            <button type="submit" className="flex-1 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-black rounded-xl text-xs transition-all shadow-md">
               {editId ? 'Lưu Sửa' : 'Thêm Routine'}
             </button>
+            {editId && (
+              <button 
+                type="button" 
+                onClick={() => { setEditId(null); setForm({ name: '', start_time: '06:00', end_time: '07:00', session: 'morning', day_of_week: 'all', habit_note: '' }); }} 
+                className="px-3 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs transition-all"
+              >
+                Hủy
+              </button>
+            )}
           </div>
         </form>
 
