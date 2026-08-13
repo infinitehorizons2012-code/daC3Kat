@@ -3,6 +3,41 @@ import { createPortal } from 'react-dom';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
+
+const formatTimeSafe = (dStr) => {
+  if (!dStr) return '';
+  const d = new Date(dStr);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+};
+
+const formatDateSafe = (dStr) => {
+  if (!dStr) return '';
+  const d = new Date(dStr);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('vi-VN');
+};
+
+const calcActionDurationText = (ev) => {
+  if (!ev) return '30m';
+  if (ev.scheduled_datetime && ev.scheduled_end_datetime) {
+    const s = new Date(ev.scheduled_datetime);
+    const e = new Date(ev.scheduled_end_datetime);
+    if (!isNaN(s.getTime()) && !isNaN(e.getTime())) {
+      const diffMs = e - s;
+      if (diffMs > 0) {
+        const mins = Math.round(diffMs / 60000);
+        if (mins >= 60) {
+          const hrs = Math.round(mins / 60 * 10) / 10;
+          return `${hrs}h`;
+        }
+        return `${mins}m`;
+      }
+    }
+  }
+  return ev.time_needed_mins ? `${ev.time_needed_mins}m` : '30m';
+};
+
 export default function Runway() {
   const [data, setData] = useState({ actions: [], areas: [], projects: [], goals: [], visions: [], missions: [] });
   const [loading, setLoading] = useState(true);
@@ -933,20 +968,7 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
 
   // Month navigation helpers
   
-  const calcActionDurationText = (ev) => {
-    if (ev.scheduled_datetime && ev.scheduled_end_datetime) {
-      const diffMs = new Date(ev.scheduled_end_datetime) - new Date(ev.scheduled_datetime);
-      if (diffMs > 0) {
-        const mins = Math.round(diffMs / 60000);
-        if (mins >= 60) {
-          const hrs = Math.round(mins / 60 * 10) / 10;
-          return `${hrs}h`;
-        }
-        return `${mins}m`;
-      }
-    }
-    return ev.time_needed_mins ? `${ev.time_needed_mins}m` : '30m';
-  };
+
 
   const prevMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
