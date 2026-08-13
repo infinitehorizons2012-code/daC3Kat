@@ -166,6 +166,9 @@ export default function TimeManagement() {
                 <i className="fa-solid fa-graduation-cap text-xl text-blue-500"></i>
               </div>
               <h3 className="font-black text-slate-800 text-base mb-1">1. Khối Core Academic</h3>
+              <div className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 mb-2 inline-block">
+                🎯 40,000 FT Tầm nhìn (Sứ mệnh: Vào MIT kiến tạo)
+              </div>
               <p className="text-xs text-slate-500 mb-4 font-medium">Tích lũy Tín chỉ High School & Ôn luyện SAT (Sub-Project A & B).</p>
             </div>
             <div>
@@ -187,6 +190,9 @@ export default function TimeManagement() {
                 <i className="fa-solid fa-brain text-xl text-indigo-500"></i>
               </div>
               <h3 className="font-black text-slate-800 text-base mb-1">2. Deep Work / Dream Map</h3>
+              <div className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 mb-2 inline-block">
+                🎯 40,000 FT Tầm nhìn (Sứ mệnh: Vào MIT kiến tạo)
+              </div>
               <p className="text-xs text-slate-500 mb-4 font-medium">3 Credits Tích hợp: Mechatronics + Python / Data Science + Business.</p>
             </div>
             <div>
@@ -208,6 +214,9 @@ export default function TimeManagement() {
                 <i className="fa-solid fa-rocket text-xl text-amber-500"></i>
               </div>
               <h3 className="font-black text-slate-800 text-base mb-1">3. Building & Portfolio</h3>
+              <div className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 mb-2 inline-block">
+                🎯 40,000 FT Tầm nhìn (Sứ mệnh: Vào MIT kiến tạo)
+              </div>
               <p className="text-xs text-slate-500 mb-4 font-medium">Khung 5 bước BTC: Tạo sản phẩm, Web Portfolio, Cold Email, Mentor.</p>
             </div>
             <div>
@@ -229,6 +238,9 @@ export default function TimeManagement() {
                 <i className="fa-solid fa-heart-pulse text-xl text-emerald-500"></i>
               </div>
               <h3 className="font-black text-slate-800 text-base mb-1">4. System Maintenance</h3>
+              <div className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 mb-2 inline-block">
+                🎯 40,000 FT Tầm nhìn (Sứ mệnh: Vào MIT kiến tạo)
+              </div>
               <p className="text-xs text-slate-500 mb-4 font-medium">Weekly Review, Dọn dẹp hệ thống & Rèn luyện Thể chất (Physically Strong).</p>
             </div>
             <div>
