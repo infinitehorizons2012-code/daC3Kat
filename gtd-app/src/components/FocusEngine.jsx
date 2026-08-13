@@ -107,6 +107,20 @@ const getDynamicEstPoms = (action, workMins) => {
   return (action.estimated_poms && action.estimated_poms > 1) ? Math.max(action.estimated_poms, calculatedPoms) : calculatedPoms;
 };
 
+
+const calcActionMins = (a) => {
+  if (!a) return 30;
+  if (a.scheduled_datetime && a.scheduled_end_datetime) {
+    const s = new Date(a.scheduled_datetime);
+    const e = new Date(a.scheduled_end_datetime);
+    if (!isNaN(s.getTime()) && !isNaN(e.getTime())) {
+      const diffMs = e - s;
+      if (diffMs > 0) return Math.round(diffMs / 60000);
+    }
+  }
+  return Number(a.time_needed_mins) || 30;
+};
+
 export default function FocusEngine() {
   const [data, setData] = useState({ actions: [], projects: [], areas: [] });
   const [sessions, setSessions] = useState([]);
@@ -370,10 +384,11 @@ export default function FocusEngine() {
             <option value="">[Chọn việc từ Runway...]</option>
             {data.actions.map(a => {
               const est = getDynamicEstPoms(a, workMins);
-              const mins = a.time_needed_mins || 30;
+              const mins = calcActionMins(a);
+              const durText = mins >= 60 ? `${Math.round(mins / 60 * 10) / 10}h` : `${mins}m`;
               return (
                 <option key={a.action_id} value={a.action_id}>
-                  {a.name} ({a.completed_poms || 0}/{est} poms • {mins}m)
+                  {a.name} ({a.completed_poms || 0}/{est} poms • {durText})
                 </option>
               );
             })}
