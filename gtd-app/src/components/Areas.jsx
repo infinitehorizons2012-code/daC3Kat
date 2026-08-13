@@ -68,7 +68,7 @@ export default function Areas() {
   return (
     <div className="glass-panel p-8 rounded-2xl min-h-[500px] relative">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-black text-teal-700 flex items-center gap-2"><i className="fa-solid fa-compass text-teal-600"></i> ☸️ Bánh Xe Cuộc Đời (20,000 ft)</h2>
+        <h2 className="text-2xl font-black text-teal-700 flex items-center gap-2"><i className="fa-solid fa-compass text-teal-600"></i> ☸️ Bánh xe cuộc đời</h2>
         <button onClick={() => { setModalType('create'); setFormData({ name: '', icon: '🎯', description: '' }); }} className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-xl transition-colors font-bold shadow-md">
           <i className="fa-solid fa-plus mr-2"></i> Thêm Khía Cạnh Cuộc Đời
         </button>
