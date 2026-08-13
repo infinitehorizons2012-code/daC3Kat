@@ -252,6 +252,45 @@ export default function WeeklyCalendarView() {
         <div className="text-center py-20 text-slate-400"><i className="fa-solid fa-spinner fa-spin text-3xl"></i></div>
       ) : (
         <>
+          
+      {/* 7-COLOR TYPE LEGEND BANNER (BẢNG NHẬN DIỆN MÀU 7 PHÂN LOẠI) */}
+      <div className="glass-panel p-4 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-2 text-xs font-black">
+        <div className="flex items-center gap-2 text-slate-500 uppercase tracking-widest text-[10px] mr-2">
+          <i className="fa-solid fa-palette text-indigo-500 text-sm"></i> Chú thích 7 Phân loại:
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="px-2.5 py-1 bg-emerald-500 text-white rounded-xl shadow-2xs flex items-center gap-1">
+            <i className="fa-solid fa-calendar-check text-[10px]"></i> 🟢 Lịch Hẹn
+          </span>
+
+          <span className="px-2.5 py-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl shadow-2xs flex items-center gap-1">
+            <i className="fa-solid fa-arrows-spin text-[10px]"></i> 🔄 Routine
+          </span>
+
+          <span className="px-2.5 py-1 bg-amber-500 text-slate-950 rounded-xl shadow-2xs flex items-center gap-1">
+            <i className="fa-solid fa-hourglass-half text-[10px]"></i> ⏳ Chờ Phản Hồi
+          </span>
+
+          <span className="px-2.5 py-1 bg-blue-500 text-white rounded-xl shadow-2xs flex items-center gap-1">
+            <i className="fa-solid fa-bolt text-[10px]"></i> ⚡ Next Action
+          </span>
+
+          <span className="px-2.5 py-1 bg-cyan-500 text-slate-950 rounded-xl shadow-2xs flex items-center gap-1">
+            <i className="fa-solid fa-parachute-box text-[10px]"></i> 🎈 Thả Nổi
+          </span>
+
+          <span className="px-2.5 py-1 bg-slate-700 text-slate-100 rounded-xl shadow-2xs flex items-center gap-1">
+            <i className="fa-solid fa-lock text-[10px]"></i> 🔒 Đóng Băng
+          </span>
+
+          <span className="px-2.5 py-1 bg-indigo-900 text-indigo-200 rounded-xl shadow-2xs flex items-center gap-1">
+            <i className="fa-solid fa-cloud-moon text-[10px]"></i> 💤 Someday
+          </span>
+        </div>
+      </div>
+
+
           {/* MAIN TIMELINE MATRIX (TẦNG TRÊN: LỊCH CỐ ĐỊNH & ROUTINE KHUNG GIỜ) */}
           <div className="glass-panel p-4 rounded-3xl bg-white border border-slate-200 shadow-sm overflow-x-auto">
             
@@ -342,12 +381,12 @@ export default function WeeklyCalendarView() {
                             const startTime = ev.scheduled_datetime ? ev.scheduled_datetime.slice(11, 16) : hourStr;
                             const durText = calcActionDurationText(ev);
                             return (
-                              <div key={ev.action_id} className="p-1.5 rounded-lg bg-emerald-500 text-white text-[11px] font-bold shadow-xs flex flex-col gap-0.5 animate-fade-in">
+                              <div key={ev.action_id} className="p-1.5 rounded-lg bg-emerald-500 text-white text-[11px] font-bold shadow-xs flex flex-col gap-0.5 animate-fade-in border border-emerald-600">
                                 <div className="flex items-center justify-between text-[9px] font-black">
-                                  <span className="bg-emerald-700 px-1 rounded">{startTime}</span>
-                                  <span className="bg-amber-300 text-slate-950 px-1 rounded">⏱️ {durText}</span>
+                                  <span className="bg-emerald-700 px-1 rounded flex items-center gap-1">🟢 LỊCH HẸN • {startTime}</span>
+                                  <span className="bg-amber-300 text-slate-950 px-1 rounded border border-amber-400">⏱️ {durText}</span>
                                 </div>
-                                <span className="truncate">{ev.name}</span>
+                                <span className="truncate font-black">{ev.name}</span>
                               </div>
                             );
                           })}
@@ -355,20 +394,20 @@ export default function WeeklyCalendarView() {
                           {/* Routines 🔄 */}
                           {hourRoutines.map(r => {
                             const isSleep = (r.title || r.name || '').toLowerCase().includes('ngủ') || (r.title || r.name || '').toLowerCase().includes('nghỉ');
-                            const badgeBg = isSleep ? 'bg-indigo-600 text-white border border-indigo-400' : 'bg-pink-500 text-white';
+                            const badgeBg = isSleep ? 'bg-gradient-to-r from-indigo-700 to-purple-800 text-white border border-indigo-500' : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white border border-purple-400';
                             const icon = isSleep ? 'fa-moon' : 'fa-arrows-spin';
                             const timeSpan = r.start_time && r.end_time ? `${r.start_time}-${r.end_time}` : (r.start_time || `${hourStr}`);
 
                             return (
                               <div key={r.routine_id} className={`p-1.5 rounded-lg text-[11px] font-bold shadow-xs flex flex-col gap-0.5 animate-fade-in ${badgeBg}`}>
-                                <div className="flex items-center justify-between text-[9px] font-black opacity-90">
-                                  <span className="truncate flex items-center gap-1">
-                                    <i className={`fa-solid ${icon} text-[10px]`}></i> {r.title || r.name}
+                                <div className="flex items-center justify-between text-[9px] font-black">
+                                  <span className="bg-purple-900/60 px-1 rounded flex items-center gap-1 text-[8px] uppercase tracking-wider">
+                                    🔄 ROUTINE • {timeSpan}
                                   </span>
                                 </div>
-                                <div className="text-[8px] opacity-80 flex justify-between">
-                                  <span>{timeSpan}</span>
-                                </div>
+                                <span className="truncate font-black flex items-center gap-1">
+                                  <i className={`fa-solid ${icon} text-[10px]`}></i> {r.title || r.name}
+                                </span>
                               </div>
                             );
                           })}
