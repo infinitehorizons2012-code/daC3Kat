@@ -14,6 +14,7 @@ app.use('*', async (c, next) => {
         CREATE TABLE IF NOT EXISTS WeeklyCapacities (
             week_id TEXT PRIMARY KEY,
             capacity_hrs INTEGER NOT NULL,
+            notes TEXT,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )
       `).run();
@@ -21,9 +22,76 @@ app.use('*', async (c, next) => {
     
     try {
       await c.env.DB.prepare(`ALTER TABLE Actions ADD COLUMN is_big_rock BOOLEAN DEFAULT 0;`).run();
-    } catch (e) { 
-      // Column might already exist
-    }
+    } catch (e) {}
+
+    try {
+      await c.env.DB.prepare(`ALTER TABLE Actions ADD COLUMN target_week TEXT;`).run();
+    } catch (e) {}
+
+    try {
+      await c.env.DB.prepare(`ALTER TABLE WeeklyCapacities ADD COLUMN notes TEXT;`).run();
+    } catch (e) {}
+    
+    
+    try {
+      await c.env.DB.prepare(`
+        CREATE TABLE IF NOT EXISTS Routines (
+            routine_id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            start_time TEXT NOT NULL,
+            end_time TEXT NOT NULL,
+            session TEXT NOT NULL DEFAULT 'morning',
+            day_of_week TEXT DEFAULT 'all',
+            week_id TEXT,
+            habit_note TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      `).run();
+    } catch (e) { console.error("Migration Routines error", e); }
+
+    
+    try {
+      await c.env.DB.prepare(`
+        CREATE TABLE IF NOT EXISTS FocusSessions (
+            session_id TEXT PRIMARY KEY,
+            action_id TEXT,
+            action_name TEXT,
+            duration_mins INTEGER NOT NULL,
+            session_type TEXT DEFAULT 'work',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      `).run();
+    } catch (e) { console.error("Migration FocusSessions error", e); }
+
+    
+    try {
+      await c.env.DB.prepare(`ALTER TABLE Actions ADD COLUMN estimated_poms INTEGER DEFAULT 1;`).run();
+    } catch (e) {}
+
+    try {
+      await c.env.DB.prepare(`ALTER TABLE Actions ADD COLUMN completed_poms INTEGER DEFAULT 0;`).run();
+    } catch (e) {}
+
+    
+    try { await c.env.DB.prepare(`ALTER TABLE Mission ADD COLUMN notes TEXT;`).run(); } catch (e) {}
+    try { await c.env.DB.prepare(`ALTER TABLE Vision ADD COLUMN notes TEXT;`).run(); } catch (e) {}
+    try { await c.env.DB.prepare(`ALTER TABLE Goals ADD COLUMN notes TEXT;`).run(); } catch (e) {}
+
+    
+    try {
+      // Auto seed Mission 'Vào MIT kiến tạo' and 4 Visions if not existing
+      const { results: existingMissions } = await c.env.DB.prepare(`SELECT * FROM Mission WHERE statement LIKE '%MIT%'`).all();
+      if (!existingMissions || existingMissions.length === 0) {
+        const mId = 'mis-mit-kientao';
+        await c.env.DB.prepare(`INSERT OR IGNORE INTO Mission (mission_id, statement, category, status) VALUES (?, ?, ?, ?)`).bind(mId, 'Vào MIT kiến tạo', 'Strategic', 'Active').run();
+
+        await c.env.DB.prepare(`INSERT OR IGNORE INTO Vision (vision_id, mission_id, statement, category, status) VALUES (?, ?, ?, ?, ?)`).bind('vis-mit-academic', mId, '1. Khối Core Academic (40% - Tích lũy Tín chỉ & SAT)', 'Strategic', 'Active').run();
+        await c.env.DB.prepare(`INSERT OR IGNORE INTO Vision (vision_id, mission_id, statement, category, status) VALUES (?, ?, ?, ?, ?)`).bind('vis-mit-deepwork', mId, '2. Deep Work / Dream Map (35% - Mechatronics, Python & Data Science)', 'Strategic', 'Active').run();
+        await c.env.DB.prepare(`INSERT OR IGNORE INTO Vision (vision_id, mission_id, statement, category, status) VALUES (?, ?, ?, ?, ?)`).bind('vis-mit-building', mId, '3. Building & Portfolio (15% - Tạo Sản phẩm & Cold Email)', 'Strategic', 'Active').run();
+        await c.env.DB.prepare(`INSERT OR IGNORE INTO Vision (vision_id, mission_id, statement, category, status) VALUES (?, ?, ?, ?, ?)`).bind('vis-mit-maintenance', mId, '4. System Maintenance (10% - Rèn luyện Thể chất & Review)', 'Strategic', 'Active').run();
+      }
+    } catch (e) { console.error("MIT Seed Error", e); }
+
     migrationsRun = true;
   }
   await next();
@@ -264,10 +332,12 @@ app.get('/api/horizons', async (c) => {
 app.post('/api/missions', async (c) => {
   const db = c.env.DB
   const body = await c.req.json()
-  const id = `mis-${Date.now()}`
+  const id = body.mission_id || `mis-${Date.now()}`
   
   try {
-    await db.prepare(`INSERT INTO Mission (mission_id, statement) VALUES (?, ?)`).bind(id, body.statement).run()
+    await db.prepare(`INSERT INTO Mission (mission_id, statement, category, status, notes) VALUES (?, ?, ?, ?, ?)`).bind(
+      id, body.statement, body.category || 'Strategic', body.status || 'Active', body.notes || null
+    ).run()
     return c.json({ success: true, id })
   } catch (e) {
     return c.json({ error: e.message }, 500)
@@ -277,9 +347,14 @@ app.post('/api/missions', async (c) => {
 app.patch('/api/missions/:id', async (c) => {
   const db = c.env.DB
   const id = c.req.param('id')
-  const { statement, status } = await c.req.json()
+  const body = await c.req.json()
   try {
-    await db.prepare(`UPDATE Mission SET statement = ?, status = ? WHERE mission_id = ?`).bind(statement, status, id).run()
+    await db.prepare(`UPDATE Mission SET statement = COALESCE(?, statement), status = COALESCE(?, status), notes = COALESCE(?, notes) WHERE mission_id = ?`).bind(
+      body.statement !== undefined ? body.statement : null,
+      body.status !== undefined ? body.status : null,
+      body.notes !== undefined ? body.notes : null,
+      id
+    ).run()
     return c.json({ success: true })
   } catch (e) {
     return c.json({ error: e.message }, 500)
@@ -290,7 +365,6 @@ app.delete('/api/missions/:id', async (c) => {
   const db = c.env.DB
   const id = c.req.param('id')
   try {
-    // Delete mission, cascading normally handled by foreign keys or manually here
     await db.prepare(`DELETE FROM Mission WHERE mission_id = ?`).bind(id).run()
     return c.json({ success: true })
   } catch (e) {
@@ -301,13 +375,13 @@ app.delete('/api/missions/:id', async (c) => {
 app.post('/api/visions', async (c) => {
   const db = c.env.DB
   const body = await c.req.json()
-  const id = `vis-${Date.now()}`
+  const id = body.vision_id || `vis-${Date.now()}`
   
   try {
     await db.prepare(`
-      INSERT INTO Vision (vision_id, mission_id, statement, category)
-      VALUES (?, ?, ?, ?)
-    `).bind(id, body.mission_id, body.statement, body.category || 'Strategic').run()
+      INSERT INTO Vision (vision_id, mission_id, statement, category, status, notes)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).bind(id, body.mission_id || null, body.statement, body.category || 'Strategic', body.status || 'Active', body.notes || null).run()
     return c.json({ success: true, id })
   } catch (e) {
     return c.json({ error: e.message }, 500)
@@ -317,13 +391,24 @@ app.post('/api/visions', async (c) => {
 app.patch('/api/visions/:id', async (c) => {
   const db = c.env.DB
   const id = c.req.param('id')
-  const { statement, category, status, mission_id } = await c.req.json()
+  const body = await c.req.json()
   try {
-    if (mission_id !== undefined) {
-      await db.prepare(`UPDATE Vision SET statement = ?, category = ?, status = ?, mission_id = ? WHERE vision_id = ?`).bind(statement, category, status, mission_id, id).run()
-    } else {
-      await db.prepare(`UPDATE Vision SET statement = ?, category = ?, status = ? WHERE vision_id = ?`).bind(statement, category, status, id).run()
-    }
+    await db.prepare(`
+      UPDATE Vision 
+      SET statement = COALESCE(?, statement), 
+          category = COALESCE(?, category), 
+          status = COALESCE(?, status), 
+          mission_id = COALESCE(?, mission_id), 
+          notes = COALESCE(?, notes) 
+      WHERE vision_id = ?
+    `).bind(
+      body.statement !== undefined ? body.statement : null,
+      body.category !== undefined ? body.category : null,
+      body.status !== undefined ? body.status : null,
+      body.mission_id !== undefined ? body.mission_id : null,
+      body.notes !== undefined ? body.notes : null,
+      id
+    ).run()
     return c.json({ success: true })
   } catch (e) {
     return c.json({ error: e.message }, 500)
@@ -344,10 +429,18 @@ app.delete('/api/visions/:id', async (c) => {
 app.post('/api/goals', async (c) => {
   const db = c.env.DB
   const id = `goal-${Date.now()}`
-  const { vision_id, statement, category, status, milestone } = await c.req.json()
+  const body = await c.req.json()
   
   try {
-    await db.prepare(`INSERT INTO Goals (goal_id, vision_id, statement, category, status, milestone) VALUES (?, ?, ?, ?, ?, ?)`).bind(id, vision_id || null, statement, category, status || 'Active', milestone || null).run()
+    await db.prepare(`INSERT INTO Goals (goal_id, vision_id, statement, category, status, milestone, notes) VALUES (?, ?, ?, ?, ?, ?, ?)`).bind(
+      id, 
+      body.vision_id || null, 
+      body.statement, 
+      body.category || 'Strategic', 
+      body.status || 'Active', 
+      body.milestone || null, 
+      body.notes || null
+    ).run()
     return c.json({ id, success: true }, 201)
   } catch (e) {
     return c.json({ error: e.message }, 500)
@@ -373,10 +466,17 @@ app.patch('/api/goals/:id', async (c) => {
   const body = await c.req.json()
   
   try {
+    const category = body.category || 'Strategic';
+    const status = body.status || 'Active';
+    const notes = body.notes || null;
+    const milestone = body.milestone || null;
+    const statement = body.statement;
+    const vision_id = body.vision_id || null;
+
     if (body.vision_id !== undefined) {
-      await db.prepare(`UPDATE Goals SET statement = ?, category = ?, status = ?, milestone = ?, vision_id = ? WHERE goal_id = ?`).bind(body.statement, body.category, body.status, body.milestone || null, body.vision_id, id).run()
+      await db.prepare(`UPDATE Goals SET statement = ?, category = ?, status = ?, milestone = ?, vision_id = ?, notes = ? WHERE goal_id = ?`).bind(statement, category, status, milestone, vision_id, notes, id).run()
     } else {
-      await db.prepare(`UPDATE Goals SET statement = ?, category = ?, status = ?, milestone = ? WHERE goal_id = ?`).bind(body.statement, body.category, body.status, body.milestone || null, id).run()
+      await db.prepare(`UPDATE Goals SET statement = ?, category = ?, status = ?, milestone = ?, notes = ? WHERE goal_id = ?`).bind(statement, category, status, milestone, notes, id).run()
     }
     return c.json({ success: true })
   } catch (e) {
@@ -416,9 +516,9 @@ app.post('/api/actions', async (c) => {
       INSERT INTO Actions (
         action_id, area_id, project_id, goal_id, vision_id, mission_id, 
         name, storage_system, assigned_to, scheduled_datetime, scheduled_end_datetime, defer_until_date, depends_on_action_id, recurrence_rule, deadline_date, 
-        category, context, time_needed_mins, energy_level, work_type, reference_link, status, is_big_rock, notes
+        category, context, time_needed_mins, energy_level, work_type, reference_link, status, is_big_rock, notes, target_week, estimated_poms, completed_poms
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       id,
       areaId,
@@ -443,7 +543,10 @@ app.post('/api/actions', async (c) => {
       body.reference_link || '',
       body.status || 'Pending',
       body.is_big_rock ? 1 : 0,
-      body.notes || null
+      body.notes || null,
+      body.target_week || null,
+      body.estimated_poms || 1,
+      body.completed_poms || 0
     ).run()
     
     return c.json({ success: true, action_id: id }, 201)
@@ -465,7 +568,7 @@ app.patch('/api/actions/:id', async (c) => {
       'area_id', 'project_id', 'goal_id', 'vision_id', 'mission_id',
       'name', 'storage_system', 'assigned_to', 'scheduled_datetime', 'scheduled_end_datetime',
       'defer_until_date', 'depends_on_action_id', 'recurrence_rule', 'deadline_date',
-      'category', 'context', 'time_needed_mins', 'energy_level', 'work_type', 'reference_link', 'status', 'is_big_rock', 'notes'
+      'category', 'context', 'time_needed_mins', 'energy_level', 'work_type', 'reference_link', 'status', 'is_big_rock', 'notes', 'target_week', 'estimated_poms', 'completed_poms'
     ];
     
     for (const field of fields) {
@@ -513,16 +616,166 @@ app.post('/api/weekly-capacities', async (c) => {
   for (const cap of capacities) {
     if (!cap.week_id || cap.capacity_hrs === undefined) continue;
     
+    const notesValue = cap.notes !== undefined ? cap.notes : null;
+    
     const existing = await c.env.DB.prepare('SELECT * FROM WeeklyCapacities WHERE week_id = ?').bind(cap.week_id).first();
     if (existing) {
-      await c.env.DB.prepare('UPDATE WeeklyCapacities SET capacity_hrs = ?, updated_at = CURRENT_TIMESTAMP WHERE week_id = ?')
-        .bind(cap.capacity_hrs, cap.week_id).run();
+      const updateNotesStr = cap.notes !== undefined ? ', notes = ?' : '';
+      const params = cap.notes !== undefined ? [cap.capacity_hrs, notesValue, cap.week_id] : [cap.capacity_hrs, cap.week_id];
+      await c.env.DB.prepare(`UPDATE WeeklyCapacities SET capacity_hrs = ?${updateNotesStr}, updated_at = CURRENT_TIMESTAMP WHERE week_id = ?`)
+        .bind(...params).run();
     } else {
-      await c.env.DB.prepare('INSERT INTO WeeklyCapacities (week_id, capacity_hrs) VALUES (?, ?)')
-        .bind(cap.week_id, cap.capacity_hrs).run();
+      await c.env.DB.prepare('INSERT INTO WeeklyCapacities (week_id, capacity_hrs, notes) VALUES (?, ?, ?)')
+        .bind(cap.week_id, cap.capacity_hrs, notesValue).run();
     }
   }
   return c.json({ success: true });
+});
+
+
+// --- ROUTINES API ---
+app.get('/api/routines', async (c) => {
+  try {
+    const { results } = await c.env.DB.prepare('SELECT * FROM Routines ORDER BY start_time ASC').all();
+    return c.json(results || []);
+  } catch (e) {
+    return c.json({ error: e.message }, 500);
+  }
+});
+
+
+app.post('/api/routines/copy', async (c) => {
+  try {
+    const { source_week_id, target_week_id } = await c.req.json();
+    if (!source_week_id || !target_week_id) {
+      return c.json({ error: 'source_week_id and target_week_id are required' }, 400);
+    }
+
+    const { results } = await c.env.DB.prepare(
+      'SELECT * FROM Routines WHERE week_id = ? OR week_id IS NULL OR week_id = ""'
+    ).bind(source_week_id).all();
+
+    if (!results || results.length === 0) {
+      return c.json({ success: true, count: 0 });
+    }
+
+    let copyCount = 0;
+    for (const r of results) {
+      const newId = `ROUTINE-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`;
+      await c.env.DB.prepare(`
+        INSERT INTO Routines (routine_id, name, start_time, end_time, session, day_of_week, week_id, habit_note)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `).bind(
+        newId,
+        r.name,
+        r.start_time,
+        r.end_time,
+        r.session || 'morning',
+        r.day_of_week || 'all',
+        target_week_id,
+        r.habit_note || null
+      ).run();
+      copyCount++;
+    }
+
+    return c.json({ success: true, count: copyCount }, 201);
+  } catch (e) {
+    return c.json({ error: e.message }, 500);
+  }
+});
+
+app.post('/api/routines', async (c) => {
+  try {
+    const body = await c.req.json();
+    const id = body.routine_id || `ROUTINE-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`;
+    
+    await c.env.DB.prepare(`
+      INSERT INTO Routines (routine_id, name, start_time, end_time, session, day_of_week, week_id, habit_note)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(
+      id,
+      body.name,
+      body.start_time,
+      body.end_time,
+      body.session || 'morning',
+      body.day_of_week || 'all',
+      body.week_id || null,
+      body.habit_note || null
+    ).run();
+
+    return c.json({ success: true, routine_id: id }, 201);
+  } catch (e) {
+    return c.json({ error: e.message }, 500);
+  }
+});
+
+app.patch('/api/routines/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+    const body = await c.req.json();
+    const updates = [];
+    const values = [];
+
+    const fields = ['name', 'start_time', 'end_time', 'session', 'day_of_week', 'week_id', 'habit_note'];
+    for (const f of fields) {
+      if (body[f] !== undefined) {
+        updates.push(`${f} = ?`);
+        values.push(body[f] === '' ? null : body[f]);
+      }
+    }
+
+    if (updates.length > 0) {
+      values.push(id);
+      await c.env.DB.prepare(`UPDATE Routines SET ${updates.join(', ')} WHERE routine_id = ?`).bind(...values).run();
+    }
+
+    return c.json({ success: true });
+  } catch (e) {
+    return c.json({ error: e.message }, 500);
+  }
+});
+
+app.delete('/api/routines/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+    await c.env.DB.prepare('DELETE FROM Routines WHERE routine_id = ?').bind(id).run();
+    return c.json({ success: true });
+  } catch (e) {
+    return c.json({ error: e.message }, 500);
+  }
+});
+
+
+// --- FOCUS SESSIONS API ---
+app.get('/api/focus-sessions', async (c) => {
+  try {
+    const { results } = await c.env.DB.prepare('SELECT * FROM FocusSessions ORDER BY created_at DESC LIMIT 100').all();
+    return c.json(results || []);
+  } catch (e) {
+    return c.json({ error: e.message }, 500);
+  }
+});
+
+app.post('/api/focus-sessions', async (c) => {
+  try {
+    const body = await c.req.json();
+    const id = body.session_id || `FOCUS-${Date.now()}`;
+    
+    await c.env.DB.prepare(`
+      INSERT INTO FocusSessions (session_id, action_id, action_name, duration_mins, session_type)
+      VALUES (?, ?, ?, ?, ?)
+    `).bind(
+      id,
+      body.action_id || null,
+      body.action_name || 'Học tập / Tập trung',
+      body.duration_mins || 25,
+      body.session_type || 'work'
+    ).run();
+
+    return c.json({ success: true, session_id: id }, 201);
+  } catch (e) {
+    return c.json({ error: e.message }, 500);
+  }
 });
 
 export default app
