@@ -139,9 +139,17 @@ export default function Routine() {
   const totalWeeklyRoutineHrs = Math.round(totalDailyRoutineHrs * 7 * 10) / 10;
   const available168Hrs = Math.max(0, Math.round((168 - totalWeeklyRoutineHrs) * 10) / 10);
 
-  // Split into Morning (00:00 - 12:00) and Evening (12:00 - 24:00)
-  const morningRoutines = filteredRoutines.filter(r => r.session === 'morning' || timeToHours(r.start_time) < 12);
-  const eveningRoutines = filteredRoutines.filter(r => r.session === 'evening' || timeToHours(r.start_time) >= 12);
+  // Split into Morning (00:00 - 12:00) and Evening (12:00 - 24:00) with Cross-Noon support
+  const morningRoutines = filteredRoutines.filter(r => {
+    const sH = timeToHours(r.start_time);
+    return r.session === 'morning' || r.session === 'both' || sH < 12;
+  });
+
+  const eveningRoutines = filteredRoutines.filter(r => {
+    const sH = timeToHours(r.start_time);
+    const eH = timeToHours(r.end_time);
+    return r.session === 'evening' || r.session === 'both' || eH > 12 || sH >= 12;
+  });
 
   // SVG Clock Donut Generator
   const renderClockCircle = (sessionRoutines, isMorning) => {
@@ -182,17 +190,23 @@ export default function Routine() {
             );
           })}
 
-          {/* Routine Sectors Arcs */}
+          {/* Routine Sectors Arcs with Precise Clamping for Cross-Noon (e.g. 11:00 - 13:30) */}
           {sessionRoutines.map((r, idx) => {
-            let sH = timeToHours(r.start_time) - baseStartHour;
-            let eH = timeToHours(r.end_time) - baseStartHour;
-            if (sH < 0) sH += 12;
-            if (eH < 0) eH += 12;
-            if (eH < sH) eH += 12;
+            const rawStart = timeToHours(r.start_time);
+            let rawEnd = timeToHours(r.end_time);
+            if (rawEnd < rawStart) rawEnd += 24; // overnight
 
-            const duration = Math.min(12, Math.max(0, eH - sH));
+            const minHour = isMorning ? 0 : 12;
+            const maxHour = isMorning ? 12 : 24;
+
+            const clampedStart = Math.max(minHour, Math.min(maxHour, rawStart)) - minHour;
+            const clampedEnd = Math.max(minHour, Math.min(maxHour, rawEnd)) - minHour;
+            const duration = Math.max(0, clampedEnd - clampedStart);
+
+            if (duration <= 0) return null;
+
             const dashLength = (duration / 12) * circumference;
-            const dashOffset = -((sH / 12) * circumference);
+            const dashOffset = -((clampedStart / 12) * circumference);
             const color = colors[idx % colors.length];
 
             return (
@@ -383,7 +397,7 @@ export default function Routine() {
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Buổi</label>
+            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Buổi / Phân Khung</label>
             <select 
               value={form.session} 
               onChange={e => setForm({ ...form, session: e.target.value })} 
@@ -391,6 +405,7 @@ export default function Routine() {
             >
               <option value="morning">Sáng (00:00 - 12:00)</option>
               <option value="evening">Tối (12:00 - 24:00)</option>
+              <option value="both">Bắc cầu Sáng & Tối (vd: 11:00 - 13:30)</option>
             </select>
           </div>
 
