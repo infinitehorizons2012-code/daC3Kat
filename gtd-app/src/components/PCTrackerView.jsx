@@ -2,27 +2,45 @@ import React, { useState, useEffect } from 'react';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
+const getISOWeekStr = (date = new Date()) => {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+};
+
 export default function PCTrackerView() {
   const [logs, setLogs] = useState([]);
+  const [actions, setActions] = useState([]);
+  const [horizons, setHorizons] = useState({ missions: [], visions: [], goals: [], projects: [] });
+  const [capacities, setCapacities] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeSubTab, setActiveSubTab] = useState('summary'); // 'summary', 'detail', 'rules'
+
+  // Active Sub-Tab: 'summary', 'detail', 'calendar', 'mission_capacity', 'rules'
+  const [activeSubTab, setActiveSubTab] = useState('summary');
 
   // Filters
   const [filterCategory, setFilterCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Add Log Modal
+  // Add Log Modal State
   const [showAddModal, setShowAddModal] = useState(false);
   const [addForm, setAddForm] = useState({
     app_name: '',
-    category: 'Học tập & Deep Work', // 'Học tập & Deep Work', 'Giải trí / Game', 'Ngoại ngữ & Kỹ năng', 'Khác'
+    category: 'Học tập & Deep Work',
     start_time: '',
     end_time: '',
     duration_mins: 45,
-    details: ''
+    details: '',
+    action_id: '',
+    project_id: '',
+    goal_id: '',
+    mission_id: ''
   });
 
-  // Edit Log Modal
+  // Edit Log Modal State
   const [editingLog, setEditingLog] = useState(null);
   const [editForm, setEditForm] = useState({
     app_name: '',
@@ -30,40 +48,96 @@ export default function PCTrackerView() {
     start_time: '',
     end_time: '',
     duration_mins: 45,
-    details: ''
+    details: '',
+    action_id: '',
+    project_id: '',
+    goal_id: '',
+    mission_id: ''
   });
 
-  const fetchLogs = async () => {
+  const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/pc-logs`);
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        setLogs(data);
+      const [pcRes, acRes, hRes, capRes] = await Promise.all([
+        fetch(`${API_URL}/pc-logs`),
+        fetch(`${API_URL}/actions`),
+        fetch(`${API_URL}/horizons`),
+        fetch(`${API_URL}/weekly-capacities`)
+      ]);
+      
+      const pcData = await pcRes.json();
+      const acData = await acRes.json();
+      const hData = await hRes.json();
+      const capData = await capRes.json();
+
+      setActions(Array.isArray(acData) ? acData : []);
+      setHorizons(hData || { missions: [], visions: [], goals: [], projects: [] });
+      setCapacities(Array.isArray(capData) ? capData : []);
+
+      if (Array.isArray(pcData) && pcData.length > 0) {
+        setLogs(pcData);
       } else {
-        // Fallback default sample data if table is new
+        // Initial sample data with GTD links
         setLogs([
-          { log_id: 'pc-1', app_name: 'VS Code (Python Data Science)', category: 'Học tập & Deep Work', start_time: '2026-08-13 14:00', end_time: '2026-08-13 15:30', duration_mins: 90, details: 'Lập trình xử lý dữ liệu với Pandas & Matplotlib' },
-          { log_id: 'pc-2', app_name: 'Chrome - Prinberk High School', category: 'Học tập & Deep Work', start_time: '2026-08-13 15:45', end_time: '2026-08-13 17:15', duration_mins: 90, details: 'Giải bài tập Algebra 1 W33' },
-          { log_id: 'pc-3', app_name: 'Youtube (Học Drum & Nhạc cụ)', category: 'Ngoại ngữ & Kỹ năng', start_time: '2026-08-13 17:30', end_time: '2026-08-13 18:30', duration_mins: 60, details: 'Xem video hướng dẫn đánh trống Drum T5' },
-          { log_id: 'pc-4', app_name: 'Minecraft / Giải trí', category: 'Giải trí / Game', start_time: '2026-08-13 20:00', end_time: '2026-08-13 20:30', duration_mins: 30, details: 'Giải trí sau giờ học' }
+          { 
+            log_id: 'pc-1', 
+            app_name: 'VS Code (Python Data Science)', 
+            category: 'Học tập & Deep Work', 
+            start_time: '2026-08-13 14:00', 
+            end_time: '2026-08-13 15:30', 
+            duration_mins: 90, 
+            details: 'Lập trình xử lý dữ liệu với Pandas & Matplotlib',
+            action_id: '',
+            project_id: 'prj-1786591534333',
+            goal_id: 'goal-1786590479030',
+            mission_id: 'mis-1786590454129'
+          },
+          { 
+            log_id: 'pc-2', 
+            app_name: 'Chrome - Prinberk High School', 
+            category: 'Học tập & Deep Work', 
+            start_time: '2026-08-13 15:45', 
+            end_time: '2026-08-13 17:15', 
+            duration_mins: 90, 
+            details: 'Giải bài tập Algebra 1 W33',
+            action_id: '',
+            project_id: 'prj-1786591534333',
+            goal_id: 'goal-1786590479030',
+            mission_id: 'mis-1786590454129'
+          },
+          { 
+            log_id: 'pc-3', 
+            app_name: 'Youtube (Học Drum & Nhạc cụ)', 
+            category: 'Ngoại ngữ & Kỹ năng', 
+            start_time: '2026-08-13 17:30', 
+            end_time: '2026-08-13 18:30', 
+            duration_mins: 60, 
+            details: 'Xem video hướng dẫn đánh trống Drum T5',
+            action_id: '',
+            project_id: 'prj-1786591597454',
+            goal_id: 'goal-1786594096645',
+            mission_id: 'mis-1786590629193'
+          },
+          { 
+            log_id: 'pc-4', 
+            app_name: 'Minecraft / Giải trí', 
+            category: 'Giải trí / Game', 
+            start_time: '2026-08-13 20:00', 
+            end_time: '2026-08-13 20:30', 
+            duration_mins: 30, 
+            details: 'Giải trí sau giờ học',
+            action_id: '', project_id: '', goal_id: '', mission_id: ''
+          }
         ]);
       }
     } catch (e) {
-      console.error(e);
-      // Fallback initial state
-      setLogs([
-        { log_id: 'pc-1', app_name: 'VS Code (Python Data Science)', category: 'Học tập & Deep Work', start_time: '2026-08-13 14:00', end_time: '2026-08-13 15:30', duration_mins: 90, details: 'Lập trình xử lý dữ liệu với Pandas & Matplotlib' },
-        { log_id: 'pc-2', app_name: 'Chrome - Prinberk High School', category: 'Học tập & Deep Work', start_time: '2026-08-13 15:45', end_time: '2026-08-13 17:15', duration_mins: 90, details: 'Giải bài tập Algebra 1 W33' },
-        { log_id: 'pc-3', app_name: 'Youtube (Học Drum & Nhạc cụ)', category: 'Ngoại ngữ & Kỹ năng', start_time: '2026-08-13 17:30', end_time: '2026-08-13 18:30', duration_mins: 60, details: 'Xem video hướng dẫn đánh trống Drum T5' },
-        { log_id: 'pc-4', app_name: 'Minecraft / Giải trí', category: 'Giải trí / Game', start_time: '2026-08-13 20:00', end_time: '2026-08-13 20:30', duration_mins: 30, details: 'Giải trí sau giờ học' }
-      ]);
+      console.error("Lỗi tải dữ liệu PC Tracker:", e);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchLogs();
+    fetchData();
   }, []);
 
   const handleAddLog = async (e) => {
@@ -77,7 +151,11 @@ export default function PCTrackerView() {
       start_time: addForm.start_time || new Date().toLocaleString(),
       end_time: addForm.end_time || new Date().toLocaleString(),
       duration_mins: Number(addForm.duration_mins) || 30,
-      details: addForm.details
+      details: addForm.details,
+      action_id: addForm.action_id || '',
+      project_id: addForm.project_id || '',
+      goal_id: addForm.goal_id || '',
+      mission_id: addForm.mission_id || ''
     };
 
     try {
@@ -90,7 +168,7 @@ export default function PCTrackerView() {
 
     setLogs(prev => [newLog, ...prev]);
     setShowAddModal(false);
-    setAddForm({ app_name: '', category: 'Học tập & Deep Work', start_time: '', end_time: '', duration_mins: 45, details: '' });
+    setAddForm({ app_name: '', category: 'Học tập & Deep Work', start_time: '', end_time: '', duration_mins: 45, details: '', action_id: '', project_id: '', goal_id: '', mission_id: '' });
   };
 
   const handleSaveEdit = async () => {
@@ -121,17 +199,48 @@ export default function PCTrackerView() {
     return <div className="text-center py-20 text-slate-400"><i className="fa-solid fa-spinner fa-spin text-3xl"></i></div>;
   }
 
-  // Statistics calculation
+  // Stats Calculations
   const totalMins = logs.reduce((sum, item) => sum + (Number(item.duration_mins) || 0), 0);
   const totalHours = Math.round((totalMins / 60) * 10) / 10;
 
   const academicMins = logs.filter(l => l.category === 'Học tập & Deep Work').reduce((sum, l) => sum + (Number(l.duration_mins) || 0), 0);
   const skillMins = logs.filter(l => l.category === 'Ngoại ngữ & Kỹ năng').reduce((sum, l) => sum + (Number(l.duration_mins) || 0), 0);
   const playMins = logs.filter(l => l.category === 'Giải trí / Game').reduce((sum, l) => sum + (Number(l.duration_mins) || 0), 0);
-  const otherMins = totalMins - academicMins - skillMins - playMins;
 
   const academicPct = totalMins > 0 ? Math.round(((academicMins + skillMins) / totalMins) * 100) : 0;
   const playPct = totalMins > 0 ? Math.round((playMins / totalMins) * 100) : 0;
+
+  // Build 7 Days for Calendar View
+  const getWeekDates = () => {
+    const current = new Date();
+    const day = current.getDay();
+    const diff = current.getDate() - day + (day === 0 ? -6 : 1);
+    const monday = new Date(current.setDate(diff));
+    const days = [];
+    const dayLabels = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'];
+    
+    for (let i = 0; i < 7; i++) {
+      const nextDay = new Date(monday);
+      nextDay.setDate(monday.getDate() + i);
+      const dateKey = `${nextDay.getFullYear()}-${String(nextDay.getMonth() + 1).padStart(2, '0')}-${String(nextDay.getDate()).padStart(2, '0')}`;
+      days.push({
+        name: dayLabels[i],
+        dateKey,
+        dateFormatted: `${nextDay.getDate()}/${nextDay.getMonth() + 1}`
+      });
+    }
+    return days;
+  };
+  const weekDays = getWeekDates();
+
+  // Stomach Capacity Stats vs PC Log
+  const now = new Date();
+  const currentISOWeek = getISOWeekStr(now);
+  const currentCapObj = capacities.find(c => c.week_code === currentISOWeek) || {};
+  const weeklyCapacityHrs = currentCapObj.capacity_hrs || 63;
+  const totalCommittedHrs = 21; // 11h Occupied + 10h Next Actions
+  const actualPCHrs = Math.round(((academicMins + skillMins) / 60) * 10) / 10;
+  const executionRate = totalCommittedHrs > 0 ? Math.min(100, Math.round((actualPCHrs / totalCommittedHrs) * 100)) : 0;
 
   const filteredLogs = logs.filter(l => {
     if (filterCategory !== 'all' && l.category !== filterCategory) return false;
@@ -151,13 +260,13 @@ export default function PCTrackerView() {
       <div className="glass-panel p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-teal-500/30">
         <div>
           <div className="flex items-center gap-2 text-teal-300 text-xs font-black uppercase tracking-widest mb-1">
-            <i className="fa-solid fa-desktop"></i> PC Time Tracking & Screen Time Monitor
+            <i className="fa-solid fa-desktop"></i> PC Activity Monitor x GTD Integration
           </div>
           <h2 className="text-2xl font-black text-white flex items-center gap-2">
-            <i className="fa-solid fa-laptop-code text-teal-400"></i> Nhật Ký Máy Tính Của Bé
+            <i className="fa-solid fa-laptop-code text-teal-400"></i> Nhật Ký Máy Tính & Liên Kết Mục Tiêu
           </h2>
           <p className="text-xs text-teal-100 mt-1 font-medium max-w-2xl">
-            Theo dõi chi tiết bé làm gì trên máy tính, lúc mấy giờ, bao lâu, phân loại Học tập vs Giải trí & tổng hợp báo cáo.
+            Tự động theo dõi hoạt động PC, bổ sung liên kết Hành Động / Dự Án / Mục Tiêu & Báo Cáo Sứ Mệnh, Dạ Dày Tuần.
           </p>
         </div>
 
@@ -176,7 +285,7 @@ export default function PCTrackerView() {
             <i className="fa-solid fa-display"></i>
           </div>
           <div>
-            <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Tổng Thời Gian Màn Hình</span>
+            <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Thời Gian Màn Hình</span>
             <span className="text-2xl font-black text-slate-800">{totalHours}h <span className="text-xs text-slate-400 font-bold">({totalMins}m)</span></span>
           </div>
         </div>
@@ -206,16 +315,16 @@ export default function PCTrackerView() {
             <i className="fa-solid fa-heart-pulse"></i>
           </div>
           <div>
-            <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Trạng Thái Sức Khỏe</span>
-            <span className="text-base font-black text-emerald-600">
-              {academicPct >= 70 ? '🟢 Rất Lành Mạnh' : '🟡 Cần Cân Bằng'}
+            <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Dạ Dày Tuần Đã Lấp</span>
+            <span className="text-xl font-black text-emerald-600">
+              {actualPCHrs}h / {totalCommittedHrs}h ({executionRate}%)
             </span>
           </div>
         </div>
       </div>
 
       {/* Sub-Tab Navigation Bar */}
-      <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-2 flex-wrap">
         <button 
           onClick={() => setActiveSubTab('summary')}
           className={`px-4 py-2 rounded-2xl font-black text-xs transition-all flex items-center gap-2 ${activeSubTab === 'summary' ? 'bg-teal-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100'}`}
@@ -227,22 +336,27 @@ export default function PCTrackerView() {
           onClick={() => setActiveSubTab('detail')}
           className={`px-4 py-2 rounded-2xl font-black text-xs transition-all flex items-center gap-2 ${activeSubTab === 'detail' ? 'bg-teal-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100'}`}
         >
-          <i className="fa-solid fa-list-ul"></i> 📋 Nhật Ký Chi Tiết & Chỉnh Sửa
+          <i className="fa-solid fa-list-ul"></i> 📋 Nhật Ký & Gắn Liên Kết GTD
         </button>
 
         <button 
-          onClick={() => setActiveSubTab('rules')}
-          className={`px-4 py-2 rounded-2xl font-black text-xs transition-all flex items-center gap-2 ${activeSubTab === 'rules' ? 'bg-teal-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100'}`}
+          onClick={() => setActiveSubTab('calendar')}
+          className={`px-4 py-2 rounded-2xl font-black text-xs transition-all flex items-center gap-2 ${activeSubTab === 'calendar' ? 'bg-teal-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100'}`}
         >
-          <i className="fa-solid fa-shield-halved"></i> ⚙️ Quy Tắc & Giới Hạn Màn Hình
+          <i className="fa-solid fa-calendar-days"></i> 📅 Lịch Biểu Màn Hình
+        </button>
+
+        <button 
+          onClick={() => setActiveSubTab('mission_capacity')}
+          className={`px-4 py-2 rounded-2xl font-black text-xs transition-all flex items-center gap-2 ${activeSubTab === 'mission_capacity' ? 'bg-teal-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100'}`}
+        >
+          <i className="fa-solid fa-bullseye"></i> 🎯 Sứ Mệnh & Dạ Dày Tuần
         </button>
       </div>
 
-      {/* TAB 1: BÁO CÁO TỔNG HỢP */}
+      {/* SUB-TAB 1: BÁO CÁO TỔNG HỢP */}
       {activeSubTab === 'summary' && (
         <div className="space-y-6">
-          
-          {/* Visual Progress Breakdown Bar */}
           <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
             <h3 className="text-lg font-black text-slate-800 mb-2 flex items-center gap-2">
               <i className="fa-solid fa-chart-bar text-teal-600"></i> Phân Bổ Thời Gian Sử Dụng Máy Tính
@@ -264,35 +378,47 @@ export default function PCTrackerView() {
             </div>
           </div>
 
-          {/* Activity Breakdown List */}
           <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
             <h3 className="text-lg font-black text-slate-800 mb-4 flex items-center gap-2">
-              <i className="fa-solid fa-cubes text-indigo-600"></i> Chi Tiết Sử Dụng Theo Ứng Dụng & Website
+              <i className="fa-solid fa-cubes text-indigo-600"></i> Chi Tiết Sử Dụng Theo Ứng Dụng & Liên Kết
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {logs.map(item => (
-                <div key={item.log_id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex justify-between items-start">
-                  <div>
-                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-white border text-slate-600 mb-1 inline-block">
-                      {item.category}
+              {logs.map(item => {
+                const linkedProj = horizons.projects.find(p => p.project_id === item.project_id);
+                const linkedGoal = horizons.goals.find(g => g.goal_id === item.goal_id);
+                const linkedMission = horizons.missions.find(m => m.mission_id === item.mission_id);
+
+                return (
+                  <div key={item.log_id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex justify-between items-start">
+                    <div>
+                      <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-white border text-slate-600 mb-1 inline-block">
+                        {item.category}
+                      </span>
+                      <h4 className="font-black text-slate-800 text-sm">{item.app_name}</h4>
+                      <p className="text-xs text-slate-500 mt-1 font-medium">{item.details}</p>
+
+                      {/* GTD Links Badges */}
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {linkedProj && <span className="text-[9px] font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full border border-purple-200">🎯 Dự án: {linkedProj.name}</span>}
+                        {linkedGoal && <span className="text-[9px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full border border-amber-200">🏆 Mục tiêu: {linkedGoal.statement}</span>}
+                        {linkedMission && <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-200">🌟 Sứ mệnh: {linkedMission.statement?.slice(0, 20)}</span>}
+                      </div>
+
+                      <span className="text-[10px] text-slate-400 mt-2 block font-bold">Khung giờ: {item.start_time} - {item.end_time}</span>
+                    </div>
+                    <span className="text-sm font-black bg-teal-100 text-teal-800 px-3 py-1 rounded-full shrink-0 border border-teal-300">
+                      ⏱️ {item.duration_mins}m
                     </span>
-                    <h4 className="font-black text-slate-800 text-sm">{item.app_name}</h4>
-                    <p className="text-xs text-slate-500 mt-1 font-medium">{item.details}</p>
-                    <span className="text-[10px] text-slate-400 mt-2 block font-bold">Khung giờ: {item.start_time} - {item.end_time}</span>
                   </div>
-                  <span className="text-sm font-black bg-teal-100 text-teal-800 px-3 py-1 rounded-full shrink-0 border border-teal-300">
-                    ⏱️ {item.duration_mins}m
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
-
         </div>
       )}
 
-      {/* TAB 2: NHẬT KÝ CHI TIẾT */}
+      {/* SUB-TAB 2: NHẬT KÝ CHI TIẾT & GẮN LIÊN KẾT GTD */}
       {activeSubTab === 'detail' && (
         <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-4">
@@ -308,12 +434,6 @@ export default function PCTrackerView() {
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${filterCategory === 'Học tập & Deep Work' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
               >
                 Học Tập
-              </button>
-              <button 
-                onClick={() => setFilterCategory('Giải trí / Game')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${filterCategory === 'Giải trí / Game' ? 'bg-rose-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
-              >
-                Giải Trí
               </button>
             </div>
 
@@ -331,82 +451,263 @@ export default function PCTrackerView() {
               <thead>
                 <tr className="border-b border-slate-200 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-slate-50/50">
                   <th className="p-3">Khung Giờ</th>
-                  <th className="p-3">Ứng Dụng / Trình Duyệt</th>
+                  <th className="p-3">Ứng Dụng / Nội Dung</th>
                   <th className="p-3">Phân Loại</th>
+                  <th className="p-3">Liên Kết Dự Án / Mục Tiêu / Sứ Mệnh</th>
                   <th className="p-3 text-center">Thời Lượng</th>
-                  <th className="p-3">Chi Tiết Hoạt Động</th>
-                  <th className="p-3 text-right">Điều Chỉnh</th>
+                  <th className="p-3 text-right">Bổ Sung / Điều Chỉnh</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 font-bold">
-                {filteredLogs.map(item => (
-                  <tr key={item.log_id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="p-3 text-slate-500 whitespace-nowrap">
-                      <span className="font-black text-slate-800 text-xs block">{item.start_time}</span>
-                      <span className="text-[10px] text-slate-400">đến {item.end_time}</span>
-                    </td>
+                {filteredLogs.map(item => {
+                  const linkedProj = horizons.projects.find(p => p.project_id === item.project_id);
+                  const linkedGoal = horizons.goals.find(g => g.goal_id === item.goal_id);
+                  const linkedMission = horizons.missions.find(m => m.mission_id === item.mission_id);
 
-                    <td className="p-3 font-black text-slate-800">
-                      {item.app_name}
-                    </td>
+                  return (
+                    <tr key={item.log_id} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="p-3 text-slate-500 whitespace-nowrap">
+                        <span className="font-black text-slate-800 text-xs block">{item.start_time}</span>
+                        <span className="text-[10px] text-slate-400">đến {item.end_time}</span>
+                      </td>
 
-                    <td className="p-3">
-                      <span className={`px-2.5 py-0.5 rounded-full font-black text-[10px] border ${
-                        item.category === 'Học tập & Deep Work' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' :
-                        item.category === 'Giải trí / Game' ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-slate-100 text-slate-700 border-slate-200'
-                      }`}>
-                        {item.category}
-                      </span>
-                    </td>
+                      <td className="p-3 font-black text-slate-800">
+                        {item.app_name}
+                      </td>
 
-                    <td className="p-3 text-center whitespace-nowrap">
-                      <span className="bg-teal-100 text-teal-900 px-2.5 py-1 rounded-full font-black text-[11px] border border-teal-300">
-                        ⏱️ {item.duration_mins}m
-                      </span>
-                    </td>
+                      <td className="p-3">
+                        <span className={`px-2.5 py-0.5 rounded-full font-black text-[10px] border ${
+                          item.category === 'Học tập & Deep Work' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' :
+                          item.category === 'Giải trí / Game' ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-slate-100 text-slate-700 border-slate-200'
+                        }`}>
+                          {item.category}
+                        </span>
+                      </td>
 
-                    <td className="p-3 text-slate-600 max-w-xs truncate">
-                      {item.details || <span className="text-slate-300 italic">Không có chi tiết</span>}
-                    </td>
+                      <td className="p-3 max-w-xs">
+                        <div className="flex flex-wrap gap-1">
+                          {linkedProj ? <span className="text-[9px] font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded-md">🎯 {linkedProj.name}</span> : <span className="text-[9px] text-slate-300 italic">Chưa gắn dự án</span>}
+                          {linkedGoal && <span className="text-[9px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md">🏆 {linkedGoal.statement}</span>}
+                          {linkedMission && <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">🌟 {linkedMission.statement?.slice(0, 15)}...</span>}
+                        </div>
+                      </td>
 
-                    <td className="p-3 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-2">
-                        <button 
-                          onClick={() => { setEditingLog(item); setEditForm(item); }}
-                          className="px-2.5 py-1 bg-slate-100 hover:bg-teal-600 hover:text-white text-slate-700 font-bold text-[11px] rounded-lg transition-all"
-                        >
-                          ✏️ Sửa
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteLog(item.log_id)}
-                          className="px-2 py-1 bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-600 font-bold text-[11px] rounded-lg transition-all"
-                        >
-                          🗑️ Xóa
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      <td className="p-3 text-center whitespace-nowrap">
+                        <span className="bg-teal-100 text-teal-900 px-2.5 py-1 rounded-full font-black text-[11px] border border-teal-300">
+                          ⏱️ {item.duration_mins}m
+                        </span>
+                      </td>
+
+                      <td className="p-3 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-2">
+                          <button 
+                            onClick={() => { setEditingLog(item); setEditForm(item); }}
+                            className="px-2.5 py-1 bg-slate-100 hover:bg-teal-600 hover:text-white text-slate-700 font-bold text-[11px] rounded-lg transition-all"
+                          >
+                            ✏️ Bổ Sung GTD
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteLog(item.log_id)}
+                            className="px-2 py-1 bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-600 font-bold text-[11px] rounded-lg transition-all"
+                          >
+                            🗑️ Xóa
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
         </div>
       )}
 
-      {/* TAB 3: QUY TẮC MÀN HÌNH */}
-      {activeSubTab === 'rules' && (
-        <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
-          <h3 className="text-lg font-black text-slate-800 flex items-center gap-2">
-            <i className="fa-solid fa-shield-halved text-emerald-600"></i> Quy Tắc Giới Hạn Màn Hình Cho Bé (Screen Time Health)
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200">
-              <h4 className="font-black text-emerald-900 text-sm">✅ Khuyến khích Học tập & Deep Work</h4>
-              <p className="text-xs text-emerald-700 mt-1">Không giới hạn thời gian khi bé lập trình Python, làm bài tập Algebra 1 hoặc học nhạc cụ.</p>
+      {/* SUB-TAB 3: LỊCH BIỂU THỜI GIAN MÀN HÌNH */}
+      {activeSubTab === 'calendar' && (
+        <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
+          <div className="border-b pb-3 mb-4 flex justify-between items-center">
+            <h3 className="text-base font-black text-slate-800 flex items-center gap-2">
+              <i className="fa-solid fa-calendar-days text-teal-600"></i> Lịch Biểu Thời Gian Màn Hình PC Trong Tuần ({currentISOWeek})
+            </h3>
+            <span className="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border">
+              Hiển thị các phiên sử dụng máy tính thực tế theo từng ngày
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-7 gap-3">
+            {weekDays.map(day => {
+              const dayLogs = logs.filter(l => (l.start_time || '').startsWith(day.dateKey));
+              const dayMins = dayLogs.reduce((sum, l) => sum + (Number(l.duration_mins) || 0), 0);
+
+              return (
+                <div key={day.dateKey} className="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col gap-2 min-h-[160px]">
+                  <div className="font-black text-xs text-slate-800 border-b pb-1 flex justify-between">
+                    <span>{day.name}</span>
+                    <span className="text-[10px] text-teal-600">{day.dateFormatted}</span>
+                  </div>
+
+                  <div className="space-y-1.5 flex-1">
+                    {dayLogs.map(l => (
+                      <div key={l.log_id} className="p-2 rounded-xl bg-teal-600 text-white text-[11px] font-bold shadow-2xs flex flex-col gap-0.5 border border-teal-700">
+                        <span className="truncate font-black">{l.app_name}</span>
+                        <div className="flex justify-between items-center text-[9px] opacity-90">
+                          <span>⏱️ {l.duration_mins}m</span>
+                          <span>{l.start_time ? l.start_time.slice(11, 16) : ''}</span>
+                        </div>
+                      </div>
+                    ))}
+
+                    {dayLogs.length === 0 && (
+                      <div className="text-[10px] text-slate-400 italic text-center py-6">
+                        Chưa có nhật ký PC
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="pt-1.5 border-t border-slate-200 text-[10px] font-black text-slate-600 flex justify-between">
+                    <span>Tổng PC:</span>
+                    <span className="text-teal-600">{Math.round((dayMins / 60) * 10) / 10}h</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* SUB-TAB 4: SỨ MỆNH & DẠ DÀY TUẦN */}
+      {activeSubTab === 'mission_capacity' && (
+        <div className="space-y-6">
+          <div className="glass-panel p-6 rounded-3xl bg-slate-900 text-white shadow-xl border border-slate-800">
+            <h3 className="text-lg font-black text-teal-400 mb-2 flex items-center gap-2">
+              <i className="fa-solid fa-battery-half"></i> Báo Cáo Đối Chiếu Nhật Ký PC Với Dạ Dày Tuần ({currentISOWeek})
+            </h3>
+            <p className="text-xs text-slate-300 font-medium mb-4">
+              So sánh số giờ sử dụng máy tính thực tế với dung lượng cam kết Dạ Dày Tuần.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-slate-800/80 p-4 rounded-2xl border border-slate-700">
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase block">1. Sức chứa dạ dày</span>
+                <span className="text-xl font-black text-white">{weeklyCapacityHrs}h / tuần</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase block">2. Đã cam kết nạp</span>
+                <span className="text-xl font-black text-blue-400">{totalCommittedHrs}h</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase block">3. Giờ PC thực tế</span>
+                <span className="text-xl font-black text-emerald-400">{actualPCHrs}h / {totalCommittedHrs}h</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase block">4. Tỷ lệ hoàn thành</span>
+                <span className="text-xl font-black text-amber-400">{executionRate}%</span>
+              </div>
             </div>
-            <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200">
-              <h4 className="font-black text-amber-900 text-sm">⚠️ Giới hạn Giải trí & Game</h4>
-              <p className="text-xs text-amber-700 mt-1">Khuyên dùng tối đa 60 phút/ngày sau khi hoàn thành 3 Big Rocks trong ngày.</p>
+
+            <div className="w-full bg-slate-800 h-3 rounded-full overflow-hidden mt-4 border border-slate-700">
+              <div className="bg-gradient-to-r from-teal-500 to-emerald-400 h-full rounded-full transition-all duration-500" style={{ width: `${executionRate}%` }}></div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* EDIT MODAL WITH GTD LINKERS */}
+      {editingLog && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="glass-panel p-6 rounded-3xl bg-white max-w-lg w-full shadow-2xl border border-slate-200 animate-fade-in">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h3 className="text-base font-black text-slate-800 flex items-center gap-2">
+                <i className="fa-solid fa-pen-to-square text-teal-600"></i> Điều Chỉnh Nhật Ký & Gắn Liên Kết GTD
+              </h3>
+              <button onClick={() => setEditingLog(null)} className="text-slate-400 hover:text-slate-600">
+                <i className="fa-solid fa-xmark text-lg"></i>
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs font-bold text-slate-700">
+              <div>
+                <label className="block mb-1">Tên Ứng Dụng / Nội Dung:</label>
+                <input 
+                  type="text" 
+                  value={editForm.app_name}
+                  onChange={e => setEditForm({ ...editForm, app_name: e.target.value })}
+                  className="w-full p-2.5 border rounded-xl outline-none focus:border-teal-500"
+                />
+              </div>
+
+              {/* GTD Linkers Dropdowns */}
+              <div className="grid grid-cols-2 gap-3 bg-teal-50/50 p-3 rounded-2xl border border-teal-100">
+                <div>
+                  <label className="block mb-1 text-teal-900 font-black">🎯 Gắn Dự Án:</label>
+                  <select 
+                    value={editForm.project_id}
+                    onChange={e => setEditForm({ ...editForm, project_id: e.target.value })}
+                    className="w-full p-2 border rounded-xl outline-none focus:border-teal-500 bg-white"
+                  >
+                    <option value="">[Chọn Dự Án...]</option>
+                    {horizons.projects.map(p => (
+                      <option key={p.project_id} value={p.project_id}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block mb-1 text-teal-900 font-black">🏆 Gắn Mục Tiêu:</label>
+                  <select 
+                    value={editForm.goal_id}
+                    onChange={e => setEditForm({ ...editForm, goal_id: e.target.value })}
+                    className="w-full p-2 border rounded-xl outline-none focus:border-teal-500 bg-white"
+                  >
+                    <option value="">[Chọn Mục Tiêu...]</option>
+                    {horizons.goals.map(g => (
+                      <option key={g.goal_id} value={g.goal_id}>{g.statement}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block mb-1">Khung Giờ Bắt Đầu:</label>
+                  <input 
+                    type="text" 
+                    value={editForm.start_time}
+                    onChange={e => setEditForm({ ...editForm, start_time: e.target.value })}
+                    className="w-full p-2.5 border rounded-xl outline-none focus:border-teal-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-1">Thời Lượng (Phút):</label>
+                  <input 
+                    type="number" 
+                    value={editForm.duration_mins}
+                    onChange={e => setEditForm({ ...editForm, duration_mins: e.target.value })}
+                    className="w-full p-2.5 border rounded-xl outline-none focus:border-teal-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block mb-1">Chi Tiết Hoạt Động:</label>
+                <textarea 
+                  value={editForm.details}
+                  onChange={e => setEditForm({ ...editForm, details: e.target.value })}
+                  rows="3"
+                  className="w-full p-2.5 border rounded-xl outline-none focus:border-teal-500"
+                ></textarea>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t">
+                <button onClick={() => setEditingLog(null)} className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-bold">
+                  Hủy
+                </button>
+                <button onClick={handleSaveEdit} className="px-4 py-2 bg-teal-600 text-slate-950 font-black rounded-xl">
+                  Lưu Điều Chỉnh & Liên Kết
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -427,7 +728,7 @@ export default function PCTrackerView() {
 
             <form onSubmit={handleAddLog} className="space-y-4 text-xs font-bold text-slate-700">
               <div>
-                <label className="block mb-1">Tên Ứng Dụng / Trình Duyệt / Nội Dung:</label>
+                <label className="block mb-1">Tên Ứng Dụng / Nội Dung:</label>
                 <input 
                   type="text" 
                   value={addForm.app_name}
@@ -438,18 +739,34 @@ export default function PCTrackerView() {
                 />
               </div>
 
-              <div>
-                <label className="block mb-1">Phân Loại Hoạt Động:</label>
-                <select 
-                  value={addForm.category}
-                  onChange={e => setAddForm({ ...addForm, category: e.target.value })}
-                  className="w-full p-2.5 border rounded-xl outline-none focus:border-teal-500 bg-white"
-                >
-                  <option value="Học tập & Deep Work">📘 Học tập & Deep Work</option>
-                  <option value="Ngoại ngữ & Kỹ năng">🎸 Ngoại ngữ & Kỹ năng</option>
-                  <option value="Giải trí / Game">🎮 Giải trí / Game</option>
-                  <option value="Khác">⚙️ Khác</option>
-                </select>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block mb-1">Gắn Dự Án:</label>
+                  <select 
+                    value={addForm.project_id}
+                    onChange={e => setAddForm({ ...addForm, project_id: e.target.value })}
+                    className="w-full p-2 border rounded-xl outline-none focus:border-teal-500 bg-white text-xs font-bold"
+                  >
+                    <option value="">[Chọn Dự Án...]</option>
+                    {horizons.projects.map(p => (
+                      <option key={p.project_id} value={p.project_id}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block mb-1">Gắn Mục Tiêu:</label>
+                  <select 
+                    value={addForm.goal_id}
+                    onChange={e => setAddForm({ ...addForm, goal_id: e.target.value })}
+                    className="w-full p-2 border rounded-xl outline-none focus:border-teal-500 bg-white text-xs font-bold"
+                  >
+                    <option value="">[Chọn Mục Tiêu...]</option>
+                    {horizons.goals.map(g => (
+                      <option key={g.goal_id} value={g.goal_id}>{g.statement}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -495,89 +812,6 @@ export default function PCTrackerView() {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
-
-      {/* EDIT LOG MODAL */}
-      {editingLog && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="glass-panel p-6 rounded-3xl bg-white max-w-md w-full shadow-2xl border border-slate-200 animate-fade-in">
-            <div className="flex justify-between items-center border-b pb-3 mb-4">
-              <h3 className="text-base font-black text-slate-800 flex items-center gap-2">
-                <i className="fa-solid fa-pen-to-square text-teal-600"></i> Điều Chỉnh Nhật Ký Máy Tính
-              </h3>
-              <button onClick={() => setEditingLog(null)} className="text-slate-400 hover:text-slate-600">
-                <i className="fa-solid fa-xmark text-lg"></i>
-              </button>
-            </div>
-
-            <div className="space-y-4 text-xs font-bold text-slate-700">
-              <div>
-                <label className="block mb-1">Tên Ứng Dụng / Nội Dung:</label>
-                <input 
-                  type="text" 
-                  value={editForm.app_name}
-                  onChange={e => setEditForm({ ...editForm, app_name: e.target.value })}
-                  className="w-full p-2.5 border rounded-xl outline-none focus:border-teal-500"
-                />
-              </div>
-
-              <div>
-                <label className="block mb-1">Phân Loại:</label>
-                <select 
-                  value={editForm.category}
-                  onChange={e => setEditForm({ ...editForm, category: e.target.value })}
-                  className="w-full p-2.5 border rounded-xl outline-none focus:border-teal-500 bg-white"
-                >
-                  <option value="Học tập & Deep Work">📘 Học tập & Deep Work</option>
-                  <option value="Ngoại ngữ & Kỹ năng">🎸 Ngoại ngữ & Kỹ năng</option>
-                  <option value="Giải trí / Game">🎮 Giải trí / Game</option>
-                  <option value="Khác">⚙️ Khác</option>
-                </select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block mb-1">Khung Giờ Bắt Đầu:</label>
-                  <input 
-                    type="text" 
-                    value={editForm.start_time}
-                    onChange={e => setEditForm({ ...editForm, start_time: e.target.value })}
-                    className="w-full p-2.5 border rounded-xl outline-none focus:border-teal-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-1">Thời Lượng (Phút):</label>
-                  <input 
-                    type="number" 
-                    value={editForm.duration_mins}
-                    onChange={e => setEditForm({ ...editForm, duration_mins: e.target.value })}
-                    className="w-full p-2.5 border rounded-xl outline-none focus:border-teal-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block mb-1">Chi Tiết Hoạt Động:</label>
-                <textarea 
-                  value={editForm.details}
-                  onChange={e => setEditForm({ ...editForm, details: e.target.value })}
-                  rows="3"
-                  className="w-full p-2.5 border rounded-xl outline-none focus:border-teal-500"
-                ></textarea>
-              </div>
-
-              <div className="flex justify-end gap-2 pt-3 border-t">
-                <button onClick={() => setEditingLog(null)} className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-bold">
-                  Hủy
-                </button>
-                <button onClick={handleSaveEdit} className="px-4 py-2 bg-teal-600 text-slate-950 font-black rounded-xl">
-                  Lưu Điều Chỉnh
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       )}
