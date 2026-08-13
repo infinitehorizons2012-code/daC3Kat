@@ -18,6 +18,7 @@ const tabs = {
   weekly_calendar: { label: 'Lịch Tuần Master', icon: 'fa-solid fa-calendar-week', color: 'text-indigo-600', bg: 'bg-indigo-100' },
   focus: { label: 'Runway', icon: 'fa-solid fa-plane-departure', color: 'text-blue-600', bg: 'bg-blue-100' },
   pomodoro: { label: 'Focus Mode', icon: 'fa-solid fa-stopwatch', color: 'text-orange-600', bg: 'bg-orange-100' },
+  focus_report: { label: 'Báo Cáo Pomodoro', icon: 'fa-solid fa-chart-pie', color: 'text-amber-600', bg: 'bg-amber-100' },
   routine: { label: 'Routine', icon: 'fa-solid fa-arrows-spin', color: 'text-pink-600', bg: 'bg-pink-100' },
   time: { label: 'Time Matrix', icon: 'fa-solid fa-clock-rotate-left', color: 'text-amber-600', bg: 'bg-amber-100' },
   daily: { label: 'Daily Review', icon: 'fa-solid fa-sun', color: 'text-orange-600', bg: 'bg-orange-100' },
@@ -192,7 +193,8 @@ function App() {
           <ErrorBoundary key={activeTab}>
             {activeTab === 'weekly_calendar' && <WeeklyCalendarView />}
             {activeTab === 'focus' && <Runway />}
-            {activeTab === 'pomodoro' && <FocusEngine />}
+            {activeTab === 'pomodoro' && <FocusEngine onOpenReport={() => setActiveTab('focus_report')} />}
+            {activeTab === 'focus_report' && <FocusReportView />}
             {activeTab === 'routine' && <Routine />}
             {activeTab === 'time' && <TimeManagement />}
             {activeTab === 'areas' && <Areas />}
