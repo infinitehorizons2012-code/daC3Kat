@@ -1,42 +1,322 @@
 [
   {
-    "log_id": "pc-1786631367351",
-    "app_name": "Search\"\r",
+    "log_id": "pc-1786631498849-0",
+    "app_name": "[System Idle Process] N/A\"\r",
     "url_link": "",
-    "category": "Học tập & Deep Work",
-    "start_time": "2026-08-13 21:29",
-    "end_time": "21:29",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
     "duration_mins": 15,
-    "details": "Đang hoạt động trực tiếp lúc 21:29"
+    "details": "Đang hoạt động trên máy tính (Tiến trình: System Idle Process)"
   },
   {
-    "log_id": "pc-1786631226893",
-    "app_name": "Facebook Reel Video (ID: 1350191780413194)",
-    "url_link": "https://www.facebook.com/reel/1350191780413194",
+    "log_id": "pc-1786631498849-1",
+    "app_name": "[dwm.exe] DWM Notification Window\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: dwm.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-2",
+    "app_name": "[ETDCtrl.exe] My Favorites Setting\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: ETDCtrl.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-3",
+    "app_name": "[igfxEMN.exe] The Event Manager Dashboard\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: igfxEMN.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-4",
+    "app_name": "[svchost.exe] Windows Push Notifications Platform\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: svchost.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-5",
+    "app_name": "[taskhostw.exe] Task Host Window\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: taskhostw.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-6",
+    "app_name": "[explorer.exe] Workflow runs  infinitehorizons2012-code/daC3Kat\"\r",
+    "url_link": "https://github.com/infinitehorizons2012-code/daC3Kat",
+    "category": "Học tập & Deep Work",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: explorer.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-7",
+    "app_name": "[ShellHost.exe] Quick Settings\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: ShellHost.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-8",
+    "app_name": "[CrossDeviceResume.exe] CrossDeviceResumeWindow\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: CrossDeviceResume.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-9",
+    "app_name": "[svchost.exe] OLEChannelWnd\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: svchost.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-10",
+    "app_name": "[RtkAudUService64.exe] RealtekAudioAdminBackgroundProcessClass\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: RtkAudUService64.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-11",
+    "app_name": "[StartMenuExperienceHost.exe] Start\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: StartMenuExperienceHost.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-12",
+    "app_name": "[SearchHost.exe] Search\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: SearchHost.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-13",
+    "app_name": "[svchost.exe] OleMainThreadWndName\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: svchost.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-14",
+    "app_name": "[CrossDeviceService.exe] .NET-BroadcastEventWindow.3d893c.0\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: CrossDeviceService.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-15",
+    "app_name": "[ServiceHub.Helper.exe] GDI+ Window (ServiceHub.Helper.exe)\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: ServiceHub.Helper.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-16",
+    "app_name": "[TextInputHost.exe] Windows Input Experience\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: TextInputHost.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-17",
+    "app_name": "[chrome.exe] Facebook - Google Chrome\"\r",
+    "url_link": "https://www.facebook.com",
     "category": "Giải trí / Game",
-    "start_time": "2026-08-13 21:27",
-    "end_time": "21:27",
-    "duration_mins": 12,
-    "details": "Xem Video Facebook Reel Cụ Thể (Link chuẩn: https://www.facebook.com/reel/1350191780413194)"
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: chrome.exe)"
   },
   {
-    "log_id": "pc-1786631226892",
-    "app_name": "Nhóm Học Lập Trình Python & AI | Facebook",
-    "url_link": "https://www.facebook.com/groups",
-    "category": "Học tập & Deep Work",
-    "start_time": "2026-08-13 21:27",
-    "end_time": "21:27",
-    "duration_mins": 25,
-    "details": "Xem Nhóm Facebook Cụ Thể: Nhóm Học Lập Trình Python & AI (Link: https://www.facebook.com/groups)"
+    "log_id": "pc-1786631498849-18",
+    "app_name": "[PhoneExperienceHost.exe] .NET-BroadcastEventWindow.bf7771.0\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: PhoneExperienceHost.exe)"
   },
   {
-    "log_id": "pc-1786631226891",
-    "app_name": "Coursera: Machine Learning Specialization by Stanford",
-    "url_link": "https://www.coursera.org/learn/machine-learning",
+    "log_id": "pc-1786631498849-19",
+    "app_name": "[RtkAudUService64.exe] RealtekAudioBackgroundProcessClass\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: RtkAudUService64.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-20",
+    "app_name": "[CNABISWD.EXE] Canon LBP6230/6240\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: CNABISWD.EXE)"
+  },
+  {
+    "log_id": "pc-1786631498849-21",
+    "app_name": "[HPSystemEventUtilityBackground.exe] .NET-BroadcastEventWindow.4.0.0.0.3b95145.0\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: HPSystemEventUtilityBackground.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-22",
+    "app_name": "[HPMediaNetwork.exe] .NET-BroadcastEventWindow.4.0.0.0.25bb5ff.0\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: HPMediaNetwork.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-23",
+    "app_name": "[OneDrive.Sync.Service.exe] Microsoft OneDrive Sync Service\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: OneDrive.Sync.Service.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-24",
+    "app_name": "[WhatsApp.Root.exe] GDI+ Window (WhatsApp.Root.exe)\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: WhatsApp.Root.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-25",
+    "app_name": "[ollama.exe] C:\\Users\\DT.HANG\\AppData\\Local\\Programs\\Ollama\\ollama.exe\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: ollama.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-26",
+    "app_name": "[cmd.exe] C:\\WINDOWS\\system32\\cmd.exe \"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: cmd.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-27",
+    "app_name": "[powershell.exe] GDI+ Window (powershell.exe)\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: powershell.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-28",
+    "app_name": "[msedge.exe] Tr?m di?u khi?n 168 (React) and 1 more page - Personal - Microsoft? Edge\"\r",
+    "url_link": "http://localhost:5173",
     "category": "Học tập & Deep Work",
-    "start_time": "2026-08-13 14:00",
-    "end_time": "15:30",
-    "duration_mins": 90,
-    "details": "Nền tảng Khóa học trực tuyến Coursera - Môn Học Máy & AI (Link: https://www.coursera.org/learn/machine-learning)"
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: msedge.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-29",
+    "app_name": "[Antigravity.exe] Web Qu?n Ly Th?i Gian\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: Antigravity.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-30",
+    "app_name": "[LockApp.exe] Windows Default Lock Screen\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: LockApp.exe)"
+  },
+  {
+    "log_id": "pc-1786631498849-31",
+    "app_name": "[ShellExperienceHost.exe] New notification\"\r",
+    "url_link": "",
+    "category": "Khác",
+    "start_time": "2026-08-13 21:31",
+    "end_time": "21:31",
+    "duration_mins": 15,
+    "details": "Đang hoạt động trên máy tính (Tiến trình: ShellExperienceHost.exe)"
   }
 ]
