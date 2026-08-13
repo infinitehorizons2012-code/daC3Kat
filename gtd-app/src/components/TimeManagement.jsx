@@ -121,7 +121,6 @@ export default function TimeManagement() {
   // Calculate actual hours spent/scheduled in current week for each pillar
   const weekActions = data.actions.filter(a => a.status !== 'Cancelled' && (a.storage_system === 'Next_Actions' || a.storage_system === 'Calendar'));
 
-  const getPillarActions = (pillarKey) => getPillarActionsHelper(data, pillarKey);
 
   const getPillarHours = (pillarKey) => {
     const actions = getPillarActionsHelper(data, pillarKey);
