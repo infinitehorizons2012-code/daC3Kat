@@ -3,6 +3,38 @@ import React, { useState, useEffect } from 'react';
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
 export default function TimeManagement() {
+  const [selectedPillarModal, setSelectedPillarModal] = useState(null);
+
+  const getPillarActions = (pillarKey) => {
+    if (!pillarKey || !data.actions) return [];
+    const activeActions = data.actions.filter(a => a.status !== 'Cancelled');
+
+    return activeActions.filter(a => {
+      const nameLower = (a.name || '').toLowerCase();
+      const projName = (data.projects.find(p => p.project_id === a.project_id)?.name || '').toLowerCase();
+      const cat = (a.category || '').toLowerCase();
+      const ctx = (a.context || '').toLowerCase();
+      const wt = (a.work_type || '').toLowerCase();
+
+      if (wt.includes('academic') || cat.includes('academic')) return pillarKey === 'academic';
+      if (wt.includes('deep') || cat.includes('deep')) return pillarKey === 'deepwork';
+      if (wt.includes('build') || cat.includes('build')) return pillarKey === 'building';
+      if (wt.includes('maint') || cat.includes('maint')) return pillarKey === 'maintenance';
+
+      const isAcademic = ['sat', 'high school', 'tín chỉ', 'toán', 'văn', 'anh', 'lý', 'hóa', 'sinh', 'tự học', 'học', 'study', 'course', 'khóa học', 'bài tập', 'luyện đề', 'giảng'].some(k => nameLower.includes(k) || projName.includes(k));
+      const isDeepWork = ['python', 'mechatronics', 'data', 'code', 'nghiên cứu', 'lập trình', 'dự án', 'robot', 'ai', 'lab', 'tech', 'system', 'thuật toán'].some(k => nameLower.includes(k) || projName.includes(k));
+      const isBuilding = ['portfolio', 'building', 'sản phẩm', 'web', 'email', 'mentor', 'business', 'btc', 'kết nối', 'outreach', 'startup', 'pitch'].some(k => nameLower.includes(k) || projName.includes(k));
+      const isMaintenance = ['bảo trì', 'maintenance', 'review', 'thể thao', 'chạy', 'tập', 'gym', 'thiền', 'dọn', 'gtd', 'ăn', 'ngủ', 'lịch'].some(k => nameLower.includes(k) || projName.includes(k)) || a.storage_system === 'Calendar';
+
+      if (pillarKey === 'academic') return isAcademic;
+      if (pillarKey === 'deepwork') return isDeepWork || (!isAcademic && !isBuilding && !isMaintenance && (ctx.includes('máy_tính') || a.project_id));
+      if (pillarKey === 'building') return isBuilding;
+      if (pillarKey === 'maintenance') return isMaintenance || (!isAcademic && !isDeepWork && !isBuilding);
+
+      return false;
+    });
+  };
+
   const [data, setData] = useState({ actions: [], projects: [], goals: [], visions: [], missions: [] });
   const [loading, setLoading] = useState(true);
   const [activeSubTab, setActiveSubTab] = useState('matrix'); // 'matrix', 'template', 'review', 'table'
@@ -171,14 +203,17 @@ export default function TimeManagement() {
               </div>
               <p className="text-xs text-slate-500 mb-4 font-medium">Tích lũy Tín chỉ High School & Ôn luyện SAT (Sub-Project A & B).</p>
             </div>
-            <div>
+            <div onClick={() => setSelectedPillarModal('academic')} className="cursor-pointer p-2.5 bg-blue-50/50 hover:bg-blue-100/60 rounded-xl border border-dashed border-blue-300 transition-all group" title="Bấm để xem Hồ sơ chi tiết danh sách công việc">
               <div className="flex justify-between items-baseline mb-1">
-                <span className="text-xs font-bold text-slate-600">Đã lên lịch: {academicHours}h</span>
+                <span className="text-xs font-black text-slate-700 group-hover:text-blue-700 flex items-center gap-1">
+                  <i className="fa-solid fa-folder-open text-blue-500"></i> Đã lên lịch: {academicHours}h
+                </span>
                 <span className="text-xs font-black text-blue-600">Mục tiêu: 15h/tuần</span>
               </div>
-              <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div className="w-full bg-slate-200/80 h-2.5 rounded-full overflow-hidden">
                 <div className="bg-blue-500 h-full rounded-full transition-all duration-500" style={{ width: `${Math.min((academicHours / 15) * 100, 100)}%` }}></div>
               </div>
+              <span className="text-[9px] font-bold text-blue-600 mt-1 block text-right">🔎 Xem chi tiết hồ sơ</span>
             </div>
           </div>
 
@@ -219,14 +254,17 @@ export default function TimeManagement() {
               </div>
               <p className="text-xs text-slate-500 mb-4 font-medium">Khung 5 bước BTC: Tạo sản phẩm, Web Portfolio, Cold Email, Mentor.</p>
             </div>
-            <div>
+            <div onClick={() => setSelectedPillarModal('building')} className="cursor-pointer p-2.5 bg-amber-50/50 hover:bg-amber-100/60 rounded-xl border border-dashed border-amber-300 transition-all group" title="Bấm để xem Hồ sơ chi tiết danh sách công việc">
               <div className="flex justify-between items-baseline mb-1">
-                <span className="text-xs font-bold text-slate-600">Đã lên lịch: {buildingHours}h</span>
+                <span className="text-xs font-black text-slate-700 group-hover:text-amber-700 flex items-center gap-1">
+                  <i className="fa-solid fa-folder-open text-amber-500"></i> Đã lên lịch: {buildingHours}h
+                </span>
                 <span className="text-xs font-black text-amber-600">Mục tiêu: 6h/tuần</span>
               </div>
-              <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div className="w-full bg-slate-200/80 h-2.5 rounded-full overflow-hidden">
                 <div className="bg-amber-500 h-full rounded-full transition-all duration-500" style={{ width: `${Math.min((buildingHours / 6) * 100, 100)}%` }}></div>
               </div>
+              <span className="text-[9px] font-bold text-amber-600 mt-1 block text-right">🔎 Xem chi tiết hồ sơ</span>
             </div>
           </div>
 
@@ -243,14 +281,17 @@ export default function TimeManagement() {
               </div>
               <p className="text-xs text-slate-500 mb-4 font-medium">Weekly Review, Dọn dẹp hệ thống & Rèn luyện Thể chất (Physically Strong).</p>
             </div>
-            <div>
+            <div onClick={() => setSelectedPillarModal('maintenance')} className="cursor-pointer p-2.5 bg-emerald-50/50 hover:bg-emerald-100/60 rounded-xl border border-dashed border-emerald-300 transition-all group" title="Bấm để xem Hồ sơ chi tiết danh sách công việc">
               <div className="flex justify-between items-baseline mb-1">
-                <span className="text-xs font-bold text-slate-600">Đã lên lịch: {maintenanceHours}h</span>
+                <span className="text-xs font-black text-slate-700 group-hover:text-emerald-700 flex items-center gap-1">
+                  <i className="fa-solid fa-folder-open text-emerald-500"></i> Đã lên lịch: {maintenanceHours}h
+                </span>
                 <span className="text-xs font-black text-emerald-600">Mục tiêu: 4h/tuần</span>
               </div>
-              <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div className="w-full bg-slate-200/80 h-2.5 rounded-full overflow-hidden">
                 <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: `${Math.min((maintenanceHours / 4) * 100, 100)}%` }}></div>
               </div>
+              <span className="text-[9px] font-bold text-emerald-600 mt-1 block text-right">🔎 Xem chi tiết hồ sơ</span>
             </div>
           </div>
         </div>
@@ -556,6 +597,94 @@ export default function TimeManagement() {
           </table>
         </div>
       )}
+
+      {/* Detail Action Profile Modal */}
+      {selectedPillarModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[85vh] animate-fade-in">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-widest bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">
+                  📁 Hồ Sơ Chi Tiết Công Việc
+                </span>
+                <h3 className="text-xl font-black text-slate-800 mt-1">
+                  {selectedPillarModal === 'academic' && '1. Khối Core Academic (40%)'}
+                  {selectedPillarModal === 'deepwork' && '2. Deep Work / Dream Map (35%)'}
+                  {selectedPillarModal === 'building' && '3. Building & Portfolio (15%)'}
+                  {selectedPillarModal === 'maintenance' && '4. System Maintenance (10%)'}
+                </h3>
+              </div>
+
+              <button 
+                onClick={() => setSelectedPillarModal(null)} 
+                className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold"
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            {/* Summary Row */}
+            <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 flex justify-between items-center mb-4 text-xs font-bold">
+              <span className="text-slate-600">
+                Số lượng công việc: <strong className="text-slate-900">{getPillarActions(selectedPillarModal).length} việc</strong>
+              </span>
+              <span className="text-blue-600 bg-blue-50 px-3 py-1 rounded-lg border border-blue-200">
+                ⏱️ Tổng giờ đã nạp: {getPillarHours(selectedPillarModal)}h
+              </span>
+            </div>
+
+            {/* Action Items List */}
+            <div className="overflow-y-auto custom-scrollbar flex-1 space-y-2 pr-1">
+              {getPillarActions(selectedPillarModal).map(a => {
+                const project = data.projects.find(p => p.project_id === a.project_id);
+                const isDone = a.status === 'Done';
+                return (
+                  <div key={a.action_id} className={`p-3 rounded-xl border flex justify-between items-center gap-3 ${isDone ? 'bg-slate-50 border-slate-200' : 'bg-white border-slate-200 shadow-2xs hover:border-blue-300'}`}>
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <button 
+                        onClick={() => handleToggleAction(a)}
+                        className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all ${isDone ? 'bg-emerald-500 text-white' : 'border-2 border-slate-300 hover:border-emerald-500'}`}
+                      >
+                        {isDone && <i className="fa-solid fa-check text-xs"></i>}
+                      </button>
+                      <div className="flex-1 min-w-0">
+                        <div className={`text-sm font-bold truncate ${isDone ? 'line-through text-slate-400' : 'text-slate-800'}`}>{a.name}</div>
+                        <div className="text-[10px] font-bold text-slate-400 mt-0.5 flex items-center gap-2 flex-wrap">
+                          {project && <span className="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded">{project.name}</span>}
+                          {a.context && <span className="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">{a.context}</span>}
+                          <span className="bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded">{a.storage_system}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-black bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg border border-blue-100">
+                        {Math.round((a.time_needed_mins || 30) / 60 * 10) / 10}h
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {getPillarActions(selectedPillarModal).length === 0 && (
+                <div className="text-center py-10 text-slate-400 italic text-xs">
+                  Chưa có công việc nào thuộc khối này. Hãy thêm từ khóa tương ứng khi tạo việc!
+                </div>
+              )}
+            </div>
+
+            <div className="mt-4 pt-3 border-t flex justify-end">
+              <button 
+                onClick={() => setSelectedPillarModal(null)} 
+                className="px-4 py-2 bg-slate-800 hover:bg-black text-white font-bold rounded-xl text-xs"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
