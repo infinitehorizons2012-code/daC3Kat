@@ -60,8 +60,21 @@
     font-size: 22px;
     box-shadow: 0 0 20px rgba(124,92,252,0.4);
   }
-  .logo-text h1 { font-size: 18px; font-weight: 700; }
-  .logo-text p { font-size: 12px; color: var(--text-muted); }
+  .logo-text h1 {
+    font-size: 18px;
+    font-weight: 700;
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    border: 1.5px solid transparent;
+    transition: all 0.3s ease;
+  }
+  .logo-text h1.cf-connected {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.12);
+    box-shadow: 0 0 14px rgba(16, 185, 129, 0.4), inset 0 0 8px rgba(16, 185, 129, 0.15);
+  }
+  .logo-text p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
   .header-badge {
     display: flex; align-items: center; gap: 8px;
     background: var(--glass); border: 1px solid var(--glass-border);
@@ -479,6 +492,19 @@ const CLOUDFLARE_API_URL = "https://algebra1.infinite-horizons-2012.workers.dev"
 let cf_password = localStorage.getItem("cf_password") || "";
 let cloudflareSaveTimer = null;
 
+function setCloudConnectionStatus(connected) {
+    const h1 = document.querySelector('.logo-text h1');
+    if (h1) {
+        if (connected) {
+            h1.classList.add('cf-connected');
+            h1.title = "Đã kết nối Cloudflare Database";
+        } else {
+            h1.classList.remove('cf-connected');
+            h1.title = "Chưa kết nối Cloudflare Database";
+        }
+    }
+}
+
 async function syncFromCloud() {
     // Show overlay
     const overlay = document.createElement('div');
@@ -496,9 +522,13 @@ async function syncFromCloud() {
                     Storage.prototype.setItem.call(localStorage, key, data[key]);
                 }
             }
+            setCloudConnectionStatus(true);
+        } else {
+            setCloudConnectionStatus(false);
         }
     } catch(e) {
         console.error("Cloudflare sync error:", e);
+        setCloudConnectionStatus(false);
     }
     
     document.body.removeChild(overlay);
@@ -543,11 +573,14 @@ async function syncToCloud() {
             } else {
                 console.error("Cloudflare save error:", res.statusText);
             }
+            setCloudConnectionStatus(false);
         } else {
             console.log("Đã lưu lên Cloudflare thành công!");
+            setCloudConnectionStatus(true);
         }
     } catch(e) {
         console.error("Cloudflare save error:", e);
+        setCloudConnectionStatus(false);
     }
 }
 
