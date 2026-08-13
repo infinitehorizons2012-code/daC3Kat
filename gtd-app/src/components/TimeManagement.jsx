@@ -19,6 +19,7 @@ const calcActionMins = (a) => {
 
 
 
+
 const getPillarForAction = (a, data) => {
   if (!a || !data) return 'academic';
 
@@ -26,16 +27,23 @@ const getPillarForAction = (a, data) => {
   const goals = data.goals || [];
   const projects = data.projects || [];
 
-  // Helper to map Vision object or Vision Statement to pillar key
+  const PILLAR_VISION_MAP = {
+    'vis-1786590462256': 'academic',
+    'vis-1786607493926': 'deepwork',
+    'vis-1786607530122': 'building',
+    'vis-1786607544898': 'maintenance'
+  };
+
   const matchVisionToPillar = (vis) => {
     if (!vis) return null;
-    const stmt = (vis.statement || '').toLowerCase();
     const vid = vis.vision_id || '';
+    if (PILLAR_VISION_MAP[vid]) return PILLAR_VISION_MAP[vid];
 
-    if (vid === 'vis-1786590462256' || stmt.includes('academic') || stmt.includes('1.')) return 'academic';
-    if (vid === 'vis-1786607493926' || stmt.includes('deep work') || stmt.includes('dream map') || stmt.includes('2.')) return 'deepwork';
-    if (vid === 'vis-1786607530122' || stmt.includes('building') || stmt.includes('portfolio') || stmt.includes('3.')) return 'building';
-    if (vid === 'vis-1786607544898' || stmt.includes('maintenance') || stmt.includes('4.')) return 'maintenance';
+    const stmt = (vis.statement || '').toLowerCase();
+    if (stmt.includes('core academic') || stmt.includes('tín chỉ') || stmt.includes('sat')) return 'academic';
+    if (stmt.includes('deep work') || stmt.includes('dream map') || stmt.includes('mechatronics')) return 'deepwork';
+    if (stmt.includes('building') || stmt.includes('portfolio') || stmt.includes('cold email')) return 'building';
+    if (stmt.includes('system maintenance') || stmt.includes('thể chất') || stmt.includes('rèn luyện')) return 'maintenance';
 
     return null;
   };
@@ -61,19 +69,21 @@ const getPillarForAction = (a, data) => {
   if (a.project_id) {
     const p = projects.find(x => x.project_id === a.project_id);
     if (p) {
-      // Check vision_ids on project
+      // First check vision_ids for exact match in PILLAR_VISION_MAP
       const pVids = p.vision_ids || [];
       for (const vid of pVids) {
+        if (PILLAR_VISION_MAP[vid]) return PILLAR_VISION_MAP[vid];
         const vis = visions.find(v => v.vision_id === vid);
         const pillar = matchVisionToPillar(vis);
         if (pillar) return pillar;
       }
 
-      // Check goal_ids on project
+      // Then check goal_ids on project
       const pGids = p.goal_ids || [];
       for (const gid of pGids) {
         const g = goals.find(x => x.goal_id === gid);
         if (g && g.vision_id) {
+          if (PILLAR_VISION_MAP[g.vision_id]) return PILLAR_VISION_MAP[g.vision_id];
           const vis = visions.find(v => v.vision_id === g.vision_id);
           const pillar = matchVisionToPillar(vis);
           if (pillar) return pillar;
