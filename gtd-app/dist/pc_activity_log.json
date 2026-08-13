@@ -1,0 +1,38 @@
+[
+  {
+    "log_id": "pc-1786630959929",
+    "app_name": "Facebook - Google Chrome",
+    "category": "Giải trí / Game",
+    "start_time": "2026-08-13 21:22",
+    "end_time": "21:22",
+    "duration_mins": 15,
+    "details": "Trình duyệt Google Chrome đang mở trang Facebook"
+  },
+  {
+    "log_id": "pc-1786630959928",
+    "app_name": "Trạm điều khiển 168 (React) - Microsoft Edge",
+    "category": "Học tập & Deep Work",
+    "start_time": "2026-08-13 21:22",
+    "end_time": "21:22",
+    "duration_mins": 25,
+    "details": "Trình duyệt Edge mở web app GTD Quản lý thời gian"
+  },
+  {
+    "log_id": "pc-1786630959927",
+    "app_name": "VS Code - Python Data Science",
+    "category": "Học tập & Deep Work",
+    "start_time": "2026-08-13 14:00",
+    "end_time": "15:30",
+    "duration_mins": 90,
+    "details": "Lập trình xử lý dữ liệu với Pandas & Matplotlib"
+  },
+  {
+    "log_id": "pc-1786630959926",
+    "app_name": "Youtube - Học Drum & Nhạc cụ",
+    "category": "Ngoại ngữ & Kỹ năng",
+    "start_time": "2026-08-13 17:30",
+    "end_time": "18:30",
+    "duration_mins": 60,
+    "details": "Xem video hướng dẫn đánh trống Drum T5"
+  }
+]
