@@ -251,14 +251,14 @@ export default function Runway() {
   
   const runwayTabsDef = {
     'All_Actions': { label: 'Tất cả Hành động', icon: 'fa-solid fa-layer-group', color: 'text-rose-600', bg: 'bg-rose-100' },
-    'Inbox': { label: 'Inbox (Chờ xử lý)', icon: 'fa-solid fa-inbox', color: 'text-gray-800', bg: 'bg-gray-100' },
+    'Inbox': { label: 'Inbox', icon: 'fa-solid fa-inbox', color: 'text-gray-800', bg: 'bg-gray-100' },
     'Next_Actions': { label: '⚡ Next Actions', icon: 'fa-solid fa-list-check', color: 'text-blue-600', bg: 'bg-blue-100' },
     'Floating_Backlog': { label: '🎈 Thả nổi', icon: 'fa-solid fa-parachute-box', color: 'text-cyan-600', bg: 'bg-cyan-100' },
     'Calendar': { label: '📅 Lịch Hẹn', icon: 'fa-regular fa-calendar', color: 'text-emerald-600', bg: 'bg-emerald-100' },
     'Project_Backlog': { label: '📁 Project Backlog', icon: 'fa-solid fa-folder-open', color: 'text-indigo-600', bg: 'bg-indigo-100' },
     'Deferred': { label: '🔒 Đóng băng', icon: 'fa-solid fa-lock', color: 'text-slate-700', bg: 'bg-slate-200' },
     'Waiting_For': { label: '⏳ Chờ Phản Hồi', icon: 'fa-solid fa-hourglass-half', color: 'text-amber-600', bg: 'bg-amber-100' },
-    'Someday_Maybe': { label: '💤 Someday / Maybe', icon: 'fa-solid fa-cloud-moon', color: 'text-purple-600', bg: 'bg-purple-100' }
+    'Someday_Maybe': { label: 'Someday', icon: 'fa-solid fa-cloud-moon', color: 'text-purple-600', bg: 'bg-purple-100' }
   };
 
   return (
