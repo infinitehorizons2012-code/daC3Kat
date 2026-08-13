@@ -9,6 +9,7 @@ import DailyReviewWizard from './components/DailyReviewWizard';
 import TimeManagement from './components/TimeManagement';
 import Routine from './components/Routine';
 import FocusEngine from './components/FocusEngine';
+import FocusReportView from './components/FocusReportView';
 import WeeklyCalendarView from './components/WeeklyCalendarView';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';

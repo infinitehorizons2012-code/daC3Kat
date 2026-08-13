@@ -131,7 +131,7 @@ const getISOWeekStr = (date = new Date()) => {
   return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
 };
 
-export default function FocusEngine() {
+export default function FocusEngine({ onOpenReport }) {
   const [data, setData] = useState({ actions: [], projects: [], areas: [] });
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -579,6 +579,14 @@ export default function FocusEngine() {
         >
           <i className="fa-solid fa-window-restore"></i> {isWidgetMode ? 'Mở rộng màn hình' : 'Thu nhỏ góc màn hình'}
         </button>
+          {onOpenReport && (
+            <button 
+              onClick={onOpenReport}
+              className="px-4 py-2.5 rounded-2xl font-black text-xs transition-all shadow-md bg-amber-400 text-slate-950 hover:bg-amber-300 flex items-center gap-2"
+            >
+              <i className="fa-solid fa-chart-pie"></i> 📊 Xem Báo Cáo & Nhật Ký
+            </button>
+          )}
       </div>
 
       {/* Main Focus Card */}
