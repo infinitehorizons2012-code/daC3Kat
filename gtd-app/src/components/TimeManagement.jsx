@@ -121,36 +121,11 @@ export default function TimeManagement() {
   // Calculate actual hours spent/scheduled in current week for each pillar
   const weekActions = data.actions.filter(a => a.status !== 'Cancelled' && (a.storage_system === 'Next_Actions' || a.storage_system === 'Calendar'));
 
+  const getPillarActions = (pillarKey) => getPillarActionsHelper(data, pillarKey);
+
   const getPillarHours = (pillarKey) => {
-    // Include all active actions in Next_Actions, Calendar, Waiting_For, or Done
-    const activeActions = data.actions.filter(a => a.status !== 'Cancelled');
-
-    const mins = activeActions.filter(a => {
-      const nameLower = (a.name || '').toLowerCase();
-      const projName = (data.projects.find(p => p.project_id === a.project_id)?.name || '').toLowerCase();
-      const cat = (a.category || '').toLowerCase();
-      const ctx = (a.context || '').toLowerCase();
-      const wt = (a.work_type || '').toLowerCase();
-
-      // Check explicit work_type / category first
-      if (wt.includes('academic') || cat.includes('academic')) return pillarKey === 'academic';
-      if (wt.includes('deep') || cat.includes('deep')) return pillarKey === 'deepwork';
-      if (wt.includes('build') || cat.includes('build')) return pillarKey === 'building';
-      if (wt.includes('maint') || cat.includes('maint')) return pillarKey === 'maintenance';
-
-      const isAcademic = ['sat', 'high school', 'tín chỉ', 'toán', 'văn', 'anh', 'lý', 'hóa', 'sinh', 'tự học', 'học', 'study', 'course', 'khóa học', 'bài tập', 'luyện đề', 'giảng'].some(k => nameLower.includes(k) || projName.includes(k));
-      const isDeepWork = ['python', 'mechatronics', 'data', 'code', 'nghiên cứu', 'lập trình', 'dự án', 'robot', 'ai', 'lab', 'tech', 'system', 'thuật toán'].some(k => nameLower.includes(k) || projName.includes(k));
-      const isBuilding = ['portfolio', 'building', 'sản phẩm', 'web', 'email', 'mentor', 'business', 'btc', 'kết nối', 'outreach', 'startup', 'pitch'].some(k => nameLower.includes(k) || projName.includes(k));
-      const isMaintenance = ['bảo trì', 'maintenance', 'review', 'thể thao', 'chạy', 'tập', 'gym', 'thiền', 'dọn', 'gtd', 'ăn', 'ngủ', 'lịch'].some(k => nameLower.includes(k) || projName.includes(k)) || a.storage_system === 'Calendar';
-
-      if (pillarKey === 'academic') return isAcademic;
-      if (pillarKey === 'deepwork') return isDeepWork || (!isAcademic && !isBuilding && !isMaintenance && (ctx.includes('máy_tính') || a.project_id));
-      if (pillarKey === 'building') return isBuilding;
-      if (pillarKey === 'maintenance') return isMaintenance || (!isAcademic && !isDeepWork && !isBuilding);
-
-      return false;
-    }).reduce((sum, a) => sum + calcActionMins(a), 0);
-
+    const actions = getPillarActionsHelper(data, pillarKey);
+    const mins = actions.reduce((sum, a) => sum + calcActionMins(a), 0);
     return Math.round(mins / 60 * 10) / 10;
   };
 
