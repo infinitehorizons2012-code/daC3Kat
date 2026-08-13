@@ -74,7 +74,7 @@ export default function Horizons() {
     }
 
     let endpoint = '';
-    let payload = { statement: formData.statement, category: formData.category, notes: formData.notes };
+    let payload = { statement: formData.statement, category: 'Strategic', notes: formData.notes };
     let method = 'POST';
     
     if (modalType === 'mission') endpoint = '/missions';
