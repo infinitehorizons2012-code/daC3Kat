@@ -17,13 +17,13 @@ const calcActionMins = (a) => {
 };
 
 
+
 const getPillarForAction = (a, data) => {
-  if (!a) return 'maintenance';
+  if (!a) return 'academic';
 
   const nameLower = (a.name || '').toLowerCase();
   const projName = (data && data.projects ? (data.projects.find(p => p && p.project_id === a.project_id)?.name || '') : '').toLowerCase();
   const cat = (a.category || '').toLowerCase();
-  const ctx = (a.context || '').toLowerCase();
   const wt = (a.work_type || '').toLowerCase();
 
   // 1. Explicit Category / Work Type overrides
@@ -32,26 +32,23 @@ const getPillarForAction = (a, data) => {
   if (wt.includes('build') || cat.includes('build')) return 'building';
   if (wt.includes('maint') || cat.includes('maint')) return 'maintenance';
 
-  // 2. Physical / Sport / Health & Maintenance keywords
-  const isMaintenance = ['karate', 'bơi', 'võ', 'thể thao', 'chạy', 'tập', 'gym', 'thiền', 'dọn', 'bảo trì', 'maintenance', 'review', 'sức khỏe', 'thể chất', 'fitness', 'workout', 'yoga', 'bóng đá', 'bóng rổ', 'cầu lông', 'đi bộ', 'ăn', 'ngủ', 'lịch'].some(k => nameLower.includes(k) || projName.includes(k));
+  // 2. Physical Sports, Health & System Maintenance (Pillar 4)
+  const isMaintenance = ['karate', 'bơi', 'võ', 'thể thao', 'chạy', 'tập', 'gym', 'thiền', 'dọn', 'bảo trì', 'maintenance', 'review', 'sức khỏe', 'thể chất', 'fitness', 'workout', 'yoga', 'bóng đá', 'bóng rổ', 'cầu lông', 'đi bộ', 'ăn', 'ngủ'].some(k => nameLower.includes(k) || projName.includes(k));
   if (isMaintenance) return 'maintenance';
 
-  // 3. Deep Work keywords (Programming, Mechatronics, Data, Code, Drum, Music...)
-  const isDeepWork = ['python', 'mechatronics', 'data', 'code', 'nghiên cứu', 'lập trình', 'dự án', 'robot', 'ai', 'lab', 'tech', 'system', 'thuật toán', 'drum', 'trống'].some(k => nameLower.includes(k) || projName.includes(k));
-  if (isDeepWork) return 'deepwork';
-
-  // 4. Academic keywords
-  const isAcademic = ['sat', 'high school', 'tín chỉ', 'toán', 'văn', 'anh', 'lý', 'hóa', 'sinh', 'tự học', 'học tập', 'study', 'course', 'khóa học', 'bài tập', 'luyện đề', 'giảng', 'gpa', 'essay', 'toefl', 'ielts'].some(k => nameLower.includes(k) || projName.includes(k));
+  // 3. Core Academic (Subjects, Languages, Music, SAT, High School) (Pillar 1)
+  const isAcademic = ['algebra', 'pinyin', 'toán', 'math', 'văn', 'anh', 'english', 'lý', 'hóa', 'sinh', 'tiếng trung', 'hán ngữ', 'sat', 'high school', 'tín chỉ', 'tự học', 'học tập', 'study', 'course', 'khóa học', 'bài tập', 'luyện đề', 'giảng', 'gpa', 'essay', 'toefl', 'ielts', 'drum', 'trống', 'nhạc', 'đàn'].some(k => nameLower.includes(k) || projName.includes(k));
   if (isAcademic) return 'academic';
 
-  // 5. Building & Portfolio keywords
+  // 4. Deep Work & Dream Map (Mechatronics, Python, Data Science, AI, Robotics, Coding) (Pillar 2)
+  const isDeepWork = ['python', 'mechatronics', 'data', 'code', 'nghiên cứu', 'lập trình', 'robot', 'ai', 'lab', 'tech', 'system', 'thuật toán', 'machine learning', 'deep learning'].some(k => nameLower.includes(k) || projName.includes(k));
+  if (isDeepWork) return 'deepwork';
+
+  // 5. Building & Portfolio (Products, Web, Outreach, Cold Email) (Pillar 3)
   const isBuilding = ['portfolio', 'building', 'sản phẩm', 'web', 'email', 'mentor', 'business', 'btc', 'kết nối', 'outreach', 'startup', 'pitch'].some(k => nameLower.includes(k) || projName.includes(k));
   if (isBuilding) return 'building';
 
-  // 6. Context fallback
-  if (ctx.includes('máy_tính')) return 'deepwork';
-
-  return 'maintenance';
+  return 'academic';
 };
 
 const getPillarActionsHelper = (data, pillarKey) => {
