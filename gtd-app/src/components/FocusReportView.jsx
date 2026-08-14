@@ -155,24 +155,38 @@ export default function FocusReportView() {
     const targetId = editingSession.session_id;
     setEditingSession(null);
 
-    // 3. Sync execution stamp & AUTOMATICALLY MARK GTD ACTION AS DONE!
-    if (editForm.action_id) {
+    // 3. Sync execution stamp ONLY to newly selected GTD Action & unmark old action if changed!
+    const oldActionId = editingSession.action_id;
+    const newActionId = editForm.action_id;
+
+    if (oldActionId && oldActionId !== newActionId) {
+      // Revert old action (e.g. Bơi T2) back to Pending so it is NOT incorrectly marked Done!
+      try {
+        await fetch(`${API_URL}/actions/${oldActionId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'Pending', completed_at: null })
+        });
+        setActions(prev => prev.map(a => a.action_id === oldActionId ? { ...a, status: 'Pending', completed_at: null } : a));
+      } catch (e) {}
+    }
+
+    if (newActionId) {
       try {
         const nowIso = editForm.start_time || new Date().toISOString();
-        await fetch(`${API_URL}/actions/${editForm.action_id}`, {
+        await fetch(`${API_URL}/actions/${newActionId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            status: 'Done', // 🌟 MARK GTD ACTION AS DONE (Ví dụ: Bơi T6 -> Done!)
+            status: 'Done', // ONLY mark target action (e.g. Bơi T4) as Done!
             completed_at: nowIso,
             last_executed_at: nowIso,
             total_focus_mins: editForm.duration_mins || 25
           })
         });
 
-        // Local state sync for actions
         setActions(prev => prev.map(a => 
-          a.action_id === editForm.action_id ? { ...a, status: 'Done', completed_at: nowIso, last_executed_at: nowIso } : a
+          a.action_id === newActionId ? { ...a, status: 'Done', completed_at: nowIso, last_executed_at: nowIso } : a
         ));
       } catch (e) {}
     }
@@ -477,17 +491,7 @@ export default function FocusReportView() {
                       </td>
 
                       <td className="p-3 font-black text-slate-800">
-                        <div>
-                          <span className="text-slate-900 font-black text-xs block">{session.action_name || linkedAction?.name || 'Hiệp Pomodoro'}</span>
-                          <div className="flex items-center gap-1.5 mt-1 text-[10px] font-bold text-slate-500">
-                            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-black flex items-center gap-1">
-                              <i className="fa-solid fa-circle-check text-emerald-600"></i> Đã hoàn thành GTD ({session.created_at ? session.created_at.slice(0, 16).replace('T', ' ') : 'Hôm nay'})
-                            </span>
-                            <span className="bg-amber-100 text-amber-900 px-2 py-0.5 rounded-md font-black">
-                              ⏱️ {session.duration_mins || 25} phút
-                            </span>
-                          </div>
-                        </div>
+                        {session.action_name || linkedAction?.name || 'Hiệp Pomodoro'}
                       </td>
 
                       <td className="p-3 max-w-xs">
