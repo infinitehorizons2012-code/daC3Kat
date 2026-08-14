@@ -1,62 +1,32 @@
 [
   {
-    "log_id": "pc-1786673355483",
-    "app_name": "Facebook",
-    "url_link": "https://www.facebook.com/reel/1787607489103743",
-    "category": "Giải trí / Game",
-    "start_time": "2026-08-14 09:08",
-    "end_time": "09:09",
+    "log_id": "pc-1786673538247",
+    "app_name": "Trạm điều khiển 168 (React)",
+    "url_link": "https://infinitehorizons2012-code.github.io/daC3Kat/",
+    "category": "Học tập & Deep Work",
+    "start_time": "2026-08-14 09:11",
+    "end_time": "09:12",
     "duration_mins": 1,
-    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/reel/1787607489103743)"
+    "details": "Trang web: Trạm điều khiển 168 (React) (Link gốc: https://infinitehorizons2012-code.github.io/daC3Kat/)"
   },
   {
-    "log_id": "pc-fb-reel-1",
-    "app_name": "Facebook Reel Video cụ thể (ID: 1350191780413194)",
+    "log_id": "pc-real-1786673537789",
+    "app_name": "Facebook — Google Chrome",
     "url_link": "https://www.facebook.com/reel/1350191780413194",
     "category": "Giải trí / Game",
-    "start_time": "2026-08-14 09:00",
-    "end_time": "2026-08-14 09:15",
-    "duration_mins": 15,
-    "details": "Xem Video Reel Facebook Cụ Thể (Link chuẩn: https://www.facebook.com/reel/1350191780413194)"
+    "start_time": "2026-08-14 09:12",
+    "end_time": "09:12",
+    "duration_mins": 5,
+    "details": "Đang theo dõi trực tiếp từ máy tính (Quét 5s/lần)"
   },
   {
-    "log_id": "pc-coursera-1",
-    "app_name": "Coursera: Machine Learning Specialization by Stanford",
-    "url_link": "https://www.coursera.org/learn/machine-learning/lecture/3b1/supervised-learning",
-    "category": "Học tập & Deep Work",
-    "start_time": "2026-08-14 08:00",
-    "end_time": "2026-08-14 09:00",
-    "duration_mins": 60,
-    "details": "Khóa Học Máy & AI Trực Tuyến Stanford - Bài giảng Supervised Learning"
-  },
-  {
-    "log_id": "pc-prinberk-1",
-    "app_name": "Prinberk High School - Algebra 1 Course Module W33",
-    "url_link": "https://prinberkhighschool.org/courses/algebra1/week33",
-    "category": "Học tập & Deep Work",
-    "start_time": "2026-08-13 15:45",
-    "end_time": "2026-08-13 17:15",
-    "duration_mins": 90,
-    "details": "Cổng Học Tập Prinberk High School - Giải bài tập Algebra 1 W33"
-  },
-  {
-    "log_id": "pc-youtube-1",
-    "app_name": "Youtube: Hướng Dẫn Đánh Trống Drum T5 Bài 5 Chi Tiết",
-    "url_link": "https://www.youtube.com/watch?v=drum_t5_lesson_5",
-    "category": "Ngoại ngữ & Kỹ năng",
-    "start_time": "2026-08-13 17:30",
-    "end_time": "2026-08-13 18:30",
-    "duration_mins": 60,
-    "details": "Video Youtube Học Đánh Trống Năng Khiếu Drum T5"
-  },
-  {
-    "log_id": "pc-gtd-1",
-    "app_name": "Trạm Điều Khiển 168 GTD (Local Web App)",
+    "log_id": "pc-real-1786673537788",
+    "app_name": "Trạm điều khiển 168 (React) — Microsoft Edge",
     "url_link": "http://localhost:5173",
     "category": "Học tập & Deep Work",
-    "start_time": "2026-08-13 21:00",
-    "end_time": "2026-08-13 21:30",
-    "duration_mins": 30,
-    "details": "Quản lý thời gian & lập kế hoạch hệ thống GTD"
+    "start_time": "2026-08-14 09:12",
+    "end_time": "09:12",
+    "duration_mins": 15,
+    "details": "Web App Quản Lý Thời Gian GTD"
   }
 ]

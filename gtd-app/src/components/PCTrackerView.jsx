@@ -141,6 +141,11 @@ export default function PCTrackerView() {
 
   useEffect(() => {
     fetchData();
+    // Auto-refresh live logs every 10 seconds automatically
+    const interval = setInterval(() => {
+      fetchData();
+    }, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleAddLog = async (e) => {
@@ -273,12 +278,21 @@ export default function PCTrackerView() {
           </p>
         </div>
 
-        <button 
-          onClick={() => setShowAddModal(true)}
-          className="px-4 py-2.5 bg-teal-500 hover:bg-teal-600 text-slate-950 font-black text-xs rounded-2xl transition-all shadow-md flex items-center gap-2"
-        >
-          <i className="fa-solid fa-plus"></i> + Ghi Nhật Ký Máy Tính Mới
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => fetchData()}
+            className="px-3 py-2.5 bg-white/20 hover:bg-white/30 text-white font-black text-xs rounded-2xl transition-all border border-white/30 flex items-center gap-2"
+            title="Bấm để tải lại báo cáo tự động ngay lập tức"
+          >
+            <i className="fa-solid fa-rotate animate-spin-slow"></i> 🔄 Cập Nhật Realtime (Tự động 10s)
+          </button>
+          <button 
+            onClick={() => setShowAddModal(true)}
+            className="px-4 py-2.5 bg-teal-500 hover:bg-teal-600 text-slate-950 font-black text-xs rounded-2xl transition-all shadow-md flex items-center gap-2"
+          >
+            <i className="fa-solid fa-plus"></i> + Ghi Nhật Ký Máy Tính Mới
+          </button>
+        </div>
       </div>
 
       {/* KPI Cards */}
