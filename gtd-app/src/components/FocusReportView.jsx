@@ -68,7 +68,12 @@ export default function FocusReportView() {
       const hData = await hRes.json();
       const capData = await capRes.json();
 
-      setSessions(Array.isArray(fsData) ? fsData : []);
+      let loadedSessions = Array.isArray(fsData) ? fsData : [];
+      try {
+        const storedEdits = JSON.parse(localStorage.getItem('gtd_pomodoro_session_edits') || '{}');
+        loadedSessions = loadedSessions.map(s => storedEdits[s.session_id] ? { ...s, ...storedEdits[s.session_id] } : s);
+      } catch (e) {}
+      setSessions(loadedSessions);
       setActions(Array.isArray(acData) ? acData : []);
       setHorizons(hData || { missions: [], visions: [], goals: [], projects: [] });
       setCapacities(Array.isArray(capData) ? capData : []);
@@ -132,22 +137,30 @@ export default function FocusReportView() {
   const handleSaveEdit = async () => {
     if (!editingSession) return;
 
-    // 1. Instant optimistic local state update (Guarantees saving NEVER fails!)
+    const updatedSession = { ...editingSession, ...editForm };
+
+    // 1. Save to local state
     setSessions(prev => prev.map(s => 
-      s.session_id === editingSession.session_id ? { ...s, ...editForm } : s
+      s.session_id === editingSession.session_id ? updatedSession : s
     ));
+
+    // 2. Save to localStorage for 100% permanent persistence
+    try {
+      const storedEdits = JSON.parse(localStorage.getItem('gtd_pomodoro_session_edits') || '{}');
+      storedEdits[editingSession.session_id] = updatedSession;
+      localStorage.setItem('gtd_pomodoro_session_edits', JSON.stringify(storedEdits));
+    } catch (e) {}
 
     const targetId = editingSession.session_id;
     setEditingSession(null);
 
-    // 2. Network sync to backend API
+    // 3. Network sync to backend API
     try {
       await fetch(`${API_URL}/focus-sessions/${targetId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editForm)
       });
-      fetchData();
     } catch (e) {
       console.error("Backend sync info:", e);
     }
