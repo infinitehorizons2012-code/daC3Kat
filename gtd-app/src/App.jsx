@@ -10,7 +10,6 @@ import TimeManagement from './components/TimeManagement';
 import Routine from './components/Routine';
 import FocusEngine from './components/FocusEngine';
 import FocusReportView from './components/FocusReportView';
-import PCTrackerView from './components/PCTrackerView';
 import WeeklyCalendarView from './components/WeeklyCalendarView';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
@@ -20,7 +19,6 @@ const tabs = {
   focus: { label: 'Runway', icon: 'fa-solid fa-plane-departure', color: 'text-blue-600', bg: 'bg-blue-100' },
   pomodoro: { label: 'Focus Mode', icon: 'fa-solid fa-stopwatch', color: 'text-orange-600', bg: 'bg-orange-100' },
   focus_report: { label: 'Báo Cáo Pomodoro', icon: 'fa-solid fa-chart-pie', color: 'text-amber-600', bg: 'bg-amber-100' },
-  pc_tracker: { label: 'Nhật Ký Máy Tính Bé', icon: 'fa-solid fa-desktop', color: 'text-teal-600', bg: 'bg-teal-100' },
   routine: { label: 'Routine', icon: 'fa-solid fa-arrows-spin', color: 'text-pink-600', bg: 'bg-pink-100' },
   time: { label: 'Time Matrix', icon: 'fa-solid fa-clock-rotate-left', color: 'text-amber-600', bg: 'bg-amber-100' },
   daily: { label: 'Daily Review', icon: 'fa-solid fa-sun', color: 'text-orange-600', bg: 'bg-orange-100' },
