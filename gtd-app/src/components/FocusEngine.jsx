@@ -282,6 +282,9 @@ export default function FocusEngine({ onOpenReport }) {
 
   useEffect(() => {
     fetchData();
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
   }, []);
 
   useEffect(() => {
@@ -321,6 +324,20 @@ export default function FocusEngine({ onOpenReport }) {
   const handleCompleteRound = async () => {
     setIsRunning(false);
     playBellChime();
+
+    // 🌟 AUTOMATIC WINDOW FOCUS: Immediately bring browser tab & floating widget back to front!
+    try {
+      window.focus();
+      if (popupRef.current && !popupRef.current.closed) {
+        popupRef.current.focus();
+      }
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification("🔥 HẾT HIỆP POMODORO!", {
+          body: `Hiệp Pomodoro vừa hoàn thành! Màn hình đã tự động quay về Focus Mode 168.`,
+          icon: "/favicon.ico"
+        });
+      }
+    } catch (e) {}
 
     const currentAction = data.actions.find(a => a.action_id === selectedActionId);
     const actionName = currentAction ? currentAction.name : 'Hiệp Tập Trung Pomodoro';
