@@ -132,6 +132,93 @@ const getISOWeekStr = (date = new Date()) => {
 };
 
 export default function FocusEngine({ onOpenReport }) {
+
+  // Floating Mini-Widget Reference & Listener
+  const popupRef = useRef(null);
+
+  useEffect(() => {
+    const handleWidgetMessage = (event) => {
+      if (event.data?.type === 'POMODORO_TOGGLE') {
+        setIsRunning(prev => !prev);
+      } else if (event.data?.type === 'POMODORO_SKIP') {
+        handleSkipSession();
+      }
+    };
+    window.addEventListener('message', handleWidgetMessage);
+    return () => window.removeEventListener('message', handleWidgetMessage);
+  }, []);
+
+  // Sync Timer to Floating Mini-Widget Window
+  useEffect(() => {
+    if (popupRef.current && !popupRef.current.closed) {
+      try {
+        const timerEl = popupRef.current.document.getElementById('timer-display');
+        const titleEl = popupRef.current.document.getElementById('action-title');
+        const statusEl = popupRef.current.document.getElementById('status-badge');
+        
+        if (timerEl) timerEl.innerText = formatTime(timeLeft);
+        if (titleEl) titleEl.innerText = selectedAction?.title || 'Hiệp Tập Trung Focus Mode';
+        if (statusEl) statusEl.innerText = mode === 'work' ? '🔥 DEEP WORK' : '☕ NGHỈ NGƠI';
+      } catch (e) {}
+    }
+  });
+
+  const openFloatingMiniWidget = () => {
+    if (popupRef.current && !popupRef.current.closed) {
+      popupRef.current.focus();
+      return;
+    }
+
+    const width = 340;
+    const height = 210;
+    const left = window.screen.width - width - 40;
+    const top = 60;
+
+    const popup = window.open(
+      '',
+      'PomodoroMiniWidget',
+      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=no,status=no,toolbar=no,menubar=no,location=no`
+    );
+
+    if (!popup) {
+      alert("Vui lòng cho phép Pop-up trên trình duyệt để mở Cửa sổ Pomodoro Nổi!");
+      return;
+    }
+
+    popup.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>⏱️ Pomodoro Floating Widget</title>
+          <meta charset="utf-8">
+          <script src="https://cdn.tailwindcss.com"></script>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+        </head>
+        <body class="bg-slate-950 text-white p-4 font-sans flex flex-col items-center justify-center min-h-screen border-2 border-amber-500/80 rounded-2xl select-none overflow-hidden shadow-2xl">
+          <div className="flex items-center gap-2 mb-1">
+            <span id="status-badge" class="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-amber-500 text-slate-950">🔥 DEEP WORK</span>
+          </div>
+          <div id="action-title" class="text-xs font-bold text-slate-200 text-center truncate max-w-[280px] my-1">
+            ${selectedAction?.title || 'Hiệp Tập Trung Focus Mode'}
+          </div>
+          <div id="timer-display" class="text-4xl font-black text-amber-400 font-mono tracking-wider my-1">
+            ${formatTime(timeLeft)}
+          </div>
+          <div class="flex gap-2 mt-2">
+            <button onclick="window.opener.postMessage({type: 'POMODORO_TOGGLE'}, '*')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs transition-all flex items-center gap-1 shadow-md">
+              <i class="fa-solid fa-play"></i> Chạy / Dừng
+            </button>
+            <button onclick="window.opener.postMessage({type: 'POMODORO_SKIP'}, '*')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs transition-all flex items-center gap-1">
+              <i class="fa-solid fa-forward"></i> Bỏ Qua
+            </button>
+          </div>
+        </body>
+      </html>
+    `);
+
+    popupRef.current = popup;
+  };
+
   const [data, setData] = useState({ actions: [], projects: [], areas: [] });
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
