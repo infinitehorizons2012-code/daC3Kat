@@ -376,17 +376,58 @@ export default function WeeklyCalendarView() {
                       return (
                         <div key={day.dateKey} className={`p-1 rounded-xl border flex flex-col gap-1 transition-all ${hasItems ? 'bg-emerald-50/40 border-emerald-200' : 'bg-slate-50/30 border-slate-100/60'}`}>
                           
-                          {/* Calendar Events 🟢 */}
+                          {/* Calendar Events 🟢 / Completed Done ✅ */}
                           {hourCalendar.map(ev => {
+                            const isDone = ev.status === 'Done';
                             const startTime = ev.scheduled_datetime ? ev.scheduled_datetime.slice(11, 16) : hourStr;
                             const durText = calcActionDurationText(ev);
+                            const compTime = ev.completed_at || ev.last_executed_at;
+                            const formattedCompTime = compTime ? compTime.slice(0, 16).replace('T', ' ') : null;
+
                             return (
-                              <div key={ev.action_id} className="p-1.5 rounded-lg bg-emerald-500 text-white text-[11px] font-bold shadow-xs flex flex-col gap-0.5 animate-fade-in border border-emerald-600">
+                              <div 
+                                key={ev.action_id} 
+                                className={`p-2 rounded-xl text-[11px] font-bold shadow-md flex flex-col gap-1 animate-fade-in transition-all border ${
+                                  isDone 
+                                    ? 'bg-gradient-to-r from-emerald-800 to-teal-900 text-white border-amber-400 ring-2 ring-amber-400/50' 
+                                    : 'bg-emerald-500 text-slate-950 border-emerald-600'
+                                }`}
+                              >
                                 <div className="flex items-center justify-between text-[9px] font-black">
-                                  <span className="bg-emerald-700 px-1 rounded flex items-center gap-1">🟢 LỊCH HẸN • {startTime}</span>
-                                  <span className="bg-amber-300 text-slate-950 px-1 rounded border border-amber-400">⏱️ {durText}</span>
+                                  {isDone ? (
+                                    <span className="bg-amber-400 text-slate-950 px-1.5 py-0.5 rounded font-black flex items-center gap-1 shadow-xs">
+                                      <i className="fa-solid fa-circle-check text-emerald-800"></i> ✅ HOÀN THÀNH
+                                    </span>
+                                  ) : (
+                                    <span className="bg-emerald-700 text-white px-1 rounded flex items-center gap-1">
+                                      🟢 LỊCH HẸN • {startTime}
+                                    </span>
+                                  )}
+                                  <span className="bg-amber-300 text-slate-950 px-1 rounded border border-amber-400 font-black">
+                                    ⏱️ {durText}
+                                  </span>
                                 </div>
-                                <span className="truncate font-black">{ev.name}</span>
+
+                                <div className="flex items-center justify-between gap-1">
+                                  <span className={`font-black text-xs truncate ${isDone ? 'text-amber-200 line-through' : ''}`}>
+                                    {ev.name || ev.title}
+                                  </span>
+                                </div>
+
+                                {isDone && (
+                                  <div className="mt-1 pt-1 border-t border-emerald-600/80 text-[9px] font-black text-amber-200 flex flex-col gap-0.5">
+                                    {formattedCompTime && (
+                                      <span className="flex items-center gap-1 text-emerald-200">
+                                        <i className="fa-solid fa-clock text-amber-300"></i> Hoàn thành: {formattedCompTime}
+                                      </span>
+                                    )}
+                                    {ev.total_focus_mins && (
+                                      <span className="text-amber-300">
+                                        ⏱️ Tích lũy: {ev.total_focus_mins}m tập trung
+                                      </span>
+                                    )}
+                                  </div>
+                                )}
                               </div>
                             );
                           })}
