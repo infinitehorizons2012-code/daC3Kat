@@ -351,6 +351,9 @@ export default function FocusEngine({ onOpenReport }) {
           body: JSON.stringify({
             action_id: selectedActionId || null,
             action_name: actionName,
+            project_id: currentAction?.project_id || null,
+            goal_id: currentAction?.goal_id || null,
+            mission_id: currentAction?.mission_id || null,
             duration_mins: workMins,
             session_type: 'work'
           })

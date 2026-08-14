@@ -29,6 +29,10 @@ export default function FocusReportView() {
   const [editingSession, setEditingSession] = useState(null);
   const [editForm, setEditForm] = useState({
     action_name: '',
+    action_id: '',
+    project_id: '',
+    goal_id: '',
+    mission_id: '',
     start_time: '',
     end_time: '',
     duration_mins: 25,
@@ -39,6 +43,10 @@ export default function FocusReportView() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [addForm, setAddForm] = useState({
     action_name: '',
+    action_id: '',
+    project_id: '',
+    goal_id: '',
+    mission_id: '',
     start_time: '',
     end_time: '',
     duration_mins: 25,
@@ -73,10 +81,46 @@ export default function FocusReportView() {
     fetchData();
   }, []);
 
+  const handleActionSelectInEdit = (actionId) => {
+    const selected = actions.find(a => a.action_id === actionId);
+    if (selected) {
+      setEditForm(prev => ({
+        ...prev,
+        action_id: selected.action_id,
+        action_name: selected.name || selected.title,
+        project_id: selected.project_id || prev.project_id,
+        goal_id: selected.goal_id || prev.goal_id,
+        mission_id: selected.mission_id || prev.mission_id
+      }));
+    } else {
+      setEditForm(prev => ({ ...prev, action_id: actionId }));
+    }
+  };
+
+  const handleActionSelectInAdd = (actionId) => {
+    const selected = actions.find(a => a.action_id === actionId);
+    if (selected) {
+      setAddForm(prev => ({
+        ...prev,
+        action_id: selected.action_id,
+        action_name: selected.name || selected.title,
+        project_id: selected.project_id || prev.project_id,
+        goal_id: selected.goal_id || prev.goal_id,
+        mission_id: selected.mission_id || prev.mission_id
+      }));
+    } else {
+      setAddForm(prev => ({ ...prev, action_id: actionId }));
+    }
+  };
+
   const handleEditClick = (session) => {
     setEditingSession(session);
     setEditForm({
       action_name: session.action_name || '',
+      action_id: session.action_id || '',
+      project_id: session.project_id || '',
+      goal_id: session.goal_id || '',
+      mission_id: session.mission_id || '',
       start_time: session.start_time || session.created_at || '',
       end_time: session.end_time || '',
       duration_mins: session.duration_mins || 25,
@@ -120,17 +164,10 @@ export default function FocusReportView() {
       await fetch(`${API_URL}/focus-sessions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action_name: addForm.action_name,
-          start_time: addForm.start_time || new Date().toISOString(),
-          end_time: addForm.end_time || new Date().toISOString(),
-          duration_mins: Number(addForm.duration_mins) || 25,
-          notes: addForm.notes,
-          session_type: 'work'
-        })
+        body: JSON.stringify(addForm)
       });
       setShowAddModal(false);
-      setAddForm({ action_name: '', start_time: '', end_time: '', duration_mins: 25, notes: '' });
+      setAddForm({ action_name: '', action_id: '', project_id: '', goal_id: '', mission_id: '', start_time: '', end_time: '', duration_mins: 25, notes: '' });
       fetchData();
     } catch (e) {
       console.error(e);
@@ -141,14 +178,8 @@ export default function FocusReportView() {
     return <div className="text-center py-20 text-slate-400"><i className="fa-solid fa-spinner fa-spin text-3xl"></i></div>;
   }
 
-  // Filter sessions
-  const now = new Date();
-  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-  
+  // Filtered Sessions
   const filteredSessions = sessions.filter(s => {
-    const sDate = s.created_at || s.start_time || '';
-    if (timeRange === 'today' && !sDate.startsWith(todayStr)) return false;
-    
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       const name = (s.action_name || '').toLowerCase();
@@ -158,74 +189,50 @@ export default function FocusReportView() {
     return true;
   });
 
+  // Calculate totals
   const totalMins = filteredSessions.reduce((sum, s) => sum + (Number(s.duration_mins) || 0), 0);
   const totalHours = Math.round((totalMins / 60) * 10) / 10;
-  const totalPoms = filteredSessions.length;
+  const totalPoms = Math.round(totalMins / 25);
 
-  // Build 7 Days for Calendar View
-  const getWeekDates = () => {
-    const current = new Date();
-    const day = current.getDay();
-    const diff = current.getDate() - day + (day === 0 ? -6 : 1);
-    const monday = new Date(current.setDate(diff));
-    const days = [];
-    const dayLabels = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'];
-    
-    for (let i = 0; i < 7; i++) {
-      const nextDay = new Date(monday);
-      nextDay.setDate(monday.getDate() + i);
-      const dateKey = `${nextDay.getFullYear()}-${String(nextDay.getMonth() + 1).padStart(2, '0')}-${String(nextDay.getDate()).padStart(2, '0')}`;
-      days.push({
-        name: dayLabels[i],
-        dateKey,
-        dateFormatted: `${nextDay.getDate()}/${nextDay.getMonth() + 1}`
-      });
-    }
-    return days;
-  };
-  const weekDays = getWeekDates();
-
-  // Calculate Stomach Capacity Stats vs Actual Pomodoro Log
+  // Stomach Capacity Stats vs Pomodoro Log
+  const now = new Date();
   const currentISOWeek = getISOWeekStr(now);
   const currentCapObj = capacities.find(c => c.week_code === currentISOWeek) || {};
   const weeklyCapacityHrs = currentCapObj.capacity_hrs || 63;
-  const committedNAHrs = 10; // Committed Next Actions
-  const occupiedHrs = 11; // Fixed Appointments
-  const totalCommittedHrs = occupiedHrs + committedNAHrs; // 21h
-  const actualPomodoroMins = sessions.reduce((sum, s) => sum + (Number(s.duration_mins) || 0), 0);
-  const actualPomodoroHrs = Math.round((actualPomodoroMins / 60) * 10) / 10;
-  const executionRate = totalCommittedHrs > 0 ? Math.min(100, Math.round((actualPomodoroHrs / totalCommittedHrs) * 100)) : 0;
+  const totalCommittedHrs = 21; // 11h Occupied + 10h Next Actions
+  const actualPomHrs = totalHours;
+  const executionRate = totalCommittedHrs > 0 ? Math.min(100, Math.round((actualPomHrs / totalCommittedHrs) * 100)) : 0;
 
   return (
     <div className="flex flex-col gap-6 min-h-[600px] animate-fade-in max-w-5xl mx-auto w-full">
       
       {/* Header Banner */}
-      <div className="glass-panel p-6 rounded-3xl bg-gradient-to-r from-violet-900 via-indigo-900 to-purple-900 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="glass-panel p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-amber-950 to-slate-900 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-amber-500/30">
         <div>
-          <div className="flex items-center gap-2 text-purple-300 text-xs font-black uppercase tracking-widest mb-1">
-            <i className="fa-solid fa-chart-pie"></i> Dedicated Pomodoro Analytics & Log Engine
+          <div className="flex items-center gap-2 text-amber-300 text-xs font-black uppercase tracking-widest mb-1">
+            <i className="fa-solid fa-stopwatch"></i> Pomodoro Focus Time Log & GTD Alignment Engine
           </div>
           <h2 className="text-2xl font-black text-white flex items-center gap-2">
-            <i className="fa-solid fa-clock-rotate-left text-amber-400"></i> Nhật Ký & Báo Cáo Thời Gian Pomodoro
+            <i className="fa-solid fa-chart-pie text-amber-400"></i> Nhật Ký Pomodoro & Đối Chiếu GTD
           </h2>
-          <p className="text-xs text-purple-200 mt-1 font-medium max-w-2xl">
-            Lưu trữ chi tiết từng khung giờ tập trung, số phút thực hiện, đối chiếu với Sứ Mệnh & Dung Lượng Dạ Dày Tuần.
+          <p className="text-xs text-amber-100 mt-1 font-medium max-w-2xl">
+            Báo cáo chính xác tên Hành Động GTD, chỉnh sửa liên kết Dự Án / Mục Tiêu / Sứ Mệnh & xem đối chiếu Dạ Dày Tuần.
           </p>
         </div>
 
         <button 
           onClick={() => setShowAddModal(true)}
-          className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs rounded-2xl transition-all shadow-md flex items-center gap-2"
+          className="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs rounded-2xl transition-all shadow-md flex items-center gap-2"
         >
-          <i className="fa-solid fa-plus"></i> + Nhập Nhật Ký Thủ Công
+          <i className="fa-solid fa-plus"></i> + Nhập Thủ Công Hiệp Pomodoro
         </button>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {/* KPI Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div className="glass-panel p-5 rounded-3xl bg-white border border-slate-200 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl shrink-0">
-            <i className="fa-solid fa-hourglass-start"></i>
+          <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shrink-0">
+            <i className="fa-solid fa-clock"></i>
           </div>
           <div>
             <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Tổng Giờ Tập Trung</span>
@@ -234,75 +241,67 @@ export default function FocusReportView() {
         </div>
 
         <div className="glass-panel p-5 rounded-3xl bg-white border border-slate-200 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl shrink-0">
             <i className="fa-solid fa-stopwatch"></i>
           </div>
           <div>
-            <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Số Hiệp Pomodoro</span>
-            <span className="text-2xl font-black text-amber-600">{totalPoms} <span className="text-xs text-slate-400 font-bold">Hiệp</span></span>
+            <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Tổng Hiệp Pomodoro</span>
+            <span className="text-2xl font-black text-rose-600">{totalPoms} <span className="text-xs text-slate-400 font-bold">hiệp</span></span>
+          </div>
+        </div>
+
+        <div className="glass-panel p-5 rounded-3xl bg-white border border-slate-200 shadow-sm flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl shrink-0">
+            <i className="fa-solid fa-bullseye"></i>
+          </div>
+          <div>
+            <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Dạ Dày Tuần Đã Lấp</span>
+            <span className="text-2xl font-black text-indigo-600">{actualPomHrs}h / {totalCommittedHrs}h</span>
           </div>
         </div>
 
         <div className="glass-panel p-5 rounded-3xl bg-white border border-slate-200 shadow-sm flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0">
-            <i className="fa-solid fa-square-check"></i>
+            <i className="fa-solid fa-[#10b981]"></i>
+            <i className="fa-solid fa-fire"></i>
           </div>
           <div>
-            <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Thực Thi Dạ Dày Tuần</span>
-            <span className="text-2xl font-black text-emerald-600">{actualPomodoroHrs}h / {totalCommittedHrs}h <span className="text-xs text-slate-400 font-bold">({executionRate}%)</span></span>
+            <span className="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Tỷ Lệ Hoàn Thành</span>
+            <span className="text-xl font-black text-emerald-600">{executionRate}%</span>
           </div>
         </div>
       </div>
 
-      {/* Sub-Tab Navigation Bar */}
+      {/* Sub-Tab Navigation */}
       <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
         <button 
           onClick={() => setActiveSubTab('table')}
-          className={`px-4 py-2 rounded-2xl font-black text-xs transition-all flex items-center gap-2 ${activeSubTab === 'table' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100'}`}
+          className={`px-4 py-2 rounded-2xl font-black text-xs transition-all flex items-center gap-2 ${activeSubTab === 'table' ? 'bg-amber-500 text-slate-950 shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100'}`}
         >
-          <i className="fa-solid fa-table-list"></i> 📋 Bảng Nhật Ký & Sửa Chi Tiết
-        </button>
-
-        <button 
-          onClick={() => setActiveSubTab('calendar')}
-          className={`px-4 py-2 rounded-2xl font-black text-xs transition-all flex items-center gap-2 ${activeSubTab === 'calendar' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100'}`}
-        >
-          <i className="fa-solid fa-calendar-days"></i> 📅 Lịch Biểu Thực Thi Pomodoro
+          <i className="fa-solid fa-table-list"></i> 📋 Bảng Nhật Ký & Gắn Liên Kết GTD
         </button>
 
         <button 
           onClick={() => setActiveSubTab('mission_capacity')}
-          className={`px-4 py-2 rounded-2xl font-black text-xs transition-all flex items-center gap-2 ${activeSubTab === 'mission_capacity' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100'}`}
+          className={`px-4 py-2 rounded-2xl font-black text-xs transition-all flex items-center gap-2 ${activeSubTab === 'mission_capacity' ? 'bg-amber-500 text-slate-950 shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100'}`}
         >
           <i className="fa-solid fa-bullseye"></i> 🎯 Báo Cáo Sứ Mệnh & Dạ Dày Tuần
         </button>
       </div>
 
-      {/* SUB-TAB 1: 📋 BẢNG NHẬT KÝ CHI TIẾT */}
+      {/* SUB-TAB 1: BẢNG NHẬT KÝ & GẮN LIÊN KẾT GTD */}
       {activeSubTab === 'table' && (
         <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-4">
-            <div className="flex items-center gap-2">
-              <button 
-                onClick={() => setTimeRange('all')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${timeRange === 'all' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
-              >
-                Tất Cả
-              </button>
-              <button 
-                onClick={() => setTimeRange('today')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${timeRange === 'today' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
-              >
-                Hôm Nay
-              </button>
-            </div>
-
+            <h3 className="text-base font-black text-slate-800 flex items-center gap-2">
+              <i className="fa-solid fa-list-check text-amber-600"></i> Nhật Ký Các Hiệp Pomodoro Đã Thực Hiện
+            </h3>
             <input 
               type="text" 
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="🔍 Tìm kiếm công việc trong nhật ký..."
-              className="p-2 border border-slate-300 rounded-xl outline-none focus:border-indigo-500 text-xs font-bold w-full sm:w-64"
+              placeholder="🔍 Tìm tên công việc..."
+              className="p-2 border border-slate-300 rounded-xl outline-none focus:border-amber-500 text-xs font-bold w-full sm:w-64"
             />
           </div>
 
@@ -310,50 +309,54 @@ export default function FocusReportView() {
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-slate-200 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-slate-50/50">
-                  <th className="p-3">Thời Gian Thực Hiện</th>
-                  <th className="p-3">Hành Động / Công Việc</th>
+                  <th className="p-3">Thời Gian</th>
+                  <th className="p-3">Tên Hành Động GTD / Công Việc</th>
+                  <th className="p-3">Gắn Liên Kết GTD (Dự Án / Mục Tiêu / Sứ Mệnh)</th>
                   <th className="p-3 text-center">Thời Lượng</th>
-                  <th className="p-3">Ghi Chú Kết Quả</th>
-                  <th className="p-3 text-right">Điều Chỉnh</th>
+                  <th className="p-3 text-right">Điều Chỉnh & Liên Kết</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 font-bold">
-                {filteredSessions.map(s => {
-                  const dateStr = s.created_at || s.start_time || 'N/A';
-                  const timeOnly = dateStr.length >= 16 ? dateStr.slice(11, 16) : dateStr;
-                  const fullDate = dateStr.length >= 10 ? dateStr.slice(0, 10) : dateStr;
+                {filteredSessions.map(session => {
+                  const linkedAction = actions.find(a => a.action_id === session.action_id);
+                  const linkedProj = horizons.projects.find(p => p.project_id === (session.project_id || linkedAction?.project_id));
+                  const linkedGoal = horizons.goals.find(g => g.goal_id === (session.goal_id || linkedAction?.goal_id));
+                  const linkedMission = horizons.missions.find(m => m.mission_id === (session.mission_id || linkedAction?.mission_id));
 
                   return (
-                    <tr key={s.session_id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="p-3 text-slate-500">
-                        <span className="font-black text-slate-800 text-xs block">{timeOnly}</span>
-                        <span className="text-[10px] text-slate-400">{fullDate}</span>
+                    <tr key={session.session_id} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="p-3 text-slate-500 whitespace-nowrap">
+                        <span className="font-black text-slate-800 text-xs block">{session.created_at ? session.created_at.slice(0, 16) : 'Gần đây'}</span>
                       </td>
 
                       <td className="p-3 font-black text-slate-800">
-                        {s.action_name || 'Hiệp Tập Trung'}
+                        {session.action_name || linkedAction?.name || 'Hiệp Pomodoro'}
                       </td>
 
-                      <td className="p-3 text-center">
-                        <span className="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-black text-[11px] border border-amber-300">
-                          ⏱️ {s.duration_mins || 25}m
+                      <td className="p-3 max-w-xs">
+                        <div className="flex flex-wrap gap-1">
+                          {linkedProj ? <span className="text-[9px] font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded-md">🎯 Dự án: {linkedProj.name}</span> : <span className="text-[9px] text-slate-300 italic">Chưa gắn dự án</span>}
+                          {linkedGoal && <span className="text-[9px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md">🏆 Mục tiêu: {linkedGoal.statement}</span>}
+                          {linkedMission && <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">🌟 Sứ mệnh: {linkedMission.statement?.slice(0, 15)}...</span>}
+                        </div>
+                      </td>
+
+                      <td className="p-3 text-center whitespace-nowrap">
+                        <span className="bg-amber-100 text-amber-900 px-2.5 py-1 rounded-full font-black text-[11px] border border-amber-300">
+                          ⏱️ {session.duration_mins || 25}m
                         </span>
                       </td>
 
-                      <td className="p-3 text-slate-500 max-w-xs truncate">
-                        {s.notes || <span className="text-slate-300 italic">Không có ghi chú</span>}
-                      </td>
-
-                      <td className="p-3 text-right">
+                      <td className="p-3 text-right whitespace-nowrap">
                         <div className="flex items-center justify-end gap-2">
                           <button 
-                            onClick={() => handleEditClick(s)}
-                            className="px-2.5 py-1 bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-700 font-bold text-[11px] rounded-lg transition-all"
+                            onClick={() => handleEditClick(session)}
+                            className="px-2.5 py-1 bg-slate-100 hover:bg-amber-500 hover:text-slate-950 text-slate-700 font-bold text-[11px] rounded-lg transition-all"
                           >
-                            ✏️ Sửa
+                            ✏️ Sửa & Liên Kết GTD
                           </button>
                           <button 
-                            onClick={() => handleDeleteSession(s.session_id)}
+                            onClick={() => handleDeleteSession(session.session_id)}
                             className="px-2 py-1 bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-600 font-bold text-[11px] rounded-lg transition-all"
                           >
                             🗑️ Xóa
@@ -363,163 +366,56 @@ export default function FocusReportView() {
                     </tr>
                   );
                 })}
-
-                {filteredSessions.length === 0 && (
-                  <tr>
-                    <td colSpan="5" className="text-center py-10 text-slate-400 font-medium">
-                      Chưa có dữ liệu nhật ký Pomodoro nào trong khoảng thời gian này.
-                    </td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>
         </div>
       )}
 
-      {/* SUB-TAB 2: 📅 LỊCH BIỂU THỰC THI POMODORO */}
-      {activeSubTab === 'calendar' && (
-        <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
-          <div className="border-b pb-3 mb-4 flex justify-between items-center">
-            <h3 className="text-base font-black text-slate-800 flex items-center gap-2">
-              <i className="fa-solid fa-calendar-days text-indigo-600"></i> Lịch Biểu Nhật Ký Tập Trung Trong Tuần ({currentISOWeek})
-            </h3>
-            <span className="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border">
-              Hiển thị các phiên Pomodoro thực tế đã thực hiện theo từng ngày
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-7 gap-3">
-            {weekDays.map(day => {
-              const daySessions = sessions.filter(s => {
-                const sDate = s.created_at || s.start_time || '';
-                return sDate.startsWith(day.dateKey);
-              });
-              const dayMins = daySessions.reduce((sum, s) => sum + (Number(s.duration_mins) || 0), 0);
-
-              return (
-                <div key={day.dateKey} className="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col gap-2 min-h-[160px]">
-                  <div className="font-black text-xs text-slate-800 border-b pb-1 flex justify-between">
-                    <span>{day.name}</span>
-                    <span className="text-[10px] text-indigo-600">{day.dateFormatted}</span>
-                  </div>
-
-                  <div className="space-y-1.5 flex-1">
-                    {daySessions.map(s => (
-                      <div key={s.session_id} className="p-2 rounded-xl bg-indigo-500 text-white text-[11px] font-bold shadow-2xs flex flex-col gap-0.5 border border-indigo-600">
-                        <span className="truncate font-black">{s.action_name || 'Hiệp Pomodoro'}</span>
-                        <div className="flex justify-between items-center text-[9px] opacity-90">
-                          <span>⏱️ {s.duration_mins || 25}m</span>
-                          <span>{s.created_at ? s.created_at.slice(11, 16) : ''}</span>
-                        </div>
-                      </div>
-                    ))}
-
-                    {daySessions.length === 0 && (
-                      <div className="text-[10px] text-slate-400 italic text-center py-6">
-                        Chưa có phiên Pomodoro
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="pt-1.5 border-t border-slate-200 text-[10px] font-black text-slate-600 flex justify-between">
-                    <span>Tổng:</span>
-                    <span className="text-indigo-600">{Math.round((dayMins / 60) * 10) / 10}h</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* SUB-TAB 3: 🎯 BÁO CÁO SỨ MỆNH & DẠ DÀY TUẦN */}
+      {/* SUB-TAB 2: SỨ MỆNH & DẠ DÀY TUẦN */}
       {activeSubTab === 'mission_capacity' && (
         <div className="space-y-6">
-          {/* Đối Chiếu Dạ Dày Tuần */}
           <div className="glass-panel p-6 rounded-3xl bg-slate-900 text-white shadow-xl border border-slate-800">
             <h3 className="text-lg font-black text-amber-400 mb-2 flex items-center gap-2">
-              <i className="fa-solid fa-battery-half"></i> Đối Chiếu Thực Thi Với Dạ Dày Tuần ({currentISOWeek})
+              <i className="fa-solid fa-battery-half"></i> Báo Cáo Đối Chiếu Pomodoro Với Dạ Dày Tuần ({currentISOWeek})
             </h3>
             <p className="text-xs text-slate-300 font-medium mb-4">
-              So sánh số giờ tập trung Pomodoro thực tế với lượng thời gian cam kết nạp vào Dạ Dày Tuần.
+              Tự động tích lũy giờ Pomodoro tập trung thực tế và so sánh với cam kết Dạ Dày Tuần 21h.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-slate-800/80 p-4 rounded-2xl border border-slate-700">
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">1. Dung lượng sức chứa</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase block">1. Sức chứa dạ dày</span>
                 <span className="text-xl font-black text-white">{weeklyCapacityHrs}h / tuần</span>
               </div>
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">2. Đã cam kết nạp vào</span>
-                <span className="text-xl font-black text-blue-400">{totalCommittedHrs}h <span className="text-xs text-slate-400 font-normal">(11h Lịch + 10h NA)</span></span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase block">2. Đã cam kết nạp</span>
+                <span className="text-xl font-black text-blue-400">{totalCommittedHrs}h</span>
               </div>
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">3. Đã thực thi Pomodoro</span>
-                <span className="text-xl font-black text-emerald-400">{actualPomodoroHrs}h / {totalCommittedHrs}h</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase block">3. Giờ Pomodoro thực tế</span>
+                <span className="text-xl font-black text-amber-400">{actualPomHrs}h / {totalCommittedHrs}h</span>
               </div>
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">4. Tỷ lệ lấp đầy thực tế</span>
-                <span className="text-xl font-black text-amber-400">{executionRate}%</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase block">4. Tỷ lệ thực thi</span>
+                <span className="text-xl font-black text-emerald-400">{executionRate}%</span>
               </div>
             </div>
 
-            {/* Progress Bar */}
             <div className="w-full bg-slate-800 h-3 rounded-full overflow-hidden mt-4 border border-slate-700">
-              <div className="bg-gradient-to-r from-emerald-500 to-amber-400 h-full rounded-full transition-all duration-500" style={{ width: `${executionRate}%` }}></div>
-            </div>
-          </div>
-
-          {/* Phân Bổ Theo 4 Trụ Cột / Tầm Nhìn */}
-          <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
-            <h3 className="text-lg font-black text-slate-800 mb-4 flex items-center gap-2">
-              <i className="fa-solid fa-cubes text-indigo-600"></i> Báo Cáo Phân Bổ Thời Gian Theo 4 Khối Trụ Cột (Visions 40k FT)
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100 flex justify-between items-center">
-                <div>
-                  <h4 className="font-black text-indigo-950 text-sm">1. Khối Core Academic (40%)</h4>
-                  <p className="text-xs text-slate-500 font-medium">Algebra 1, Pinyin, SAT, Học tập & Năng khiếu</p>
-                </div>
-                <span className="text-lg font-black text-indigo-600">12h Mục tiêu</span>
-              </div>
-
-              <div className="p-4 bg-purple-50/50 rounded-2xl border border-purple-100 flex justify-between items-center">
-                <div>
-                  <h4 className="font-black text-purple-950 text-sm">2. Deep Work / Dream Map (35%)</h4>
-                  <p className="text-xs text-slate-500 font-medium">Mechatronics, Python, Data Science & AI</p>
-                </div>
-                <span className="text-lg font-black text-purple-600">14h Mục tiêu</span>
-              </div>
-
-              <div className="p-4 bg-amber-50/50 rounded-2xl border border-amber-100 flex justify-between items-center">
-                <div>
-                  <h4 className="font-black text-amber-950 text-sm">3. Building & Portfolio (15%)</h4>
-                  <p className="text-xs text-slate-500 font-medium">Tạo sản phẩm, Web Portfolio & Cold Email</p>
-                </div>
-                <span className="text-lg font-black text-amber-600">6h Mục tiêu</span>
-              </div>
-
-              <div className="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100 flex justify-between items-center">
-                <div>
-                  <h4 className="font-black text-emerald-950 text-sm">4. System Maintenance (10%)</h4>
-                  <p className="text-xs text-slate-500 font-medium">Weekly Review, Karate, Bơi & Dọn hệ thống</p>
-                </div>
-                <span className="text-lg font-black text-emerald-600">4h Mục tiêu</span>
-              </div>
+              <div className="bg-gradient-to-r from-amber-500 to-emerald-400 h-full rounded-full transition-all duration-500" style={{ width: `${executionRate}%` }}></div>
             </div>
           </div>
         </div>
       )}
 
-      {/* EDIT SESSION MODAL */}
+      {/* EDIT MODAL WITH GTD LINKERS */}
       {editingSession && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="glass-panel p-6 rounded-3xl bg-white max-w-md w-full shadow-2xl border border-slate-200 animate-fade-in">
+          <div className="glass-panel p-6 rounded-3xl bg-white max-w-lg w-full shadow-2xl border border-slate-200 animate-fade-in">
             <div className="flex justify-between items-center border-b pb-3 mb-4">
               <h3 className="text-base font-black text-slate-800 flex items-center gap-2">
-                <i className="fa-solid fa-pen-to-square text-indigo-600"></i> Điều Chỉnh Nhật Ký Pomodoro
+                <i className="fa-solid fa-pen-to-square text-amber-600"></i> Điều Chỉnh Hiệp Pomodoro & Liên Kết GTD
               </h3>
               <button onClick={() => setEditingSession(null)} className="text-slate-400 hover:text-slate-600">
                 <i className="fa-solid fa-xmark text-lg"></i>
@@ -528,55 +424,88 @@ export default function FocusReportView() {
 
             <div className="space-y-4 text-xs font-bold text-slate-700">
               <div>
-                <label className="block mb-1">Tên hành động / công việc:</label>
+                <label className="block mb-1 text-slate-900 font-black">🎯 Gắn Chọn Hành Động GTD Có Sẵn:</label>
+                <select 
+                  value={editForm.action_id}
+                  onChange={e => handleActionSelectInEdit(e.target.value)}
+                  className="w-full p-2.5 border rounded-xl outline-none focus:border-amber-500 bg-white"
+                >
+                  <option value="">[Tự nhập tên hoặc chọn Hành Động GTD...]</option>
+                  {actions.map(a => (
+                    <option key={a.action_id} value={a.action_id}>{a.name || a.title}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block mb-1">Tên Công Việc / Hiệp Pomodoro:</label>
                 <input 
                   type="text" 
                   value={editForm.action_name}
                   onChange={e => setEditForm({ ...editForm, action_name: e.target.value })}
-                  className="w-full p-2.5 border rounded-xl outline-none focus:border-indigo-500"
+                  className="w-full p-2.5 border rounded-xl outline-none focus:border-amber-500"
                 />
+              </div>
+
+              {/* GTD Linkers Dropdowns */}
+              <div className="grid grid-cols-2 gap-3 bg-amber-50/60 p-3 rounded-2xl border border-amber-200">
+                <div>
+                  <label className="block mb-1 text-amber-900 font-black">🎯 Gắn Dự Án:</label>
+                  <select 
+                    value={editForm.project_id}
+                    onChange={e => setEditForm({ ...editForm, project_id: e.target.value })}
+                    className="w-full p-2 border rounded-xl outline-none focus:border-amber-500 bg-white text-xs"
+                  >
+                    <option value="">[Chọn Dự Án...]</option>
+                    {horizons.projects.map(p => (
+                      <option key={p.project_id} value={p.project_id}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block mb-1 text-amber-900 font-black">🏆 Gắn Mục Tiêu:</label>
+                  <select 
+                    value={editForm.goal_id}
+                    onChange={e => setEditForm({ ...editForm, goal_id: e.target.value })}
+                    className="w-full p-2 border rounded-xl outline-none focus:border-amber-500 bg-white text-xs"
+                  >
+                    <option value="">[Chọn Mục Tiêu...]</option>
+                    {horizons.goals.map(g => (
+                      <option key={g.goal_id} value={g.goal_id}>{g.statement}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block mb-1">Thời gian bắt đầu / Ngày:</label>
+                  <label className="block mb-1">Thời Gian:</label>
                   <input 
                     type="text" 
                     value={editForm.start_time}
                     onChange={e => setEditForm({ ...editForm, start_time: e.target.value })}
-                    className="w-full p-2.5 border rounded-xl outline-none focus:border-indigo-500"
-                    placeholder="2026-08-13 19:15"
+                    className="w-full p-2.5 border rounded-xl outline-none focus:border-amber-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block mb-1">Thời lượng (Phút):</label>
+                  <label className="block mb-1">Thời Lượng (Phút):</label>
                   <input 
                     type="number" 
                     value={editForm.duration_mins}
-                    onChange={e => setEditForm({ ...editForm, duration_mins: e.target.value })}
-                    className="w-full p-2.5 border rounded-xl outline-none focus:border-indigo-500"
+                    onChange={e => setEditForm({ ...editForm, duration_mins: Number(e.target.value) })}
+                    className="w-full p-2.5 border rounded-xl outline-none focus:border-amber-500"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="block mb-1">Ghi chú kết quả:</label>
-                <textarea 
-                  value={editForm.notes}
-                  onChange={e => setEditForm({ ...editForm, notes: e.target.value })}
-                  rows="3"
-                  className="w-full p-2.5 border rounded-xl outline-none focus:border-indigo-500"
-                  placeholder="Ghi chú kết quả hoàn thành..."
-                ></textarea>
               </div>
 
               <div className="flex justify-end gap-2 pt-3 border-t">
                 <button onClick={() => setEditingSession(null)} className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-bold">
                   Hủy
                 </button>
-                <button onClick={handleSaveEdit} className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-black">
-                  Lưu Điều Chỉnh
+                <button onClick={handleSaveEdit} className="px-4 py-2 bg-amber-500 text-slate-950 font-black rounded-xl">
+                  Lưu Điều Chỉnh & Liên Kết
                 </button>
               </div>
             </div>
@@ -584,13 +513,13 @@ export default function FocusReportView() {
         </div>
       )}
 
-      {/* ADD MANUAL SESSION MODAL */}
+      {/* MANUAL CREATE MODAL */}
       {showAddModal && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="glass-panel p-6 rounded-3xl bg-white max-w-md w-full shadow-2xl border border-slate-200 animate-fade-in">
+          <div className="glass-panel p-6 rounded-3xl bg-white max-w-lg w-full shadow-2xl border border-slate-200 animate-fade-in">
             <div className="flex justify-between items-center border-b pb-3 mb-4">
               <h3 className="text-base font-black text-slate-800 flex items-center gap-2">
-                <i className="fa-solid fa-plus-circle text-emerald-600"></i> Thêm Nhật Ký Thủ Công
+                <i className="fa-solid fa-plus text-amber-600"></i> Nhập Thủ Công Hiệp Pomodoro & Gắn Liên Kết GTD
               </h3>
               <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600">
                 <i className="fa-solid fa-xmark text-lg"></i>
@@ -599,57 +528,79 @@ export default function FocusReportView() {
 
             <form onSubmit={handleCreateManualSession} className="space-y-4 text-xs font-bold text-slate-700">
               <div>
-                <label className="block mb-1">Tên hành động / công việc:</label>
+                <label className="block mb-1 text-slate-900 font-black">🎯 Chọn Hành Động GTD Có Sẵn:</label>
+                <select 
+                  value={addForm.action_id}
+                  onChange={e => handleActionSelectInAdd(e.target.value)}
+                  className="w-full p-2.5 border rounded-xl outline-none focus:border-amber-500 bg-white"
+                >
+                  <option value="">[Chọn Hành Động GTD...]</option>
+                  {actions.map(a => (
+                    <option key={a.action_id} value={a.action_id}>{a.name || a.title}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block mb-1">Tên Công Việc / Hiệp Pomodoro:</label>
                 <input 
                   type="text" 
                   value={addForm.action_name}
                   onChange={e => setAddForm({ ...addForm, action_name: e.target.value })}
-                  placeholder="Ví dụ: Giải đề Toán SAT..."
-                  className="w-full p-2.5 border rounded-xl outline-none focus:border-emerald-500"
+                  placeholder="Ví dụ: Giải bài tập Algebra 1 W33..."
+                  className="w-full p-2.5 border rounded-xl outline-none focus:border-amber-500"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block mb-1">Thời gian (YYYY-MM-DD HH:MM):</label>
-                  <input 
-                    type="text" 
-                    value={addForm.start_time}
-                    onChange={e => setAddForm({ ...addForm, start_time: e.target.value })}
-                    placeholder="2026-08-13 19:15"
-                    className="w-full p-2.5 border rounded-xl outline-none focus:border-emerald-500"
-                  />
+                  <label className="block mb-1">Gắn Dự Án:</label>
+                  <select 
+                    value={addForm.project_id}
+                    onChange={e => setAddForm({ ...addForm, project_id: e.target.value })}
+                    className="w-full p-2 border rounded-xl outline-none focus:border-amber-500 bg-white text-xs"
+                  >
+                    <option value="">[Chọn Dự Án...]</option>
+                    {horizons.projects.map(p => (
+                      <option key={p.project_id} value={p.project_id}>{p.name}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
-                  <label className="block mb-1">Thời lượng (Phút):</label>
-                  <input 
-                    type="number" 
-                    value={addForm.duration_mins}
-                    onChange={e => setAddForm({ ...addForm, duration_mins: e.target.value })}
-                    className="w-full p-2.5 border rounded-xl outline-none focus:border-emerald-500"
-                  />
+                  <label className="block mb-1">Gắn Mục Tiêu:</label>
+                  <select 
+                    value={addForm.goal_id}
+                    onChange={e => setAddForm({ ...addForm, goal_id: e.target.value })}
+                    className="w-full p-2 border rounded-xl outline-none focus:border-amber-500 bg-white text-xs"
+                  >
+                    <option value="">[Chọn Mục Tiêu...]</option>
+                    {horizons.goals.map(g => (
+                      <option key={g.goal_id} value={g.goal_id}>{g.statement}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
-              <div>
-                <label className="block mb-1">Ghi chú kết quả:</label>
-                <textarea 
-                  value={addForm.notes}
-                  onChange={e => setAddForm({ ...addForm, notes: e.target.value })}
-                  rows="3"
-                  className="w-full p-2.5 border rounded-xl outline-none focus:border-emerald-500"
-                  placeholder="Ghi chú kết quả công việc..."
-                ></textarea>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block mb-1">Thời Lượng (Phút):</label>
+                  <input 
+                    type="number" 
+                    value={addForm.duration_mins}
+                    onChange={e => setAddForm({ ...addForm, duration_mins: Number(e.target.value) })}
+                    className="w-full p-2.5 border rounded-xl outline-none focus:border-amber-500"
+                  />
+                </div>
               </div>
 
               <div className="flex justify-end gap-2 pt-3 border-t">
                 <button type="button" onClick={() => setShowAddModal(false)} className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-bold">
                   Hủy
                 </button>
-                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-black">
-                  + Thêm Nhật Ký
+                <button type="submit" className="px-4 py-2 bg-amber-500 text-slate-950 font-black rounded-xl">
+                  + Thêm Hiệp Pomodoro
                 </button>
               </div>
             </form>
