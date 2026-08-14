@@ -21,6 +21,7 @@ export default function FocusReportView() {
   // Active Sub-Tab: 'table', 'calendar', 'mission_capacity'
   const [activeSubTab, setActiveSubTab] = useState('table');
   const [selectedPillarModal, setSelectedPillarModal] = useState(null);
+  const [showActualPomDetailsModal, setShowActualPomDetailsModal] = useState(false);
 
   // Filters
   const [timeRange, setTimeRange] = useState('all'); // 'today', 'week', 'month', 'all'
@@ -518,9 +519,18 @@ export default function FocusReportView() {
                 <span className="text-[10px] font-bold text-slate-400 uppercase block">2. Đã cam kết nạp</span>
                 <span className="text-xl font-black text-blue-400">{totalCommittedHrs}h</span>
               </div>
-              <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">3. Giờ Pomodoro thực tế</span>
-                <span className="text-xl font-black text-amber-400">{actualPomHrs}h / {totalCommittedHrs}h</span>
+              <div 
+                onClick={() => setShowActualPomDetailsModal(true)}
+                className="cursor-pointer p-2.5 hover:bg-slate-700/80 rounded-2xl border border-transparent hover:border-amber-500/50 transition-all group"
+                title="Bấm vào để xem danh sách chi tiết tất cả các hiệp Pomodoro!"
+              >
+                <div className="flex items-center justify-between gap-1 mb-1">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block">3. Giờ Pomodoro thực tế</span>
+                  <span className="text-[9px] font-black bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-md group-hover:bg-amber-500 group-hover:text-slate-950 transition-all flex items-center gap-1">
+                    <i className="fa-solid fa-magnifying-glass text-[8px]"></i> Chi tiết
+                  </span>
+                </div>
+                <span className="text-xl font-black text-amber-400 block">{actualPomHrs}h / {totalCommittedHrs}h</span>
               </div>
               <div>
                 <span className="text-[10px] font-bold text-slate-400 uppercase block">4. Tỷ lệ thực thi</span>
@@ -852,6 +862,110 @@ export default function FocusReportView() {
               <div className="flex justify-end pt-3 border-t">
                 <button onClick={() => setSelectedPillarModal(null)} className="px-5 py-2 bg-slate-900 text-white font-black rounded-xl text-xs">
                   Đóng Hồ Sơ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+      {/* ACTUAL POMODORO SESSIONS DETAIL BREAKDOWN MODAL */}
+      {showActualPomDetailsModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="glass-panel p-6 rounded-3xl bg-white max-w-3xl w-full shadow-2xl border border-slate-200 animate-fade-in max-h-[85vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <div>
+                <span className="text-[10px] font-black uppercase text-amber-600 tracking-wider block">📊 Chi Tiết Đối Chiếu Dạ Dày Tuần</span>
+                <h3 className="text-lg font-black text-slate-800 flex items-center gap-2">
+                  <i className="fa-solid fa-stopwatch text-amber-500"></i> Danh Sách Các Hiệp Pomodoro Thực Tế ({actualPomHrs}h / {totalCommittedHrs}h)
+                </h3>
+              </div>
+              <button onClick={() => setShowActualPomDetailsModal(false)} className="text-slate-400 hover:text-slate-600">
+                <i className="fa-solid fa-xmark text-xl"></i>
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-3 gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Tổng Số Hiệp</span>
+                  <span className="text-lg font-black text-slate-800">{filteredSessions.length} hiệp</span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Tổng Thời Gian</span>
+                  <span className="text-lg font-black text-amber-600">{actualPomHrs}h ({totalMins}m)</span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Cam Kết Nạp</span>
+                  <span className="text-lg font-black text-indigo-600">{totalCommittedHrs}h / tuần</span>
+                </div>
+              </div>
+
+              <div className="border-t pt-3">
+                <h4 className="font-black text-slate-800 text-sm mb-3 flex items-center justify-between">
+                  <span>📋 Chi Tiết Từng Hiệp Pomodoro Đã Nạp:</span>
+                  <span className="text-xs text-slate-400 font-normal">Sắp xếp theo thời gian mới nhất</span>
+                </h4>
+
+                <div className="space-y-2.5 max-h-[400px] overflow-y-auto pr-1">
+                  {filteredSessions.length > 0 ? (
+                    filteredSessions.map((session, idx) => {
+                      const linkedAction = actions.find(a => a.action_id === session.action_id);
+                      const linkedProj = horizons.projects.find(p => p.project_id === (session.project_id || linkedAction?.project_id));
+                      const linkedGoal = horizons.goals.find(g => g.goal_id === (session.goal_id || linkedAction?.goal_id));
+
+                      return (
+                        <div key={session.session_id || idx} className="p-3.5 bg-slate-50/90 hover:bg-slate-100/90 rounded-2xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="w-6 h-6 rounded-full bg-amber-100 text-amber-800 font-black text-xs flex items-center justify-center shrink-0">
+                                {idx + 1}
+                              </span>
+                              <h5 className="font-black text-slate-800 text-sm">{session.action_name || linkedAction?.name || 'Hiệp Pomodoro'}</h5>
+                            </div>
+
+                            <div className="flex flex-wrap items-center gap-2 text-[10px] text-slate-500 pl-8">
+                              <span>⏱️ {session.created_at ? session.created_at.slice(0, 16) : 'Gần đây'}</span>
+                              {linkedProj && <span className="font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded-md">🎯 {linkedProj.name}</span>}
+                              {linkedGoal && <span className="font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md">🏆 {linkedGoal.statement}</span>}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pl-8 sm:pl-0">
+                            <span className="font-black text-amber-900 bg-amber-100 px-3 py-1 rounded-full text-xs border border-amber-300">
+                              ⏱️ {session.duration_mins || 25} phút
+                            </span>
+
+                            <div className="flex items-center gap-1">
+                              <button 
+                                onClick={() => { setShowActualPomDetailsModal(false); handleEditClick(session); }}
+                                className="px-2 py-1 bg-slate-200 hover:bg-amber-500 hover:text-slate-950 text-slate-700 font-bold text-[10px] rounded-lg transition-all"
+                              >
+                                ✏️ Sửa
+                              </button>
+                              <button 
+                                onClick={() => handleDeleteSession(session.session_id)}
+                                className="px-2 py-1 bg-rose-100 hover:bg-rose-600 hover:text-white text-rose-700 font-bold text-[10px] rounded-lg transition-all"
+                              >
+                                🗑️ Xóa
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="p-6 text-center text-slate-400 italic">
+                      Chưa có hiệp Pomodoro nào được nạp trong tuần này.
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-3 border-t">
+                <button onClick={() => setShowActualPomDetailsModal(false)} className="px-5 py-2 bg-slate-900 text-white font-black rounded-xl text-xs">
+                  Đóng Chi Tiết
                 </button>
               </div>
             </div>
