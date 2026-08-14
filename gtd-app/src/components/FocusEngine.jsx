@@ -365,14 +365,16 @@ export default function FocusEngine({ onOpenReport }) {
           const est = getDynamicEstPoms(currentAction, workMins);
           const isDoneNow = newCompleted >= est;
 
+          const nowIso = new Date().toISOString();
           await fetch(`${API_URL}/actions/${currentAction.action_id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
               completed_poms: newCompleted,
-              last_executed_at: new Date().toISOString(),
-              total_focus_mins: ((currentAction.total_focus_mins || 0) + workMins),
-              ...(isDoneNow ? { status: 'Done' } : {})
+              status: 'Done', // 🌟 ALWAYS AUTOMATICALLY MARK ACTION AS DONE!
+              completed_at: nowIso,
+              last_executed_at: nowIso,
+              total_focus_mins: ((currentAction.total_focus_mins || 0) + workMins)
             })
           });
 
