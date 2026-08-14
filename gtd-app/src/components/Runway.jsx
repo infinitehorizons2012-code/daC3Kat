@@ -42,7 +42,7 @@ export default function Runway() {
   const [data, setData] = useState({ actions: [], areas: [], projects: [], goals: [], visions: [], missions: [] });
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('Next_Actions');
-  const [showCompleted, setShowCompleted] = useState(false); // Next_Actions, Calendar, Waiting_For, Someday_Maybe
+  const [showCompleted, setShowCompleted] = useState(true); // Next_Actions, Calendar, Waiting_For, Someday_Maybe
   
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
@@ -304,7 +304,7 @@ export default function Runway() {
   
   // Áp dụng bộ lọc cho Next Actions
   const filteredNextActions = tabActions.filter(a => {
-    if (a.status === 'Done') return false; 
+    if (!showCompleted && a.status === 'Done') return false; 
     if (filters.work_type !== 'All' && a.work_type !== filters.work_type) return false;
     if (filters.context !== 'All' && a.context !== filters.context) return false;
     if (filters.time !== 'All' && a.time_needed_mins !== parseInt(filters.time)) return false;
