@@ -254,6 +254,17 @@ export default function FocusReportView() {
     return 'academic';
   };
 
+  // Filtered Sessions (Declared FIRST)
+  const filteredSessions = (sessions || []).filter(s => {
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      const name = (s.action_name || '').toLowerCase();
+      const notes = (s.notes || '').toLowerCase();
+      if (!name.includes(q) && !notes.includes(q)) return false;
+    }
+    return true;
+  });
+
   // Aggregate actual Pomodoro hours per Pillar via strict database tracing
   const pillarHours = { academic: 0, deepwork: 0, building: 0, maintenance: 0 };
   filteredSessions.forEach(s => {
@@ -266,17 +277,6 @@ export default function FocusReportView() {
   const deepworkPillarHrs = Math.round((pillarHours.deepwork / 60) * 10) / 10;
   const buildingPillarHrs = Math.round((pillarHours.building / 60) * 10) / 10;
   const maintenancePillarHrs = Math.round((pillarHours.maintenance / 60) * 10) / 10;
-
-  // Filtered Sessions
-  const filteredSessions = sessions.filter(s => {
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      const name = (s.action_name || '').toLowerCase();
-      const notes = (s.notes || '').toLowerCase();
-      if (!name.includes(q) && !notes.includes(q)) return false;
-    }
-    return true;
-  });
 
   // Calculate totals
   const totalMins = filteredSessions.reduce((sum, s) => sum + (Number(s.duration_mins) || 0), 0);
