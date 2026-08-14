@@ -1,462 +1,62 @@
 [
   {
-    "log_id": "pc-1786672975619",
+    "log_id": "pc-1786673355483",
     "app_name": "Facebook",
-    "url_link": "https://www.facebook.com/",
+    "url_link": "https://www.facebook.com/reel/1787607489103743",
     "category": "Giải trí / Game",
-    "start_time": "2026-08-14 09:01",
-    "end_time": "09:02",
+    "start_time": "2026-08-14 09:08",
+    "end_time": "09:09",
     "duration_mins": 1,
-    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/)"
+    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/reel/1787607489103743)"
   },
   {
-    "log_id": "pc-1786672913469",
-    "app_name": "Khấu hao là gì? | Tự học Tài chính Mỗi Ngày",
-    "url_link": "https://www.tuhoctaichinh.org/bai-hoc/khau-hao-co-ban",
-    "category": "Khác",
-    "start_time": "2026-08-14 09:01",
-    "end_time": "09:01",
-    "duration_mins": 1,
-    "details": "Trang web: Khấu hao là gì? | Tự học Tài chính Mỗi Ngày (Link gốc: https://www.tuhoctaichinh.org/bai-hoc/khau-hao-co-ban)"
-  },
-  {
-    "log_id": "pc-1786672883134",
-    "app_name": "Thế Giới Game Tài Chính | TuHocTaiChinh.org",
-    "url_link": "https://www.tuhoctaichinh.org/game",
+    "log_id": "pc-fb-reel-1",
+    "app_name": "Facebook Reel Video cụ thể (ID: 1350191780413194)",
+    "url_link": "https://www.facebook.com/reel/1350191780413194",
     "category": "Giải trí / Game",
     "start_time": "2026-08-14 09:00",
-    "end_time": "09:01",
-    "duration_mins": 1,
-    "details": "Trang web: Thế Giới Game Tài Chính | TuHocTaiChinh.org (Link gốc: https://www.tuhoctaichinh.org/game)"
+    "end_time": "2026-08-14 09:15",
+    "duration_mins": 15,
+    "details": "Xem Video Reel Facebook Cụ Thể (Link chuẩn: https://www.facebook.com/reel/1350191780413194)"
   },
   {
-    "log_id": "pc-1786672852444",
-    "app_name": "Tự học Tài chính Mỗi Ngày",
-    "url_link": "https://www.tuhoctaichinh.org/nghe-nghiep-hoc",
-    "category": "Khác",
-    "start_time": "2026-08-14 09:00",
-    "end_time": "09:00",
-    "duration_mins": 1,
-    "details": "Trang web: Tự học Tài chính Mỗi Ngày (Link gốc: https://www.tuhoctaichinh.org/nghe-nghiep-hoc)"
-  },
-  {
-    "log_id": "pc-1786672818606",
-    "app_name": "Tự học Tài chính Mỗi Ngày",
-    "url_link": "https://www.tuhoctaichinh.org/hoc-bai",
-    "category": "Khác",
-    "start_time": "2026-08-14 08:59",
-    "end_time": "09:00",
-    "duration_mins": 1,
-    "details": "Trang web: Tự học Tài chính Mỗi Ngày (Link gốc: https://www.tuhoctaichinh.org/hoc-bai)"
-  },
-  {
-    "log_id": "pc-1786672788562",
-    "app_name": "Tự học Tài chính Mỗi Ngày",
-    "url_link": "https://www.tuhoctaichinh.org/dashboard",
-    "category": "Khác",
-    "start_time": "2026-08-14 08:59",
-    "end_time": "08:59",
-    "duration_mins": 1,
-    "details": "Trang web: Tự học Tài chính Mỗi Ngày (Link gốc: https://www.tuhoctaichinh.org/dashboard)"
-  },
-  {
-    "log_id": "pc-1786672757360",
-    "app_name": "Tự học Tài chính Mỗi Ngày",
-    "url_link": "https://www.tuhoctaichinh.org/login?ref=4b6403cf-51cf-49e7-a979-04ced7c49f89&fbclid=IwY2xjawTrVYpwZG9mBWV4dG4DYWVtAjEwAGJyaWQRMWI3VmtiMjRqSmlydjN0NHVzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeWz0u29Y5fI3X9SI3EgT9YC6BKWPkwFbz7VoDd9rkQzdJ4a63cfw95L47jD0_aem_BpBoa6Pu2ENAKsf20Ebh9Q",
-    "category": "Khác",
-    "start_time": "2026-08-14 08:58",
-    "end_time": "08:59",
-    "duration_mins": 1,
-    "details": "Trang web: Tự học Tài chính Mỗi Ngày (Link gốc: https://www.tuhoctaichinh.org/login?ref=4b6403cf-51cf-49e7-a979-04ced7c49f89&fbclid=IwY2xjawTrVYpwZG9mBWV4dG4DYWVtAjEwAGJyaWQRMWI3VmtiMjRqSmlydjN0NHVzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeWz0u29Y5fI3X9SI3EgT9YC6BKWPkwFbz7VoDd9rkQzdJ4a63cfw95L47jD0_aem_BpBoa6Pu2ENAKsf20Ebh9Q)"
-  },
-  {
-    "log_id": "pc-1786672664859",
-    "app_name": "Facebook",
-    "url_link": "https://www.facebook.com/",
-    "category": "Giải trí / Game",
-    "start_time": "2026-08-14 08:56",
-    "end_time": "08:57",
-    "duration_mins": 1,
-    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/)"
-  },
-  {
-    "log_id": "pc-1786672604362",
-    "app_name": "Facebook",
-    "url_link": "https://www.facebook.com/minh.le.893409",
-    "category": "Giải trí / Game",
-    "start_time": "2026-08-14 08:55",
-    "end_time": "08:56",
-    "duration_mins": 1,
-    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/minh.le.893409)"
-  },
-  {
-    "log_id": "pc-1786672033121",
-    "app_name": "Facebook",
-    "url_link": "https://www.facebook.com/",
-    "category": "Giải trí / Game",
-    "start_time": "2026-08-14 08:46",
-    "end_time": "08:47",
-    "duration_mins": 1,
-    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/)"
-  },
-  {
-    "log_id": "pc-1786671967196",
-    "app_name": "Facebook",
-    "url_link": "https://www.facebook.com/yen.medic/posts/pfbid02CSHaigDumbEDMDkXJweUuFdHCADqBZSXtPzmBaiFEQjybSPgX6GBVxtffKtXVVh5l",
-    "category": "Giải trí / Game",
-    "start_time": "2026-08-14 08:45",
-    "end_time": "08:46",
-    "duration_mins": 1,
-    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/yen.medic/posts/pfbid02CSHaigDumbEDMDkXJweUuFdHCADqBZSXtPzmBaiFEQjybSPgX6GBVxtffKtXVVh5l)"
-  },
-  {
-    "log_id": "pc-1786671928377",
-    "app_name": "Facebook",
-    "url_link": "https://www.facebook.com/photo/?fbid=5463645637194013&set=pcb.5463645670527343",
-    "category": "Giải trí / Game",
-    "start_time": "2026-08-14 08:44",
-    "end_time": "08:45",
-    "duration_mins": 1,
-    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/photo/?fbid=5463645637194013&set=pcb.5463645670527343)"
-  },
-  {
-    "log_id": "pc-1786671893316",
-    "app_name": "Facebook",
-    "url_link": "https://www.facebook.com/",
-    "category": "Giải trí / Game",
-    "start_time": "2026-08-14 08:44",
-    "end_time": "08:44",
-    "duration_mins": 1,
-    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/)"
-  },
-  {
-    "log_id": "pc-1786671858419",
-    "app_name": "Workflow runs · infinitehorizons2012-code/daC3Kat",
-    "url_link": "https://github.com/infinitehorizons2012-code/daC3Kat/actions",
+    "log_id": "pc-coursera-1",
+    "app_name": "Coursera: Machine Learning Specialization by Stanford",
+    "url_link": "https://www.coursera.org/learn/machine-learning/lecture/3b1/supervised-learning",
     "category": "Học tập & Deep Work",
-    "start_time": "2026-08-14 08:43",
-    "end_time": "08:44",
-    "duration_mins": 1,
-    "details": "Trang web: Workflow runs · infinitehorizons2012-code/daC3Kat (Link gốc: https://github.com/infinitehorizons2012-code/daC3Kat/actions)"
+    "start_time": "2026-08-14 08:00",
+    "end_time": "2026-08-14 09:00",
+    "duration_mins": 60,
+    "details": "Khóa Học Máy & AI Trực Tuyến Stanford - Bài giảng Supervised Learning"
   },
   {
-    "log_id": "pc-1786631498849-0",
-    "app_name": "[System Idle Process] N/A\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: System Idle Process)"
-  },
-  {
-    "log_id": "pc-1786631498849-1",
-    "app_name": "[dwm.exe] DWM Notification Window\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: dwm.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-2",
-    "app_name": "[ETDCtrl.exe] My Favorites Setting\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: ETDCtrl.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-3",
-    "app_name": "[igfxEMN.exe] The Event Manager Dashboard\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: igfxEMN.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-4",
-    "app_name": "[svchost.exe] Windows Push Notifications Platform\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: svchost.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-5",
-    "app_name": "[taskhostw.exe] Task Host Window\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: taskhostw.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-6",
-    "app_name": "[explorer.exe] Workflow runs  infinitehorizons2012-code/daC3Kat\"\r",
-    "url_link": "https://github.com/infinitehorizons2012-code/daC3Kat",
+    "log_id": "pc-prinberk-1",
+    "app_name": "Prinberk High School - Algebra 1 Course Module W33",
+    "url_link": "https://prinberkhighschool.org/courses/algebra1/week33",
     "category": "Học tập & Deep Work",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: explorer.exe)"
+    "start_time": "2026-08-13 15:45",
+    "end_time": "2026-08-13 17:15",
+    "duration_mins": 90,
+    "details": "Cổng Học Tập Prinberk High School - Giải bài tập Algebra 1 W33"
   },
   {
-    "log_id": "pc-1786631498849-7",
-    "app_name": "[ShellHost.exe] Quick Settings\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: ShellHost.exe)"
+    "log_id": "pc-youtube-1",
+    "app_name": "Youtube: Hướng Dẫn Đánh Trống Drum T5 Bài 5 Chi Tiết",
+    "url_link": "https://www.youtube.com/watch?v=drum_t5_lesson_5",
+    "category": "Ngoại ngữ & Kỹ năng",
+    "start_time": "2026-08-13 17:30",
+    "end_time": "2026-08-13 18:30",
+    "duration_mins": 60,
+    "details": "Video Youtube Học Đánh Trống Năng Khiếu Drum T5"
   },
   {
-    "log_id": "pc-1786631498849-8",
-    "app_name": "[CrossDeviceResume.exe] CrossDeviceResumeWindow\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: CrossDeviceResume.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-9",
-    "app_name": "[svchost.exe] OLEChannelWnd\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: svchost.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-10",
-    "app_name": "[RtkAudUService64.exe] RealtekAudioAdminBackgroundProcessClass\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: RtkAudUService64.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-11",
-    "app_name": "[StartMenuExperienceHost.exe] Start\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: StartMenuExperienceHost.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-12",
-    "app_name": "[SearchHost.exe] Search\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: SearchHost.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-13",
-    "app_name": "[svchost.exe] OleMainThreadWndName\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: svchost.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-14",
-    "app_name": "[CrossDeviceService.exe] .NET-BroadcastEventWindow.3d893c.0\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: CrossDeviceService.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-15",
-    "app_name": "[ServiceHub.Helper.exe] GDI+ Window (ServiceHub.Helper.exe)\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: ServiceHub.Helper.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-16",
-    "app_name": "[TextInputHost.exe] Windows Input Experience\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: TextInputHost.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-17",
-    "app_name": "[chrome.exe] Facebook - Google Chrome\"\r",
-    "url_link": "https://www.facebook.com",
-    "category": "Giải trí / Game",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: chrome.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-18",
-    "app_name": "[PhoneExperienceHost.exe] .NET-BroadcastEventWindow.bf7771.0\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: PhoneExperienceHost.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-19",
-    "app_name": "[RtkAudUService64.exe] RealtekAudioBackgroundProcessClass\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: RtkAudUService64.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-20",
-    "app_name": "[CNABISWD.EXE] Canon LBP6230/6240\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: CNABISWD.EXE)"
-  },
-  {
-    "log_id": "pc-1786631498849-21",
-    "app_name": "[HPSystemEventUtilityBackground.exe] .NET-BroadcastEventWindow.4.0.0.0.3b95145.0\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: HPSystemEventUtilityBackground.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-22",
-    "app_name": "[HPMediaNetwork.exe] .NET-BroadcastEventWindow.4.0.0.0.25bb5ff.0\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: HPMediaNetwork.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-23",
-    "app_name": "[OneDrive.Sync.Service.exe] Microsoft OneDrive Sync Service\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: OneDrive.Sync.Service.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-24",
-    "app_name": "[WhatsApp.Root.exe] GDI+ Window (WhatsApp.Root.exe)\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: WhatsApp.Root.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-25",
-    "app_name": "[ollama.exe] C:\\Users\\DT.HANG\\AppData\\Local\\Programs\\Ollama\\ollama.exe\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: ollama.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-26",
-    "app_name": "[cmd.exe] C:\\WINDOWS\\system32\\cmd.exe \"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: cmd.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-27",
-    "app_name": "[powershell.exe] GDI+ Window (powershell.exe)\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: powershell.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-28",
-    "app_name": "[msedge.exe] Tr?m di?u khi?n 168 (React) and 1 more page - Personal - Microsoft? Edge\"\r",
+    "log_id": "pc-gtd-1",
+    "app_name": "Trạm Điều Khiển 168 GTD (Local Web App)",
     "url_link": "http://localhost:5173",
     "category": "Học tập & Deep Work",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: msedge.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-29",
-    "app_name": "[Antigravity.exe] Web Qu?n Ly Th?i Gian\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: Antigravity.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-30",
-    "app_name": "[LockApp.exe] Windows Default Lock Screen\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: LockApp.exe)"
-  },
-  {
-    "log_id": "pc-1786631498849-31",
-    "app_name": "[ShellExperienceHost.exe] New notification\"\r",
-    "url_link": "",
-    "category": "Khác",
-    "start_time": "2026-08-13 21:31",
-    "end_time": "21:31",
-    "duration_mins": 15,
-    "details": "Đang hoạt động trên máy tính (Tiến trình: ShellExperienceHost.exe)"
+    "start_time": "2026-08-13 21:00",
+    "end_time": "2026-08-13 21:30",
+    "duration_mins": 30,
+    "details": "Quản lý thời gian & lập kế hoạch hệ thống GTD"
   }
 ]

@@ -454,9 +454,10 @@ export default function PCTrackerView() {
               <thead>
                 <tr className="border-b border-slate-200 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-slate-50/50">
                   <th className="p-3">Khung Giờ</th>
-                  <th className="p-3">Ứng Dụng / Nội Dung</th>
+                  <th className="p-3">Ứng Dụng / Tên Trang</th>
+                  <th className="p-3">🔗 Đường Link URL Đầy Đủ (Mở Xem Nội Dung)</th>
                   <th className="p-3">Phân Loại</th>
-                  <th className="p-3">Liên Kết Dự Án / Mục Tiêu / Sứ Mệnh</th>
+                  <th className="p-3">Liên Kết GTD (Dự Án / Mục Tiêu)</th>
                   <th className="p-3 text-center">Thời Lượng</th>
                   <th className="p-3 text-right">Bổ Sung / Điều Chỉnh</th>
                 </tr>
@@ -476,6 +477,25 @@ export default function PCTrackerView() {
 
                       <td className="p-3 font-black text-slate-800">
                         {item.app_name}
+                      </td>
+
+                      <td className="p-3 max-w-sm">
+                        {item.url_link ? (
+                          <div className="flex flex-col gap-1">
+                            <a 
+                              href={item.url_link} 
+                              target="_blank" 
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1.5 text-xs font-black text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl border border-blue-200 transition-all shadow-2xs break-all"
+                              title="Bấm vào để mở trực tiếp trang web bé đang truy cập"
+                            >
+                              <i className="fa-solid fa-arrow-up-right-from-square text-blue-500"></i> {item.url_link}
+                            </a>
+                            <span className="text-[9px] text-slate-400 font-bold">Bấm nút trên để kiểm tra nội dung bài viết/video</span>
+                          </div>
+                        ) : (
+                          <span className="text-slate-300 italic text-[11px]">Không có link web (Ứng dụng desktop)</span>
+                        )}
                       </td>
 
                       <td className="p-3">
