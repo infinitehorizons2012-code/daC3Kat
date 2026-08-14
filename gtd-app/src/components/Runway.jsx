@@ -348,19 +348,15 @@ export default function Runway() {
         <div className="relative group" onMouseEnter={() => setIsDropdownOpen(true)} onMouseLeave={() => setIsDropdownOpen(false)}>
           <button className={`glass-panel px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm ${runwayTabsDef[activeTab].color} ${runwayTabsDef[activeTab].bg}`}>
             <i className={runwayTabsDef[activeTab].icon}></i> {runwayTabsDef[activeTab].label} 
-            <span className="ml-1 bg-white/50 px-1.5 py-0.5 rounded-full text-[10px]">
-              {activeTab === 'All_Actions' 
-                ? (data?.actions || []).filter(a => a && a.status !== 'Done').length 
-                : (data?.actions || []).filter(a => a && a.storage_system === activeTab && a.status !== 'Done').length}
+            <span className="ml-1 bg-white/50 px-1.5 py-0.5 rounded-full text-[10px] font-black">
+              {(data?.actions || []).filter(a => a && a.status !== 'Cancelled' && (showCompleted || a.status !== 'Done') && (activeTab === 'All_Actions' || a.storage_system === activeTab)).length}
             </span>
             <i className="fa-solid fa-chevron-down text-[10px] ml-1 opacity-50"></i>
           </button>
           
           <div className={`absolute top-full left-0 mt-2 w-56 glass-panel rounded-xl p-2 transition-all flex flex-col gap-1 shadow-xl border border-slate-200/50 z-[110] ${isDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
             {Object.entries(runwayTabsDef).map(([key, tab]) => {
-              let count = key === 'All_Actions' 
-                ? (data?.actions || []).filter(a => a && a.status !== 'Done').length 
-                : (data?.actions || []).filter(a => a && a.storage_system === key && a.status !== 'Done').length;
+              let count = (data?.actions || []).filter(a => a && a.status !== 'Cancelled' && (showCompleted || a.status !== 'Done') && (key === 'All_Actions' || a.storage_system === key)).length;
               return (
                 <button 
                   key={key}
@@ -385,6 +381,27 @@ export default function Runway() {
           {/* CỘT LỌC (Chỉ hiện khi ở tab Next Actions) */}
           {activeTab === 'Next_Actions' && (
             <div className="glass-panel w-full md:w-80 p-5 rounded-2xl flex-shrink-0 flex flex-col gap-5 sticky top-24 shadow-sm border border-slate-100">
+              {/* 🌟 Show Completed Toggle Switch */}
+              <div 
+                onClick={() => setShowCompleted(prev => !prev)}
+                className={`p-3 rounded-2xl cursor-pointer transition-all border flex items-center justify-between shadow-sm ${
+                  showCompleted 
+                    ? 'bg-emerald-50 border-emerald-400 text-emerald-950 ring-2 ring-emerald-300' 
+                    : 'bg-slate-100 hover:bg-slate-200 border-slate-300 text-slate-700'
+                }`}
+                title="Bấm để Bật/Tắt hiển thị cả các việc đã hoàn thành (Done)"
+              >
+                <div className="flex items-center gap-2">
+                  <i className={`fa-solid ${showCompleted ? 'fa-eye text-emerald-600 text-base' : 'fa-eye-slash text-slate-400 text-base'}`}></i>
+                  <span className="font-black text-xs">
+                    {showCompleted ? '✅ Hiện cả việc Đã Xong (Done)' : '👁️ Hiện cả việc Đã Xong (Done)'}
+                  </span>
+                </div>
+                <span className={`w-5 h-5 rounded-full flex items-center justify-center font-black text-[10px] ${showCompleted ? 'bg-emerald-600 text-white' : 'bg-slate-300 text-slate-600'}`}>
+                  {showCompleted ? '✓' : 'off'}
+                </span>
+              </div>
+
               <h3 className="font-black text-slate-800 border-b border-slate-200 pb-2 uppercase tracking-wide text-sm flex items-center justify-between">
                 <span>Thuật toán Lọc (3 Bước)</span>
                 <i className="fa-solid fa-filter text-blue-500"></i>
