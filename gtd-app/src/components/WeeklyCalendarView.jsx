@@ -197,7 +197,7 @@ export default function WeeklyCalendarView() {
   const days = getWeekDays(selectedWeek);
   const todayKey = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
 
-  const activeActions = data.actions.filter(a => a.status !== 'Done' && a.status !== 'Cancelled');
+  const activeActions = data.actions.filter(a => a.status !== 'Cancelled');
   const assignedActionIds = new Set();
 
   return (
