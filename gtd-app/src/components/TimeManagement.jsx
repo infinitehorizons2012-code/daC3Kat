@@ -105,6 +105,7 @@ const getPillarForAction = (a, data) => {
 
 const getPillarActionsHelper = (data, pillarKey) => {
   if (!pillarKey || !data || !data.actions) return [];
+  // 🌟 NEVER REMOVE ACTIONS! Retain both Pending and Done actions in Weekly Capacity
   const activeActions = data.actions.filter(a => a && a.status !== 'Cancelled');
   return activeActions.filter(a => getPillarForAction(a, data) === pillarKey);
 };
