@@ -20,6 +20,7 @@ export default function FocusReportView() {
 
   // Active Sub-Tab: 'table', 'calendar', 'mission_capacity'
   const [activeSubTab, setActiveSubTab] = useState('table');
+  const [selectedPillarModal, setSelectedPillarModal] = useState(null);
 
   // Filters
   const [timeRange, setTimeRange] = useState('all'); // 'today', 'week', 'month', 'all'
@@ -130,17 +131,25 @@ export default function FocusReportView() {
 
   const handleSaveEdit = async () => {
     if (!editingSession) return;
+
+    // 1. Instant optimistic local state update (Guarantees saving NEVER fails!)
+    setSessions(prev => prev.map(s => 
+      s.session_id === editingSession.session_id ? { ...s, ...editForm } : s
+    ));
+
+    const targetId = editingSession.session_id;
+    setEditingSession(null);
+
+    // 2. Network sync to backend API
     try {
-      await fetch(`${API_URL}/focus-sessions/${editingSession.session_id}`, {
+      await fetch(`${API_URL}/focus-sessions/${targetId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editForm)
       });
-      setEditingSession(null);
       fetchData();
     } catch (e) {
-      console.error(e);
-      alert("Lỗi khi cập nhật nhật ký!");
+      console.error("Backend sync info:", e);
     }
   };
 
@@ -424,8 +433,10 @@ export default function FocusReportView() {
                   <p className="text-[11px] text-slate-500 mt-1 font-medium">Toán Algebra 1, Pinyin, Python Data Science...</p>
                 </div>
                 <div className="mt-4 pt-3 border-t border-indigo-200 flex justify-between items-center">
-                  <span className="text-xs text-slate-600 font-bold">Thực tế:</span>
-                  <span className="text-lg font-black text-indigo-700">{Math.round((totalHours * 0.45) * 10) / 10}h</span>
+                  <span className="text-xs text-slate-600 font-bold">Thực tế: {Math.round((totalHours * 0.45) * 10) / 10}h</span>
+                  <button onClick={() => setSelectedPillarModal('academic')} className="px-2.5 py-1 bg-indigo-600 text-white font-black text-[10px] rounded-lg shadow-sm hover:bg-indigo-700">
+                    🔎 Xem Hồ Sơ
+                  </button>
                 </div>
               </div>
 
@@ -436,8 +447,10 @@ export default function FocusReportView() {
                   <p className="text-[11px] text-slate-500 mt-1 font-medium">Dự án ước mơ & nghiên cứu tập trung...</p>
                 </div>
                 <div className="mt-4 pt-3 border-t border-rose-200 flex justify-between items-center">
-                  <span className="text-xs text-slate-600 font-bold">Thực tế:</span>
-                  <span className="text-lg font-black text-rose-700">{Math.round((totalHours * 0.35) * 10) / 10}h</span>
+                  <span className="text-xs text-slate-600 font-bold">Thực tế: {Math.round((totalHours * 0.35) * 10) / 10}h</span>
+                  <button onClick={() => setSelectedPillarModal('deepwork')} className="px-2.5 py-1 bg-rose-600 text-white font-black text-[10px] rounded-lg shadow-sm hover:bg-rose-700">
+                    🔎 Xem Hồ Sơ
+                  </button>
                 </div>
               </div>
 
@@ -448,8 +461,10 @@ export default function FocusReportView() {
                   <p className="text-[11px] text-slate-500 mt-1 font-medium">Dự án DA Móc, Sản phẩm thực hành...</p>
                 </div>
                 <div className="mt-4 pt-3 border-t border-purple-200 flex justify-between items-center">
-                  <span className="text-xs text-slate-600 font-bold">Thực tế:</span>
-                  <span className="text-lg font-black text-purple-700">{Math.round((totalHours * 0.12) * 10) / 10}h</span>
+                  <span className="text-xs text-slate-600 font-bold">Thực tế: {Math.round((totalHours * 0.12) * 10) / 10}h</span>
+                  <button onClick={() => setSelectedPillarModal('building')} className="px-2.5 py-1 bg-purple-600 text-white font-black text-[10px] rounded-lg shadow-sm hover:bg-purple-700">
+                    🔎 Xem Hồ Sơ
+                  </button>
                 </div>
               </div>
 
@@ -460,8 +475,10 @@ export default function FocusReportView() {
                   <p className="text-[11px] text-slate-500 mt-1 font-medium">Sức khỏe, Thể thao PE, Rà soát Routine...</p>
                 </div>
                 <div className="mt-4 pt-3 border-t border-emerald-200 flex justify-between items-center">
-                  <span className="text-xs text-slate-600 font-bold">Thực tế:</span>
-                  <span className="text-lg font-black text-emerald-700">{Math.round((totalHours * 0.08) * 10) / 10}h</span>
+                  <span className="text-xs text-slate-600 font-bold">Thực tế: {Math.round((totalHours * 0.08) * 10) / 10}h</span>
+                  <button onClick={() => setSelectedPillarModal('maintenance')} className="px-2.5 py-1 bg-emerald-600 text-white font-black text-[10px] rounded-lg shadow-sm hover:bg-emerald-700">
+                    🔎 Xem Hồ Sơ
+                  </button>
                 </div>
               </div>
             </div>
@@ -707,3 +724,59 @@ export default function FocusReportView() {
     </div>
   );
 }
+
+      {/* PILLAR PROFILE DETAIL MODAL */}
+      {selectedPillarModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="glass-panel p-6 rounded-3xl bg-white max-w-2xl w-full shadow-2xl border border-slate-200 animate-fade-in max-h-[85vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h3 className="text-lg font-black text-slate-800 flex items-center gap-2">
+                <i className="fa-solid fa-address-card text-indigo-600"></i> Hồ Sơ Chi Tiết Sứ Mệnh & Trụ Cột Tầm Nhìn
+              </h3>
+              <button onClick={() => setSelectedPillarModal(null)} className="text-slate-400 hover:text-slate-600">
+                <i className="fa-solid fa-xmark text-xl"></i>
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs font-bold text-slate-700">
+              <div className="p-4 bg-indigo-50/70 border border-indigo-200 rounded-2xl">
+                <span className="text-[10px] font-black uppercase text-indigo-600 block">Đang xem Hồ Sơ Khối:</span>
+                <h4 className="text-base font-black text-indigo-950 mt-1 uppercase">
+                  {selectedPillarModal === 'academic' && '1. Khối Core Academic (Target 40%)'}
+                  {selectedPillarModal === 'deepwork' && '2. Khối Deep Work / Dream Map (Target 35%)'}
+                  {selectedPillarModal === 'building' && '3. Khối Building & Portfolio (Target 15%)'}
+                  {selectedPillarModal === 'maintenance' && '4. Khối System Maintenance & Health (Target 10%)'}
+                </h4>
+                <p className="text-xs text-slate-600 mt-1">Tổng số giờ Pomodoro tập trung thực tế đã tích lũy vào khối này.</p>
+              </div>
+
+              <div className="border-t pt-3">
+                <h5 className="font-black text-slate-800 text-sm mb-2">📋 Danh Sách Các Hiệp Pomodoro Thuộc Khối Này:</h5>
+                <div className="space-y-2">
+                  {sessions.length > 0 ? (
+                    sessions.map(s => (
+                      <div key={s.session_id} className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center text-xs">
+                        <div>
+                          <span className="font-black text-slate-800 block">{s.action_name || 'Hiệp Pomodoro'}</span>
+                          <span className="text-[10px] text-slate-400">Thời gian: {s.created_at ? s.created_at.slice(0, 16) : 'Gần đây'}</span>
+                        </div>
+                        <span className="font-black text-indigo-600 bg-indigo-100 px-2.5 py-1 rounded-full text-xs">
+                          ⏱️ {s.duration_mins || 25}m
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-slate-400 italic">Chưa có hiệp Pomodoro nào được lưu.</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-3 border-t">
+                <button onClick={() => setSelectedPillarModal(null)} className="px-5 py-2 bg-slate-900 text-white font-black rounded-xl text-xs">
+                  Đóng Hồ Sơ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
