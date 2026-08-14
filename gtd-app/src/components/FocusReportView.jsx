@@ -200,6 +200,73 @@ export default function FocusReportView() {
     return <div className="text-center py-20 text-slate-400"><i className="fa-solid fa-spinner fa-spin text-3xl"></i></div>;
   }
 
+
+  // Exact Database Vision Pillar Map
+  const PILLAR_VISION_MAP = {
+    'vis-1786590462256': 'academic',     // 1. Khối Core Academic
+    'vis-1786607493926': 'deepwork',     // 2. Deep Work / Dream Map
+    'vis-1786607530122': 'building',     // 3. Building & Portfolio
+    'vis-1786607544898': 'maintenance'   // 4. System Maintenance
+  };
+
+  const getPillarForSession = (session) => {
+    // 1. Directly linked project
+    let projId = session.project_id;
+    let goalId = session.goal_id;
+    let visId = session.mission_id;
+
+    // 2. Trace via Action
+    if (session.action_id && actions.length > 0) {
+      const act = actions.find(a => a.action_id === session.action_id);
+      if (act) {
+        if (!projId) projId = act.project_id;
+        if (!goalId) goalId = act.goal_id;
+      }
+    }
+
+    // 3. Trace via Project -> Goal -> Vision
+    if (projId && horizons.projects.length > 0) {
+      const proj = horizons.projects.find(p => p.project_id === projId);
+      if (proj && proj.goal_id) goalId = proj.goal_id;
+    }
+
+    if (goalId && horizons.goals.length > 0) {
+      const g = horizons.goals.find(goal => goal.goal_id === goalId);
+      if (g && g.vision_id) visId = g.vision_id;
+    }
+
+    if (visId && PILLAR_VISION_MAP[visId]) {
+      return PILLAR_VISION_MAP[visId];
+    }
+
+    // Fallback keyword trace if IDs not yet set
+    const nameStr = (session.action_name || '').toLowerCase();
+    if (nameStr.includes('algebra') || nameStr.includes('pinyin') || nameStr.includes('python') || nameStr.includes('học') || nameStr.includes('sat')) {
+      return 'academic';
+    } else if (nameStr.includes('drum') || nameStr.includes('nhạc') || nameStr.includes('kỹ năng') || nameStr.includes('tiếng trung')) {
+      return 'deepwork';
+    } else if (nameStr.includes('móc') || nameStr.includes('da móc') || nameStr.includes('portfolio') || nameStr.includes('building')) {
+      return 'building';
+    } else if (nameStr.includes('pe') || nameStr.includes('thể thao') || nameStr.includes('vệ sinh') || nameStr.includes('routine')) {
+      return 'maintenance';
+    }
+
+    return 'academic';
+  };
+
+  // Aggregate actual Pomodoro hours per Pillar via strict database tracing
+  const pillarHours = { academic: 0, deepwork: 0, building: 0, maintenance: 0 };
+  filteredSessions.forEach(s => {
+    const pKey = getPillarForSession(s);
+    const mins = Number(s.duration_mins) || 25;
+    pillarHours[pKey] += mins;
+  });
+
+  const academicPillarHrs = Math.round((pillarHours.academic / 60) * 10) / 10;
+  const deepworkPillarHrs = Math.round((pillarHours.deepwork / 60) * 10) / 10;
+  const buildingPillarHrs = Math.round((pillarHours.building / 60) * 10) / 10;
+  const maintenancePillarHrs = Math.round((pillarHours.maintenance / 60) * 10) / 10;
+
   // Filtered Sessions
   const filteredSessions = sessions.filter(s => {
     if (searchQuery.trim()) {
@@ -446,7 +513,7 @@ export default function FocusReportView() {
                   <p className="text-[11px] text-slate-500 mt-1 font-medium">Toán Algebra 1, Pinyin, Python Data Science...</p>
                 </div>
                 <div className="mt-4 pt-3 border-t border-indigo-200 flex justify-between items-center">
-                  <span className="text-xs text-slate-600 font-bold">Thực tế: {Math.round((totalHours * 0.45) * 10) / 10}h</span>
+                  <span className="text-xs text-slate-600 font-bold">Thực tế: {academicPillarHrs}h</span>
                   <button onClick={() => setSelectedPillarModal('academic')} className="px-2.5 py-1 bg-indigo-600 text-white font-black text-[10px] rounded-lg shadow-sm hover:bg-indigo-700">
                     🔎 Xem Hồ Sơ
                   </button>
@@ -460,7 +527,7 @@ export default function FocusReportView() {
                   <p className="text-[11px] text-slate-500 mt-1 font-medium">Dự án ước mơ & nghiên cứu tập trung...</p>
                 </div>
                 <div className="mt-4 pt-3 border-t border-rose-200 flex justify-between items-center">
-                  <span className="text-xs text-slate-600 font-bold">Thực tế: {Math.round((totalHours * 0.35) * 10) / 10}h</span>
+                  <span className="text-xs text-slate-600 font-bold">Thực tế: {deepworkPillarHrs}h</span>
                   <button onClick={() => setSelectedPillarModal('deepwork')} className="px-2.5 py-1 bg-rose-600 text-white font-black text-[10px] rounded-lg shadow-sm hover:bg-rose-700">
                     🔎 Xem Hồ Sơ
                   </button>
@@ -474,7 +541,7 @@ export default function FocusReportView() {
                   <p className="text-[11px] text-slate-500 mt-1 font-medium">Dự án DA Móc, Sản phẩm thực hành...</p>
                 </div>
                 <div className="mt-4 pt-3 border-t border-purple-200 flex justify-between items-center">
-                  <span className="text-xs text-slate-600 font-bold">Thực tế: {Math.round((totalHours * 0.12) * 10) / 10}h</span>
+                  <span className="text-xs text-slate-600 font-bold">Thực tế: {buildingPillarHrs}h</span>
                   <button onClick={() => setSelectedPillarModal('building')} className="px-2.5 py-1 bg-purple-600 text-white font-black text-[10px] rounded-lg shadow-sm hover:bg-purple-700">
                     🔎 Xem Hồ Sơ
                   </button>
@@ -488,7 +555,7 @@ export default function FocusReportView() {
                   <p className="text-[11px] text-slate-500 mt-1 font-medium">Sức khỏe, Thể thao PE, Rà soát Routine...</p>
                 </div>
                 <div className="mt-4 pt-3 border-t border-emerald-200 flex justify-between items-center">
-                  <span className="text-xs text-slate-600 font-bold">Thực tế: {Math.round((totalHours * 0.08) * 10) / 10}h</span>
+                  <span className="text-xs text-slate-600 font-bold">Thực tế: {maintenancePillarHrs}h</span>
                   <button onClick={() => setSelectedPillarModal('maintenance')} className="px-2.5 py-1 bg-emerald-600 text-white font-black text-[10px] rounded-lg shadow-sm hover:bg-emerald-700">
                     🔎 Xem Hồ Sơ
                   </button>
