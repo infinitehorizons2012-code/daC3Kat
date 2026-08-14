@@ -5,15 +5,19 @@ const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.worker
 
 const calcActionMins = (a) => {
   if (!a) return 30;
+  let scheduledMins = 30;
   if (a.scheduled_datetime && a.scheduled_end_datetime) {
     const s = new Date(a.scheduled_datetime);
     const e = new Date(a.scheduled_end_datetime);
     if (!isNaN(s.getTime()) && !isNaN(e.getTime())) {
       const diffMs = e - s;
-      if (diffMs > 0) return Math.round(diffMs / 60000);
+      if (diffMs > 0) scheduledMins = Math.round(diffMs / 60000);
     }
+  } else if (a.time_needed_mins) {
+    scheduledMins = Number(a.time_needed_mins);
   }
-  return Number(a.time_needed_mins) || 30;
+  const actualMins = Number(a.total_focus_mins) || 0;
+  return Math.max(scheduledMins, actualMins);
 };
 
 

@@ -563,11 +563,16 @@ export default function WeeklyReview() {
                         </div>
                       </div>
                       
-                      {/* Visual Hours Badge */}
-                      <div className={`flex flex-col items-end justify-center px-3 py-1 rounded-lg shrink-0 ${isCal || isWait ? 'bg-amber-50' : 'bg-blue-50'}`}>
-                        <span className={`text-sm font-black ${isCal || isWait ? 'text-amber-500' : 'text-blue-500'}`}>
+                      {/* Visual Hours Badge (Reflects actual 3h duration) */}
+                      <div className={`flex flex-col items-end justify-center px-3 py-1 rounded-xl shrink-0 font-black shadow-xs ${a.status === 'Done' ? 'bg-emerald-100 border border-emerald-300' : (isCal || isWait ? 'bg-amber-100 border border-amber-300' : 'bg-blue-100 border border-blue-300')}`}>
+                        <span className={`text-sm font-black ${a.status === 'Done' ? 'text-emerald-900' : (isCal || isWait ? 'text-amber-900' : 'text-blue-900')}`}>
                           {Math.round(calcMins(a) / 60 * 10) / 10}h
                         </span>
+                        {a.total_focus_mins && Number(a.total_focus_mins) > 0 && (
+                          <span className="text-[8px] text-emerald-800 font-bold">
+                            ⏱️ Thực tế
+                          </span>
+                        )}
                       </div>
 
                       {/* Push Back Button only for Next Actions */}
