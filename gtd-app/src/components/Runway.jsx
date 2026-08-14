@@ -41,7 +41,8 @@ const calcActionDurationText = (ev) => {
 export default function Runway() {
   const [data, setData] = useState({ actions: [], areas: [], projects: [], goals: [], visions: [], missions: [] });
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('Next_Actions'); // Next_Actions, Calendar, Waiting_For, Someday_Maybe
+  const [activeTab, setActiveTab] = useState('Next_Actions');
+  const [showCompleted, setShowCompleted] = useState(false); // Next_Actions, Calendar, Waiting_For, Someday_Maybe
   
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
@@ -294,7 +295,12 @@ export default function Runway() {
 
   // Lọc dữ liệu theo Hệ thống lưu trữ
   const actionsList = data?.actions || [];
-  const tabActions = activeTab === 'All_Actions' ? actionsList.filter(a => a && a.status !== 'Done') : actionsList.filter(a => a && a.storage_system === activeTab);
+  const tabActions = actionsList.filter(a => {
+    if (!a || a.status === 'Cancelled') return false;
+    if (!showCompleted && a.status === 'Done') return false; // 🌟 Hide Done when toggle is OFF, Show Done when toggle is ON!
+    if (activeTab === 'All_Actions') return true;
+    return a.storage_system === activeTab;
+  });
   
   // Áp dụng bộ lọc cho Next Actions
   const filteredNextActions = tabActions.filter(a => {
