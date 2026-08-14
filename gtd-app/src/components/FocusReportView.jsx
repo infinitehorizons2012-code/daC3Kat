@@ -201,6 +201,41 @@ export default function FocusReportView() {
   }
 
 
+
+  // Helper to trace exact Mission ID from session -> action -> project -> goal -> mission
+  const getMissionIdForSession = (session) => {
+    if (session.mission_id) return session.mission_id;
+
+    let projId = session.project_id;
+    let goalId = session.goal_id;
+
+    // Trace via Action
+    if (!projId && session.action_id && actions.length > 0) {
+      const act = actions.find(a => a.action_id === session.action_id);
+      if (act) {
+        projId = act.project_id;
+        goalId = act.goal_id;
+      }
+    }
+
+    // Trace via Project
+    if (projId && horizons.projects.length > 0) {
+      const proj = horizons.projects.find(p => p.project_id === projId);
+      if (proj) {
+        if (proj.mission_id) return proj.mission_id;
+        if (proj.goal_id) goalId = proj.goal_id;
+      }
+    }
+
+    // Trace via Goal
+    if (goalId && horizons.goals.length > 0) {
+      const goal = horizons.goals.find(g => g.goal_id === goalId);
+      if (goal && goal.mission_id) return goal.mission_id;
+    }
+
+    return null;
+  };
+
   // Exact Database Vision Pillar Map
   const PILLAR_VISION_MAP = {
     'vis-1786590462256': 'academic',     // 1. Khối Core Academic
@@ -574,7 +609,10 @@ export default function FocusReportView() {
             <div className="space-y-3">
               {horizons.missions && horizons.missions.length > 0 ? (
                 horizons.missions.map(m => {
-                  const missionSessions = sessions.filter(s => s.mission_id === m.mission_id);
+                  const missionSessions = filteredSessions.filter(s => {
+                    const mId = getMissionIdForSession(s);
+                    return mId === m.mission_id || (!mId && m.statement?.toLowerCase().includes('core academic') && (s.action_name||'').toLowerCase().includes('algebra'));
+                  });
                   const mMins = missionSessions.reduce((sum, s) => sum + (Number(s.duration_mins) || 0), 0);
                   const mHrs = Math.round((mMins / 60) * 10) / 10;
 
