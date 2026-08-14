@@ -599,43 +599,7 @@ export default function FocusReportView() {
             </div>
           </div>
 
-          {/* Block 3: Danh Sách Sứ Mệnh (Missions 30k ft) */}
-          <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
-            <h3 className="text-lg font-black text-slate-800 mb-2 flex items-center gap-2">
-              <i className="fa-solid fa-bullseye text-amber-600"></i> Tiến Độ Tích Lũy Theo Từng Sứ Mệnh (Missions 30,000 ft)
-            </h3>
-            <p className="text-xs text-slate-500 font-medium mb-4">Các Sứ Mệnh được liên kết trực tiếp từ nhật ký Pomodoro.</p>
 
-            <div className="space-y-3">
-              {horizons.missions && horizons.missions.length > 0 ? (
-                horizons.missions.map(m => {
-                  const missionSessions = filteredSessions.filter(s => {
-                    const mId = getMissionIdForSession(s);
-                    return mId === m.mission_id || (!mId && m.statement?.toLowerCase().includes('core academic') && (s.action_name||'').toLowerCase().includes('algebra'));
-                  });
-                  const mMins = missionSessions.reduce((sum, s) => sum + (Number(s.duration_mins) || 0), 0);
-                  const mHrs = Math.round((mMins / 60) * 10) / 10;
-
-                  return (
-                    <div key={m.mission_id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex justify-between items-center">
-                      <div>
-                        <span className="text-[10px] font-black uppercase text-slate-400 block">Sứ Mệnh ID: {m.mission_id}</span>
-                        <h4 className="font-black text-slate-800 text-sm mt-0.5">{m.statement}</h4>
-                        <span className="text-xs text-slate-500 mt-1 block">Đã có {missionSessions.length} hiệp Pomodoro gắn liên kết</span>
-                      </div>
-                      <span className="text-base font-black bg-amber-100 text-amber-900 px-4 py-2 rounded-2xl border border-amber-300">
-                        ⏱️ {mHrs}h ({mMins}m)
-                      </span>
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-amber-800 text-xs font-bold">
-                  🌟 Sứ mệnh "1. Khối Core Academic (40%)" — Đã tích lũy {totalHours}h từ các hiệp Pomodoro học tập.
-                </div>
-              )}
-            </div>
-          </div>
 
         </div>
       )}
