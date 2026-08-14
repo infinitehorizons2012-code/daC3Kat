@@ -370,6 +370,8 @@ export default function FocusEngine({ onOpenReport }) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
               completed_poms: newCompleted,
+              last_executed_at: new Date().toISOString(),
+              total_focus_mins: ((currentAction.total_focus_mins || 0) + workMins),
               ...(isDoneNow ? { status: 'Done' } : {})
             })
           });

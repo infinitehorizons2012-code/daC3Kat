@@ -155,7 +155,21 @@ export default function FocusReportView() {
     const targetId = editingSession.session_id;
     setEditingSession(null);
 
-    // 3. Network sync to backend API
+    // 3. Sync execution stamp to GTD Action
+    if (editForm.action_id) {
+      try {
+        await fetch(`${API_URL}/actions/${editForm.action_id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            last_executed_at: editForm.start_time || new Date().toISOString(),
+            total_focus_mins: editForm.duration_mins || 25
+          })
+        });
+      } catch (e) {}
+    }
+
+    // 4. Network sync to backend API
     try {
       await fetch(`${API_URL}/focus-sessions/${targetId}`, {
         method: 'PATCH',
@@ -455,7 +469,17 @@ export default function FocusReportView() {
                       </td>
 
                       <td className="p-3 font-black text-slate-800">
-                        {session.action_name || linkedAction?.name || 'Hiệp Pomodoro'}
+                        <div>
+                          <span className="text-slate-900 font-black text-xs block">{session.action_name || linkedAction?.name || 'Hiệp Pomodoro'}</span>
+                          <div className="flex items-center gap-1.5 mt-1 text-[10px] font-bold text-slate-500">
+                            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-black">
+                              ✅ Đã thực hiện: {session.created_at ? session.created_at.slice(0, 16).replace('T', ' ') : 'Hôm nay'}
+                            </span>
+                            <span className="bg-amber-100 text-amber-900 px-2 py-0.5 rounded-md font-black">
+                              ⏱️ {session.duration_mins || 25} phút
+                            </span>
+                          </div>
+                        </div>
                       </td>
 
                       <td className="p-3 max-w-xs">
