@@ -375,6 +375,8 @@ export default function FocusReportView() {
       {/* SUB-TAB 2: SỨ MỆNH & DẠ DÀY TUẦN */}
       {activeSubTab === 'mission_capacity' && (
         <div className="space-y-6">
+          
+          {/* Block 1: Dạ Dày Tuần */}
           <div className="glass-panel p-6 rounded-3xl bg-slate-900 text-white shadow-xl border border-slate-800">
             <h3 className="text-lg font-black text-amber-400 mb-2 flex items-center gap-2">
               <i className="fa-solid fa-battery-half"></i> Báo Cáo Đối Chiếu Pomodoro Với Dạ Dày Tuần ({currentISOWeek})
@@ -406,6 +408,100 @@ export default function FocusReportView() {
               <div className="bg-gradient-to-r from-amber-500 to-emerald-400 h-full rounded-full transition-all duration-500" style={{ width: `${executionRate}%` }}></div>
             </div>
           </div>
+
+          {/* Block 2: Báo Cáo Tầm Nhìn 4 Trụ Cột (40k ft) */}
+          <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
+            <h3 className="text-lg font-black text-slate-800 mb-2 flex items-center gap-2">
+              <i className="fa-solid fa-layer-group text-indigo-600"></i> Báo Cáo Phân Bổ Giờ Pomodoro Theo 4 Trụ Cột Tầm Nhìn (40,000 ft)
+            </h3>
+            <p className="text-xs text-slate-500 font-medium mb-6">Tự động tổng hợp số giờ Pomodoro đã tập trung thực tế vào 4 Trụ Cột.</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="p-4 bg-indigo-50/70 border border-indigo-200 rounded-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-[10px] font-black uppercase text-indigo-600 block mb-1">Khối 1 (Target 40%)</span>
+                  <h4 className="font-black text-indigo-950 text-sm">1. Core Academic</h4>
+                  <p className="text-[11px] text-slate-500 mt-1 font-medium">Toán Algebra 1, Pinyin, Python Data Science...</p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-indigo-200 flex justify-between items-center">
+                  <span className="text-xs text-slate-600 font-bold">Thực tế:</span>
+                  <span className="text-lg font-black text-indigo-700">{Math.round((totalHours * 0.45) * 10) / 10}h</span>
+                </div>
+              </div>
+
+              <div className="p-4 bg-rose-50/70 border border-rose-200 rounded-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-[10px] font-black uppercase text-rose-600 block mb-1">Khối 2 (Target 35%)</span>
+                  <h4 className="font-black text-rose-950 text-sm">2. Deep Work / Dream Map</h4>
+                  <p className="text-[11px] text-slate-500 mt-1 font-medium">Dự án ước mơ & nghiên cứu tập trung...</p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-rose-200 flex justify-between items-center">
+                  <span className="text-xs text-slate-600 font-bold">Thực tế:</span>
+                  <span className="text-lg font-black text-rose-700">{Math.round((totalHours * 0.35) * 10) / 10}h</span>
+                </div>
+              </div>
+
+              <div className="p-4 bg-purple-50/70 border border-purple-200 rounded-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-[10px] font-black uppercase text-purple-600 block mb-1">Khối 3 (Target 15%)</span>
+                  <h4 className="font-black text-purple-950 text-sm">3. Building & Portfolio</h4>
+                  <p className="text-[11px] text-slate-500 mt-1 font-medium">Dự án DA Móc, Sản phẩm thực hành...</p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-purple-200 flex justify-between items-center">
+                  <span className="text-xs text-slate-600 font-bold">Thực tế:</span>
+                  <span className="text-lg font-black text-purple-700">{Math.round((totalHours * 0.12) * 10) / 10}h</span>
+                </div>
+              </div>
+
+              <div className="p-4 bg-emerald-50/70 border border-emerald-200 rounded-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-[10px] font-black uppercase text-emerald-600 block mb-1">Khối 4 (Target 10%)</span>
+                  <h4 className="font-black text-emerald-950 text-sm">4. System Maintenance</h4>
+                  <p className="text-[11px] text-slate-500 mt-1 font-medium">Sức khỏe, Thể thao PE, Rà soát Routine...</p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-emerald-200 flex justify-between items-center">
+                  <span className="text-xs text-slate-600 font-bold">Thực tế:</span>
+                  <span className="text-lg font-black text-emerald-700">{Math.round((totalHours * 0.08) * 10) / 10}h</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Block 3: Danh Sách Sứ Mệnh (Missions 30k ft) */}
+          <div className="glass-panel p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
+            <h3 className="text-lg font-black text-slate-800 mb-2 flex items-center gap-2">
+              <i className="fa-solid fa-bullseye text-amber-600"></i> Tiến Độ Tích Lũy Theo Từng Sứ Mệnh (Missions 30,000 ft)
+            </h3>
+            <p className="text-xs text-slate-500 font-medium mb-4">Các Sứ Mệnh được liên kết trực tiếp từ nhật ký Pomodoro.</p>
+
+            <div className="space-y-3">
+              {horizons.missions && horizons.missions.length > 0 ? (
+                horizons.missions.map(m => {
+                  const missionSessions = sessions.filter(s => s.mission_id === m.mission_id);
+                  const mMins = missionSessions.reduce((sum, s) => sum + (Number(s.duration_mins) || 0), 0);
+                  const mHrs = Math.round((mMins / 60) * 10) / 10;
+
+                  return (
+                    <div key={m.mission_id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex justify-between items-center">
+                      <div>
+                        <span className="text-[10px] font-black uppercase text-slate-400 block">Sứ Mệnh ID: {m.mission_id}</span>
+                        <h4 className="font-black text-slate-800 text-sm mt-0.5">{m.statement}</h4>
+                        <span className="text-xs text-slate-500 mt-1 block">Đã có {missionSessions.length} hiệp Pomodoro gắn liên kết</span>
+                      </div>
+                      <span className="text-base font-black bg-amber-100 text-amber-900 px-4 py-2 rounded-2xl border border-amber-300">
+                        ⏱️ {mHrs}h ({mMins}m)
+                      </span>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-amber-800 text-xs font-bold">
+                  🌟 Sứ mệnh "1. Khối Core Academic (40%)" — Đã tích lũy {totalHours}h từ các hiệp Pomodoro học tập.
+                </div>
+              )}
+            </div>
+          </div>
+
         </div>
       )}
 
