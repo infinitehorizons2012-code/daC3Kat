@@ -228,15 +228,20 @@ export default function WeeklyReview() {
 
   const calcMins = (a) => {
     if (!a) return 30;
+    let scheduledMins = 30;
     if (a.storage_system === 'Calendar' && a.scheduled_datetime && a.scheduled_end_datetime) {
       const s = new Date(a.scheduled_datetime);
       const e = new Date(a.scheduled_end_datetime);
       if (!isNaN(s.getTime()) && !isNaN(e.getTime())) {
         const diffMs = e - s;
-        if (diffMs > 0) return Math.round(diffMs / 60000);
+        if (diffMs > 0) scheduledMins = Math.round(diffMs / 60000);
       }
+    } else if (a.time_needed_mins) {
+      scheduledMins = Number(a.time_needed_mins);
     }
-    return Number(a.time_needed_mins) || 30;
+    // 🌟 If actual Pomodoro focus mins is logged (e.g. 180m = 3h), use actual focus duration!
+    const actualMins = Number(a.total_focus_mins) || 0;
+    return Math.max(scheduledMins, actualMins);
   };
 
   const nextMins = nextActions.reduce((s, a) => s + calcMins(a), 0);
@@ -514,23 +519,44 @@ export default function WeeklyReview() {
                           <i className={isCal ? 'fa-regular fa-calendar-check text-sm' : (isWait ? 'fa-solid fa-hourglass-half text-sm' : 'fa-solid fa-bolt text-sm')}></i>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-bold text-slate-800 truncate">{a.name}</div>
-                          <div className="text-[10px] font-bold text-slate-400 mt-0.5 flex items-center gap-2 flex-wrap">
-                            {data.projects.find(p => p.project_id === a.project_id)?.name && (
-                              <span className="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded">{data.projects.find(p => p.project_id === a.project_id)?.name}</span>
+                          <div className="flex items-center gap-2">
+                            <div className={`text-sm font-black truncate ${a.status === 'Done' ? 'line-through text-slate-500' : 'text-slate-800'}`}>{a.name}</div>
+                            {a.status === 'Done' && (
+                              <span className="bg-emerald-600 text-white font-black px-2 py-0.5 rounded-full text-[9px] flex items-center gap-1 shrink-0 shadow-xs">
+                                <i className="fa-solid fa-circle-check"></i> ✅ HOÀN THÀNH
+                              </span>
                             )}
+                          </div>
+                          
+                          <div className="text-[10px] font-bold text-slate-400 mt-1 flex items-center gap-2 flex-wrap">
+                            {data.projects.find(p => p.project_id === a.project_id)?.name && (
+                              <span className="bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded font-bold">{data.projects.find(p => p.project_id === a.project_id)?.name}</span>
+                            )}
+                            
                             {isCal ? (
-                              <span className="text-emerald-600">
+                              <span className="text-emerald-700 font-bold">
                                 <i className="fa-regular fa-calendar mr-1"></i>
                                 {a.scheduled_datetime && !isNaN(new Date(a.scheduled_datetime).getTime()) ? new Date(a.scheduled_datetime).toLocaleDateString('vi-VN') : 'Lịch hẹn'} ({calcMins(a)}m)
                               </span>
                             ) : isWait ? (
-                              <span className="text-amber-600">
+                              <span className="text-amber-700 font-bold">
                                 <i className="fa-solid fa-user mr-1"></i> Chờ: {a.assigned_to} ({calcMins(a)}m)
                               </span>
                             ) : (
-                              <span className="text-blue-600">
+                              <span className="text-blue-700 font-bold">
                                 <i className="fa-solid fa-clock mr-1"></i> {calcMins(a)}m • {a.energy_level || 'Medium'}
+                              </span>
+                            )}
+
+                            {(a.completed_at || a.last_executed_at) && (
+                              <span className="bg-emerald-50 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded font-black">
+                                🕒 Xong lúc: {(a.completed_at || a.last_executed_at).slice(0, 16).replace('T', ' ')}
+                              </span>
+                            )}
+
+                            {a.total_focus_mins && Number(a.total_focus_mins) > 120 && (
+                              <span className="bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded font-black">
+                                ⚡ Tập trung thực tế: {a.total_focus_mins}m (+{Number(a.total_focus_mins) - 120}m)
                               </span>
                             )}
                           </div>
