@@ -174,18 +174,25 @@ export default function FocusReportView() {
     if (newActionId) {
       try {
         const nowIso = editForm.start_time || new Date().toISOString();
+        const targetStatus = editForm.action_status || 'Done';
+
         await fetch(`${API_URL}/actions/${newActionId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            status: targetStatus,
+            completed_at: targetStatus === 'Done' ? nowIso : null,
             last_executed_at: nowIso,
             total_focus_mins: editForm.duration_mins || 25
           })
         });
 
         setActions(prev => prev.map(a => 
-          a.action_id === newActionId ? { ...a, last_executed_at: nowIso } : a
+          a.action_id === newActionId ? { ...a, status: targetStatus, completed_at: targetStatus === 'Done' ? nowIso : null, last_executed_at: nowIso } : a
         ));
+
+        // 🌟 Broadcast realtime event so all other GTD screens instantly update!
+        window.dispatchEvent(new CustomEvent('gtd_data_changed'));
       } catch (e) {}
     }
 
@@ -682,8 +689,37 @@ export default function FocusReportView() {
                   type="text" 
                   value={editForm.action_name}
                   onChange={e => setEditForm({ ...editForm, action_name: e.target.value })}
-                  className="w-full p-2.5 border rounded-xl outline-none focus:border-amber-500"
+                  className="w-full p-2.5 border rounded-xl outline-none focus:border-amber-500 font-black text-slate-800"
                 />
+              </div>
+
+              {/* 🌟 GTD Action Status Toggle */}
+              <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                <label className="block mb-1.5 text-slate-900 font-black text-xs">⚡ Trạng Thái Cho Hành Động GTD Bên Trên:</label>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-700">
+                    <input 
+                      type="radio" 
+                      name="action_status" 
+                      value="Pending"
+                      checked={editForm.action_status === 'Pending'}
+                      onChange={e => setEditForm({ ...editForm, action_status: e.target.value })}
+                      className="accent-amber-500 w-4 h-4"
+                    />
+                    <span>⚡ Đang Thực Thi (Pending)</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer font-black text-emerald-700">
+                    <input 
+                      type="radio" 
+                      name="action_status" 
+                      value="Done"
+                      checked={editForm.action_status === 'Done'}
+                      onChange={e => setEditForm({ ...editForm, action_status: e.target.value })}
+                      className="accent-emerald-600 w-4 h-4"
+                    />
+                    <span>✅ Đã Hoàn Thành (Done)</span>
+                  </label>
+                </div>
               </div>
 
               {/* GTD Linkers Dropdowns */}
