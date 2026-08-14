@@ -513,7 +513,7 @@ export default function WeeklyReview() {
                   const isCal = a.storage_system === 'Calendar';
                   const isWait = a.storage_system === 'Waiting_For';
                   return (
-                    <div key={a.action_id} className={`p-3 bg-white border rounded-xl shadow-sm flex items-center justify-between gap-3 group transition-colors ${isCal ? 'border-emerald-200' : (isWait ? 'border-amber-200' : 'border-slate-200')}`}>
+                    <div key={a.action_id} className={`p-3 border rounded-xl shadow-sm flex items-center justify-between gap-3 group transition-colors ${a.status === 'Done' ? 'bg-emerald-50/90 border-emerald-400 ring-2 ring-emerald-300' : (isCal ? 'bg-white border-emerald-200' : (isWait ? 'bg-white border-amber-200' : 'bg-white border-slate-200'))}`}>
                       <div className="flex items-start gap-3 flex-1 min-w-0">
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isCal ? 'bg-emerald-100 text-emerald-600' : (isWait ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600')}`}>
                           <i className={isCal ? 'fa-regular fa-calendar-check text-sm' : (isWait ? 'fa-solid fa-hourglass-half text-sm' : 'fa-solid fa-bolt text-sm')}></i>
