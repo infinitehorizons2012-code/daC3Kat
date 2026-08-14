@@ -1,5 +1,145 @@
 [
   {
+    "log_id": "pc-1786672975619",
+    "app_name": "Facebook",
+    "url_link": "https://www.facebook.com/",
+    "category": "Giải trí / Game",
+    "start_time": "2026-08-14 09:01",
+    "end_time": "09:02",
+    "duration_mins": 1,
+    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/)"
+  },
+  {
+    "log_id": "pc-1786672913469",
+    "app_name": "Khấu hao là gì? | Tự học Tài chính Mỗi Ngày",
+    "url_link": "https://www.tuhoctaichinh.org/bai-hoc/khau-hao-co-ban",
+    "category": "Khác",
+    "start_time": "2026-08-14 09:01",
+    "end_time": "09:01",
+    "duration_mins": 1,
+    "details": "Trang web: Khấu hao là gì? | Tự học Tài chính Mỗi Ngày (Link gốc: https://www.tuhoctaichinh.org/bai-hoc/khau-hao-co-ban)"
+  },
+  {
+    "log_id": "pc-1786672883134",
+    "app_name": "Thế Giới Game Tài Chính | TuHocTaiChinh.org",
+    "url_link": "https://www.tuhoctaichinh.org/game",
+    "category": "Giải trí / Game",
+    "start_time": "2026-08-14 09:00",
+    "end_time": "09:01",
+    "duration_mins": 1,
+    "details": "Trang web: Thế Giới Game Tài Chính | TuHocTaiChinh.org (Link gốc: https://www.tuhoctaichinh.org/game)"
+  },
+  {
+    "log_id": "pc-1786672852444",
+    "app_name": "Tự học Tài chính Mỗi Ngày",
+    "url_link": "https://www.tuhoctaichinh.org/nghe-nghiep-hoc",
+    "category": "Khác",
+    "start_time": "2026-08-14 09:00",
+    "end_time": "09:00",
+    "duration_mins": 1,
+    "details": "Trang web: Tự học Tài chính Mỗi Ngày (Link gốc: https://www.tuhoctaichinh.org/nghe-nghiep-hoc)"
+  },
+  {
+    "log_id": "pc-1786672818606",
+    "app_name": "Tự học Tài chính Mỗi Ngày",
+    "url_link": "https://www.tuhoctaichinh.org/hoc-bai",
+    "category": "Khác",
+    "start_time": "2026-08-14 08:59",
+    "end_time": "09:00",
+    "duration_mins": 1,
+    "details": "Trang web: Tự học Tài chính Mỗi Ngày (Link gốc: https://www.tuhoctaichinh.org/hoc-bai)"
+  },
+  {
+    "log_id": "pc-1786672788562",
+    "app_name": "Tự học Tài chính Mỗi Ngày",
+    "url_link": "https://www.tuhoctaichinh.org/dashboard",
+    "category": "Khác",
+    "start_time": "2026-08-14 08:59",
+    "end_time": "08:59",
+    "duration_mins": 1,
+    "details": "Trang web: Tự học Tài chính Mỗi Ngày (Link gốc: https://www.tuhoctaichinh.org/dashboard)"
+  },
+  {
+    "log_id": "pc-1786672757360",
+    "app_name": "Tự học Tài chính Mỗi Ngày",
+    "url_link": "https://www.tuhoctaichinh.org/login?ref=4b6403cf-51cf-49e7-a979-04ced7c49f89&fbclid=IwY2xjawTrVYpwZG9mBWV4dG4DYWVtAjEwAGJyaWQRMWI3VmtiMjRqSmlydjN0NHVzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeWz0u29Y5fI3X9SI3EgT9YC6BKWPkwFbz7VoDd9rkQzdJ4a63cfw95L47jD0_aem_BpBoa6Pu2ENAKsf20Ebh9Q",
+    "category": "Khác",
+    "start_time": "2026-08-14 08:58",
+    "end_time": "08:59",
+    "duration_mins": 1,
+    "details": "Trang web: Tự học Tài chính Mỗi Ngày (Link gốc: https://www.tuhoctaichinh.org/login?ref=4b6403cf-51cf-49e7-a979-04ced7c49f89&fbclid=IwY2xjawTrVYpwZG9mBWV4dG4DYWVtAjEwAGJyaWQRMWI3VmtiMjRqSmlydjN0NHVzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeWz0u29Y5fI3X9SI3EgT9YC6BKWPkwFbz7VoDd9rkQzdJ4a63cfw95L47jD0_aem_BpBoa6Pu2ENAKsf20Ebh9Q)"
+  },
+  {
+    "log_id": "pc-1786672664859",
+    "app_name": "Facebook",
+    "url_link": "https://www.facebook.com/",
+    "category": "Giải trí / Game",
+    "start_time": "2026-08-14 08:56",
+    "end_time": "08:57",
+    "duration_mins": 1,
+    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/)"
+  },
+  {
+    "log_id": "pc-1786672604362",
+    "app_name": "Facebook",
+    "url_link": "https://www.facebook.com/minh.le.893409",
+    "category": "Giải trí / Game",
+    "start_time": "2026-08-14 08:55",
+    "end_time": "08:56",
+    "duration_mins": 1,
+    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/minh.le.893409)"
+  },
+  {
+    "log_id": "pc-1786672033121",
+    "app_name": "Facebook",
+    "url_link": "https://www.facebook.com/",
+    "category": "Giải trí / Game",
+    "start_time": "2026-08-14 08:46",
+    "end_time": "08:47",
+    "duration_mins": 1,
+    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/)"
+  },
+  {
+    "log_id": "pc-1786671967196",
+    "app_name": "Facebook",
+    "url_link": "https://www.facebook.com/yen.medic/posts/pfbid02CSHaigDumbEDMDkXJweUuFdHCADqBZSXtPzmBaiFEQjybSPgX6GBVxtffKtXVVh5l",
+    "category": "Giải trí / Game",
+    "start_time": "2026-08-14 08:45",
+    "end_time": "08:46",
+    "duration_mins": 1,
+    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/yen.medic/posts/pfbid02CSHaigDumbEDMDkXJweUuFdHCADqBZSXtPzmBaiFEQjybSPgX6GBVxtffKtXVVh5l)"
+  },
+  {
+    "log_id": "pc-1786671928377",
+    "app_name": "Facebook",
+    "url_link": "https://www.facebook.com/photo/?fbid=5463645637194013&set=pcb.5463645670527343",
+    "category": "Giải trí / Game",
+    "start_time": "2026-08-14 08:44",
+    "end_time": "08:45",
+    "duration_mins": 1,
+    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/photo/?fbid=5463645637194013&set=pcb.5463645670527343)"
+  },
+  {
+    "log_id": "pc-1786671893316",
+    "app_name": "Facebook",
+    "url_link": "https://www.facebook.com/",
+    "category": "Giải trí / Game",
+    "start_time": "2026-08-14 08:44",
+    "end_time": "08:44",
+    "duration_mins": 1,
+    "details": "Trang web: Facebook (Link gốc: https://www.facebook.com/)"
+  },
+  {
+    "log_id": "pc-1786671858419",
+    "app_name": "Workflow runs · infinitehorizons2012-code/daC3Kat",
+    "url_link": "https://github.com/infinitehorizons2012-code/daC3Kat/actions",
+    "category": "Học tập & Deep Work",
+    "start_time": "2026-08-14 08:43",
+    "end_time": "08:44",
+    "duration_mins": 1,
+    "details": "Trang web: Workflow runs · infinitehorizons2012-code/daC3Kat (Link gốc: https://github.com/infinitehorizons2012-code/daC3Kat/actions)"
+  },
+  {
     "log_id": "pc-1786631498849-0",
     "app_name": "[System Idle Process] N/A\"\r",
     "url_link": "",
