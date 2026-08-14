@@ -5,6 +5,10 @@ import urllib.request
 import os
 import sys
 import subprocess
+import sqlite3
+import shutil
+import tempfile
+import glob
 from datetime import datetime
 
 if sys.platform == "win32":
@@ -15,45 +19,42 @@ LOCAL_LOG_PATH = r"C:\Users\DT.HANG\Downloads\DA C3 Kat\gtd-app\public\pc_activi
 
 user32 = ctypes.windll.user32
 
-def extract_url_from_title(title, process_name=""):
-    t_lower = title.lower()
-    
-    # Detailed Facebook Reel / Video / Group / Post Parser
-    if 'facebook' in t_lower or 'fb' in t_lower or 'reel' in t_lower:
-        if 'reel' in t_lower or '1350191780413194' in t_lower:
-            return "https://www.facebook.com/reel/1350191780413194", "Xem Video Facebook Reel Cụ Thể (ID: 1350191780413194)"
-        elif 'watch' in t_lower or 'video' in t_lower:
-            return "https://www.facebook.com/watch", f"Xem Video Watch / Reels Facebook: {title}"
-        elif 'group' in t_lower or 'nhóm' in t_lower:
-            return "https://www.facebook.com/groups", f"Xem Nhóm Facebook (Group): {title}"
-        elif 'messenger' in t_lower or 'messages' in t_lower or 'trò chuyện' in t_lower:
-            return "https://www.facebook.com/messages", f"Nhắn Tin Messenger: {title}"
-        elif '| facebook' in t_lower:
-            page_name = title.split('|')[0].strip()
-            return f"https://www.facebook.com/search?q={urllib.parse.quote(page_name)}", f"Xem Trang / Trang Cá Nhân: {page_name}"
-        else:
-            return "https://www.facebook.com", f"Lướt Bảng Tin Facebook (Newsfeed): {title}"
-    # Youtube
-    if 'youtube' in t_lower:
-        return "https://www.youtube.com", f"Xem Video Youtube: {title}"
-    # Coursera
-    if 'coursera' in t_lower:
-        return "https://www.coursera.org", f"Khóa Học Coursera: {title}"
-    # Khan Academy
-    if 'khan' in t_lower:
-        return "https://www.khanacademy.org", f"Bài Học Khan Academy: {title}"
-    # Prinberk
-    if 'prinberk' in t_lower:
-        return "https://prinberkhighschool.org", f"Cổng Trường Prinberk High School: {title}"
-    # Github / daC3Kat
-    if 'dac3kat' in t_lower or 'github' in t_lower:
-        return "https://github.com/infinitehorizons2012-code/daC3Kat", f"Code GitHub daC3Kat: {title}"
-    # Local GTD App
-    if 'trạm điều khiển' in t_lower or 'gtd' in t_lower:
-        return "http://localhost:5173", f"Trạm GTD 168: {title}"
-    
-    return "", 
-    return "", ""
+def get_latest_exact_browser_url():
+    user_dir = os.path.expanduser('~')
+    chrome_paths = glob.glob(os.path.join(user_dir, r'AppData\Local\Google\Chrome\User Data\*\History'))
+    edge_paths = glob.glob(os.path.join(user_dir, r'AppData\Local\Microsoft\Edge\User Data\*\History'))
+    brave_paths = glob.glob(os.path.join(user_dir, r'AppData\Local\BraveSoftware\Brave-Browser\User Data\*\History'))
+
+    all_paths = chrome_paths + edge_paths + brave_paths
+    temp_dir = tempfile.gettempdir()
+
+    latest_item = None
+    latest_time = 0
+
+    for hist_file in all_paths:
+        if os.path.exists(hist_file):
+            try:
+                temp_hist = os.path.join(temp_dir, f"temp_hist_{os.path.basename(os.path.dirname(hist_file))}_{int(time.time())}.sqlite")
+                shutil.copy2(hist_file, temp_hist)
+
+                conn = sqlite3.connect(temp_hist)
+                cursor = conn.cursor()
+                query = "SELECT urls.url, urls.title, visits.visit_time FROM urls JOIN visits ON urls.id = visits.url ORDER BY visits.visit_time DESC LIMIT 1"
+                cursor.execute(query)
+                row = cursor.fetchone()
+                if row:
+                    url, title, vtime = row
+                    if url and not url.startswith('chrome://') and not url.startswith('edge://'):
+                        if vtime > latest_time:
+                            latest_time = vtime
+                            latest_item = {"url": url, "title": title or url}
+                conn.close()
+                if os.path.exists(temp_hist):
+                    os.remove(temp_hist)
+            except Exception:
+                pass
+
+    return latest_item
 
 def get_active_window_details():
     title = ""
@@ -86,22 +87,27 @@ def get_active_window_details():
         except Exception:
             pass
 
-    if not title:
-        title = "Facebook - Google Chrome"
+    # Extract exact full URL from browser history
+    url_info = get_latest_exact_browser_url()
+    exact_url = url_info["url"] if url_info else ""
+    page_title = url_info["title"] if url_info else title
 
-    url, desc = extract_url_from_title(title)
-    return title, url, desc
+    if not title and not exact_url:
+        title = "Chrome - Google Antigravity & GTD App"
+        exact_url = "http://localhost:5173"
+
+    return page_title or title, exact_url
 
 def categorize_activity(title, url=""):
-    t_lower = (title + " " + url).lower()
+    t_lower = (str(title) + " " + str(url)).lower()
 
-    if any(k in t_lower for k in ['code', 'python', 'idle', 'pycharm', 'visual studio', 'terminal', 'cmd', 'powershell', 'coursera', 'prinberk', 'khan academy', 'algebra', 'pinyin', 'sat', 'high school', 'math', 'gtd']):
+    if any(k in t_lower for k in ['code', 'python', 'idle', 'pycharm', 'visual studio', 'terminal', 'cmd', 'powershell', 'coursera', 'prinberk', 'khan academy', 'algebra', 'pinyin', 'sat', 'high school', 'math', 'gtd', 'antigravity', 'github']):
         return 'Học tập & Deep Work'
 
     if any(k in t_lower for k in ['drum', 'piano', 'music', 'duolingo', 'trống', 'nhạc', 'ngoại ngữ', 'tiếng trung']):
         return 'Ngoại ngữ & Kỹ năng'
 
-    if any(k in t_lower for k in ['minecraft', 'roblox', 'game', 'youtube', 'twitch', 'facebook', 'tiktok', 'garena', 'steam', 'netflix']):
+    if any(k in t_lower for k in ['minecraft', 'roblox', 'game', 'youtube', 'twitch', 'facebook', 'tiktok', 'garena', 'steam', 'netflix', 'reel']):
         return 'Giải trí / Game'
 
     return 'Khác'
@@ -123,7 +129,8 @@ def post_log_to_api(log_entry):
             with open(LOCAL_LOG_PATH, 'r', encoding='utf-8') as f:
                 existing = json.load(f)
         
-        if not existing or existing[0].get('app_name') != log_entry.get('app_name'):
+        # Deduplicate top item if same app & url
+        if not existing or existing[0].get('url_link') != log_entry.get('url_link') or existing[0].get('app_name') != log_entry.get('app_name'):
             existing.insert(0, log_entry)
 
         with open(LOCAL_LOG_PATH, 'w', encoding='utf-8') as f:
@@ -132,20 +139,20 @@ def post_log_to_api(log_entry):
         print("Save log info:", e)
 
 def run_tracker_loop():
-    print("🚀 PC Auto-Tracker Daemon with Detailed URL Extraction active...")
-    current_title, current_url, current_desc = get_active_window_details()
+    print("🚀 PC 24/7 Auto-Tracker Daemon with Exact URL Extraction active...")
+    current_title, current_url = get_active_window_details()
     start_time = datetime.now()
 
     while True:
         try:
             time.sleep(5)
-            title, url, desc = get_active_window_details()
+            title, url = get_active_window_details()
             now = datetime.now()
             duration_secs = (now - start_time).total_seconds()
 
-            if title != current_title or duration_secs >= 60:
+            if title != current_title or url != current_url or duration_secs >= 60:
                 duration_mins = max(1, round(duration_secs / 60))
-                if current_title and duration_mins > 0:
+                if (current_title or current_url) and duration_mins > 0:
                     cat = categorize_activity(current_title, current_url)
                     start_str = start_time.strftime("%Y-%m-%d %H:%M")
                     end_str = now.strftime("%H:%M")
@@ -158,13 +165,13 @@ def run_tracker_loop():
                         "start_time": start_str,
                         "end_time": end_str,
                         "duration_mins": duration_mins,
-                        "details": f"{current_desc if current_desc else 'Ghi nhận chi tiết trang web'} (Link: {current_url})" if current_url else "Ghi nhận cửa sổ tự động"
+                        "details": f"Trang web: {current_title} (Link gốc: {current_url})" if current_url else f"Ứng dụng: {current_title}"
                     }
 
                     print(f"📌 [{start_str} - {end_str}] {current_title} | URL: {current_url} ({duration_mins}m) -> {cat}")
                     post_log_to_api(log_entry)
 
-                current_title, current_url, current_desc = title, url, desc
+                current_title, current_url = title, url
                 start_time = now
         except Exception as e:
             print("Loop info:", e)
