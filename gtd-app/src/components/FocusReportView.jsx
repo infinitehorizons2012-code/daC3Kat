@@ -178,15 +178,13 @@ export default function FocusReportView() {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            status: 'Done', // ONLY mark target action (e.g. Bơi T4) as Done!
-            completed_at: nowIso,
             last_executed_at: nowIso,
             total_focus_mins: editForm.duration_mins || 25
           })
         });
 
         setActions(prev => prev.map(a => 
-          a.action_id === newActionId ? { ...a, status: 'Done', completed_at: nowIso, last_executed_at: nowIso } : a
+          a.action_id === newActionId ? { ...a, last_executed_at: nowIso } : a
         ));
       } catch (e) {}
     }
