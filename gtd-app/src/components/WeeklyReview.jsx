@@ -204,7 +204,7 @@ export default function WeeklyReview() {
   
   // Right Column calculations for selectedWeek
   const weekActions = data.actions.filter(a => {
-    if (a.status === 'Done' || a.status === 'Cancelled') return false;
+    if (a.status === 'Cancelled') return false;
     
     if (a.storage_system === 'Next_Actions') {
       return a.target_week ? a.target_week === selectedWeek : selectedWeek === currentWeek;
