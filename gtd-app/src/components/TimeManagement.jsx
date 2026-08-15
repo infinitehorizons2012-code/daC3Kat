@@ -149,11 +149,6 @@ const getPillarActionsHelper = (data, pillarKey, selectedWeek) => {
 
   return activeActions.filter(a => getPillarForAction(a, data) === pillarKey);
 };
-  if (!pillarKey || !data || !data.actions) return [];
-  // 🌟 NEVER REMOVE ACTIONS! Retain both Pending and Done actions in Weekly Capacity
-  const activeActions = data.actions.filter(a => a && a.status !== 'Cancelled');
-  return activeActions.filter(a => getPillarForAction(a, data) === pillarKey);
-};
 
 
 export default function TimeManagement() {
