@@ -209,8 +209,27 @@ const handleDelete = async (id) => {
     return Math.max(0, e - s);
   };
 
-  const totalDailyRoutineHrs = filteredRoutines.reduce((sum, r) => sum + calcDurationHrs(r.start_time, r.end_time), 0);
-  const totalWeeklyRoutineHrs = Math.round(totalDailyRoutineHrs * 7 * 10) / 10;
+  // Helper to calculate exact days per week a routine runs
+  const getRoutineDaysCount = (r) => {
+    if (r.days) {
+      try {
+        const arr = typeof r.days === 'string' ? JSON.parse(r.days) : r.days;
+        if (Array.isArray(arr) && arr.length > 0) return arr.length;
+      } catch (e) {}
+    }
+    if (r.is_daily === 1 || r.is_daily === true || r.is_daily === '1') return 7;
+    if (r.day_of_week === 'all') return 7;
+    if (r.day_of_week === 'mon_fri') return 5;
+    if (r.day_of_week === 'sat_sun') return 2;
+    if (r.day_of_week === 'sun') return 1;
+    return 7;
+  };
+
+  const totalWeeklyRoutineHrs = Math.round(
+    filteredRoutines.reduce((sum, r) => sum + (calcDurationHrs(r.start_time, r.end_time) * getRoutineDaysCount(r)), 0) * 10
+  ) / 10;
+
+  const totalDailyRoutineHrs = Math.round((totalWeeklyRoutineHrs / 7) * 10) / 10;
   const available168Hrs = Math.max(0, Math.round((168 - totalWeeklyRoutineHrs) * 10) / 10);
 
   // Split into Morning (00:00 - 12:00) and Evening (12:00 - 24:00) with Cross-Noon & Overnight support
