@@ -85,8 +85,13 @@ const getItemStartHour = (item) => {
   return 9; // default fallback 9am
 };
 
-// 18 Hour Slots from 06:00 to 23:00
-const HOURS = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+// 35 Time Slots (30-Minute Intervals) from 06:00 to 23:00
+const TIME_SLOTS = [];
+for (let h = 6; h <= 23; h++) {
+  const hh = String(h).padStart(2, '0');
+  TIME_SLOTS.push(`${hh}:00`);
+  if (h < 23) TIME_SLOTS.push(`${hh}:30`);
+}
 
 
 const isRoutineActiveOnDay = (r, dayIndex) => {
@@ -100,13 +105,25 @@ const isRoutineActiveOnDay = (r, dayIndex) => {
   return true;
 };
 
-const isRoutineInHourSlot = (r, hour) => {
+const isRoutineInSlot = (r, slotStr) => {
   if (!r || !r.start_time) return false;
+  const startTime5 = r.start_time.slice(0, 5);
   const startH = parseInt(r.start_time.slice(0, 2), 10);
-  if (isNaN(startH)) return false;
-  // 🌟 Render routine card at its start hour slot (or 6am for overnight routine ending in morning)
-  if (startH === hour) return true;
-  if (startH > 20 && hour === 6) return true; // Overnight routine boundary at 06:00
+  const startM = parseInt(r.start_time.slice(3, 5), 10) || 0;
+  
+  // Exact 30-minute slot match (e.g. 07:00 or 07:30)
+  if (startTime5 === slotStr) return true;
+  
+  // Slot rounding match (if start_time is e.g. 07:15, match nearest 30-min slot 07:00)
+  const slotH = parseInt(slotStr.slice(0, 2), 10);
+  const slotM = parseInt(slotStr.slice(3, 5), 10);
+  if (startH === slotH) {
+    if (startM < 30 && slotM === 0) return true;
+    if (startM >= 30 && slotM === 30) return true;
+  }
+  
+  // Overnight boundary match at 06:00
+  if (startH >= 21 && slotStr === '06:00') return true;
   return false;
 };
 
@@ -362,14 +379,22 @@ export default function WeeklyCalendarView() {
                         }
                       }
 
-                      // Filter Waiting Items for this hour
+                      // Filter Waiting Items for this 30-minute slot
                       const hourWaiting = activeActions.filter(a => {
                         if (a.storage_system === 'Waiting_For') {
                           if ((a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey)) || (a.defer_until_date && a.defer_until_date.startsWith(day.dateKey))) {
-                            const h = getItemStartHour(a);
-                            if (h === hour) {
-                              assignedActionIds.add(a.action_id);
-                              return true;
+                            const itemTime = (a.scheduled_datetime || a.defer_until_date || '').slice(11, 16);
+                            const itemH = parseInt(itemTime.slice(0, 2), 10);
+                            const itemM = parseInt(itemTime.slice(3, 5), 10) || 0;
+                            if (itemH === slotH) {
+                              if (slotM === 0 && itemM < 30) {
+                                assignedActionIds.add(a.action_id);
+                                return true;
+                              }
+                              if (slotM === 30 && itemM >= 30) {
+                                assignedActionIds.add(a.action_id);
+                                return true;
+                              }
                             }
                           }
                         }
