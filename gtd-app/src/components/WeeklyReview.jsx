@@ -100,6 +100,7 @@ export default function WeeklyReview() {
 
   // Helper to calculate exact days per week a routine runs
   const getRoutineDaysCount = (r) => {
+    if (!r) return 7;
     if (r.days) {
       try {
         const arr = typeof r.days === 'string' ? JSON.parse(r.days) : r.days;
@@ -107,15 +108,33 @@ export default function WeeklyReview() {
       } catch (e) {}
     }
     if (r.is_daily === 1 || r.is_daily === true || r.is_daily === '1') return 7;
-    if (r.day_of_week === 'all') return 7;
-    if (r.day_of_week === 'mon_fri') return 5;
-    if (r.day_of_week === 'sat_sun') return 2;
-    if (r.day_of_week === 'sun') return 1;
+    
+    const dow = (r.day_of_week || '').toLowerCase();
+    if (dow === 'all') return 7;
+    if (dow === 'mon_fri') return 5;
+    if (dow === 'sat_sun') return 2;
+    if (dow === 'sun' || dow === 'sunday' || dow === 'cn') return 1;
+    if (dow === 'mon' || dow === 'tue' || dow === 'wed' || dow === 'thu' || dow === 'fri' || dow === 'sat') return 1;
     return 7;
   };
 
-  // Filter routines for selectedWeek
-  const weekRoutines = (routines || []).filter(r => r && (!r.week_id || r.week_id === selectedWeek));
+  // Filter & Deduplicate routines strictly for selectedWeek
+  const rawWeekRoutines = (routines || []).filter(r => {
+    if (!r) return false;
+    if (r.week_id && r.week_id !== selectedWeek && r.week_id !== 'All') return false;
+    return true;
+  });
+
+  const weekRoutines = [];
+  const seenRoutineKeys = new Set();
+  for (const r of rawWeekRoutines) {
+    const key = `${(r.name || r.title || '').trim().toLowerCase()}_${r.start_time}_${r.end_time}`;
+    if (!seenRoutineKeys.has(key)) {
+      seenRoutineKeys.add(key);
+      weekRoutines.push(r);
+    }
+  }
+
   const weeklyRoutineHrs = Math.round(
     weekRoutines.reduce((sum, r) => sum + (calcRoutineDurationHrs(r.start_time, r.end_time) * getRoutineDaysCount(r)), 0) * 10
   ) / 10;

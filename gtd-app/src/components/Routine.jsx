@@ -211,6 +211,7 @@ const handleDelete = async (id) => {
 
   // Helper to calculate exact days per week a routine runs
   const getRoutineDaysCount = (r) => {
+    if (!r) return 7;
     if (r.days) {
       try {
         const arr = typeof r.days === 'string' ? JSON.parse(r.days) : r.days;
@@ -218,10 +219,13 @@ const handleDelete = async (id) => {
       } catch (e) {}
     }
     if (r.is_daily === 1 || r.is_daily === true || r.is_daily === '1') return 7;
-    if (r.day_of_week === 'all') return 7;
-    if (r.day_of_week === 'mon_fri') return 5;
-    if (r.day_of_week === 'sat_sun') return 2;
-    if (r.day_of_week === 'sun') return 1;
+    
+    const dow = (r.day_of_week || '').toLowerCase();
+    if (dow === 'all') return 7;
+    if (dow === 'mon_fri') return 5;
+    if (dow === 'sat_sun') return 2;
+    if (dow === 'sun' || dow === 'sunday' || dow === 'cn') return 1;
+    if (dow === 'mon' || dow === 'tue' || dow === 'wed' || dow === 'thu' || dow === 'fri' || dow === 'sat') return 1;
     return 7;
   };
 
