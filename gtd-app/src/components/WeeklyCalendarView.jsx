@@ -107,24 +107,16 @@ const isRoutineActiveOnDay = (r, dayIndex) => {
 
 const isRoutineInSlot = (r, slotStr) => {
   if (!r || !r.start_time) return false;
-  const startTime5 = r.start_time.slice(0, 5);
-  const startH = parseInt(r.start_time.slice(0, 2), 10);
-  const startM = parseInt(r.start_time.slice(3, 5), 10) || 0;
+  const s = r.start_time.slice(0, 5);
+  const e = r.end_time ? r.end_time.slice(0, 5) : s;
   
-  // Exact 30-minute slot match (e.g. 07:00 or 07:30)
-  if (startTime5 === slotStr) return true;
-  
-  // Slot rounding match (if start_time is e.g. 07:15, match nearest 30-min slot 07:00)
-  const slotH = parseInt(slotStr.slice(0, 2), 10);
-  const slotM = parseInt(slotStr.slice(3, 5), 10);
-  if (startH === slotH) {
-    if (startM < 30 && slotM === 0) return true;
-    if (startM >= 30 && slotM === 30) return true;
+  if (s <= e) {
+    // Normal range e.g. 11:00 to 13:30 -> spans 11:00, 11:30, 12:00, 12:30, 13:00
+    return slotStr >= s && slotStr < e;
+  } else {
+    // Overnight range e.g. 21:30 to 07:00
+    return slotStr >= s || slotStr < e;
   }
-  
-  // Overnight boundary match at 06:00
-  if (startH >= 21 && slotStr === '06:00') return true;
-  return false;
 };
 
 export default function WeeklyCalendarView() {
@@ -470,12 +462,24 @@ export default function WeeklyCalendarView() {
                             );
                           })}
 
-                          {/* Routines 🔄 */}
+                          {/* Routines 🔄 (With Spanning Continuation Bar) */}
                           {hourRoutines.map(r => {
+                            const isStartSlot = r.start_time && r.start_time.slice(0, 5) === slotStr;
                             const isSleep = (r.title || r.name || '').toLowerCase().includes('ngủ') || (r.title || r.name || '').toLowerCase().includes('nghỉ');
                             const badgeBg = isSleep ? 'bg-gradient-to-r from-indigo-700 to-purple-800 text-white border border-indigo-500' : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white border border-purple-400';
                             const icon = isSleep ? 'fa-moon' : 'fa-arrows-spin';
                             const timeSpan = r.start_time && r.end_time ? `${r.start_time}-${r.end_time}` : (r.start_time || `${slotStr}`);
+
+                            if (!isStartSlot) {
+                              return (
+                                <div key={`${r.routine_id}_${slotStr}`} className="p-1 rounded-md text-[10px] font-bold bg-indigo-900/50 text-indigo-100 border-l-4 border-purple-400 opacity-90 flex items-center justify-between shadow-2xs">
+                                  <span className="truncate flex items-center gap-1 font-semibold">
+                                    │ <i className={`fa-solid ${icon} text-[9px]`}></i> {r.title || r.name}
+                                  </span>
+                                  <span className="text-[8px] opacity-70">({r.start_time}-{r.end_time})</span>
+                                </div>
+                              );
+                            }
 
                             return (
                               <div key={r.routine_id} className={`p-1.5 rounded-lg text-[11px] font-bold shadow-xs flex flex-col gap-0.5 animate-fade-in ${badgeBg}`}>
