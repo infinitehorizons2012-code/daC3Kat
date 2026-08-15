@@ -31,79 +31,100 @@ const getPillarForAction = (a, data) => {
   const goals = data.goals || [];
   const projects = data.projects || [];
 
-  const PILLAR_VISION_MAP = {
+  const MAIN_PILLAR_VISIONS = {
     'vis-1786590462256': 'academic',
     'vis-1786607493926': 'deepwork',
     'vis-1786607530122': 'building',
     'vis-1786607544898': 'maintenance'
   };
 
-  const matchVisionToPillar = (vis) => {
-    if (!vis) return null;
-    const vid = vis.vision_id || '';
-    if (PILLAR_VISION_MAP[vid]) return PILLAR_VISION_MAP[vid];
+  const getPillarFromVisionObj = (v) => {
+    if (!v) return null;
+    if (v.pillar && MAIN_PILLAR_VISIONS[v.pillar]) return v.pillar;
+    const vid = v.vision_id || '';
+    if (MAIN_PILLAR_VISIONS[vid]) return MAIN_PILLAR_VISIONS[vid];
 
-    const stmt = (vis.statement || '').toLowerCase();
-    if (stmt.includes('core academic') || stmt.includes('tín chỉ') || stmt.includes('sat')) return 'academic';
-    if (stmt.includes('deep work') || stmt.includes('dream map') || stmt.includes('mechatronics')) return 'deepwork';
-    if (stmt.includes('building') || stmt.includes('portfolio') || stmt.includes('cold email')) return 'building';
-    if (stmt.includes('system maintenance') || stmt.includes('thể chất') || stmt.includes('rèn luyện')) return 'maintenance';
+    const stmt = (v.statement || '').toLowerCase();
+    if (stmt.includes('core academic') || stmt.startsWith('1.')) return 'academic';
+    if (stmt.includes('deep work') || stmt.startsWith('2.')) return 'deepwork';
+    if (stmt.includes('building') || stmt.startsWith('3.')) return 'building';
+    if (stmt.includes('system maintenance') || stmt.startsWith('4.')) return 'maintenance';
 
     return null;
   };
 
-  // 1. Direct Vision ID on Action
-  if (a.vision_id) {
-    const vis = visions.find(v => v.vision_id === a.vision_id);
-    const pillar = matchVisionToPillar(vis);
-    if (pillar) return pillar;
+  // 1. TRACE VIA PROJECT (Action -> Project -> Goal -> Vision -> Pillar)
+  if (a.project_id) {
+    const p = projects.find(x => x.project_id === a.project_id);
+    if (p) {
+      // Parse p.goal_ids
+      let pGids = [];
+      if (Array.isArray(p.goal_ids)) pGids = p.goal_ids;
+      else if (typeof p.goal_ids === 'string') {
+        try { pGids = JSON.parse(p.goal_ids); } catch(e) { pGids = [p.goal_ids]; }
+      }
+      if (p.goal_id) pGids.push(p.goal_id);
+
+      // Pass A: Check for explicit Main 4 Pillar Vision matches in linked Goals
+      for (const gid of pGids) {
+        const g = goals.find(x => x.goal_id === gid);
+        if (g && g.vision_id && MAIN_PILLAR_VISIONS[g.vision_id]) {
+          return MAIN_PILLAR_VISIONS[g.vision_id];
+        }
+      }
+
+      // Parse p.vision_ids
+      let pVids = [];
+      if (Array.isArray(p.vision_ids)) pVids = p.vision_ids;
+      else if (typeof p.vision_ids === 'string') {
+        try { pVids = JSON.parse(p.vision_ids); } catch(e) { pVids = [p.vision_ids]; }
+      }
+      if (p.vision_id) pVids.push(p.vision_id);
+
+      // Pass B: Check for explicit Main 4 Pillar Vision matches in project vision_ids
+      for (const vid of pVids) {
+        if (MAIN_PILLAR_VISIONS[vid]) return MAIN_PILLAR_VISIONS[vid];
+      }
+
+      // Pass C: Fallback to non-main vision matching via goals
+      for (const gid of pGids) {
+        const g = goals.find(x => x.goal_id === gid);
+        if (g && g.vision_id) {
+          const vis = visions.find(v => v.vision_id === g.vision_id);
+          const pillar = getPillarFromVisionObj(vis);
+          if (pillar) return pillar;
+        }
+      }
+
+      // Pass D: Fallback to non-main vision matching via project vision_ids
+      for (const vid of pVids) {
+        const vis = visions.find(v => v.vision_id === vid);
+        const pillar = getPillarFromVisionObj(vis);
+        if (pillar) return pillar;
+      }
+    }
   }
 
-  // 2. Direct Goal ID on Action -> Goal's Vision
+  // 2. TRACE VIA GOAL (Action -> Goal -> Vision -> Pillar)
   if (a.goal_id) {
     const g = goals.find(x => x.goal_id === a.goal_id);
     if (g && g.vision_id) {
+      if (MAIN_PILLAR_VISIONS[g.vision_id]) return MAIN_PILLAR_VISIONS[g.vision_id];
       const vis = visions.find(v => v.vision_id === g.vision_id);
-      const pillar = matchVisionToPillar(vis);
+      const pillar = getPillarFromVisionObj(vis);
       if (pillar) return pillar;
     }
   }
 
-  // 3. Direct Project ID on Action -> Project's linked Visions or Goals
-  if (a.project_id) {
-    const p = projects.find(x => x.project_id === a.project_id);
-    if (p) {
-      // First check vision_ids for exact match in PILLAR_VISION_MAP
-      const pVids = p.vision_ids || [];
-      for (const vid of pVids) {
-        if (PILLAR_VISION_MAP[vid]) return PILLAR_VISION_MAP[vid];
-        const vis = visions.find(v => v.vision_id === vid);
-        const pillar = matchVisionToPillar(vis);
-        if (pillar) return pillar;
-      }
-
-      // Then check goal_ids on project
-      const pGids = p.goal_ids || [];
-      for (const gid of pGids) {
-        const g = goals.find(x => x.goal_id === gid);
-        if (g && g.vision_id) {
-          if (PILLAR_VISION_MAP[g.vision_id]) return PILLAR_VISION_MAP[g.vision_id];
-          const vis = visions.find(v => v.vision_id === g.vision_id);
-          const pillar = matchVisionToPillar(vis);
-          if (pillar) return pillar;
-        }
-      }
-    }
+  // 3. TRACE VIA VISION (Action -> Vision -> Pillar)
+  if (a.vision_id) {
+    if (MAIN_PILLAR_VISIONS[a.vision_id]) return MAIN_PILLAR_VISIONS[a.vision_id];
+    const vis = visions.find(v => v.vision_id === a.vision_id);
+    const pillar = getPillarFromVisionObj(vis);
+    if (pillar) return pillar;
   }
 
-  // 4. Work Type or Category override fallback
-  const wt = (a.work_type || '').toLowerCase();
-  const cat = (a.category || '').toLowerCase();
-  if (wt.includes('academic') || cat.includes('academic')) return 'academic';
-  if (wt.includes('deep') || cat.includes('deep')) return 'deepwork';
-  if (wt.includes('build') || cat.includes('build')) return 'building';
-  if (wt.includes('maint') || cat.includes('maint')) return 'maintenance';
-
+  // Fallback default
   return 'academic';
 };
 
