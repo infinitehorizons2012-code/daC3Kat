@@ -98,10 +98,27 @@ export default function WeeklyReview() {
     return Math.max(0, e - s);
   };
 
+  // Helper to calculate exact days per week a routine runs
+  const getRoutineDaysCount = (r) => {
+    if (r.days) {
+      try {
+        const arr = typeof r.days === 'string' ? JSON.parse(r.days) : r.days;
+        if (Array.isArray(arr) && arr.length > 0) return arr.length;
+      } catch (e) {}
+    }
+    if (r.is_daily === 1 || r.is_daily === true || r.is_daily === '1') return 7;
+    if (r.day_of_week === 'all') return 7;
+    if (r.day_of_week === 'mon_fri') return 5;
+    if (r.day_of_week === 'sat_sun') return 2;
+    if (r.day_of_week === 'sun') return 1;
+    return 7;
+  };
+
   // Filter routines for selectedWeek
   const weekRoutines = (routines || []).filter(r => r && (!r.week_id || r.week_id === selectedWeek));
-  const dailyRoutineHrs = weekRoutines.reduce((sum, r) => sum + calcRoutineDurationHrs(r.start_time, r.end_time), 0);
-  const weeklyRoutineHrs = Math.round(dailyRoutineHrs * 7 * 10) / 10;
+  const weeklyRoutineHrs = Math.round(
+    weekRoutines.reduce((sum, r) => sum + (calcRoutineDurationHrs(r.start_time, r.end_time) * getRoutineDaysCount(r)), 0) * 10
+  ) / 10;
   const defaultRoutineDeducted168Hrs = Math.max(0, Math.round((168 - weeklyRoutineHrs) * 10) / 10);
 
   const currentCapacityObj = (capacitiesMap && capacitiesMap[selectedWeek]) || {};
