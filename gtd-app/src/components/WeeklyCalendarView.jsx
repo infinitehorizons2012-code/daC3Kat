@@ -330,30 +330,38 @@ export default function WeeklyCalendarView() {
 
             {/* HOURLY ROWS (06:00 ➔ 23:00) */}
             <div className="space-y-1.5 min-w-[900px]">
-              {HOURS.map(hour => {
-                const hourStr = `${String(hour).padStart(2, '0')}:00`;
+              {TIME_SLOTS.map(slotStr => {
+                const slotH = parseInt(slotStr.slice(0, 2), 10);
+                const slotM = parseInt(slotStr.slice(3, 5), 10);
 
                 return (
-                  <div key={hour} className="grid grid-cols-8 gap-2 items-stretch min-h-[48px] hover:bg-slate-50/80 rounded-xl transition-all p-0.5 border-b border-slate-100">
+                  <div key={slotStr} className="grid grid-cols-8 gap-2 items-stretch min-h-[44px] hover:bg-slate-50/80 rounded-xl transition-all p-0.5 border-b border-slate-100/80">
                     
                     {/* Left Hour Label Slot */}
                     <div className="flex items-center justify-center bg-slate-900 text-slate-200 font-black text-xs rounded-xl shadow-2xs">
-                      <span className="text-amber-300">{hourStr}</span>
+                      <span className={`${slotM === 0 ? "text-amber-300 text-sm font-black" : "text-slate-300 text-xs"}`}>{slotStr}</span>
                     </div>
 
                     {/* 7 Days cells for this hour */}
                     {days.map(day => {
-                      // Filter Calendar Events starting at this hour
+                      // Filter Calendar Events starting in this 30-minute slot
                       const hourCalendar = activeActions.filter(a => {
                         if (a.storage_system === 'Calendar' || (a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey))) {
                           if (a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey)) {
-                            const h = getItemStartHour(a);
-                            if (h === hour) {
-                              assignedActionIds.add(a.action_id);
-                              return true;
+                            const itemTime = a.scheduled_datetime.slice(11, 16);
+                            const itemH = parseInt(itemTime.slice(0, 2), 10);
+                            const itemM = parseInt(itemTime.slice(3, 5), 10) || 0;
+                            if (itemH === slotH) {
+                              if (slotM === 0 && itemM < 30) {
+                                assignedActionIds.add(a.action_id);
+                                return true;
+                              }
+                              if (slotM === 30 && itemM >= 30) {
+                                assignedActionIds.add(a.action_id);
+                                return true;
+                              }
                             }
-                          }
-                          if (a.storage_system === 'Calendar' && !a.scheduled_datetime && hour === 9) {
+                          } else if (a.storage_system === 'Calendar' && !a.scheduled_datetime && slotStr === '09:00') {
                             assignedActionIds.add(a.action_id);
                             return true;
                           }
@@ -366,7 +374,7 @@ export default function WeeklyCalendarView() {
                         if (r.week_id && r.week_id !== selectedWeek && r.week_id !== 'All') return false;
                         const activeDay = isRoutineActiveOnDay(r, day.dayIndex);
                         if (!activeDay) return false;
-                        return isRoutineInHourSlot(r, hour);
+                        return isRoutineInSlot(r, slotStr);
                       });
 
                       const hourRoutines = [];
@@ -409,7 +417,7 @@ export default function WeeklyCalendarView() {
                           {/* Calendar Events 🟢 / Completed Done ✅ */}
                           {hourCalendar.map(ev => {
                             const isDone = ev.status === 'Done';
-                            const startTime = ev.scheduled_datetime ? ev.scheduled_datetime.slice(11, 16) : hourStr;
+                            const startTime = ev.scheduled_datetime ? ev.scheduled_datetime.slice(11, 16) : slotStr;
                             const durText = calcActionDurationText(ev);
                             const compTime = ev.completed_at || ev.last_executed_at;
                             const formattedCompTime = compTime ? compTime.slice(0, 16).replace('T', ' ') : null;
