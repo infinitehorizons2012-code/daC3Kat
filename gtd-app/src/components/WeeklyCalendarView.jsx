@@ -344,8 +344,9 @@ export default function WeeklyCalendarView() {
                         return false;
                       });
 
-                      // Filter & Deduplicate Routines for this hour slot
+                      // Filter & Deduplicate Routines strictly for selectedWeek slot
                       const rawRoutines = data.routines.filter(r => {
+                        if (r.week_id && r.week_id !== selectedWeek && r.week_id !== 'All') return false;
                         const activeDay = isRoutineActiveOnDay(r, day.dayIndex);
                         if (!activeDay) return false;
                         return isRoutineInHourSlot(r, hour);
