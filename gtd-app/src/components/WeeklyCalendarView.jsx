@@ -467,7 +467,7 @@ export default function WeeklyCalendarView() {
                             const isSleep = (r.title || r.name || '').toLowerCase().includes('ngủ') || (r.title || r.name || '').toLowerCase().includes('nghỉ');
                             const badgeBg = isSleep ? 'bg-gradient-to-r from-indigo-700 to-purple-800 text-white border border-indigo-500' : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white border border-purple-400';
                             const icon = isSleep ? 'fa-moon' : 'fa-arrows-spin';
-                            const timeSpan = r.start_time && r.end_time ? `${r.start_time}-${r.end_time}` : (r.start_time || `${hourStr}`);
+                            const timeSpan = r.start_time && r.end_time ? `${r.start_time}-${r.end_time}` : (r.start_time || `${slotStr}`);
 
                             return (
                               <div key={r.routine_id} className={`p-1.5 rounded-lg text-[11px] font-bold shadow-xs flex flex-col gap-0.5 animate-fade-in ${badgeBg}`}>
