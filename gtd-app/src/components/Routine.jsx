@@ -62,8 +62,24 @@ export default function Routine() {
     e.preventDefault();
     if (!form.name.trim() || !form.start_time || !form.end_time) return alert("Vui lòng nhập đầy đủ tên và khung giờ!");
 
+    let daysArray = [0, 1, 2, 3, 4, 5, 6];
+    let is_daily = 1;
+
+    if (form.day_of_week === 'sun') {
+      daysArray = [6]; // 🌟 Chủ Nhật Only (Index 6)
+      is_daily = 0;
+    } else if (form.day_of_week === 'mon_fri') {
+      daysArray = [0, 1, 2, 3, 4]; // Thứ 2 đến Thứ 6
+      is_daily = 0;
+    } else if (form.day_of_week === 'sat_sun') {
+      daysArray = [5, 6]; // Thứ 7 & Chủ Nhật
+      is_daily = 0;
+    }
+
     const payload = {
       ...form,
+      is_daily,
+      days: JSON.stringify(daysArray),
       week_id: selectedWeek
     };
 

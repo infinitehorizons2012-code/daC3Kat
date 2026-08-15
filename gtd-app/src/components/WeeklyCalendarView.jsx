@@ -136,10 +136,13 @@ for (let h = 6; h <= 23; h++) {
 const isRoutineActiveOnDay = (r, dayIndex) => {
   if (!r) return false;
   if (r.is_daily === 1 || r.is_daily === true || r.is_daily === '1') return true;
-  if (!r.days || r.days === 'None' || r.days === 'null') return true; // Default active all days if not specified
+  if (!r.days || r.days === 'None' || r.days === 'null') {
+    // If days is not specified and is_daily is false, default to active only if daily was intended, otherwise check days
+    return r.is_daily === 1;
+  }
   try {
     const daysArr = typeof r.days === 'string' ? JSON.parse(r.days) : r.days;
-    if (Array.isArray(daysArr)) return daysArr.includes(dayIndex);
+    if (Array.isArray(daysArr) && daysArr.length > 0) return daysArr.includes(dayIndex);
   } catch (e) {}
   return true;
 };
