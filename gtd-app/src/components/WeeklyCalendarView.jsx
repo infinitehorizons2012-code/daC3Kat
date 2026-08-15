@@ -102,18 +102,12 @@ const isRoutineActiveOnDay = (r, dayIndex) => {
 
 const isRoutineInHourSlot = (r, hour) => {
   if (!r || !r.start_time) return false;
-
   const startH = parseInt(r.start_time.slice(0, 2), 10);
-  let endH = r.end_time ? parseInt(r.end_time.slice(0, 2), 10) : startH + 1;
   if (isNaN(startH)) return false;
-  if (isNaN(endH)) endH = startH + 1;
-
-  if (startH <= endH) {
-    return hour >= startH && hour <= endH;
-  } else {
-    // Overnight range e.g. 21:30 to 07:00 -> hours >= 21 or hours <= 7
-    return hour >= startH || hour <= endH;
-  }
+  // 🌟 Render routine card at its start hour slot (or 6am for overnight routine ending in morning)
+  if (startH === hour) return true;
+  if (startH > 20 && hour === 6) return true; // Overnight routine boundary at 06:00
+  return false;
 };
 
 export default function WeeklyCalendarView() {
@@ -350,12 +344,22 @@ export default function WeeklyCalendarView() {
                         return false;
                       });
 
-                      // Filter Routines for this hour slot
-                      const hourRoutines = data.routines.filter(r => {
+                      // Filter & Deduplicate Routines for this hour slot
+                      const rawRoutines = data.routines.filter(r => {
                         const activeDay = isRoutineActiveOnDay(r, day.dayIndex);
                         if (!activeDay) return false;
                         return isRoutineInHourSlot(r, hour);
                       });
+
+                      const hourRoutines = [];
+                      const seenRoutineKeys = new Set();
+                      for (const r of rawRoutines) {
+                        const key = `${r.name || r.title}_${r.start_time}_${r.end_time}`;
+                        if (!seenRoutineKeys.has(key)) {
+                          seenRoutineKeys.add(key);
+                          hourRoutines.push(r);
+                        }
+                      }
 
                       // Filter Waiting Items for this hour
                       const hourWaiting = activeActions.filter(a => {
