@@ -21,7 +21,6 @@ const tabs = {
   focus_report: { label: 'Báo Cáo Pomodoro', icon: 'fa-solid fa-chart-pie', color: 'text-amber-600', bg: 'bg-amber-100' },
   routine: { label: 'Routine', icon: 'fa-solid fa-arrows-spin', color: 'text-pink-600', bg: 'bg-pink-100' },
   time: { label: 'Time Matrix', icon: 'fa-solid fa-clock-rotate-left', color: 'text-amber-600', bg: 'bg-amber-100' },
-  daily: { label: 'Daily Review', icon: 'fa-solid fa-sun', color: 'text-orange-600', bg: 'bg-orange-100' },
   weekly: { label: 'Weekly Planning', icon: 'fa-solid fa-calendar-week', color: 'text-indigo-600', bg: 'bg-indigo-100' },
   kanban: { label: 'Kanban Dự án', icon: 'fa-solid fa-layer-group', color: 'text-purple-600', bg: 'bg-purple-100' },
   areas: { label: 'Bánh xe cuộc đời', icon: 'fa-solid fa-map-location-dot', color: 'text-teal-600', bg: 'bg-teal-100' },
@@ -200,7 +199,6 @@ function App() {
             {activeTab === 'areas' && <Areas />}
             {activeTab === 'kanban' && <Kanban />}
             {activeTab === 'horizons' && <Horizons />}
-            {activeTab === 'daily' && <DailyReviewWizard onExit={() => setActiveTab('focus')} />}
             {activeTab === 'weekly' && <WeeklyReview />}
           </ErrorBoundary>
         </div>
