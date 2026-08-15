@@ -52,6 +52,45 @@ const getWeekDays = (weekStr) => {
   }
 };
 
+const getActionStartAndEndTime = (a) => {
+  if (!a || !a.scheduled_datetime) return { start: null, end: null, startMins: 0, endMins: 0 };
+  const sStr = a.scheduled_datetime.slice(11, 16);
+  const sH = parseInt(sStr.slice(0, 2), 10);
+  const sM = parseInt(sStr.slice(3, 5), 10) || 0;
+  const startTotalMins = sH * 60 + sM;
+
+  let endTotalMins = startTotalMins + 30; // default 30m
+
+  if (a.scheduled_end_datetime) {
+    const eStr = a.scheduled_end_datetime.slice(11, 16);
+    const eH = parseInt(eStr.slice(0, 2), 10);
+    const eM = parseInt(eStr.slice(3, 5), 10) || 0;
+    const computedEnd = eH * 60 + eM;
+    if (computedEnd > startTotalMins) endTotalMins = computedEnd;
+  } else if (a.total_focus_mins || a.time_needed_mins) {
+    const dur = Math.max(Number(a.total_focus_mins) || 0, Number(a.time_needed_mins) || 0);
+    if (dur > 0) endTotalMins = startTotalMins + dur;
+  }
+
+  const endH = Math.floor(endTotalMins / 60) % 24;
+  const endM = endTotalMins % 60;
+  const eStr = `${String(endH).padStart(2, '0')}:${String(endM).padStart(2, '0')}`;
+
+  return { start: sStr, end: eStr, startTotalMins, endTotalMins };
+};
+
+const isActionInSlot = (a, dayDateKey, slotStr) => {
+  if (!a || !a.scheduled_datetime || !a.scheduled_datetime.startsWith(dayDateKey)) return false;
+  const { start, end, startTotalMins, endTotalMins } = getActionStartAndEndTime(a);
+  if (!start) return false;
+
+  const slotH = parseInt(slotStr.slice(0, 2), 10);
+  const slotM = parseInt(slotStr.slice(3, 5), 10);
+  const slotTotalMins = slotH * 60 + slotM;
+
+  return slotTotalMins >= startTotalMins && slotTotalMins < endTotalMins;
+};
+
 const calcActionDurationText = (ev) => {
   if (!ev) return '30m';
   if (ev.scheduled_datetime && ev.scheduled_end_datetime) {
@@ -336,22 +375,13 @@ export default function WeeklyCalendarView() {
 
                     {/* 7 Days cells for this hour */}
                     {days.map(day => {
-                      // Filter Calendar Events starting in this 30-minute slot
+                      // Filter Calendar Events spanning across this 30-minute slot
                       const hourCalendar = activeActions.filter(a => {
                         if (a.storage_system === 'Calendar' || (a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey))) {
                           if (a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey)) {
-                            const itemTime = a.scheduled_datetime.slice(11, 16);
-                            const itemH = parseInt(itemTime.slice(0, 2), 10);
-                            const itemM = parseInt(itemTime.slice(3, 5), 10) || 0;
-                            if (itemH === slotH) {
-                              if (slotM === 0 && itemM < 30) {
-                                assignedActionIds.add(a.action_id);
-                                return true;
-                              }
-                              if (slotM === 30 && itemM >= 30) {
-                                assignedActionIds.add(a.action_id);
-                                return true;
-                              }
+                            if (isActionInSlot(a, day.dateKey, slotStr)) {
+                              assignedActionIds.add(a.action_id);
+                              return true;
                             }
                           } else if (a.storage_system === 'Calendar' && !a.scheduled_datetime && slotStr === '09:00') {
                             assignedActionIds.add(a.action_id);
@@ -406,13 +436,30 @@ export default function WeeklyCalendarView() {
                       return (
                         <div key={day.dateKey} className={`p-1 rounded-xl border flex flex-col gap-1 transition-all ${hasItems ? 'bg-emerald-50/40 border-emerald-200' : 'bg-slate-50/30 border-slate-100/60'}`}>
                           
-                          {/* Calendar Events 🟢 / Completed Done ✅ */}
+                          {/* Calendar Events 🟢 / Completed Done ✅ (With Spanning Continuation Bar) */}
                           {hourCalendar.map(ev => {
                             const isDone = ev.status === 'Done';
-                            const startTime = ev.scheduled_datetime ? ev.scheduled_datetime.slice(11, 16) : slotStr;
+                            const { start, end } = getActionStartAndEndTime(ev);
+                            const isStartSlot = !start || start === slotStr;
                             const durText = calcActionDurationText(ev);
                             const compTime = ev.completed_at || ev.last_executed_at;
                             const formattedCompTime = compTime ? compTime.slice(0, 16).replace('T', ' ') : null;
+
+                            if (!isStartSlot) {
+                              return (
+                                <div 
+                                  key={`${ev.action_id}_${slotStr}`} 
+                                  className={`p-1 rounded-md text-[10px] font-bold border-l-4 border-emerald-400 opacity-90 flex items-center justify-between shadow-2xs ${
+                                    isDone ? 'bg-teal-950/60 text-emerald-200 border-amber-400' : 'bg-emerald-600/80 text-white'
+                                  }`}
+                                >
+                                  <span className="truncate flex items-center gap-1 font-semibold">
+                                    │ <i className="fa-solid fa-calendar-check text-[9px]"></i> {ev.name || ev.title}
+                                  </span>
+                                  <span className="text-[8px] opacity-80">({start}-{end})</span>
+                                </div>
+                              );
+                            }
 
                             return (
                               <div 
@@ -430,7 +477,7 @@ export default function WeeklyCalendarView() {
                                     </span>
                                   ) : (
                                     <span className="bg-emerald-700 text-white px-1 rounded flex items-center gap-1">
-                                      🟢 LỊCH HẸN • {startTime}
+                                      🟢 LỊCH HẸN • {start || slotStr}
                                     </span>
                                   )}
                                   <span className="bg-amber-300 text-slate-950 px-1 rounded border border-amber-400 font-black">
