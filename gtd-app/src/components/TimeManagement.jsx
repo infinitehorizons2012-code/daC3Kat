@@ -124,8 +124,8 @@ const getPillarForAction = (a, data) => {
     if (pillar) return pillar;
   }
 
-  // Fallback default
-  return 'academic';
+  // If an action has no hierarchy link to any of the 4 Pillars, return null (DO NOT default to Academic)
+  return null;
 };
 
 const getISOWeekStr = (date = new Date()) => {
