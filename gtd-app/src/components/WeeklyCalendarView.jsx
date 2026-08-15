@@ -136,14 +136,29 @@ for (let h = 6; h <= 23; h++) {
 const isRoutineActiveOnDay = (r, dayIndex) => {
   if (!r) return false;
   if (r.is_daily === 1 || r.is_daily === true || r.is_daily === '1') return true;
-  if (!r.days || r.days === 'None' || r.days === 'null') {
-    // If days is not specified and is_daily is false, default to active only if daily was intended, otherwise check days
-    return r.is_daily === 1;
+  if (r.day_of_week === 'all') return true;
+
+  if (r.days && r.days !== 'None' && r.days !== 'null') {
+    try {
+      const daysArr = typeof r.days === 'string' ? JSON.parse(r.days) : r.days;
+      if (Array.isArray(daysArr) && daysArr.length > 0) {
+        return daysArr.includes(dayIndex);
+      }
+    } catch (e) {}
   }
-  try {
-    const daysArr = typeof r.days === 'string' ? JSON.parse(r.days) : r.days;
-    if (Array.isArray(daysArr) && daysArr.length > 0) return daysArr.includes(dayIndex);
-  } catch (e) {}
+
+  const dow = (r.day_of_week || '').toLowerCase();
+  if (dow === 'sun' || dow === 'sunday' || dow === 'cn') return dayIndex === 6;
+  if (dow === 'mon_fri') return dayIndex >= 0 && dayIndex <= 4;
+  if (dow === 'sat_sun') return dayIndex === 5 || dayIndex === 6;
+  if (dow === 'mon') return dayIndex === 0;
+  if (dow === 'tue') return dayIndex === 1;
+  if (dow === 'wed') return dayIndex === 2;
+  if (dow === 'thu') return dayIndex === 3;
+  if (dow === 'fri') return dayIndex === 4;
+  if (dow === 'sat') return dayIndex === 5;
+
+  // Default fallback: Active on all days if no restriction is set
   return true;
 };
 
