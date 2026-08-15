@@ -107,7 +107,48 @@ const getPillarForAction = (a, data) => {
   return 'academic';
 };
 
-const getPillarActionsHelper = (data, pillarKey) => {
+const getISOWeekStr = (date = new Date()) => {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+};
+
+const getWeekFromDate = (dateStr) => {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return null;
+  return getISOWeekStr(d);
+};
+
+const getPillarActionsHelper = (data, pillarKey, selectedWeek) => {
+  if (!pillarKey || !data || !data.actions) return [];
+  const currentWeekStr = getISOWeekStr();
+  const targetW = selectedWeek || currentWeekStr;
+
+  const activeActions = data.actions.filter(a => {
+    if (!a || a.status === 'Cancelled') return false;
+    
+    if (a.storage_system === 'Next_Actions' || a.storage_system === 'Waiting_For') {
+      return a.target_week ? a.target_week === targetW : targetW === currentWeekStr;
+    }
+    
+    if (a.storage_system === 'Calendar' || a.scheduled_datetime) {
+      const actWeek = getWeekFromDate(a.scheduled_datetime);
+      return actWeek ? actWeek === targetW : targetW === currentWeekStr;
+    }
+
+    if (a.target_week) {
+      return a.target_week === targetW;
+    }
+    
+    return false;
+  });
+
+  return activeActions.filter(a => getPillarForAction(a, data) === pillarKey);
+};
   if (!pillarKey || !data || !data.actions) return [];
   // 🌟 NEVER REMOVE ACTIONS! Retain both Pending and Done actions in Weekly Capacity
   const activeActions = data.actions.filter(a => a && a.status !== 'Cancelled');
@@ -117,8 +158,18 @@ const getPillarActionsHelper = (data, pillarKey) => {
 
 export default function TimeManagement() {
   const [selectedPillarModal, setSelectedPillarModal] = useState(null);
+  const [selectedWeek, setSelectedWeek] = useState(getISOWeekStr());
 
-  const getPillarActions = (pillarKey) => getPillarActionsHelper(data, pillarKey);
+  const shiftWeek = (delta) => {
+    const parts = selectedWeek.split('-W');
+    let year = parseInt(parts[0], 10);
+    let week = parseInt(parts[1], 10) + delta;
+    if (week < 1) { year--; week = 52; }
+    if (week > 52) { year++; week = 1; }
+    setSelectedWeek(`${year}-W${String(week).padStart(2, '0')}`);
+  };
+
+  const getPillarActions = (pillarKey) => getPillarActionsHelper(data, pillarKey, selectedWeek);
 
   const [data, setData] = useState({ actions: [], projects: [], goals: [], visions: [], missions: [] });
   const [loading, setLoading] = useState(true);
@@ -180,7 +231,7 @@ export default function TimeManagement() {
 
 
   const getPillarHours = (pillarKey) => {
-    const actions = getPillarActionsHelper(data, pillarKey);
+    const actions = getPillarActionsHelper(data, pillarKey, selectedWeek);
     const mins = actions.reduce((sum, a) => sum + calcActionMins(a), 0);
     return Math.round(mins / 60 * 10) / 10;
   };
@@ -199,9 +250,44 @@ export default function TimeManagement() {
           <div className="flex items-center gap-2 text-indigo-400 text-xs font-black uppercase tracking-widest mb-1">
             <i className="fa-solid fa-compass"></i> Timeboxing Matrix & Weekly Template
           </div>
-          <h2 className="text-2xl font-black text-white flex items-center gap-2">
-            <i className="fa-solid fa-clock-rotate-left text-amber-400"></i> Quản Lý Thời Gian 168h Thực Chiến
-          </h2>
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 className="text-2xl font-black text-white flex items-center gap-2">
+              <i className="fa-solid fa-clock-rotate-left text-amber-400"></i> Quản Lý Thời Gian 168h ({selectedWeek})
+            </h2>
+
+            {/* Week Switcher Control Bar */}
+            <div className="flex items-center gap-1.5 bg-slate-800/90 p-1.5 rounded-2xl border border-slate-700/80 shadow-inner">
+              <button 
+                type="button"
+                onClick={() => shiftWeek(-1)}
+                className="w-7 h-7 rounded-xl bg-slate-700 hover:bg-slate-600 text-white flex items-center justify-center font-bold transition-all text-xs"
+              >
+                <i className="fa-solid fa-chevron-left"></i>
+              </button>
+
+              <span className="font-black text-xs text-indigo-300 px-2.5 py-1 bg-slate-900/80 rounded-xl border border-indigo-500/30">
+                {selectedWeek}
+              </span>
+
+              <button 
+                type="button"
+                onClick={() => shiftWeek(1)}
+                className="w-7 h-7 rounded-xl bg-slate-700 hover:bg-slate-600 text-white flex items-center justify-center font-bold transition-all text-xs"
+              >
+                <i className="fa-solid fa-chevron-right"></i>
+              </button>
+
+              {selectedWeek !== getISOWeekStr() && (
+                <button 
+                  type="button"
+                  onClick={() => setSelectedWeek(getISOWeekStr())}
+                  className="text-[11px] font-black text-white bg-indigo-600 hover:bg-indigo-700 px-2.5 py-1 rounded-xl transition-all shadow-md ml-1"
+                >
+                  Về Tuần Này
+                </button>
+              )}
+            </div>
+          </div>
           <p className="text-xs text-slate-300 mt-1 font-medium max-w-2xl">
             Chuyển hóa Dream Map (Sứ mệnh 50k & Tầm nhìn 40k ft) thành Khối thời gian khóa cứng (Timebox) hàng tuần theo Tỷ Lệ Vàng.
           </p>
