@@ -1015,7 +1015,7 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'agenda'
 
   const allActions = data?.actions || [];
-  const calendarActions = allActions.filter(a => a && a.status !== 'Cancelled' && (a.storage_system === 'Calendar' || a.scheduled_datetime));
+  const calendarActions = allActions.filter(a => a && a.status !== 'Done' && a.status !== 'Cancelled' && (a.storage_system === 'Calendar' || a.scheduled_datetime));
 
   // Month navigation helpers
   
