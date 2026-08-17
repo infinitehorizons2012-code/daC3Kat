@@ -183,19 +183,47 @@ export default function Runway() {
     }
   };
 
-  const handleToggleStatus = async (action) => {
+  const handleToggleActionStatus = async (action, e) => {
+    if (e) {
+      if (e.stopPropagation) e.stopPropagation();
+      if (e.preventDefault) e.preventDefault();
+    }
+    if (!action || !action.action_id) return;
     const newStatus = action.status === 'Done' ? 'Pending' : 'Done';
+    const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 19);
+
+    // ⚡ Optimistic UI update for 0ms instant feedback
+    setData(prevData => {
+      if (!prevData || !prevData.actions) return prevData;
+      return {
+        ...prevData,
+        actions: prevData.actions.map(a => 
+          a.action_id === action.action_id 
+            ? { ...a, status: newStatus, completed_at: newStatus === 'Done' ? nowStr : null }
+            : a
+        )
+      };
+    });
+
     try {
-      await fetch(`${API_URL}/actions/${action.action_id}`, {
+      const res = await fetch(`${API_URL}/actions/${action.action_id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
+        body: JSON.stringify({ 
+          status: newStatus,
+          completed_at: newStatus === 'Done' ? nowStr : null
+        })
       });
+      if (!res.ok) console.error("PATCH action failed", res.status);
+      window.dispatchEvent(new CustomEvent('gtd_data_changed'));
       fetchData();
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error("Error toggling status:", err);
+      fetchData();
     }
   };
+
+  const handleToggleStatus = handleToggleActionStatus;
 
   const handlePullToActive = async (a) => {
     try {
