@@ -1179,13 +1179,27 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
                       const projectsList = data?.projects || [];
                       const project = projectsList.find(p => p && p.project_id === ev.project_id);
 
+                      const isDone = ev.status === 'Done';
+                      const compTime = ev.completed_at || ev.last_executed_at;
+                      const formattedCompTime = compTime ? compTime.slice(0, 16).replace('T', ' ') : null;
+
                       return (
-                        <div key={ev.action_id} className="p-4 rounded-xl border border-emerald-100 bg-emerald-50/40 hover:bg-emerald-50 flex justify-between items-center group transition-colors">
-                          <div className="flex items-start gap-4">
+                        <div 
+                          key={ev.action_id} 
+                          className={`p-4 rounded-xl border flex justify-between items-center group transition-all ${
+                            isDone 
+                              ? 'bg-slate-50 border-emerald-300/80 shadow-2xs opacity-90' 
+                              : 'border-emerald-100 bg-emerald-50/40 hover:bg-emerald-50 shadow-xs'
+                          }`}
+                        >
+                          <div className="flex items-center gap-4 flex-1 min-w-0">
+                            {/* Time Badge */}
                             {(() => {
                               const durText = calcActionDurationText(ev);
                               return (
-                                <div className="bg-emerald-600 text-white font-black text-xs px-3 py-2 rounded-xl flex flex-col items-center justify-center min-w-[80px] shadow-sm text-center">
+                                <div className={`font-black text-xs px-3 py-2 rounded-xl flex flex-col items-center justify-center min-w-[85px] shadow-sm text-center shrink-0 ${
+                                  isDone ? 'bg-slate-700 text-slate-200' : 'bg-emerald-600 text-white'
+                                }`}>
                                   <span>{startTime}</span>
                                   {endTime && <span className="text-[9px] opacity-80 mt-0.5">đến {endTime}</span>}
                                   <span className="text-[9px] font-black bg-yellow-300 text-slate-950 px-1.5 py-0.2 rounded mt-1 shadow-2xs">⏱️ {durText}</span>
@@ -1193,17 +1207,52 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
                               );
                             })()}
 
-                            <div>
-                              <h5 className="font-bold text-slate-800 text-sm mb-1">{ev.name}</h5>
-                              <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 flex-wrap">
+                            {/* Checkbox Complete Toggle Button */}
+                            <button
+                              type="button"
+                              onClick={() => handleToggleActionStatus(ev)}
+                              className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all shrink-0 cursor-pointer ${
+                                isDone 
+                                  ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs scale-105' 
+                                  : 'border-slate-300 hover:border-emerald-500 hover:bg-emerald-100 text-transparent hover:text-emerald-600'
+                              }`}
+                              title={isDone ? "Đánh dấu Chưa hoàn thành" : "Đánh dấu Đã hoàn thành"}
+                            >
+                              <i className="fa-solid fa-check text-xs"></i>
+                            </button>
+
+                            {/* Event Details */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <h5 className={`font-bold text-sm truncate ${isDone ? 'line-through text-slate-400' : 'text-slate-800'}`}>
+                                  {ev.name}
+                                </h5>
+                                {isDone && (
+                                  <span className="bg-emerald-100 text-emerald-800 text-[9px] font-black px-2 py-0.5 rounded-full border border-emerald-200 shrink-0">
+                                    ✅ HOÀN THÀNH
+                                  </span>
+                                )}
+                              </div>
+
+                              <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 flex-wrap mt-1">
                                 {project && <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">{project.name}</span>}
                                 {ev.context && <span className="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">{ev.context}</span>}
                                 {ev.time_needed_mins && <span className="text-emerald-700"><i className="fa-regular fa-clock"></i> {ev.time_needed_mins} phút</span>}
+                                {formattedCompTime && isDone && (
+                                  <span className="text-emerald-600 font-semibold">
+                                    <i className="fa-solid fa-check-double mr-0.5"></i> Xong lúc: {formattedCompTime}
+                                  </span>
+                                )}
+                                {ev.total_focus_mins > 0 && isDone && (
+                                  <span className="text-amber-600 font-semibold">
+                                    ⏱️ Focus: {ev.total_focus_mins}m
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </div>
 
-                          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity ml-2 shrink-0">
                             <button onClick={() => onEdit(ev)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="Chỉnh sửa">
                               <i className="fa-solid fa-pen"></i>
                             </button>
