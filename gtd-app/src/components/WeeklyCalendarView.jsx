@@ -53,7 +53,7 @@ const getWeekDays = (weekStr) => {
 };
 
 const getActionStartAndEndTime = (a) => {
-  if (!a || !a.scheduled_datetime) return { start: null, end: null, startMins: 0, endMins: 0 };
+  if (!a || !a.scheduled_datetime) return { start: null, end: null, startMins: 0, endMins: 0, roundedStartSlot: null };
   const sStr = a.scheduled_datetime.slice(11, 16);
   const sH = parseInt(sStr.slice(0, 2), 10);
   const sM = parseInt(sStr.slice(3, 5), 10) || 0;
@@ -76,19 +76,24 @@ const getActionStartAndEndTime = (a) => {
   const endM = endTotalMins % 60;
   const eStr = `${String(endH).padStart(2, '0')}:${String(endM).padStart(2, '0')}`;
 
-  return { start: sStr, end: eStr, startTotalMins, endTotalMins };
+  const roundedStartMins = 5 * Math.floor(startTotalMins / 5);
+  const rH = Math.floor(roundedStartMins / 60) % 24;
+  const rM = roundedStartMins % 60;
+  const roundedStartSlot = `${String(rH).padStart(2, '0')}:${String(rM).padStart(2, '0')}`;
+
+  return { start: sStr, end: eStr, startTotalMins, endTotalMins, roundedStartSlot };
 };
 
 const isActionInSlot = (a, dayDateKey, slotStr) => {
   if (!a || !a.scheduled_datetime || !a.scheduled_datetime.startsWith(dayDateKey)) return false;
-  const { start, end, startTotalMins, endTotalMins } = getActionStartAndEndTime(a);
+  const { start, startTotalMins, endTotalMins } = getActionStartAndEndTime(a);
   if (!start) return false;
 
   const slotH = parseInt(slotStr.slice(0, 2), 10);
   const slotM = parseInt(slotStr.slice(3, 5), 10);
   const slotTotalMins = slotH * 60 + slotM;
 
-  return slotTotalMins >= startTotalMins && slotTotalMins < endTotalMins;
+  return slotTotalMins >= 5 * Math.floor(startTotalMins / 5) && slotTotalMins < endTotalMins;
 };
 
 const calcActionDurationText = (ev) => {
@@ -124,12 +129,14 @@ const getItemStartHour = (item) => {
   return 9; // default fallback 9am
 };
 
-// 35 Time Slots (30-Minute Intervals) from 06:00 to 23:00
+// 216 Time Slots (5-Minute Intervals) from 06:00 to 23:55
 const TIME_SLOTS = [];
 for (let h = 6; h <= 23; h++) {
   const hh = String(h).padStart(2, '0');
-  TIME_SLOTS.push(`${hh}:00`);
-  if (h < 23) TIME_SLOTS.push(`${hh}:30`);
+  for (let m = 0; m < 60; m += 5) {
+    const mm = String(m).padStart(2, '0');
+    TIME_SLOTS.push(`${hh}:${mm}`);
+  }
 }
 
 
@@ -166,13 +173,23 @@ const isRoutineInSlot = (r, slotStr) => {
   if (!r || !r.start_time) return false;
   const s = r.start_time.slice(0, 5);
   const e = r.end_time ? r.end_time.slice(0, 5) : s;
-  
-  if (s <= e) {
-    // Normal range e.g. 11:00 to 13:30 -> spans 11:00, 11:30, 12:00, 12:30, 13:00
-    return slotStr >= s && slotStr < e;
+
+  const slotH = parseInt(slotStr.slice(0, 2), 10);
+  const slotM = parseInt(slotStr.slice(3, 5), 10);
+  const slotTotalMins = slotH * 60 + slotM;
+
+  const sH = parseInt(s.slice(0, 2), 10);
+  const sM = parseInt(s.slice(3, 5), 10) || 0;
+  const startTotalMins = sH * 60 + sM;
+
+  const eH = parseInt(e.slice(0, 2), 10);
+  const eM = parseInt(e.slice(3, 5), 10) || 0;
+  let endTotalMins = eH * 60 + eM;
+
+  if (startTotalMins <= endTotalMins) {
+    return slotTotalMins >= 5 * Math.floor(startTotalMins / 5) && slotTotalMins < endTotalMins;
   } else {
-    // Overnight range e.g. 21:30 to 07:00
-    return slotStr >= s || slotStr < e;
+    return slotTotalMins >= 5 * Math.floor(startTotalMins / 5) || slotTotalMins < endTotalMins;
   }
 };
 
@@ -273,7 +290,7 @@ export default function WeeklyCalendarView() {
             <i className="fa-solid fa-calendar-check text-amber-400"></i> Lịch Tuần ({selectedWeek})
           </h2>
           <p className="text-xs text-slate-300 mt-1 font-medium">
-            Phân bổ chính xác theo từng khung giờ (06:00 đến 23:00) chuẩn khớp giữa Trục Giờ & Cột Ngày.
+            Phân bổ chính xác tuyệt đối theo mốc 5 PHÚT (06:00 đến 23:55) chuẩn khớp giữa Trục Giờ & Cột Ngày.
           </p>
         </div>
 
@@ -382,13 +399,20 @@ export default function WeeklyCalendarView() {
               {TIME_SLOTS.map(slotStr => {
                 const slotH = parseInt(slotStr.slice(0, 2), 10);
                 const slotM = parseInt(slotStr.slice(3, 5), 10);
+                const isMajorHour = slotM === 0;
+                const isHalfHour = slotM === 30;
+                const isMinorSlot = !isMajorHour && !isHalfHour;
+
+                const rowBg = isMajorHour ? 'bg-slate-900/90 text-amber-300 font-black text-xs' : (isHalfHour ? 'bg-slate-800 text-white font-bold text-xs' : 'bg-slate-100/80 text-slate-500 font-semibold text-[10px]');
+                const minRowHeight = isMinorSlot ? 'min-h-[22px]' : (isMajorHour ? 'min-h-[36px]' : 'min-h-[30px]');
+                const rowBorder = isMajorHour ? 'border-t-2 border-slate-300 pt-1' : 'border-b border-slate-100/60';
 
                 return (
-                  <div key={slotStr} className="grid grid-cols-8 gap-2 items-stretch min-h-[44px] hover:bg-slate-50/80 rounded-xl transition-all p-0.5 border-b border-slate-100/80">
+                  <div key={slotStr} className={`grid grid-cols-8 gap-2 items-stretch ${minRowHeight} hover:bg-slate-50/90 rounded-xl transition-all p-0.5 ${rowBorder}`}>
                     
-                    {/* Left Hour Label Slot */}
-                    <div className="flex items-center justify-center bg-slate-900 text-slate-200 font-black text-xs rounded-xl shadow-2xs">
-                      <span className={`${slotM === 0 ? "text-amber-300 text-sm font-black" : "text-slate-300 text-xs"}`}>{slotStr}</span>
+                    {/* Left 5-Minute Label Slot */}
+                    <div className={`flex items-center justify-center rounded-xl shadow-2xs py-0.5 px-1 ${rowBg}`}>
+                      <span>{slotStr}</span>
                     </div>
 
                     {/* 7 Days cells for this hour */}
@@ -427,22 +451,19 @@ export default function WeeklyCalendarView() {
                         }
                       }
 
-                      // Filter Waiting Items for this 30-minute slot
+                      // Filter Waiting Items for this 5-minute slot
                       const hourWaiting = activeActions.filter(a => {
                         if (a.storage_system === 'Waiting_For') {
                           if ((a.scheduled_datetime && a.scheduled_datetime.startsWith(day.dateKey)) || (a.defer_until_date && a.defer_until_date.startsWith(day.dateKey))) {
                             const itemTime = (a.scheduled_datetime || a.defer_until_date || '').slice(11, 16);
                             const itemH = parseInt(itemTime.slice(0, 2), 10);
                             const itemM = parseInt(itemTime.slice(3, 5), 10) || 0;
-                            if (itemH === slotH) {
-                              if (slotM === 0 && itemM < 30) {
-                                assignedActionIds.add(a.action_id);
-                                return true;
-                              }
-                              if (slotM === 30 && itemM >= 30) {
-                                assignedActionIds.add(a.action_id);
-                                return true;
-                              }
+                            const itemTotalMins = itemH * 60 + itemM;
+                            const slotTotalMins = slotH * 60 + slotM;
+
+                            if (slotTotalMins === 5 * Math.floor(itemTotalMins / 5)) {
+                              assignedActionIds.add(a.action_id);
+                              return true;
                             }
                           }
                         }
@@ -457,8 +478,8 @@ export default function WeeklyCalendarView() {
                           {/* Calendar Events 🟢 / Completed Done ✅ (With Spanning Continuation Bar) */}
                           {hourCalendar.map(ev => {
                             const isDone = ev.status === 'Done';
-                            const { start, end } = getActionStartAndEndTime(ev);
-                            const isStartSlot = !start || start === slotStr;
+                            const { start, end, roundedStartSlot } = getActionStartAndEndTime(ev);
+                            const isStartSlot = !roundedStartSlot || roundedStartSlot === slotStr;
                             const durText = calcActionDurationText(ev);
                             const compTime = ev.completed_at || ev.last_executed_at;
                             const formattedCompTime = compTime ? compTime.slice(0, 16).replace('T', ' ') : null;
@@ -529,7 +550,10 @@ export default function WeeklyCalendarView() {
 
                           {/* Routines 🔄 (With Spanning Continuation Bar) */}
                           {hourRoutines.map(r => {
-                            const isStartSlot = r.start_time && r.start_time.slice(0, 5) === slotStr;
+                            const rStartMins = parseInt(r.start_time.slice(0, 2), 10) * 60 + (parseInt(r.start_time.slice(3, 5), 10) || 0);
+                            const roundedRStartMins = 5 * Math.floor(rStartMins / 5);
+                            const rStartSlotStr = `${String(Math.floor(roundedRStartMins / 60)).padStart(2, '0')}:${String(roundedRStartMins % 60).padStart(2, '0')}`;
+                            const isStartSlot = rStartSlotStr === slotStr;
                             const isSleep = (r.title || r.name || '').toLowerCase().includes('ngủ') || (r.title || r.name || '').toLowerCase().includes('nghỉ');
                             const badgeBg = isSleep ? 'bg-gradient-to-r from-indigo-700 to-purple-800 text-white border border-indigo-500' : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white border border-purple-400';
                             const icon = isSleep ? 'fa-moon' : 'fa-arrows-spin';
