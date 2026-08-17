@@ -1128,7 +1128,11 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
                       return (
                         <div 
                           key={ev.action_id}
-                          onClick={(e) => { e.stopPropagation(); openEditModal(ev); }}
+                          onClick={(e) => { 
+                            if (e.target.closest('button')) return;
+                            e.stopPropagation(); 
+                            openEditModal(ev); 
+                          }}
                           className={`p-1.5 rounded-lg border text-[11px] font-bold cursor-pointer transition-all flex items-center justify-between gap-1 shadow-2xs group ${
                             isDone 
                               ? 'bg-slate-100/90 text-slate-400 border-slate-300 line-through' 
@@ -1140,7 +1144,11 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
                             {/* Checkbox Complete Button */}
                             <button
                               type="button"
-                              onClick={(e) => handleToggleActionStatus(ev, e)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                handleToggleActionStatus(ev, e);
+                              }}
                               className={`w-4 h-4 rounded flex items-center justify-center shrink-0 transition-all border cursor-pointer ${
                                 isDone 
                                   ? 'bg-emerald-600 border-emerald-600 text-white shadow-2xs' 
@@ -1232,7 +1240,11 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
                             {/* Checkbox Complete Toggle Button */}
                             <button
                               type="button"
-                              onClick={(e) => handleToggleActionStatus(ev, e)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                handleToggleActionStatus(ev, e);
+                              }}
                               className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all shrink-0 cursor-pointer ${
                                 isDone 
                                   ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs scale-105' 
