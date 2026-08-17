@@ -471,7 +471,7 @@ export default function Runway() {
                 <EmptyState icon="fa-mug-hot" text="Không có công việc nào khớp với bộ lọc hiện tại." />
               ) : filteredNextActions.map(a => <ActionCard key={a.action_id} action={a} data={data} onToggle={() => handleToggleStatus(a)} onEdit={() => openEditModal(a)} onDelete={() => handleDelete(a.action_id)} onCopy={() => handleCopyAction(a)} onPull={() => handlePullToActive(a)} />)
             ) : activeTab === 'Calendar' ? (
-              <CalendarView data={data} onEdit={openEditModal} onDelete={handleDelete} onToggle={handleToggleStatus} />
+              <CalendarView data={data} onEdit={openEditModal} onDelete={handleDelete} onToggle={handleToggleActionStatus} />
             ) : (
               tabActions.length === 0 ? (
                 <EmptyState icon="fa-folder-open" text={`Chưa có dữ liệu trong kho ${activeTab.replace('_', ' ')}.`} />
@@ -987,7 +987,7 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'agenda'
 
   const allActions = data?.actions || [];
-  const calendarActions = allActions.filter(a => a && a.status !== 'Done' && (a.storage_system === 'Calendar' || a.scheduled_datetime));
+  const calendarActions = allActions.filter(a => a && a.status !== 'Cancelled' && (a.storage_system === 'Calendar' || a.scheduled_datetime));
 
   // Month navigation helpers
   
@@ -1147,7 +1147,7 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
                               onClick={(e) => {
                                 e.stopPropagation();
                                 e.preventDefault();
-                                handleToggleActionStatus(ev, e);
+                                if (onToggle) onToggle(ev, e);
                               }}
                               className={`w-4 h-4 rounded flex items-center justify-center shrink-0 transition-all border cursor-pointer ${
                                 isDone 
@@ -1243,7 +1243,7 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
                               onClick={(e) => {
                                 e.stopPropagation();
                                 e.preventDefault();
-                                handleToggleActionStatus(ev, e);
+                                if (onToggle) onToggle(ev, e);
                               }}
                               className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all shrink-0 cursor-pointer ${
                                 isDone 
