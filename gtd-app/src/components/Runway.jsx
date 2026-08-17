@@ -297,7 +297,7 @@ export default function Runway() {
   const actionsList = data?.actions || [];
   const tabActions = actionsList.filter(a => {
     if (!a || a.status === 'Cancelled') return false;
-    if (!showCompleted && a.status === 'Done') return false; // 🌟 Hide Done when toggle is OFF, Show Done when toggle is ON!
+    if (!showCompleted && a.status === 'Done' && activeTab !== 'Calendar') return false; // 🌟 Keep Calendar items visible!
     if (activeTab === 'All_Actions') return true;
     return a.storage_system === activeTab;
   });
@@ -1210,7 +1210,7 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
                             {/* Checkbox Complete Toggle Button */}
                             <button
                               type="button"
-                              onClick={() => handleToggleActionStatus(ev)}
+                              onClick={(e) => handleToggleActionStatus(ev, e)}
                               className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all shrink-0 cursor-pointer ${
                                 isDone 
                                   ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs scale-105' 
