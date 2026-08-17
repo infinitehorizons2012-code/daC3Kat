@@ -1123,20 +1123,42 @@ function CalendarView({ data, onEdit, onDelete, onToggle, openCreateModalWithDat
                     {dayEvents.map(ev => {
                       const startTime = formatTimeSafe(ev.scheduled_datetime) || '00:00';
                       const durText = calcActionDurationText(ev);
+                      const isDone = ev.status === 'Done';
+
                       return (
                         <div 
                           key={ev.action_id}
-                          onClick={(e) => { e.stopPropagation(); onEdit(ev); }}
-                          className="p-1.5 rounded-lg bg-emerald-100/90 hover:bg-emerald-200 text-emerald-950 border border-emerald-300 text-[11px] font-bold cursor-pointer transition-colors flex items-center justify-between gap-1 shadow-2xs group"
+                          onClick={(e) => { e.stopPropagation(); openEditModal(ev); }}
+                          className={`p-1.5 rounded-lg border text-[11px] font-bold cursor-pointer transition-all flex items-center justify-between gap-1 shadow-2xs group ${
+                            isDone 
+                              ? 'bg-slate-100/90 text-slate-400 border-slate-300 line-through' 
+                              : 'bg-emerald-100/90 hover:bg-emerald-200 text-emerald-950 border-emerald-300'
+                          }`}
                           title={`${startTime} - ${ev.name} (Thời lượng: ${durText})`}
                         >
-                          <div className="flex items-center gap-1 overflow-hidden min-w-0">
-                            <span className="text-[9px] bg-emerald-700 text-white px-1 rounded font-black shrink-0">{startTime}</span>
+                          <div className="flex items-center gap-1.5 overflow-hidden min-w-0">
+                            {/* Checkbox Complete Button */}
+                            <button
+                              type="button"
+                              onClick={(e) => handleToggleActionStatus(ev, e)}
+                              className={`w-4 h-4 rounded flex items-center justify-center shrink-0 transition-all border cursor-pointer ${
+                                isDone 
+                                  ? 'bg-emerald-600 border-emerald-600 text-white shadow-2xs' 
+                                  : 'bg-white border-emerald-500 text-transparent hover:bg-emerald-100 hover:text-emerald-700'
+                              }`}
+                              title={isDone ? "Đánh dấu Chưa hoàn thành" : "Đánh dấu Đã hoàn thành"}
+                            >
+                              <i className="fa-solid fa-check text-[9px]"></i>
+                            </button>
+
+                            <span className={`text-[9px] px-1 rounded font-black shrink-0 ${isDone ? 'bg-slate-400 text-white' : 'bg-emerald-700 text-white'}`}>{startTime}</span>
                             <span className="truncate">{ev.name}</span>
                           </div>
                           
                           {/* Duration Badge */}
-                          <span className="text-[9px] font-black bg-amber-300 text-slate-950 px-1.5 py-0.2 rounded shrink-0 shadow-2xs border border-amber-400">
+                          <span className={`text-[9px] font-black px-1.5 py-0.2 rounded shrink-0 shadow-2xs border ${
+                            isDone ? 'bg-slate-200 text-slate-600 border-slate-300' : 'bg-amber-300 text-slate-950 border-amber-400'
+                          }`}>
                             ⏱️ {durText}
                           </span>
                         </div>
