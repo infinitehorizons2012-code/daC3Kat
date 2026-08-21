@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Security & Secret Exclusions
+.env
+.env.local
+.env.*
+.wrangler
+*.pem
+*.key
+id_rsa
+id_ed25519
+secrets.json
+config.local.json
