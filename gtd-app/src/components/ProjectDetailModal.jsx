@@ -28,23 +28,20 @@ function ProjectDetailModal({ project, data, onClose, onRefresh }) {
     depends_on_action_id: ''
   });
 
-  const [projectNotes, setProjectNotes] = useState(() => {
-    try {
-      const notesMap = JSON.parse(localStorage.getItem('gtd_project_notes') || '{}');
-      return notesMap[project.project_id] !== undefined ? notesMap[project.project_id] : (project.notes || '');
-    } catch (e) { return project.notes || ''; }
-  });
+  const [projectNotes, setProjectNotes] = useState(project.notes || '');
   const [isNotesSaved, setIsNotesSaved] = useState(false);
 
-  const handleSaveNotes = (newNotes) => {
+  const handleSaveNotes = async (newNotes) => {
     try {
-      const notesMap = JSON.parse(localStorage.getItem('gtd_project_notes') || '{}');
-      notesMap[project.project_id] = newNotes;
-      localStorage.setItem('gtd_project_notes', JSON.stringify(notesMap));
+      await fetch(`${API_URL}/projects/${project.project_id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notes: newNotes })
+      });
       setIsNotesSaved(true);
       setTimeout(() => setIsNotesSaved(false), 2000);
-      window.dispatchEvent(new CustomEvent('gtd_project_notes_changed'));
-    } catch (e) { console.error(e); }
+      if (onRefresh) onRefresh();
+    } catch (e) { console.error("Save project notes error:", e); }
   };
 
   const projectActions = (data?.actions || []).filter(a => a.project_id === project.project_id);

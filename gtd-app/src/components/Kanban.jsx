@@ -53,16 +53,11 @@ export default function Kanban() {
     const payload = { ...formData };
 
     try {
-      const res = await fetch(`${API_URL}${endpoint}`, {
+      await fetch(`${API_URL}${endpoint}`, {
         method: method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      const resData = await res.json();
-      const targetId = editId || resData.project_id;
-      if (targetId && formData.notes !== undefined) {
-        saveProjectNotes(targetId, formData.notes);
-      }
       setModalType(null);
       setEditId(null);
       fetchData();
@@ -103,22 +98,6 @@ export default function Kanban() {
     }
   };
 
-  const getProjectNotes = (project_id, defaultNotes) => {
-    try {
-      const notesMap = JSON.parse(localStorage.getItem('gtd_project_notes') || '{}');
-      return notesMap[project_id] !== undefined ? notesMap[project_id] : (defaultNotes || '');
-    } catch (e) { return defaultNotes || ''; }
-  };
-
-  const saveProjectNotes = (project_id, notes) => {
-    try {
-      const notesMap = JSON.parse(localStorage.getItem('gtd_project_notes') || '{}');
-      notesMap[project_id] = notes;
-      localStorage.setItem('gtd_project_notes', JSON.stringify(notesMap));
-      window.dispatchEvent(new CustomEvent('gtd_project_notes_changed'));
-    } catch (e) { console.error(e); }
-  };
-
   const openCreateModal = () => {
     setModalType('create');
     setFormData({ name: '', category: 'Strategic', area_id: '', goal_ids: [], vision_ids: [], mission_ids: [], status: 'Active', notes: '' });
@@ -135,7 +114,7 @@ export default function Kanban() {
       vision_ids: project.vision_ids || [],
       mission_ids: project.mission_ids || [],
       status: project.status || 'Active',
-      notes: getProjectNotes(project.project_id, project.notes)
+      notes: project.notes || ''
     });
   };
 
