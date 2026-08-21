@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ProjectDetailModal from './ProjectDetailModal';
 
 const API_URL = 'https://gtd-space-station-168-api.infinite-horizons-2012.workers.dev/api';
 
@@ -22,10 +23,18 @@ export default function HorizonProfileModalWrapper(props) {
 function HorizonProfileModal({ horizonType, horizonData, data, onClose, onRefresh }) {
   const [activeRightTab, setActiveRightTab] = useState('projects'); // 'projects' or 'actions'
   const [activeLeftTab, setActiveLeftTab] = useState('action'); // 'action' or 'project'
+  const [selectedProject, setSelectedProject] = useState(null);
   
   // Forms state
   const [newActionName, setNewActionName] = useState('');
   const [newProjectName, setNewProjectName] = useState('');
+
+  const getProjectNotes = (project_id, defaultNotes) => {
+    try {
+      const notesMap = JSON.parse(localStorage.getItem('gtd_project_notes') || '{}');
+      return notesMap[project_id] !== undefined ? notesMap[project_id] : (defaultNotes || '');
+    } catch (e) { return defaultNotes || ''; }
+  };
 
   // 1. Lọc dữ liệu liên kết
   let linkedProjects = [];
@@ -214,19 +223,33 @@ function HorizonProfileModal({ horizonType, horizonData, data, onClose, onRefres
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {linkedProjects.map(p => (
-                      <div key={p.project_id} className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-all group flex flex-col">
+                      <div 
+                        key={p.project_id} 
+                        onClick={() => setSelectedProject(p)}
+                        className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-all group flex flex-col cursor-pointer hover:border-purple-300"
+                      >
                         <div className="flex justify-between items-start mb-2">
                           <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${p.status === 'Active' ? 'bg-green-100 text-green-700' : p.status === 'Completed' ? 'bg-slate-100 text-slate-600' : 'bg-orange-100 text-orange-700'}`}>
                             {p.status}
                           </span>
-                          <button onClick={() => handleDeleteProject(p.project_id)} className="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button onClick={(e) => { e.stopPropagation(); handleDeleteProject(p.project_id); }} className="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
                             <i className="fa-solid fa-trash text-xs"></i>
                           </button>
                         </div>
                         <h4 className="font-bold text-slate-800 text-sm flex-1">{p.name}</h4>
+                        
+                        {getProjectNotes(p.project_id, p.notes) && (
+                          <div className="mt-2 text-[11px] text-amber-900 bg-amber-50 p-2 rounded-lg border border-amber-200/80 flex items-start gap-1.5 shadow-2xs">
+                            <i className="fa-solid fa-note-sticky text-amber-600 mt-0.5 shrink-0 text-xs"></i>
+                            <span className="line-clamp-2 italic font-medium">{getProjectNotes(p.project_id, p.notes)}</span>
+                          </div>
+                        )}
+
                         <div className="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
                           <span className="text-slate-500 font-medium"><i className="fa-solid fa-list-check mr-1"></i> {(data.actions || []).filter(a => a.project_id === p.project_id).length} việc con</span>
-                          <span className="text-purple-600 font-bold">10,000 ft</span>
+                          <span className="text-purple-600 font-bold hover:underline flex items-center gap-1">
+                            Hồ Sơ <i className="fa-solid fa-arrow-right text-[10px]"></i>
+                          </span>
                         </div>
                       </div>
                     ))}
@@ -265,6 +288,14 @@ function HorizonProfileModal({ horizonType, horizonData, data, onClose, onRefres
           </div>
         </div>
       </div>
+      {selectedProject && (
+        <ProjectDetailModal 
+          project={selectedProject} 
+          data={data} 
+          onClose={() => setSelectedProject(null)} 
+          onRefresh={onRefresh} 
+        />
+      )}
     </div>
   );
 }
@@ -274,6 +305,14 @@ function EmptyState({ icon, text }) {
     <div className="flex flex-col items-center justify-center py-12 text-slate-400">
       <i className={`fa-solid ${icon} text-4xl mb-4 opacity-30`}></i>
       <p className="text-sm font-medium text-center max-w-xs">{text}</p>
+      {selectedProject && (
+        <ProjectDetailModal 
+          project={selectedProject} 
+          data={data} 
+          onClose={() => setSelectedProject(null)} 
+          onRefresh={onRefresh} 
+        />
+      )}
     </div>
   );
 }
