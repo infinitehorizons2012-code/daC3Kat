@@ -23,6 +23,7 @@ export default function Areas() {
   });
 
   const [activeAreaId, setActiveAreaId] = useState(null);
+  const [selectedAreaId, setSelectedAreaId] = useState(null);
 
   const fetchAreas = () => {
     fetch(`${API_URL}/areas`)
@@ -187,6 +188,7 @@ export default function Areas() {
 
               const color = SLICE_COLORS[i % SLICE_COLORS.length];
               const isHovered = activeAreaId === area.area_id;
+              const isSelected = selectedAreaId === area.area_id;
 
               // Label Position
               const labelRadius = maxRadius + 32;
@@ -199,6 +201,7 @@ export default function Areas() {
                   className="cursor-pointer transition-all duration-300"
                   onMouseEnter={() => setActiveAreaId(area.area_id)}
                   onMouseLeave={() => setActiveAreaId(null)}
+                  onClick={() => setSelectedAreaId(area.area_id)}
                 >
                   {/* Filled Slice Arc */}
                   <path
@@ -212,20 +215,57 @@ export default function Areas() {
 
                   {/* Outer Label with Icon, Name & Score */}
                   <foreignObject
-                    x={lx - 60}
-                    y={ly - 20}
-                    width="120"
-                    height="45"
-                    className="overflow-visible pointer-events-none"
+                    x={lx - 65}
+                    y={ly - 25}
+                    width="130"
+                    height="65"
+                    className="overflow-visible pointer-events-auto"
                   >
-                    <div className={`flex flex-col items-center justify-center p-1 rounded-xl transition-all border shadow-2xs ${isHovered ? 'bg-slate-900 text-white border-teal-400 scale-110 z-20' : 'bg-white/95 text-slate-800 border-slate-200'}`}>
-                      <div className="flex items-center gap-1 text-[10px] font-black truncate max-w-[110px]">
+                    <div 
+                      onClick={(e) => { e.stopPropagation(); setSelectedAreaId(area.area_id); }}
+                      className={`flex flex-col items-center justify-center p-1.5 rounded-xl transition-all border shadow-md cursor-pointer ${
+                        isSelected || isHovered ? 'bg-slate-900 text-white border-teal-400 scale-110 z-30 ring-2 ring-teal-300' : 'bg-white/95 text-slate-800 border-slate-200'
+                      }`}
+                    >
+                      <div className="flex items-center gap-1 text-[10px] font-black truncate max-w-[115px]">
                         <span>{area.icon || '🎯'}</span>
                         <span className="truncate">{area.name}</span>
                       </div>
-                      <span className={`text-[10px] font-extrabold px-1.5 rounded ${isHovered ? 'bg-teal-400 text-slate-950' : 'bg-teal-50 text-teal-700'}`}>
-                        {score}/10
-                      </span>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <span className={`text-[10px] font-extrabold px-1.5 rounded ${isSelected || isHovered ? 'bg-teal-400 text-slate-950' : 'bg-teal-50 text-teal-700'}`}>
+                          {score}/10
+                        </span>
+                        
+                        {/* Direct Quick Action Buttons on Spoke Label */}
+                        {(isHovered || isSelected) && (
+                          <div className="flex items-center gap-1 ml-1 pointer-events-auto">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setModalType('edit');
+                                setEditId(area.area_id);
+                                setFormData({ name: area.name, icon: area.icon, description: area.description || '' });
+                              }}
+                              className="text-[9px] bg-blue-600 hover:bg-blue-700 text-white px-1 rounded shadow-2xs font-bold"
+                              title="Sửa nan này"
+                            >
+                              ✏️
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(area.area_id);
+                              }}
+                              className="text-[9px] bg-rose-600 hover:bg-rose-700 text-white px-1 rounded shadow-2xs font-bold"
+                              title="Xóa nan này"
+                            >
+                              🗑️
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </foreignObject>
                 </g>
@@ -243,6 +283,48 @@ export default function Areas() {
             <span className="text-[8px] font-bold text-slate-400">/10</span>
           </div>
         </div>
+
+        {/* 🌟 Floating Selected Spoke Action Bar */}
+        {(() => {
+          const selectedArea = areas.find(a => a.area_id === selectedAreaId || a.area_id === activeAreaId);
+          if (!selectedArea) return null;
+          return (
+            <div className="w-full max-w-xl mx-auto mt-4 p-4 bg-slate-900 text-white rounded-2xl border-2 border-teal-400 shadow-xl flex flex-wrap justify-between items-center gap-3 animate-fade-in z-30">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{selectedArea.icon || '🎯'}</span>
+                <div>
+                  <h4 className="font-black text-white text-sm">{selectedArea.name}</h4>
+                  <span className="text-[11px] font-bold text-teal-300">Mức hài lòng: {scoresMap[selectedArea.area_id] || 8}/10</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setModalType('edit');
+                    setEditId(selectedArea.area_id);
+                    setFormData({ name: selectedArea.name, icon: selectedArea.icon, description: selectedArea.description || '' });
+                  }}
+                  className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs flex items-center gap-1 shadow-sm transition-all"
+                >
+                  <i className="fa-solid fa-pen"></i> Chỉnh sửa Nan
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleDelete(selectedArea.area_id);
+                    setSelectedAreaId(null);
+                  }}
+                  className="px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-black rounded-xl text-xs flex items-center gap-1 shadow-md transition-all scale-105"
+                  title="Xóa nan này vĩnh viễn"
+                >
+                  <i className="fa-solid fa-trash"></i> XÓA NAN NÀY
+                </button>
+              </div>
+            </div>
+          );
+        })()}
       </div>
     );
   };
