@@ -78,10 +78,15 @@ export default function Areas() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc chắn muốn xóa khía cạnh này không?")) return;
+    setAreas(prev => prev.filter(a => a.area_id !== id));
     try {
-      await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      await fetch(`${API_URL}/areas/${id}`, { method: 'DELETE' });
+      window.dispatchEvent(new CustomEvent('gtd_data_changed'));
       fetchAreas();
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error(e);
+      fetchAreas();
+    }
   };
 
   // SVG Wheel Rendering Math

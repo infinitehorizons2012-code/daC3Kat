@@ -28,6 +28,25 @@ function ProjectDetailModal({ project, data, onClose, onRefresh }) {
     depends_on_action_id: ''
   });
 
+  const [projectNotes, setProjectNotes] = useState(() => {
+    try {
+      const notesMap = JSON.parse(localStorage.getItem('gtd_project_notes') || '{}');
+      return notesMap[project.project_id] !== undefined ? notesMap[project.project_id] : (project.notes || '');
+    } catch (e) { return project.notes || ''; }
+  });
+  const [isNotesSaved, setIsNotesSaved] = useState(false);
+
+  const handleSaveNotes = (newNotes) => {
+    try {
+      const notesMap = JSON.parse(localStorage.getItem('gtd_project_notes') || '{}');
+      notesMap[project.project_id] = newNotes;
+      localStorage.setItem('gtd_project_notes', JSON.stringify(notesMap));
+      setIsNotesSaved(true);
+      setTimeout(() => setIsNotesSaved(false), 2000);
+      window.dispatchEvent(new CustomEvent('gtd_project_notes_changed'));
+    } catch (e) { console.error(e); }
+  };
+
   const projectActions = (data?.actions || []).filter(a => a.project_id === project.project_id);
   const backlogActions = (projectActions || []).filter(a => a.status !== 'Done' && a.storage_system === 'Project_Backlog');
   const activeActions = (projectActions || []).filter(a => a.status !== 'Done' && (a.storage_system === 'Next_Actions' || a.storage_system === 'Calendar' || a.storage_system === 'Floating_Backlog'));
@@ -113,8 +132,35 @@ function ProjectDetailModal({ project, data, onClose, onRefresh }) {
         </div>
 
         <div className="flex-1 overflow-hidden flex flex-col lg:flex-row">
-          {/* LEO PANEL: Thêm việc mới */}
-          <div className="lg:w-1/3 bg-slate-50 p-6 border-r border-slate-200 overflow-y-auto">
+          {/* LEO PANEL: Ghi chú & Thêm việc mới */}
+          <div className="lg:w-1/3 bg-slate-50 p-6 border-r border-slate-200 overflow-y-auto custom-scrollbar">
+            {/* 📝 Ghi chú Dự án */}
+            <div className="bg-amber-50/90 p-4 rounded-xl border border-amber-200/80 mb-6 shadow-2xs">
+              <div className="flex justify-between items-center mb-2">
+                <label className="font-black text-amber-900 uppercase tracking-widest text-[11px] flex items-center gap-1.5">
+                  <i className="fa-solid fa-note-sticky text-amber-600 text-sm"></i> Ghi chú Dự án (Notes)
+                </label>
+                {isNotesSaved && (
+                  <span className="text-[10px] font-bold bg-emerald-600 text-white px-2 py-0.5 rounded-full animate-pulse">
+                    ✓ Đã lưu!
+                  </span>
+                )}
+              </div>
+              <textarea
+                value={projectNotes}
+                onChange={(e) => {
+                  setProjectNotes(e.target.value);
+                  handleSaveNotes(e.target.value);
+                }}
+                rows={4}
+                placeholder="Ghi chú các chi tiết liên quan đến dự án (bối cảnh, tài liệu, liên hệ, ý tưởng, lưu ý quan trọng)..."
+                className="w-full p-3 rounded-xl border border-amber-300 text-xs text-slate-800 outline-none focus:border-amber-500 bg-white/95 font-medium shadow-2xs resize-y"
+              />
+              <p className="text-[10px] text-amber-700/80 italic mt-1 font-semibold">
+                💡 Ghi chú tự động lưu tức thì 100%.
+              </p>
+            </div>
+
             <h3 className="font-black text-slate-700 uppercase tracking-widest text-xs mb-4"><i className="fa-solid fa-bolt text-yellow-500 mr-2"></i> Thêm việc vào Dự án</h3>
             
             <form onSubmit={handleAddAction} className="flex flex-col gap-4">
